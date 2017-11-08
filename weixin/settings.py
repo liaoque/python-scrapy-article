@@ -56,6 +56,11 @@ COOKIES_ENABLED = False
 #DOWNLOADER_MIDDLEWARES = {
 #    'weixin.middlewares.MyCustomDownloaderMiddleware': 543,
 #}
+DOWNLOADER_MIDDLEWARES = {
+   # 'weixin.middlewares.MyCustomDownloaderMiddleware': 543,
+   'weixin.middlewares.RandomUserAgentMiddlware': 1,
+   'scrapy.downloadermiddlewares.useragent': None,
+}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html

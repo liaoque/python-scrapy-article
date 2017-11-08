@@ -1,0 +1,9 @@
+
+使用到的插件
+fake-useragent  #随机useragent
+scrapy_proxies  #ip代理 免费
+scrapy-crawlera  #ip代理 收费
+
+pip install mysqlclent
+pip install scrapy_proxies
+pip install fake-useragent
