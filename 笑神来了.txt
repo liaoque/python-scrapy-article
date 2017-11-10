@@ -1,0 +1,77 @@
+笑神来了
+
+1.最热
+POST /?json=gender/category_article_list_hot_v2 HTTP/1.1
+User-Agent: Android/4.4.2/2.1.37_0923_yybao/864394010252171/b4dd214d26c744bba9f271c1ac8cfaf7/FC:AA:14:99:2E:B6/FCAA14992EB60000
+Content-Type: application/x-www-form-urlencoded
+Host: xiaobaxiaoba.com
+Connection: Keep-Alive
+Content-Length: 106
+
+sign=BB4EA8479E9D601B51BC868E23EE329B&timestamp=1510196860871&afterDate=1507584050000&v=2137&allowRandom=1
+
+2.精华
+POST /?json=gender/category_article_list_hot_v2 HTTP/1.1
+User-Agent: Android/4.4.2/2.1.37_0923_yybao/864394010252171/b4dd214d26c744bba9f271c1ac8cfaf7/FC:AA:14:99:2E:B6/FCAA14992EB60000
+Content-Type: application/x-www-form-urlencoded
+Host: xiaobaxiaoba.com
+Connection: Keep-Alive
+Content-Length: 108
+
+sign=6D3C9FC8CEA18A7CFB89A0748BF91564&timestamp=1510197013378&afterDate=0&v=2137&allowRandom=0&categoryId=32
+
+3.图片
+POST /?json=gender/category_article_list_new_v2 HTTP/1.1
+User-Agent: Android/4.4.2/2.1.37_0923_yybao/864394010252171/b4dd214d26c744bba9f271c1ac8cfaf7/FC:AA:14:99:2E:B6/FCAA14992EB60000
+Content-Type: application/x-www-form-urlencoded
+Host: xiaobaxiaoba.com
+Connection: Keep-Alive
+Content-Length: 94
+
+sign=545753DB4C157F0E45BB4F8A1DA4FE3A&timestamp=1510197057602&afterDate=0&v=2137&categoryId=16
+
+
+4.段子
+POST /?json=gender/category_article_list_new_v2 HTTP/1.1
+User-Agent: Android/4.4.2/2.1.37_0923_yybao/864394010252171/b4dd214d26c744bba9f271c1ac8cfaf7/FC:AA:14:99:2E:B6/FCAA14992EB60000
+Content-Type: application/x-www-form-urlencoded
+Host: xiaobaxiaoba.com
+Connection: Keep-Alive
+Content-Length: 105
+
+sign=BDB6B68194A299F2EBB5018FB0E56144&timestamp=1510197095718&afterDate=1509630414000&v=2137&categoryId=1
+
+
+5.声音
+POST /?json=gender/category_article_list_new_v2 HTTP/1.1
+User-Agent: Android/4.4.2/2.1.37_0923_yybao/864394010252171/b4dd214d26c744bba9f271c1ac8cfaf7/FC:AA:14:99:2E:B6/FCAA14992EB60000
+Content-Type: application/x-www-form-urlencoded
+Host: xiaobaxiaoba.com
+Connection: Keep-Alive
+Content-Length: 106
+
+sign=4D2712B8C5E35FEE7F64AC758CCCDBA0&timestamp=1510197166876&afterDate=1500147000000&v=2137&categoryId=29
+
+
+
+
+##加密方式
+2137 是版本号
+$t = (2137 - 6) * 2137;
+$a = [
+'afterDate' =>  0,
+'timestamp' => '1510197013378',
+'v' => '2137',
+'allowRandom' => 0,
+'categoryId' => 32
+];
+ksort($a);
+$s = '';
+foreach($a as $key => $val){
+	$s .= strtolower($key).$val;
+}
+var_dump($s,$t.$s.$t);
+var_dump(md5($t.$s.$t));exit();
+
+
+

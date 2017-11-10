@@ -1,0 +1,9 @@
+GET /weibofun/albums/album_list.php?apiver=20201&page=0&page_size=30&max_timestamp=-1&latest_viewed_ts=-1&platform=aphone&sysver=7.0&appver=1.7.3&buildver=1.7.3&app_ver=10703&udid=a_3bf9c152108c094f&channel=yingyongbao& HTTP/1.1
+
+
+data_server_url=http://fuli1024.com/weibofun
+
+
+http://fuli1024.com/weibofun/albums/album_list.php?apiver=20201&page=0&page_size=30&max_timestamp=-1&latest_viewed_ts=-1&platform=aphone&sysver=7.0&appver=1.7.3&buildver=1.7.3&app_ver=10703&udid=a_3bf9c152108c094f&channel=yingyongbao
+
+
