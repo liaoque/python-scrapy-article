@@ -24,11 +24,12 @@ class XiaoShenLaiLe(scrapy.Spider):
         }, {
             'categoryId': 1,
             'url': 'http://xiaobaxiaoba.com/?json=gender/category_article_list_new_v2',
-        }, {
-            'categoryId': 29,
-            'url': 'http://xiaobaxiaoba.com/?json=gender/category_article_list_new_v2',
         }
     ]
+    # {
+    #     'categoryId': 29,
+    #     'url': 'http://xiaobaxiaoba.com/?json=gender/category_article_list_new_v2',
+    # }
     base_url = 'http://www.xiaobaxiaoba.com/web/statics/js/manage_cookie.js';
 
     headers = {
@@ -43,19 +44,23 @@ class XiaoShenLaiLe(scrapy.Spider):
 
     def parse(self, response):
         result = json.loads(response.text)
-        for item in result["data"]["data"]:
+        for item in result:
             self.parse_content(item)
         pass
 
     def parse_content(self, item):
-        article = item.get("group");
+        article = item;
         item_loader = ItemLoader(item=XiaoShenLaiLeItems.Items())
         # 文档id
-        item_loader.add_value("id", article.get("id", 0))
+        item_loader.add_value("id", article.get("ArticleId", 0))
+        # 文档标题
+        item_loader.add_value("title", article.get("Title", 0))
         # content
-        item_loader.add_value("body", article.get("content", ''))
+        item_loader.add_value("body", article.get("Content", ''))
+        # 图片
+        item_loader.add_value("pic", article.get("Pic", ''))
         # 文档URL
-        item_loader.add_value("view_url", article.get("share_url", ''))
+        item_loader.add_value("type", article.get("CategoryId", ''))
         # 指纹
         item_loader.add_value("fingerprint", md5(article.get("share_url", '')))
         yield item_loader.load_item()
