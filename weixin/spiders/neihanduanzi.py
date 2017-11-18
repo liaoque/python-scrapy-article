@@ -34,22 +34,28 @@ class NeiHanDuanZiSpider(scrapy.Spider):
     def parse(self, response):
         result = json.loads(response.text)
         for item in result["data"]["data"]:
-            self.parse_content(item)
+           yield self.parse_content(item)
         pass
 
     def parse_content(self, item):
         article = item.get("group");
-        item_loader = ItemLoader(item=NeiHanDuanZiItems.Items())
+        item_loader = NeiHanDuanZiItems.Items()
         # 文档id
-        item_loader.add_value("id", article.get("id", 0))
+        item_loader["id"] = article.get("id", 0)
+
         # content
-        item_loader.add_value("body", article.get("content", ''))
+        body = article.get("content", '')
+        item_loader["body"] = body
+
         # 文档URL
-        item_loader.add_value("view_url", article.get("share_url", ''))
+        item_loader["view_url"] = article.get("share_url", '')
+
         # 指纹
-        item_loader.add_value("fingerprint", md5(article.get("share_url", '')))
-        yield item_loader.load_item()
-        pass
+        fingerprint= md5(body)
+        item_loader["fingerprint"] = fingerprint
+        return item_loader
+
+
 
     def start_requests(self):
         return [scrapy.Request(self.base_url, callback=self.get_csrf_token)]

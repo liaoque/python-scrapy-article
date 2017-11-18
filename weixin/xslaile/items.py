@@ -14,10 +14,11 @@ class Items(scrapy.Item):
     # name = scrapy.Field()
     id = scrapy.Field()
     # thumbnail = scrapy.Field()
-    # title = scrapy.Field()
+    title = scrapy.Field()
     # key_words = scrapy.Field()
     body = scrapy.Field()
-    # article_type = scrapy.Field()
+    pic = scrapy.Field()
+    type = scrapy.Field()
     view_url = scrapy.Field()
 
     # author_name = scrapy.Field()
@@ -27,9 +28,22 @@ class Items(scrapy.Item):
     fingerprint = scrapy.Field()
 
 
-    def get_insert_sql(self):
-        return ''
+    def save(self, cursor):
+        body = self["body"][0]
+        fingerprint = self["fingerprint"][0]
+        sql = "SELECT id FROM duanzi  WHERE fingerprint = '%s' " % (fingerprint)
+        cursor.execute(sql)
+        if cursor.rowcount:
+            return
+        sql = """
+                    INSERT INTO duanzi (body, fingerprint)
+                    VALUES (%s, %s)
+                    """;
+        params = (
+            body,
+            fingerprint
+        )
+        cursor.execute(sql, params)
+        pass
 
-
-    pass
 

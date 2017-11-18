@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import json
+import re
+from w3lib.encoding import html_to_unicode, resolve_encoding, \
+    html_body_declared_encoding, http_content_type_encoding
 from scrapy.loader import ItemLoader
 import sys
+from scrapy.selector import Selector
 
 
 import weixin.bzribao.items as baozouribaoItems
@@ -41,31 +45,41 @@ class BaozouribaoSpider(scrapy.Spider):
         pass
 
     def parse_content(self, response):
-        print(response)
-        item_loader = ItemLoader(item=baozouribaoItems.Items(), response=response)
+        item_loader = baozouribaoItems.Items()
         item = json.loads(response.text)
         # 文档id
-        item_loader.add_value("id", item.get("document_id", 0))
+        # item_loader.add_value("id", item.get("document_id", 0))
+        item_loader["id"]= item.get("document_id", 0)
         # 缩略图
-        item_loader.add_value("thumbnail", item.get("thumbnail", ''))
+        # item_loader.add_value("thumbnail", item.get("thumbnail", ''))
+        item_loader["thumbnail"]= item.get("thumbnail", '')
         # 标题
-        item_loader.add_value("title", item.get("title", ''))
+        # item_loader.add_value("title", item.get("title", ''))
+        item_loader["title"]= item.get("title", '')
         # 关键字
-        item_loader.add_value("key_words", item.get("key_words", ''))
+        item_loader["key_words"]= item.get("key_words", '')
         # 内容
-        item_loader.add_value("body", item.get("body", ''))
+        body = item.get("body", '')
+        if body:
+            body = Selector(text=body)
+            body = body.css("div.content").extract_first()
+            import re
+            p = re.compile('<p><a\shref="http:\/\/daily.ibaozou.com\/report\/\d+">举报<\/a><\/p>')
+            body = p.sub('', body)
+        item_loader["body"]= body
+
         # 文章类型
-        item_loader.add_value("article_type", item.get("article_type", 1))
+        item_loader["article_type"]= item.get("article_type", 1)
         # 文档URL
-        item_loader.add_value("view_url", item.get("view_url", ''))
+        item_loader["view_url"]= item.get("share_url", '')
         # 作者头像
-        item_loader.add_value("author_face", item.get("author_face", ''))
+        item_loader["author_face"]= item.get("author_face", '')
         # 作者名字
-        item_loader.add_value("author_name", item.get("author_name", ''))
+        item_loader["author_name"]= item.get("author_name", '')
         # api接口
-        item_loader.add_value("cur_url", response.url)
+        item_loader["cur_url"]= response.url
         # 指纹
-        item_loader.add_value("fingerprint", md5(response.url))
+        item_loader["fingerprint"]= md5(response.url)
         # 延迟时间
         # item_loader.add_value("display_time", item.display_time)
         # 点击数
@@ -80,7 +94,7 @@ class BaozouribaoSpider(scrapy.Spider):
         # item_loader.add_value("section_image", item.section_image)
         #
         # item_loader.add_value("section_name", item.section_name)
-        yield item_loader.load_item()
+        yield item_loader
         pass
 
     def start_requests(self):

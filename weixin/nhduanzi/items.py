@@ -27,9 +27,19 @@ class Items(scrapy.Item):
     fingerprint = scrapy.Field()
 
 
-    def get_insert_sql(self):
-        return ''
-
-
-    pass
+    def save(self, cursor):
+        sql = "SELECT id FROM duanzi  WHERE fingerprint = '%s' " % (self['fingerprint'])
+        cursor.execute(sql)
+        if cursor.rowcount:
+            return
+        sql = """
+            INSERT INTO duanzi (body, fingerprint)
+            VALUES (%s, %s)
+            """;
+        params = (
+            self["body"],
+            self["fingerprint"]
+        )
+        cursor.execute(sql, params)
+        pass
 

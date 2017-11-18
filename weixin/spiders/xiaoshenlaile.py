@@ -45,7 +45,7 @@ class XiaoShenLaiLe(scrapy.Spider):
     def parse(self, response):
         result = json.loads(response.text)
         for item in result:
-            self.parse_content(item)
+          yield  self.parse_content(item)
         pass
 
     def parse_content(self, item):
@@ -56,15 +56,15 @@ class XiaoShenLaiLe(scrapy.Spider):
         # 文档标题
         item_loader.add_value("title", article.get("Title", 0))
         # content
-        item_loader.add_value("body", article.get("Content", ''))
+        content=  article.get("Content", '')
+        item_loader.add_value("body", content)
         # 图片
         item_loader.add_value("pic", article.get("Pic", ''))
         # 文档URL
         item_loader.add_value("type", article.get("CategoryId", ''))
         # 指纹
-        item_loader.add_value("fingerprint", md5(article.get("share_url", '')))
-        yield item_loader.load_item()
-        pass
+        item_loader.add_value("fingerprint", md5(content))
+        return item_loader.load_item()
 
     def start_requests(self):
         return [scrapy.Request(self.base_url, callback=self.get_csrf_token)]
