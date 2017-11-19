@@ -45,7 +45,9 @@ class XiaoShenLaiLe(scrapy.Spider):
     def parse(self, response):
         result = json.loads(response.text)
         for item in result:
-          yield  self.parse_content(item)
+            itemLoader = self.parse_content(item)
+            if itemLoader:
+                yield itemLoader
         pass
 
     def parse_content(self, item):
@@ -56,7 +58,9 @@ class XiaoShenLaiLe(scrapy.Spider):
         # 文档标题
         item_loader.add_value("title", article.get("Title", 0))
         # content
-        content=  article.get("Content", '')
+        content = article.get("Content", '')
+        if content == None:
+            return False
         item_loader.add_value("body", content)
         # 图片
         item_loader.add_value("pic", article.get("Pic", ''))
@@ -79,7 +83,7 @@ class XiaoShenLaiLe(scrapy.Spider):
             }
             data = [(k.lower() + str(body[k])) for k in sorted(body.keys())];
             body['sign'] = md5(''.join(data)).upper()
-            body='&'.join([(k + '=' + str(body[k])) for k in body.keys()])
+            body = '&'.join([(k + '=' + str(body[k])) for k in body.keys()])
             yield scrapy.Request(item['url'],
                                  method='POST',
                                  body=body,

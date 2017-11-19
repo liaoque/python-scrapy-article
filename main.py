@@ -7,9 +7,9 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# execute(["scrapy", "crawl", "baisibudejie"])
 # execute(["scrapy", "crawl", "baozouribao"])
 # execute(["scrapy", "crawl", "neihanduanzi"])
-execute(["scrapy", "crawl", "baisibudejie"])
 # execute(["scrapy", "crawl", "qiushibaike"])
-# execute(["scrapy", "crawl", "xiaoshenlaile"])
+execute(["scrapy", "crawl", "xiaoshenlaile"])
 # execute(["scrapy", "crawl", "lagou"])

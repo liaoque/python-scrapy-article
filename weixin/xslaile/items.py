@@ -31,12 +31,12 @@ class Items(scrapy.Item):
     def save(self, cursor):
         body = self["body"][0]
         fingerprint = self["fingerprint"][0]
-        sql = "SELECT id FROM duanzi  WHERE fingerprint = '%s' " % (fingerprint)
+        sql = "SELECT id FROM mc_duanzi  WHERE fingerprint = '%s' " % (fingerprint)
         cursor.execute(sql)
         if cursor.rowcount:
             return
         sql = """
-                    INSERT INTO duanzi (body, fingerprint)
+                    INSERT INTO mc_duanzi (body, fingerprint)
                     VALUES (%s, %s)
                     """;
         params = (

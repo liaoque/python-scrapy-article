@@ -34,22 +34,23 @@ class BaiSiBuDeJie(scrapy.Spider):
         type = response.css(".j-top a.cur::text").extract_first("")
         items = []
         if type == '视频':
-            srcs = items = response.css(".j-r-list-c .j-video-c>div:first-child::attr(data-mp4)").extract()
+            items = response.css(".j-r-list-c .j-video-c>div:first-child::attr(data-mp4)").extract()
             itemsThumbnail = response.css(".j-r-list-c .j-video-c>div:first-child::attr(data-poster)").extract()
             itemTitles = response.css(".j-r-list-c .j-r-list-c-desc a").extract()
             type = 1
         elif type == '图片':
-            srcs = items = response.css(".j-r-list-c img::attr(data-original)").extract()
-            itemsThumbnail = itemTitles = response.css(".j-r-list-tool::attr(data-title)").extract()
+            itemsThumbnail =items = response.css(".j-r-list-c img::attr(data-original)").extract()
+            itemTitles = response.css(".j-r-list-tool::attr(data-title)").extract()
             type = 2
         elif type == '段子':
-            srcs = items = response.css(".j-r-list-c a").extract()
+            items = response.css(".j-r-list-c a").extract()
             itemsThumbnail = itemTitles = response.css(".j-r-list-tool::attr(data-title)").extract()
             type = 3
 
-        for key, item in items:
+        for key, item in enumerate(items):
             yield self.parse_content({
                 'body': item,
+                'src': item,
                 'type': type,
                 'thumbnail': itemsThumbnail[key],
                 'title': itemTitles[key],
@@ -62,8 +63,10 @@ class BaiSiBuDeJie(scrapy.Spider):
         item_loader = ItemLoader(item=BaiSiBuDeJieItem.Items())
         # 缩略图
         item_loader.add_value("thumbnail", article.get("thumbnail", 0))
+        item_loader.add_value("src", article.get("src", 0))
         # 文档标题
-        item_loader.add_value("title", article.get("Title", 0))
+        item_loader.add_value("title", article.get("title", 0))
+        item_loader.add_value("title", article.get("title", 0))
         # content
         item_loader.add_value("body", article.get("body", ''))
         # 文档URL

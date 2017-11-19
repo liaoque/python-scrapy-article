@@ -27,8 +27,8 @@ class Items(scrapy.Item):
     fingerprint = scrapy.Field()
 
 
-    def get_insert_sql(self):
-        return ''
+    def save(self, cursor):
+        return True
 
 
     pass
