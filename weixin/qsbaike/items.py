@@ -23,12 +23,12 @@ class Items(scrapy.Item):
 
     def insertQiuShiBaiKe(self, cursor):
         id = self["id"]
-        sql = "SELECT id FROM unique_qiushibaike WHERE id = %d" % (id);
+        sql = "SELECT id FROM mc_unique_qiushibaike WHERE id = %d" % (id);
         cursor.execute(sql)
         if cursor.rowcount:
             return False
         sql = """
-                  INSERT INTO unique_qiushibaike (id, view_url, type)
+                  INSERT INTO mc_unique_qiushibaike (id, view_url, type)
                   VALUES(%s, %s, %s)
                   """;
         params = (
@@ -52,15 +52,20 @@ class Items(scrapy.Item):
         )
         result = cursor.execute(sql, params)
         if result:
+            pid = cursor.lastrowid;
             sql = """
                       INSERT INTO mc_article_body (aid, body)
                       VALUES(%s, %s)
                       """;
             params = (
-                cursor.lastrowid,
+                pid,
                 self["body"]
             )
             result = cursor.execute(sql, params)
+            sql = """
+                   update mc_unique_qiushibaike set pid = '%d' WHERE id = '%s'
+               """ % (pid, self["id"])
+            cursor.execute(sql)
         return result
 
     def save(self, cursor):
@@ -74,12 +79,12 @@ class Items(scrapy.Item):
     def insertXieZhen(self, cursor):
         title = self["title"]
         fingerprint = md5(title)
-        sql = "SELECT fingerprint FROM unique_xiezhen WHERE fingerprint = '%s'" % (fingerprint);
+        sql = "SELECT fingerprint FROM mc_unique_xiezhen WHERE fingerprint = '%s'" % (fingerprint);
         cursor.execute(sql)
         if cursor.rowcount:
             return False
         sql = """
-                  INSERT INTO unique_xiezhen (fingerprint, view_url, type)
+                  INSERT INTO mc_unique_xiezhen (fingerprint, view_url, type)
                   VALUES(%s, %s, %s)
                   """;
         params = (
@@ -100,11 +105,16 @@ class Items(scrapy.Item):
             )
             result = cursor.execute(sql, params)
             if result:
+                pid = cursor.lastrowid;
                 sql = """
                           INSERT INTO mc_image_list (pid, src, type)
                           VALUES(%s, %s, %s)
                           """;
-                params = [ (cursor.lastrowid, image, 1 ) for image in self["body"]]
+                params = [ (pid, image, 1 ) for image in self["body"]]
                 # print(sql, params)
                 result = cursor.executemany(sql, params)
+                sql = """
+                    update mc_unique_xiezhen set pid = '%d' WHERE fingerprint = '%s'
+                """ % (pid, fingerprint)
+                cursor.execute(sql)
         return result

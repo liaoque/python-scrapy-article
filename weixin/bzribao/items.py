@@ -37,12 +37,12 @@ class Items(scrapy.Item):
 
     def insertBaoZouRiBao(self, cursor):
         id = self["id"]
-        sql = "SELECT id FROM unique_baozouribao WHERE id = %d" % (id);
+        sql = "SELECT id FROM mc_unique_baozouribao WHERE id = %d" % (id);
         cursor.execute(sql)
         if cursor.rowcount:
             return False
         sql = """
-                  INSERT INTO unique_baozouribao (id, view_url, type)
+                  INSERT INTO mc_unique_baozouribao (id, view_url, type)
                   VALUES(%s, %s, %s)
                   """;
         params = (
@@ -64,15 +64,20 @@ class Items(scrapy.Item):
         )
         result = cursor.execute(sql, params)
         if result:
+            pid = cursor.lastrowid;
             sql = """
                       INSERT INTO mc_article_body (aid, body)
                       VALUES(%s, %s)
                       """;
             params = (
-                cursor.lastrowid,
+                pid,
                 self["body"]
             )
             result = cursor.execute(sql, params)
+            sql = """
+               update mc_unique_baozouribao set pid = '%d' WHERE id = '%s'
+           """ % (pid, self["id"])
+            cursor.execute(sql)
         return result
 
     def save(self, cursor):

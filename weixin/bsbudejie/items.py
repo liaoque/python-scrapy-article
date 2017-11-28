@@ -99,12 +99,12 @@ class Items(scrapy.Item):
         title = self['title'][0]
         src = self['src'][0]
         fingerprint = md5(src)
-        sql = "SELECT fingerprint FROM unique_baisibudejie WHERE fingerprint = '%s'" % (fingerprint);
+        sql = "SELECT fingerprint FROM mc_unique_baisibudejie WHERE fingerprint = '%s'" % (fingerprint);
         cursor.execute(sql)
         if cursor.rowcount:
             return False
         sql = """
-                  INSERT INTO unique_baisibudejie (fingerprint)
+                  INSERT INTO mc_unique_baisibudejie (fingerprint)
                   VALUES(%s)
                   """;
         params = (
@@ -122,15 +122,22 @@ class Items(scrapy.Item):
             )
             result = cursor.execute(sql, params)
             if result:
+                pid = cursor.lastrowid;
                 sql = """
                                   INSERT INTO mc_article_body (aid, body)
                                   VALUES(%s, %s)
                                   """;
                 params = (
-                    cursor.lastrowid,
+                    pid,
                     '<img src="' + src + '"/>'
                 )
                 result = cursor.execute(sql, params)
+
+                sql = """
+                    update mc_unique_baisibudejie set pid = '%d' WHERE fingerprint = '%s'
+                """ % (pid, fingerprint)
+                cursor.execute(sql)
+
             return result
     pass
 
