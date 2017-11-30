@@ -69,9 +69,9 @@ class QiuShiBaiKe(scrapy.Spider):
             item = item.replace('\n', '')
             pattern = re.compile('var\s*content\s*=\s*\'')
             if pattern.match(item):
-                body = pattern.sub('', item)
+                body = '<div class="xsa">' + pattern.sub('', item) + '</div>'
                 body = Selector(text=body)
-                pTags = body.css('p')
+                pTags = body.css('div.xsa p')
                 for pTag in pTags:
                     imageList = pTag.css('img::attr(data-src)').extract()
                     text = pTag.css('::text').extract()
