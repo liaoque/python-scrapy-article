@@ -55,7 +55,7 @@ class Items(scrapy.Item):
     def insertVideo(self,cursor):
         src = self['src'][0]
         thumbnail = self['thumbnail'][0]
-        title = self['title'][0]
+        title = filter_tags(self['title'][0])
         fingerprint = md5(src)
         sql = "select id from mc_video where fingerprint = '%s'" % (fingerprint)
         cursor.execute(sql)

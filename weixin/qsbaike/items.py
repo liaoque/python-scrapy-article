@@ -7,6 +7,7 @@
 
 import scrapy
 from weixin.utils.common import md5
+from weixin.utils.htmlfilter import filter_tags
 
 
 class Items(scrapy.Item):
@@ -77,7 +78,7 @@ class Items(scrapy.Item):
         return result
 
     def insertXieZhen(self, cursor):
-        title = self["title"]
+        title = filter_tags(self["title"])
         fingerprint = md5(title)
         sql = "SELECT fingerprint FROM mc_unique_xiezhen WHERE fingerprint = '%s'" % (fingerprint);
         cursor.execute(sql)

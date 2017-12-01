@@ -43,6 +43,7 @@ class QiuShiBaiKe(scrapy.Spider):
                     'id': idLits[key],
                     'thumbnail': thumbnailList[key]
                 }
+                # url = 'https://www.qiushibaike.com/news/article-75465.html';
                 yield scrapy.Request(url,
                                      meta = meta,
                                      dont_filter=True,
@@ -73,7 +74,8 @@ class QiuShiBaiKe(scrapy.Spider):
                 body = Selector(text=body)
                 pTags = body.css('div.xsa p')
                 for pTag in pTags:
-                    imageList = pTag.css('img::attr(data-src)').extract()
+                    # imageList = pTag.css('img::attr(data-src)').extract()
+                    imageList = pTag.xpath('img').xpath('@data-src').extract()
                     text = pTag.css('::text').extract()
                     html = ''
                     if imageList:
