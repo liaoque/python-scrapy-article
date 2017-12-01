@@ -98,6 +98,7 @@ class Items(scrapy.Item):
     def insertArticle(self, cursor):
         title = self['title'][0]
         src = self['src'][0]
+        body = self['body'][0]
         fingerprint = md5(src)
         sql = "SELECT fingerprint FROM mc_unique_baisibudejie WHERE fingerprint = '%s'" % (fingerprint);
         cursor.execute(sql)
@@ -129,7 +130,7 @@ class Items(scrapy.Item):
                                   """;
                 params = (
                     pid,
-                    '<img src="' + src + '"/>'
+                   body
                 )
                 result = cursor.execute(sql, params)
 

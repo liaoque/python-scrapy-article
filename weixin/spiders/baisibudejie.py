@@ -39,9 +39,25 @@ class BaiSiBuDeJie(scrapy.Spider):
             itemTitles = response.css(".j-r-list-c .j-r-list-c-desc a").extract()
             type = 1
         elif type == '图片':
-            itemsThumbnail =items = response.css(".j-r-list-c img::attr(data-original)").extract()
-            itemTitles = response.css(".j-r-list-tool::attr(data-title)").extract()
-            type = 2
+            itemList = response.css(".j-r-list li");
+            type = 2;
+            for item in itemList:
+                thumbnail = item.css(".j-r-list-c img::attr(data-original)").extract_first();
+                desc = item.css(".j-r-list-c .j-r-list-c-desc a::text").extract_first();
+                title = item.css(".j-r-list-tool::attr(data-title)").extract_first();
+                if desc:
+                    desc = '<p>' + desc + '</p>'
+                if thumbnail:
+                    src = '<p><img src=' + thumbnail  + ' /></p>'
+                    yield self.parse_content({
+                        'body': '<div class="content">' + desc + src + '</div>',
+                        'src': thumbnail,
+                        'type': type,
+                        'thumbnail': thumbnail,
+                        'title': title,
+                    });
+
+
         elif type == '段子':
             items = response.css(".j-r-list-c a").extract()
             itemsThumbnail = itemTitles = response.css(".j-r-list-tool::attr(data-title)").extract()
