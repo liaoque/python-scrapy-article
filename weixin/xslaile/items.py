@@ -35,13 +35,18 @@ class Items(scrapy.Item):
         cursor.execute(sql)
         if cursor.rowcount:
             return
+        if self["body"] > 45:
+            status = 1
+        else:
+            status = 2
         sql = """
-                    INSERT INTO mc_duanzi (body, fingerprint)
-                    VALUES (%s, %s)
+                    INSERT INTO mc_duanzi (body, fingerprint, status)
+                    VALUES (%s, %s, %s)
                     """;
         params = (
             body,
-            fingerprint
+            fingerprint,
+            status
         )
         cursor.execute(sql, params)
         pass

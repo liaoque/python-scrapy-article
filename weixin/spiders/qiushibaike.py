@@ -43,7 +43,7 @@ class QiuShiBaiKe(scrapy.Spider):
                     'id': idLits[key],
                     'thumbnail': thumbnailList[key]
                 }
-                # url = 'https://www.qiushibaike.com/news/article-75465.html';
+                # url = 'https://www.qiushibaike.com/news/article-79021.html';
                 yield scrapy.Request(url,
                                      meta = meta,
                                      dont_filter=True,

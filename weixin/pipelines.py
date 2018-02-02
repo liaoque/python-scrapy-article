@@ -23,6 +23,7 @@ class MysqlTwistedPipline(object):
             db = settings["MYSQL_DBNAME"],
             user = settings["MYSQL_USER"],
             passwd = settings["MYSQL_PASSWORD"],
+            port = settings["MYSQL_PORT"],
             charset='utf8mb4',
             cursorclass=MySQLdb.cursors.DictCursor,
             use_unicode=True,

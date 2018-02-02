@@ -41,13 +41,17 @@ class Items(scrapy.Item):
         cursor.execute(sql)
         if cursor.rowcount:
             return
+        if self["body"] > 45:
+            status = 1
+        else:
+            status = 2
         sql = """
                 INSERT INTO mc_duanzi (body, fingerprint, status) VALUES ( %s, %s, %s)
             """
         params = (
             body,
             fingerprint,
-            1
+            status
         )
         cursor.execute(sql, params)
     pass
@@ -100,7 +104,7 @@ class Items(scrapy.Item):
         src = self['src'][0]
         body = self['body'][0]
         fingerprint = md5(src)
-        sql = "SELECT fingerprint FROM mc_unique_baisibudejie WHERE fingerprint = '%s'" % (fingerprint);
+        sql = "SELECT fingerprint,  FROM mc_unique_baisibudejie WHERE fingerprint = '%s'" % (fingerprint);
         cursor.execute(sql)
         if cursor.rowcount:
             return False
