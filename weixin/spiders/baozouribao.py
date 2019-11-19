@@ -109,7 +109,7 @@ class BaozouribaoSpider(scrapy.Spider):
         return [scrapy.Request(self.base_url, callback=self.get_csrf_token)]
 
     def get_csrf_token(self, response):
-        xsrf = response.css("meta[name='csrf-token']::attr(content)").extract_first("")
+        xsrf = response.css("meta[name='csrf-token']::attr(content)").getall() 
         if xsrf:
             self.headers['X-CSRF-Token'] = xsrf
             for url in self.start_urls:
