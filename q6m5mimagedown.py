@@ -20,7 +20,7 @@ password = "123456"
 db = MySQLdb.connect(host,user,password,database, charset='utf8mb4' )
 # 使用cursor()方法获取操作游标 
 cursor = db.cursor()
-sql = 'select count(1) as c from mc_6m5m where status = 200 AND down_status = 0 ';
+sql = 'select count(1) as c from mc_6m5m where status = 200 AND image_down_status = 0 ';
 # 执行SQL语句
 cursor.execute(sql)
 # 获取所有记录列表
@@ -34,7 +34,7 @@ print("共%s条数据"%(n,))
 c = 0;
 while i < n:
     i = i +1
-    sql = 'select id, zip_url from mc_6m5m where status = 200 and down_status = 0 limit 1';
+    sql = 'select id, img as zip_url from mc_6m5m where status = 200 and image_down_status = 0 limit 1';
     cursor.execute(sql)
     if cursor.rowcount < 1:
         break
@@ -63,15 +63,15 @@ while i < n:
             pass
         pass
         print( "下载成功 %s",file )
-        sql = 'update mc_6m5m set down_status = 200 where id = %s' % (id,);
+        sql = 'update mc_6m5m set image_down_status = 200 where id = %s' % (id,);
         
         cursor.execute(sql)
         db.commit()
         c = c + 1
-        time.sleep(1)
+        # time.sleep(1)
     except Exception as err:
         print("下载失败",url, err)
-        sql = 'update article_spider.mc_6m5m set down_status = 400 where id =  %s' % (id,);
+        sql = 'update article_spider.mc_6m5m set image_down_status = 400 where id =  %s' % (id,);
         res = cursor.execute(sql)
         db.commit()
         time.sleep(5)

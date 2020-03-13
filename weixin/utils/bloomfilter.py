@@ -63,14 +63,14 @@ class BloomFilter():
         return hashs
 
 
-pool = redis.ConnectionPool(host='127.0.0.1', port=6379, db=0)
-conn = redis.StrictRedis(connection_pool=pool)
+# pool = redis.ConnectionPool(host='127.0.0.1', port=6379, db=0)
+# conn = redis.StrictRedis(connection_pool=pool)
 
-start = time.time()
-bf = BloomFilter(conn=conn)
-bf.add('test')
-bf.add('fsest1')
-print(bf.is_exist('qest'))
-print(bf.is_exist('testdsad'))
-end = time.time()
-print(end-start)
+# start = time.time()
+# bf = BloomFilter(conn=conn)
+# bf.add('test')
+# bf.add('fsest1')
+# print(bf.is_exist('qest'))
+# print(bf.is_exist('testdsad'))
+# end = time.time()
+# print(end-start)
