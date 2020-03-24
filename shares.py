@@ -11,11 +11,14 @@ from datetime import datetime, date, timedelta
 from urllib.request import urlopen
 from urllib.request import Request
 
+import configparser
 
-host = "127.0.0.1"
-database = "article_spider"
-user = "root"
-password = "123456"
+cp = configparser.ConfigParser()
+cp.read("config.ini")
+host = cp.get("db","db_host")
+database = cp.get("db","db_database")
+user = cp.get("db","db_user")
+password = cp.get("db","db_pass")
 
 
 db = MySQLdb.connect(host,user,password,database, charset='utf8mb4' )
@@ -25,7 +28,6 @@ sql = 'select code, name from mc_shares_name where code';
 # 执行SQL语句
 cursor.execute(sql)
 date_as = time.strftime("%Y%m%d", time.localtime())
-date_as = "2020-03-19"
 result = cursor.fetchall()
 
 for item in result:
@@ -33,7 +35,7 @@ for item in result:
     name = item[1]
 
     #date_as = item['date_as']
-    sql = "SELECT id,date_as,p_range FROM mc_shares  WHERE code = '%s' and date_as<='%s' order by date_as desc limit 5" % (code, date_as)
+    sql = "SELECT id,date_as,p_p_range FROM mc_shares_zl  WHERE code = '%s' and date_as<='%s' order by date_as desc limit 5" % (code, date_as)
     cursor.execute(sql);
     if cursor.rowcount == 0:
         continue
