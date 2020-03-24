@@ -12,7 +12,7 @@ from urllib.request import urlopen
 from urllib.request import Request
 
 
-host = "192.168.16.248"
+host = "127.0.0.1"
 database = "article_spider"
 user = "root"
 password = "123456"
@@ -25,6 +25,7 @@ sql = 'select code, name from mc_shares_name where code';
 # 执行SQL语句
 cursor.execute(sql)
 date_as = time.strftime("%Y%m%d", time.localtime())
+date_as = "2020-03-19"
 result = cursor.fetchall()
 
 for item in result:
@@ -37,19 +38,19 @@ for item in result:
     if cursor.rowcount == 0:
         continue
     result2 = cursor.fetchall()
-    print(result2, code)
+
     one = result2[0][1]
     one_p_range = result2[0][2]
 
-    if 1 in result2:
+    if len(result2) >= 2:
         two = result2[1][1]
         two_p_range = result2[1][2]
     else:
         two = one + timedelta(days = -1)
-        two_p_range = result2[1][2]
+        two_p_range = 0
     pass    
 
-    if 2 in result2:
+    if len(result2) >= 3:
         three = result2[2][1]
         three_p_range = result2[2][2]
     else:
@@ -58,7 +59,7 @@ for item in result:
     pass   
 
 
-    if 3 in result2:
+    if len(result2) >= 4:
         four = result2[3][1]
         four_p_range = result2[3][2]
     else:
@@ -68,7 +69,7 @@ for item in result:
 
 
 
-    if 4 in result2:
+    if len(result2) >= 5:
         five = result2[4][1]
         five_p_range = result2[4][2]
     else:
@@ -80,11 +81,12 @@ for item in result:
     date_as = date_as
 
     sql = "SELECT id FROM mc_shares_last_three_day  WHERE code = '%s' and date_as='%s'" % (code, date_as)
-    # print(self)
-    cursor.execute(sql);
+    cursor.execute(sql)
+    
+	
     if cursor.rowcount:
         continue
-
+	
     sql = """
         INSERT INTO mc_shares_last_three_day (name, code, one, one_p_range, two, two_p_range, three, three_p_range, four, four_p_range, five, five_p_range, date_as)
         VALUES (%s, %s, %s,  %s,  %s, %s, %s, %s,  %s,  %s,  %s,%s,  %s)
@@ -105,6 +107,7 @@ for item in result:
        date_as
     )
     cursor.execute(sql, params)
+    db.commit()
 pass
 
 
