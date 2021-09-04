@@ -26,6 +26,8 @@ class Shares_temper_t(scrapy.Spider):
                              charset='utf8mb4')
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
+        sql = "update mc_shares_name set temper_tonghuashun = '0'  "
+        cursor.execute(sql);
         sql = 'select code from mc_shares_name ';
         try:
             # 执行SQL语句
