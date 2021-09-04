@@ -31,21 +31,23 @@ class Items(scrapy.Item):
 
     def save(self, cursor):
         code = self['code'][0]
+
+        if 'temper_tonghuashun' in self:
+            temper_tonghuashun = self['temper_tonghuashun'][0]
+            sql = "update mc_shares_name set temper_tonghuashun = '%d'  WHERE code = %s" % (temper_tonghuashun, code)
+            cursor.execute(sql);
+            return
+
+
+        if 'temper_dongfangcaifu' in self:
+            temper_dongfangcaifu = self['temper_dongfangcaifu'][0]
+            sql = "update mc_shares_name set temper_dongfangcaifu = '%d'  WHERE code = %s" % (temper_dongfangcaifu, code)
+            # print(sql)
+            cursor.execute(sql);
+            return
+
         date_as = self['date_as'][0]
-        temper_tonghuashun = self['temper_tonghuashun'][0]
-        if temper_tonghuashun != None:
-            sql = "update mc_shares_name set temper_tonghuashun = '%d'  WHERE code = '%s'" % (temper_tonghuashun, code)
-            cursor.execute(sql);
-            return
-
-        temper_dongfangcaifu = self['temper_dongfangcaifu'][0]
-        if temper_dongfangcaifu != None:
-            sql = "update mc_shares_name set temper_dongfangcaifu = '%d'  WHERE code = '%s'" % (temper_dongfangcaifu, code)
-            cursor.execute(sql);
-            return
-
-
-        sql = "SELECT code FROM mc_shares_name  WHERE code = '%s'" % (code)
+        sql = "SELECT code FROM mc_shares_name  WHERE code = '%s'" % code
 
         cursor.execute(sql);
         if cursor.rowcount != 1:

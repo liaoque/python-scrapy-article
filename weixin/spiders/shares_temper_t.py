@@ -9,13 +9,13 @@ import MySQLdb.cursors
 import weixin.shares.items as SharesItems
 import time
 
-
-class Shares_temper(scrapy.Spider):
-    name = 'shares_temper'
-    allowed_domains = ['.dfcfw.com']
+# https://bi.10jqka.com.cn/600905_17/online_user_latest.json
+class Shares_temper_t(scrapy.Spider):
+    name = 'shares_temper_t'
+    allowed_domains = ['.10jqka.com.cn']
     start_urls = []
     headers = {
-        "HOST": "gubacdn.dfcfw.com"
+        "HOST": "bi.10jqka.com.cn"
     }
 
     def start_requests(self):
@@ -39,9 +39,11 @@ class Shares_temper(scrapy.Spider):
         for url in results:
             # 替换url获取下载地址
             if int(url[0]) < 600000:
-                _urtl = "http://gubacdn.dfcfw.com/LookUpAndDown/sz" + url[0] + ".js?_=" + str(time.time())
+                _urtl = "https://bi.10jqka.com.cn/" + url[0] + "_33/online_user_latest.json"
+                # _urtl = "http://gubacdn.dfcfw.com/LookUpAndDown/sz" + url[0] + ".js?_=" + str(time.time())
             else:
-                _urtl = "http://gubacdn.dfcfw.com/LookUpAndDown/sh" + url[0] + ".js?_=" + str(time.time())
+                _urtl = "https://bi.10jqka.com.cn/" + url[0] + "_17/online_user_latest.json"
+                # _urtl = "http://gubacdn.dfcfw.com/LookUpAndDown/sh" + url[0] + ".js?_=" + str(time.time())
             self.headers['code'] = url[0]
             yield scrapy.Request(_urtl, headers=self.headers, callback=self.parse_content)
         pass
@@ -50,15 +52,23 @@ class Shares_temper(scrapy.Spider):
 
     def parse_content(self, response):
 
-        LookUpAndDown = re.sub('var LookUpAndDown=', '', response.text)
-        print(LookUpAndDown)
-        result = json.loads(LookUpAndDown)
+        # LookUpAndDown = re.sub('var LookUpAndDown=', '', response.text)
+        # print(LookUpAndDown)
+        result = json.loads(response.text)
         code = response.request.headers.getlist('code')[0]
 
+        # ss.czd.result.stock_600905.options[0].hot
         # 文档标题
+        hot = result["czd"]["result"]["stock_" +code ]["options"][0]['hot'];
+        low = result["czd"]["result"]["stock_" + code]["options"][1]['hot'];
+        if low == 0:
+            hot = 0
+        else:
+            hot = hot / (hot + low)
+
         item_loader = ItemLoader(item=SharesItems.Items())
         item_loader.add_value("code", code.decode(encoding = "utf-8"))
-        item_loader.add_value("temper_dongfangcaifu", result["Data"]["TapeZ"] * 10000)
+        item_loader.add_value("temper_dongfangcaifu", hot)
 
         return item_loader.load_item()
 
