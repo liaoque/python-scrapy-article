@@ -58,6 +58,8 @@ class Shares_temper_t(scrapy.Spider):
         # print(LookUpAndDown)
         result = json.loads(response.text)
         code = response.request.headers.getlist('code')[0]
+        code = code.decode(encoding="utf-8")
+
 
         # ss.czd.result.stock_600905.options[0].hot
         # 文档标题
@@ -69,8 +71,8 @@ class Shares_temper_t(scrapy.Spider):
             hot = hot / (hot + low)
 
         item_loader = ItemLoader(item=SharesItems.Items())
-        item_loader.add_value("code", code.decode(encoding = "utf-8"))
-        item_loader.add_value("temper_dongfangcaifu", hot)
+        item_loader.add_value("code", code)
+        item_loader.add_value("temper_dongfangcaifu", hot  * 10000)
 
         return item_loader.load_item()
 
