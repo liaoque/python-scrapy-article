@@ -72,7 +72,7 @@ class Shares_temper_t(scrapy.Spider):
 
         item_loader = ItemLoader(item=SharesItems.Items())
         item_loader.add_value("code", code)
-        item_loader.add_value("temper_dongfangcaifu", hot  * 10000)
+        item_loader.add_value("temper_tonghuashun", hot  * 10000)
 
         return item_loader.load_item()
 
