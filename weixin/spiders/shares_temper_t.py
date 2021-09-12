@@ -39,6 +39,28 @@ class Shares_temper_t(scrapy.Spider):
         db.close()
         _list = []
         for url in results:
+            # 深市A股的代码是以000打头
+            # 中小板的代码是002打头
+            # 深市是031打头
+
+            # 深圳B股的代码是以200打头
+            # 创业板的代码是300打头的股票代码
+            # 权证，沪市是580打头
+
+            # 沪市A股的代码是以600、601
+            # 或603打头
+
+            # 沪市新股申购的代码是以730打头
+            # 深市新股申购的代码与深市股票买卖代码一样
+            # 沪市以700打头，深市以080打头
+
+            # 沪市B股的代码是以900打头
+
+            if int(url[0]) > 100000 and int(url[0]) < 200000:
+                continue
+            if int(url[0]) > 400000 and int(url[0]) < 500000:
+                continue
+
             # 替换url获取下载地址
             if int(url[0]) < 600000:
                 _urtl = "https://bi.10jqka.com.cn/" + url[0] + "_33/online_user_latest.json"
