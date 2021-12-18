@@ -53,14 +53,12 @@ class Shares_name(scrapy.Spider):
             yield scrapy.Request(url, headers=self.headers, callback=self.parse_content,dont_filter=True)
 
     def parse_content(self, response):
-        print(response.text)
         result = json.loads(response.text)
         self.total = result["data"]["total"] / 200 + 1
         area = response.request.headers.getlist('area')[0].decode("UTF-8")
         for item in result["data"]["diff"]:
             name = item["f14"] + ""
             code = item["f12"] + ""
-            print(name, code)
             item_loader = ItemLoader(item=SharesItems.Items())
             item_loader.add_value("code", code)
             item_loader.add_value("name", name)

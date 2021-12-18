@@ -73,6 +73,7 @@ class Items(scrapy.Item):
     def save_one(self, cursor):
         code = self['code'][0]
         area_id = self.area_map[self['area_id'][0]]
+        print(self['area_id'][0], area_id)
         cursor = self.findByCode(cursor, code)
         if cursor.rowcount:
             data = cursor.fetchall()

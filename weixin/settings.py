@@ -105,7 +105,6 @@ database = cp.get("db", "db_database")
 user = cp.get("db", "db_user")
 password = cp.get("db", "db_pass")
 
-print(host)
 MYSQL_HOST = host
 MYSQL_DBNAME = database
 MYSQL_USER = user
