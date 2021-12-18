@@ -49,6 +49,7 @@ class Shares_name(scrapy.Spider):
         n = 1
         while n <= self.total:
             url = self.get_url(n, area)
+            n = n + 1
             yield scrapy.Request(url, headers=self.headers, callback=self.parse_content)
 
     def parse_content(self, response):
