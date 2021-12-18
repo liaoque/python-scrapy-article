@@ -43,7 +43,7 @@ class Shares_name(scrapy.Spider):
     def parse_each(self, response):
         result = json.loads(response.text)
         total = result["data"]["total"] / 200 + 1
-        area = response.request.headers.getlist('area')[0]
+        area = response.request.headers.getlist('area')[0].decode("UTF-8")
         self.headers['area'] = area
         area = self.area_map[area]
         n = 1
@@ -54,7 +54,7 @@ class Shares_name(scrapy.Spider):
     def parse_content(self, response):
         result = json.loads(response.text)
         self.total = result["data"]["total"] / 200 + 1
-        area = response.request.headers.getlist('area')[0]
+        area = response.request.headers.getlist('area')[0].decode("UTF-8")
         for item in result["data"]["diff"]:
             name = item["f14"] + ""
             code = item["f12"] + ""
