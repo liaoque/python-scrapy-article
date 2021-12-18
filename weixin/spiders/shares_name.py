@@ -44,17 +44,17 @@ class Shares_name(scrapy.Spider):
         result = json.loads(response.text)
         total = result["data"]["total"] / 200 + 1
         area = response.request.headers.getlist('area')[0].decode("UTF-8")
-        self.headers['area'] = area
-        area = self.area_map[area]
         n = 1
         while n <= total:
-            url = self.get_url(n, area)
+            url = self.get_url(n, self.area_map[area])
+            self.headers['area'] = area
             print(url)
             n = n + 1
             yield scrapy.Request(url, headers=self.headers, callback=self.parse_content)
 
     def parse_content(self, response):
         result = json.loads(response.text)
+        print(result)
         self.total = result["data"]["total"] / 200 + 1
         area = response.request.headers.getlist('area')[0].decode("UTF-8")
         for item in result["data"]["diff"]:
