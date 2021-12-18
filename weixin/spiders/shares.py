@@ -85,7 +85,7 @@ class Shares(scrapy.Spider):
         pass
 
     def findStoks(self):
-        sql = 'select code,name,area_id from mc_shares_name limit 1';
+        sql = 'select code,name,area_id from mc_shares_name';
         results = []
         try:
             # 执行SQL语句
