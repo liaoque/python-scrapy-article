@@ -16,7 +16,9 @@ class Shares(scrapy.Spider):
     allowed_domains = ['.eastmoney.com']
     start_urls = []
     headers = {
-        "HOST": "push2.eastmoney.com"
+        "HOST": "push2.eastmoney.com",
+        "Content-Type": "application/x-www-form-urlencoded",
+        'User-Agent': "Android/4.4.2/2.1.37_0923_yybao/864394010252171/b4dd214d26c744bba9f271c1ac8cfaf7/FC:AA:14:99:2E:B6/FCAA14992EB60000"
     }
     db = None
     cursor = None
@@ -61,7 +63,7 @@ class Shares(scrapy.Spider):
 
     def parse_content(self, response):
         result = json.loads(response.text)
-        print(response)
+        print(response.text)
         # title = response.css('span a::text').extract_first();
         # url = response.css('span a::attr(href)').extract_first();
         # img = response.css('img::attr(src)').extract_first();
@@ -96,9 +98,8 @@ class Shares(scrapy.Spider):
             print("Error: unable to fecth data")
         return results
 
-
     def findStokByCode(self, code):
-        sql = 'SELECT code,name,date_as FROM `mc_shares` WHERE CODE = %s ORDER BY date_as DESC LIMIT 1'%(code);
+        sql = 'SELECT code,name,date_as FROM `mc_shares` WHERE CODE = %s ORDER BY date_as DESC LIMIT 1' % (code);
         results = []
         try:
             # 执行SQL语句
