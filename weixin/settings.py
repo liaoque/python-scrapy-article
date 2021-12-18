@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import configparser
 # Scrapy settings for weixin project
 #
 # For simplicity, this file contains only settings considered important or
@@ -98,9 +98,16 @@ AUTOTHROTTLE_ENABLED = True
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
+cp = configparser.ConfigParser()
+cp.read("config.ini")
+host = cp.get("db", "db_host")
+database = cp.get("db", "db_database")
+user = cp.get("db", "db_user")
+password = cp.get("db", "db_pass")
 
-MYSQL_HOST = "127.0.0.1"
-MYSQL_DBNAME = "article_spider"
-MYSQL_USER = "root"
+print(host)
+MYSQL_HOST = host
+MYSQL_DBNAME = database
+MYSQL_USER = user
 MYSQL_PORT = 3306
-MYSQL_PASSWORD = "123456"
+MYSQL_PASSWORD = password
