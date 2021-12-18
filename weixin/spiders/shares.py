@@ -25,7 +25,7 @@ class Shares(scrapy.Spider):
 
     def get_url(self, code, days):
         if days <= 0:
-            days = 1000000
+            days = 100
         return 'https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=' + \
                str(code) + '&cb=&klt=101&fqt=0&lmt=' + str(days) + \
                '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
