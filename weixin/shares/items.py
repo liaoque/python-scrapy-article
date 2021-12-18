@@ -77,8 +77,7 @@ class Items(scrapy.Item):
         cursor = self.findByCode(cursor, code)
         if cursor.rowcount:
             data = cursor.fetchall()
-            print(data)
-            if data[0][0] != 0:
+            if data[0]['area_id'] != 0:
                 sql = "update mc_shares_name set area_id = '%s'  WHERE code = %s" % (area_id, code)
                 cursor.execute(sql);
 
