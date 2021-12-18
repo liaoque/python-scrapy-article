@@ -64,6 +64,5 @@ class Items(scrapy.Item):
 
     def exitsByCode(self, cursor, code, date_as):
         sql = "SELECT id FROM mc_shares  WHERE code = '%s' and date_as='%s'" % (code, date_as)
-        print(sql)
         cursor.execute(sql);
         return cursor.rowcount
