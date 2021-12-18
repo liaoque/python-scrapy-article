@@ -16,8 +16,7 @@ class Shares(scrapy.Spider):
     allowed_domains = ['.eastmoney.com']
     start_urls = []
     headers = {
-        "HOST": "push2.eastmoney.com",
-        "Content-Type": "application/x-www-form-urlencoded",
+        "HOST": "push2his.eastmoney.com",
         'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
     }
     db = None
