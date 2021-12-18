@@ -65,4 +65,4 @@ class Shares_name(scrapy.Spider):
             item_loader.add_value("code", code)
             item_loader.add_value("name", name)
             item_loader.add_value("area_id", area)
-            pass
+            yield item_loader.load_item()
