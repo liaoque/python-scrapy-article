@@ -39,9 +39,13 @@ class Shares_temper(scrapy.Spider):
         db.close()
         _list = []
         for url in results:
-            if int(url[0]) > 100000 and int(url[0]) < 200000:
-                continue
-            if int(url[0]) > 400000 and int(url[0]) < 500000:
+            print(url[0])
+            try:
+                if int(url[0]) > 100000 and int(url[0]) < 200000:
+                    continue
+                if int(url[0]) > 400000 and int(url[0]) < 500000:
+                    continue
+            except ValueError:
                 continue
 
             # 替换url获取下载地址

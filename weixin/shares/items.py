@@ -7,8 +7,6 @@
 
 import scrapy
 import re
-from weixin.utils.common import md5
-from weixin.utils.htmlfilter import filter_tags
 
 
 class Items(scrapy.Item):
@@ -26,44 +24,29 @@ class Items(scrapy.Item):
     buy_sum = scrapy.Field()
     date_as = scrapy.Field()
     temper_tonghuashun = scrapy.Field()
+    area_id = scrapy.Field()
     temper_dongfangcaifu = scrapy.Field()
-
+    area_map = {
+        "SH": 1,
+        "SZ": 2,
+        "BJ": 3,
+    }
 
     def save(self, cursor):
+
         code = self['code'][0]
-
-        if 'temper_tonghuashun' in self:
-            temper_tonghuashun = self['temper_tonghuashun'][0]
-            sql = "update mc_shares_name set temper_tonghuashun = '%d'  WHERE code = %s" % (temper_tonghuashun, code)
-            cursor.execute(sql);
+        if 'area_id' in self:
+            self.save_one(cursor)
             return
-
-
+        if 'temper_tonghuashun' in self:
+            self.save_temper_tonghuashun(cursor)
+            return
         if 'temper_dongfangcaifu' in self:
-            temper_dongfangcaifu = self['temper_dongfangcaifu'][0]
-            sql = "update mc_shares_name set temper_dongfangcaifu = '%d'  WHERE code = %s" % (temper_dongfangcaifu, code)
-            # print(sql)
-            cursor.execute(sql);
+            self.save_temper_dongfangcaifu(cursor)
             return
 
         date_as = self['date_as'][0]
-        sql = "SELECT code FROM mc_shares_name  WHERE code = '%s'" % code
-
-        cursor.execute(sql);
-        if cursor.rowcount != 1:
-            sql = """
-            INSERT INTO mc_shares_name (name, code)
-            VALUES (%s, %s)
-            """;
-            params = (
-                self["name"][0],
-                code
-            )
-            cursor.execute(sql, params)
-        pass   
-
         sql = "SELECT id FROM mc_shares  WHERE code = '%s' and date_as='%s'" % (code, date_as)
-        # print(self)
         cursor.execute(sql);
         if cursor.rowcount:
             return
@@ -87,4 +70,41 @@ class Items(scrapy.Item):
         pass
     pass
 
+    def save_one(self, cursor):
+        code = self['code'][0]
+        area_id = self.area_map[self['area_id'][0]]
+        cursor = self.findByCode(cursor, code)
+        if cursor.rowcount:
+            data = cursor.fetchall()
+            if data[0][0] != 0:
+                sql = "update mc_shares_name set area_id = '%d'  WHERE code = %s" % (area_id, code)
+                cursor.execute(sql);
 
+        sql = """
+                    INSERT INTO mc_shares_name (name, code, area_id)
+                    VALUES (%s, %s, %d)
+                    """;
+        params = (
+            self["name"][0],
+            code,
+            area_id,
+        )
+        cursor.execute(sql, params)
+
+    def save_temper_tonghuashun(self, cursor):
+        code = self['code'][0]
+        temper_tonghuashun = self['temper_tonghuashun'][0]
+        sql = "update mc_shares_name set temper_tonghuashun = '%d'  WHERE code = %s" % (temper_tonghuashun, code)
+        cursor.execute(sql);
+
+    def save_temper_dongfangcaifu(self, cursor):
+        code = self['code'][0]
+        temper_dongfangcaifu = self['temper_dongfangcaifu'][0]
+        sql = "update mc_shares_name set temper_dongfangcaifu = '%d'  WHERE code = %s" % (
+            temper_dongfangcaifu, code)
+        cursor.execute(sql);
+
+    def findByCode(self, cursor, code):
+        sql = "SELECT area_id FROM mc_shares_name  WHERE code = '%s'" % code
+        cursor.execute(sql);
+        return cursor
