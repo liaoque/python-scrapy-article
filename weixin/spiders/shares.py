@@ -18,7 +18,7 @@ class Shares(scrapy.Spider):
     headers = {
         "HOST": "push2.eastmoney.com",
         "Content-Type": "application/x-www-form-urlencoded",
-        'User-Agent': "Android/4.4.2/2.1.37_0923_yybao/864394010252171/b4dd214d26c744bba9f271c1ac8cfaf7/FC:AA:14:99:2E:B6/FCAA14992EB60000"
+        'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
     }
     db = None
     cursor = None
@@ -56,6 +56,7 @@ class Shares(scrapy.Spider):
             else:
                 s_code = "0." + code
             url = self.get_url(s_code, days)
+            print(url)
             yield scrapy.Request(url,
                                  headers=self.headers,
                                  dont_filter=True,
