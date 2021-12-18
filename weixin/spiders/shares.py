@@ -58,7 +58,6 @@ class Shares(scrapy.Spider):
                                  headers=self.headers,
                                  dont_filter=True,
                                  callback=self.parse_content)
-        pass
 
     def parse_content(self, response):
         result = json.loads(response.text)
@@ -86,7 +85,7 @@ class Shares(scrapy.Spider):
         pass
 
     def findStoks(self):
-        sql = 'select code,name,area_id from mc_shares_name';
+        sql = 'select code,name,area_id from mc_shares_name limit 1';
         results = []
         try:
             # 执行SQL语句
