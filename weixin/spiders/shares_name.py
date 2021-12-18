@@ -50,7 +50,7 @@ class Shares_name(scrapy.Spider):
             self.headers['area'] = area
             print(url)
             n = n + 1
-            yield scrapy.Request(url, headers=self.headers, callback=self.parse_content)
+            yield scrapy.Request(url, headers=self.headers, callback=self.parse_content,dont_filter=True)
 
     def parse_content(self, response):
         print(response.text)
