@@ -78,12 +78,12 @@ class Items(scrapy.Item):
         if cursor.rowcount:
             data = cursor.fetchall()
             if data[0][0] != 0:
-                sql = "update mc_shares_name set area_id = '%d'  WHERE code = %s" % (area_id, code)
+                sql = "update mc_shares_name set area_id = '%s'  WHERE code = %s" % (area_id, code)
                 cursor.execute(sql);
 
         sql = """
                     INSERT INTO mc_shares_name (name, code, area_id)
-                    VALUES (%s, %s, %d)
+                    VALUES (%s, %s, %s)
                     """;
         params = (
             self["name"][0],
