@@ -53,8 +53,8 @@ class Shares_name(scrapy.Spider):
             yield scrapy.Request(url, headers=self.headers, callback=self.parse_content)
 
     def parse_content(self, response):
+        print(response.text)
         result = json.loads(response.text)
-        print(result)
         self.total = result["data"]["total"] / 200 + 1
         area = response.request.headers.getlist('area')[0].decode("UTF-8")
         for item in result["data"]["diff"]:
