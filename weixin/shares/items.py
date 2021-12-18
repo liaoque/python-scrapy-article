@@ -80,7 +80,7 @@ class Items(scrapy.Item):
             if data[0]['area_id'] != 0:
                 sql = "update mc_shares_name set area_id = '%s'  WHERE code = %s" % (area_id, code)
                 cursor.execute(sql);
-
+            return
         sql = """
                     INSERT INTO mc_shares_name (name, code, area_id)
                     VALUES (%s, %s, %s)
