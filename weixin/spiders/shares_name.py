@@ -60,7 +60,7 @@ class Shares_name(scrapy.Spider):
             name = item["f14"] + ""
             code = item["f12"] + ""
             item_loader = ItemLoader(item=SharesItems.Items())
-            item_loader.add_value("code", code.decode(encoding="utf-8"))
+            item_loader.add_value("code", code)
             item_loader.add_value("name", name.decode(encoding="utf-8"))
             item_loader.add_value("area_id", area)
             pass
