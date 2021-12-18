@@ -61,7 +61,7 @@ class Shares(scrapy.Spider):
 
     def parse_content(self, response):
         result = json.loads(response.text)
-        print(result["data"]["klines"])
+        print(response.text)
         # title = response.css('span a::text').extract_first();
         # url = response.css('span a::attr(href)').extract_first();
         # img = response.css('img::attr(src)').extract_first();
