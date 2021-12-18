@@ -14,9 +14,9 @@ class Shares_name(scrapy.Spider):
     allowed_domains = ['.eastmoney.com']
     start_urls = []
     area_map = {
-        "SH": "m:0+t:6,m:0+t:80",
-        "SZ": "m:0+t:6,m:0+t:80",
-        "BJ": "m:0+t:6,m:0+t:80",
+        "SH": "m:1 t:2,m:1 t:23",
+        "SZ": "m:0 t:6,m:0 t:80",
+        "BJ": "m:0 t:81 s:2048",
     }
     headers = {
         "HOST": "push2.eastmoney.com"
