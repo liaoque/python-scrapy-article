@@ -25,8 +25,9 @@ class SharesName(SharesNameModels):
         itemListLen = len(itemList)
         x_data = np.array([v for v in range(0, itemListLen)])
         kk = kd['k'][~np.isnan(kd['k'])]
-        kd = kd['d'][~np.isnan(kd['d'])]
         kj = kd['j'][~np.isnan(kd['j'])]
+        kd = kd['d'][~np.isnan(kd['d'])]
+
 
 
         data1 = Scatter(x=x_data, y=kk, mode='lines', name='test', opacity=0.8, marker_color='red')

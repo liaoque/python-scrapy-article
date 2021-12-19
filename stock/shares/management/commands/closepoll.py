@@ -34,8 +34,9 @@ class Command(BaseCommand):
             itemListLen = len(itemList)
             x = np.array([v for v in range(0,  itemListLen)])
             ky = kd['k']
-            kd = kd['k']
             kj = kd['j']
+            kd = kd['d']
+
 
             print(kj)
             break
