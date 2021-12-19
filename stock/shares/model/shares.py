@@ -19,7 +19,7 @@ class Shares(models.Model):
 
     class Meta:
         db_table = "mc_shares"
-        abstract = True
+        # abstract = True
 
     def __str__(self):
         return self.name + ":" + datetime.strftime(self.date_as,'%Y-%m-%d')

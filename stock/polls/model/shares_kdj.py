@@ -8,6 +8,8 @@ from shares.model.shares_kdj import SharesKdj as SharesKdjModels
 
 
 class SharesKdj(SharesKdjModels):
+    class Meta:
+        proxy = True
 
     def __str__(self):
         return self.name

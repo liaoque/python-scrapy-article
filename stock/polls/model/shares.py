@@ -6,6 +6,8 @@ from shares.model.shares import Shares as SharesModels
 
 
 class Shares(SharesModels):
+    class Meta:
+        proxy = True
 
     def __str__(self):
         return self.name + ":" + datetime.strftime(self.date_as,'%Y-%m-%d')

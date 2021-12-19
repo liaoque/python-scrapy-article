@@ -15,7 +15,7 @@ class SharesKdj(models.Model):
 
     class Meta:
         db_table = "mc_shares_kdj"
-        abstract = True
+        # abstract = True
 
     def __str__(self):
         return self.name

@@ -14,10 +14,14 @@ from plotly.graph_objs import Scatter
 
 class SharesName(SharesNameModels):
 
+    class Meta:
+        proxy = True
+
     @admin.display
     def shares(self):
         itemList = SharesModels.objects.filter(code_id=self.code).all()
-        # itemList = self.code.shares_set.all()
+
+        itemList = self.code.shares_set.all()
         kd = self.talib_KDJ(itemList)
         itemListLen = len(itemList)
         x_data = np.array([v for v in range(0, itemListLen)])
@@ -30,11 +34,7 @@ class SharesName(SharesNameModels):
         data3 = Scatter(x=x_data, y=kj, mode='lines', name='test', opacity=0.8, marker_color='red')
         plot_div = plot([data1, data2, data3], output_type='div')
         # context = {'plot_div': plot_div}
-        # print(self.shares_set)
-
-
         return plot_div
-        # return self.shares_set.all()
 
     def __str__(self):
         return self.name
