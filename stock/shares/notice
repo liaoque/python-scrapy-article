@@ -1,0 +1,7 @@
+
+
+# python manage.py startapp shares 创建模块
+
+# python manage.py makemigrations shares 创建 迁移模型
+# python manage.py sqlmigrate shares 0002 展示sql
+# python manage.py migrate 迁移

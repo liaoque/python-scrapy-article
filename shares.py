@@ -39,7 +39,7 @@ for item in result:
 
     sql = "SELECT ms.id, ms.date_as, mp. p_p_range FROM mc_shares ms" \
           " left join mc_shares_p_p_range mp on mp.share_id = ms.id " \
-          "WHERE ms.code = '%s' and ms.date_as<='%s' order by ms.date_as desc limit 5" % (code, date_as)
+          "WHERE ms.code_id = '%s' and ms.date_as<='%s' order by ms.date_as desc limit 5" % (code, date_as)
     cursor.execute(sql)
     if cursor.rowcount == 0:
         continue
@@ -82,14 +82,14 @@ for item in result:
 
     date_as = date_as
 
-    sql = "SELECT id FROM mc_shares_last_three_day  WHERE code = '%s' and date_as='%s'" % (code, date_as)
+    sql = "SELECT id FROM mc_shares_last_three_day  WHERE code_id = '%s' and date_as='%s'" % (code, date_as)
     cursor.execute(sql)
 
     if cursor.rowcount:
         continue
 
     sql = """
-        INSERT INTO mc_shares_last_three_day (name, code, one, one_p_range, two, two_p_range, three, three_p_range, four, four_p_range, five, five_p_range, date_as)
+        INSERT INTO mc_shares_last_three_day (name, code_id, one, one_p_range, two, two_p_range, three, three_p_range, four, four_p_range, five, five_p_range, date_as)
         VALUES (%s, %s, %s,  %s,  %s, %s, %s, %s,  %s,  %s,  %s,%s,  %s)
         """;
     params = (

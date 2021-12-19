@@ -7,3 +7,20 @@ scrapy-crawlera  #ip代理 收费
 pip install mysqlclient
 pip install scrapy_proxies
 pip install fake-useragent
+
+
+pip install django
+
+sudo wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+tar -xzf ta-lib-0.4.0-src.tar.gz （or sudo tar -xzf ta-lib-0.4.0-src.tar.gz）
+cd ta-lib/
+sudo ./configure (if gcc is missing, install it by doing “apt-get install build-essential”)
+sudo make
+sudo make install
+pip install ta-lib
+
+
+brew install mysql-client
+echo 'export PATH="/usr/local/opt/mysql-client/bin:$PATH"' >> ~/.bash_profile
+export PATH="/usr/local/opt/mysql-client/bin:$PATH"
+pip install mysqlclient

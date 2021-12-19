@@ -25,7 +25,7 @@ cursor = db.cursor()
 sql = 'select id from mc_shares_p_p_range where share_id in (select max(id) from mc_shares) '
 cursor.execute(sql)
 if cursor.rowcount == 0:
-    sql = 'insert into mc_shares_p_p_range(share_id, p_end, min_end, p_p_range)select id, p_end, min(p_end) as p_p_end, (min(p_end) - p_end) / p_end * 10000 from mc_shares group by code order by date_as desc '
+    sql = 'insert into mc_shares_p_p_range(share_id, p_end, min_end, p_p_range)select id, p_end, min(p_end) as p_p_end, (min(p_end) - p_end) / p_end * 10000 from mc_shares group by code_id order by date_as desc '
     cursor.execute(sql)
 
 

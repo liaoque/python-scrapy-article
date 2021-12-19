@@ -99,7 +99,7 @@ class Shares(scrapy.Spider):
         return results
 
     def findStokByCode(self, code):
-        sql = 'SELECT code,name,date_as FROM `mc_shares` WHERE CODE = %s ORDER BY date_as DESC LIMIT 1' % (code);
+        sql = 'SELECT code_id as code,name,date_as FROM `mc_shares` WHERE code_id = %s ORDER BY date_as DESC LIMIT 1' % (code);
         results = []
         try:
             # 执行SQL语句

@@ -1,5 +1,6 @@
 import datetime
 
+
 from django.db import models
 from django.utils import timezone
 
@@ -28,8 +29,3 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
-
-
-class Kdj(models.Model):
-    title = models.CharField(title=20)
-    pub_date = models.DateTimeField('date published')
