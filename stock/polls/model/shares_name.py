@@ -11,12 +11,10 @@ from plotly.graph_objs import Scatter
 
 class SharesName(SharesNameModels):
 
-    @admin.display(empty_value='???')
-    def view_code(self, obj):
-        return 222
+
 
     @admin.display
-    def colored_name(self):
+    def shares(self):
         x_data = [0, 1, 2, 3]
         y_data = [x ** 2 for x in x_data]
         data = Scatter(x=x_data, y=y_data, mode='lines', name='test', opacity=0.8, marker_color='red')

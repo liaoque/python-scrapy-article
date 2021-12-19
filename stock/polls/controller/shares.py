@@ -13,5 +13,5 @@ class SharesNameAdmin(admin.ModelAdmin):
     change_form_template = "shares/detail.html"
 
     class Meta():
-        fields = ('name', 'code','colored_name' )
+        fields = ('name', 'code','shares' )
 
