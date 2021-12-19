@@ -23,6 +23,6 @@ class Command(BaseCommand):
 
     def calculateKdj(self):
         for item in SharesName.objects.all():
-            print(item)
+            print(item.shares_set)
             break
         pass

@@ -13,8 +13,8 @@ class Shares(models.Model):
     p_start = models.IntegerField(default=0)
     p_end = models.IntegerField(default=0)
     p_range = models.IntegerField(default=0)
-    p_count = models.IntegerField(default=0)
-    p_sum = models.IntegerField(default=0)
+    buy_count = models.IntegerField(default=0)
+    buy_sum = models.IntegerField(default=0)
     date_as = models.DateField()
 
     class Meta:
