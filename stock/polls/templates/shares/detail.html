@@ -35,7 +35,7 @@
   {% block field_sets %}
     <p>代码：{{ original.code }}</p>
     <p>股票：{{ original.name }}</p>
-    <p>{{ original.colored_name |safe }}</p>
+    <p>{{ original.shares |safe }}</p>
   {% endblock %}
 
   {% block after_field_sets %}  {% endblock %}
