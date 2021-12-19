@@ -1,0 +1,57 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrahead %}{{ block.super }}
+<script src="{% url 'admin:jsi18n' %}"></script>
+{{ media }}
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app- model- change-form{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+{% endblock %}
+{% endif %}
+
+{% block content %}
+  <div id="content-main">
+  {% block object-tools %}
+      {% if change %}
+        {% if not is_popup %}
+        <ul class="object-tools">
+          {% block object-tools-items %}
+            {% change_form_object_tools %}
+          {% endblock %}
+        </ul>
+        {% endif %}
+      {% endif %}
+  {% endblock %}
+  <div>
+
+  {% block field_sets %}
+    <p>代码：{{ original.code }}</p>
+    <p>股票：{{ original.name }}</p>
+    <p>{{ original.colored_name |safe }}</p>
+  {% endblock %}
+
+  {% block after_field_sets %}  {% endblock %}
+
+  {% block inline_field_sets %}
+
+  {% endblock %}
+
+  {% block after_related_objects %}  {% endblock %}
+
+
+  {% block admin_change_form_document_ready %}
+
+  {% endblock %}
+
+
+  </div>
+  </form></div>
+{% endblock %}

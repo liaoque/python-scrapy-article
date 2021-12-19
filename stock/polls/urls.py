@@ -10,7 +10,8 @@ urlpatterns = [
     path('<int:question_id>/vote/', vote, name='vote'),
 
 
-    path('shares/', SharesView.as_view(), name='index'),
+    # path('shares/', SharesView.as_view(), name='index'),
+    # path('mzq/shares/<str:pk>/', SharesView.as_view(), name='shares_name_view'),
 
     # path('', views.index, name='index'),
     #

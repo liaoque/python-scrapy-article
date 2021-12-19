@@ -4,27 +4,17 @@ from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,Http404,HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
+from django.utils.html import format_html
 from django.views import generic
 
 # from ..model.shares import Shares
 from ..model.shares_name import SharesName
 
-class SharesView(generic.ListView):
-    template_name = 'shares/index.html'
-    context_object_name = 'latest_question_list'
+class SharesView(generic.DetailView):
+    template_name = 'shares/detail.html'
+    model = SharesName
 
-    def get_queryset(self):
-        """Return the last five published questions."""
-        return SharesName.objects.order_by('-id')[:5]
-#
-# class DetailView(generic.DetailView):
-#     model = Shares
-#     template_name = 'polls/detail.html'
-#
-#
-# class ResultsView(generic.DetailView):
-#     model = Shares
-#     template_name = 'polls/results.html'
+
 
 
 # def index(request):
