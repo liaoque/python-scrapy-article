@@ -13,6 +13,7 @@ class SharesName(models.Model):
 
     class Meta:
         db_table = "mc_shares_name"
+        abstract = True
 
     def __str__(self):
         return self.name
