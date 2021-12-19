@@ -51,6 +51,6 @@ class SharesName(SharesNameModels):
                                                        fastk_period=fastk_period,
                                                        slowk_period=slowk_period,
                                                        slowd_period=slowd_period)
-        # indicators['j'] = 3 * indicators['k'] - 2 * indicators['d']
-        indicators['j'] = 3 * indicators['d'] - 2 * indicators['k']
+        indicators['j'] = 3 * indicators['k'] - 2 * indicators['d']
+        # indicators['j'] = 3 * indicators['d'] - 2 * indicators['k']
         return indicators
