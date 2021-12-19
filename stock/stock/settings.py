@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure--xlnyfew@xbrq-oy8*^8h*t+mt8v7h2-(97s0^!88cef%9-y5=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -79,6 +79,7 @@ host = cp.get("db", "db_host")
 database = cp.get("db", "db_database")
 user = cp.get("db", "db_user")
 password = cp.get("db", "db_pass")
+port = cp.get("db", "db_port")
 # if host == '127.0.0.1':
 #     host = 'localhost'
 
@@ -89,7 +90,7 @@ DATABASES = {
         'USER': user,
         'PASSWORD': password,
         'HOST': host,
-        'PORT': '53307',
+        'PORT': port,
         'TBLSPACE': 'stock_'
     }
 }
