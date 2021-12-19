@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import configparser
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,13 +76,20 @@ WSGI_APPLICATION = 'stock.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+cp = configparser.ConfigParser()
+cp.read("config.ini")
+host = cp.get("db", "db_host")
+database = cp.get("db", "db_database")
+user = cp.get("db", "db_user")
+password = cp.get("db", "db_pass")
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'article_spider',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
+        'NAME': database,
+        'USER': user,
+        'PASSWORD': password,
+        'HOST': host,
         'PORT': '53307',
         'TBLSPACE': 'stock_'
     }
