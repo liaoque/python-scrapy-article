@@ -3,8 +3,8 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.contrib import admin
 
+from .shares import Shares as SharesModels
 from shares.model.shares_name import SharesName as SharesNameModels
-from shares.model.shares import Shares as SharesModels2
 # Create your models here.
 import numpy as np
 import talib
@@ -16,7 +16,7 @@ class SharesName(SharesNameModels):
 
     @admin.display
     def shares(self):
-        itemList = SharesModels2.objects.filter(code_id=self.code).all()
+        itemList = SharesModels.objects.filter(code_id=self.code).all()
         # itemList = self.code.shares_set.all()
         kd = self.talib_KDJ(itemList)
         itemListLen = len(itemList)

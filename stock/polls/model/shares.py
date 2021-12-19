@@ -1,5 +1,4 @@
 from django.db import models
-from .shares_name import SharesName
 from datetime import datetime
 from shares.model.shares import Shares as SharesModels
 # Create your models here.
