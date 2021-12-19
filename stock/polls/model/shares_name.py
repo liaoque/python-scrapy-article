@@ -21,7 +21,7 @@ class SharesName(SharesNameModels):
     def shares(self):
         itemList = SharesModels.objects.filter(code_id=self.code).all()
 
-        itemList = self.code.shares_set.all()
+        # itemList = self.code.shares_set.all()
         kd = self.talib_KDJ(itemList)
         itemListLen = len(itemList)
         x_data = np.array([v for v in range(0, itemListLen)])
