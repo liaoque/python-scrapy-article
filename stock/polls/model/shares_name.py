@@ -31,8 +31,8 @@ class SharesName(SharesNameModels):
 
 
         data1 = Scatter(x=x_data, y=kk, mode='lines', name='test', opacity=0.8, marker_color='red')
-        data2 = Scatter(x=x_data, y=kd, mode='lines', name='test', opacity=0.8, marker_color='red')
-        data3 = Scatter(x=x_data, y=kj, mode='lines', name='test', opacity=0.8, marker_color='red')
+        data2 = Scatter(x=x_data, y=kd, mode='lines', name='test', opacity=0.8, marker_color='blue')
+        data3 = Scatter(x=x_data, y=kj, mode='lines', name='test', opacity=0.8, marker_color='orange')
         plot_div = plot([data1, data2, data3], output_type='div')
         # context = {'plot_div': plot_div}
         return plot_div
