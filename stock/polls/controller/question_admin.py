@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .polls.model.choice import Choice
-from .polls.model.question import Question
+from ..model.choice import Choice
+from ..model.question import Question
 
 
 

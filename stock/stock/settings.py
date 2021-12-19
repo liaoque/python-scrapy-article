@@ -79,8 +79,8 @@ host = cp.get("db", "db_host")
 database = cp.get("db", "db_database")
 user = cp.get("db", "db_user")
 password = cp.get("db", "db_pass")
-if host == '127.0.0.1':
-    host = 'localhost'
+# if host == '127.0.0.1':
+#     host = 'localhost'
 
 DATABASES = {
     'default': {

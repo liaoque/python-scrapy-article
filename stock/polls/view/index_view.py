@@ -6,8 +6,8 @@ from django.template import loader
 from django.urls import reverse
 from django.views import generic
 
-from .pools.model.choice import Choice
-from .pools.model.question import Question
+from ..model.choice import Choice
+from ..model.question import Question
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
