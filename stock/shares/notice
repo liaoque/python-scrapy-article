@@ -5,3 +5,9 @@
 # python manage.py makemigrations shares 创建 迁移模型
 # python manage.py sqlmigrate shares 0002 展示sql
 # python manage.py migrate 迁移
+
+
+# python manage.py createsuperuser 创建管理员
+
+
+# python manage.py  closepoll
