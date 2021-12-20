@@ -58,6 +58,6 @@ class SharesName(SharesNameModels):
                                                        slowd_matype=1)
         # indicators['j'] = 3 * indicators['k'] - 2 * indicators['d']
         # indicators['j'] = 3 * indicators['d'] - 2 * indicators['k']
-        indicators['j'] = list(map(lambda x, y: 3 * x - 2 * y, indicators['k'], indicators['d']))
+        indicators['j'] = np.array(list(map(lambda x, y: 3 * x - 2 * y, indicators['k'], indicators['d'])))
 
         return indicators
