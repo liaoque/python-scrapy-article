@@ -48,12 +48,14 @@ class Command(BaseCommand):
         high_prices = np.array([v.p_max / 100 for v in data])
         low_prices = np.array([v.p_min / 100 for v in data])
         close_prices = np.array([v.p_end / 100 for v in data])
+        slowk_period = 2 * slowk_period - 1
+        slowd_period = 2 * slowd_period - 1
         indicators['k'], indicators['d'] = talib.STOCH(high_prices, low_prices, close_prices,
                                                        fastk_period=fastk_period,
                                                        slowk_period=slowk_period,
-                                                       slowk_matype=0,
+                                                       slowk_matype=1,
                                                        slowd_period=slowd_period,
-                                                       slowd_matype=0)
+                                                       slowd_matype=1)
         # indicators['j'] = 3 * indicators['k'] - 2 * indicators['d']
         # indicators['j'] = 3 * indicators['d'] - 2 * indicators['k']
         indicators['j'] = list(map(lambda x, y: 3 * x - 2 * y, indicators['k'], indicators['d']))
