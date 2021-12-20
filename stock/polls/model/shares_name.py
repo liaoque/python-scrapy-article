@@ -22,7 +22,7 @@ class SharesName(SharesNameModels):
         itemList = self.shares_set.all()
         #
         kd = self.talib_KDJ(itemList)
-        return  (kd['j'])
+        return  (kd['j'])[~np.isnan(kd['j'])]
         itemListLen = 20
         x_data = np.array([v for v in range(0, itemListLen)])
         kk = kd['k'][~np.isnan(kd['k'])][-20:]
