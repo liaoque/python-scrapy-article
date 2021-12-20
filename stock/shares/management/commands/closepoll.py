@@ -51,6 +51,10 @@ class Command(BaseCommand):
         indicators['k'], indicators['d'] = talib.STOCH(high_prices, low_prices, close_prices,
                                                        fastk_period=fastk_period,
                                                        slowk_period=slowk_period,
-                                                       slowd_period=slowd_period)
-        indicators['j'] = 3 * indicators['k'] - 2 * indicators['d']
+                                                       slowk_matype=0,
+                                                       slowd_period=slowd_period,
+                                                       slowd_matype=0)
+        # indicators['j'] = 3 * indicators['k'] - 2 * indicators['d']
+        # indicators['j'] = 3 * indicators['d'] - 2 * indicators['k']
+        indicators['j'] = list(map(lambda x, y: 3 * x - 2 * y, indicators['k'], indicators['d']))
         return indicators
