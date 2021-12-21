@@ -42,7 +42,7 @@ class Command(BaseCommand):
 
             # 数据不存在
             itemList = item.shares_set.all()
-            if len(itemList):
+            if len(itemList) == 0:
                 continue
 
             # 数据不是今天的
