@@ -42,7 +42,7 @@ class Shares_name(scrapy.Spider):
         headers = copy.deepcopy(self.headers)
         headers['area'] = area
         url = self.get_url(1, self.area_map[area])
-        return scrapy.Request(url, headers=headers, callback=self.parse_each)
+        return scrapy.Request(url, headers=headers, callback=self.parse_each, dont_filter=True)
 
     def parse_each(self, response):
         result = json.loads(response.text)
