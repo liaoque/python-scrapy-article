@@ -25,10 +25,11 @@ class Command(BaseCommand):
         pass
 
     def calculateKdj(self):
-        for item in SharesName.objects.all():
+        for item in SharesName.objects.filter(status=1).all():
 
             code = item.code
             info = SharesKdj.objects.filter(code_id=code, date_as=datetime.now().date().strftime('%Y-%m-%d'))
+            print(item)
             if info != None:
                 continue
 
