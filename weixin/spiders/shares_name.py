@@ -20,7 +20,7 @@ class Shares_name(scrapy.Spider):
         "BJ": "m:0+t:81+s:2048",
     }
     headers = {
-        "HOST": "push2.eastmoney.com"
+        "HOST": "75.push2.eastmoney.com"
     }
 
     def get_url(self, n, area):
