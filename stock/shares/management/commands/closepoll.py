@@ -37,7 +37,7 @@ class Command(BaseCommand):
             ky = kd['k'][-1:]
             kj = kd['j'][-1:]
             kd = kd['d'][-1:]
-            shares = np.array(itemList)[-1:]
+            shares = np.array(itemList)[-1:][0]
             # SharesKdj.obj
             # b = SharesKdj(code_id=shares.code_id, k=ky, d=kd,j=kj, cycle_type=1, date_as=shares.date_as)
             # b.save()
