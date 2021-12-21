@@ -64,7 +64,7 @@ class Shares_name(scrapy.Spider):
             name = item["f14"] + ""
             code = item["f12"] + ""
             status = 1
-            if item["9"] == '-' and item["9"] =='-' :
+            if str(item["f9"]) == '-' and str(item["f23"]) =='-' :
                 status = 0
             item_loader = ItemLoader(item=SharesItems.Items())
             item_loader.add_value("code", code)
