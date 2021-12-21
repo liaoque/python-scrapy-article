@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
             code = item.code
             info = SharesKdj.objects.filter(code_id=code, date_as=datetime.now().date().strftime('%Y-%m-%d'))
-            print(item)
+            print(info)
             if info != None:
                 continue
 
