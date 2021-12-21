@@ -31,7 +31,7 @@ class Command(BaseCommand):
             # 写过了
             code = item.code
             sharesKdjList = SharesKdj.objects.filter(code_id=code, date_as=today)
-            print(len(sharesKdjList))
+            # print(len(sharesKdjList))
             if len(sharesKdjList):
                 continue
 
@@ -43,14 +43,14 @@ class Command(BaseCommand):
 
             # 数据不存在
             itemList = item.shares_set.all()
-            print(str(len(itemList)) +"---")
+            # print(str(len(itemList)) +"---")
             if len(itemList) == 0:
                 continue
 
             # 数据不是今天的
             shares = np.array(itemList)[-1:][0]
-            date_as = shares.date_as
-            if str(date_as) != today:
+            date_as = str(shares.date_as)
+            if date_as != today:
                 continue
 
             # 计算kdj
