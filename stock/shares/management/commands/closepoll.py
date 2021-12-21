@@ -56,12 +56,13 @@ class Command(BaseCommand):
             # 计算kdj
             print(code + "：" + date_as + "：开始计算kdj")
             kd = self.talib_KDJ(itemList)
+            # print("计算出未知数据", (code,  kd))
             # itemListLen = len(itemList)
             # x = np.array([v for v in range(0, itemListLen)])
-            ky = kd['k'][-1:]
-            kj = kd['j'][-1:]
-            kd = kd['d'][-1:]
-            print("计算出未知数据", (code, ky, kd, kj))
+            ky = kd['k'][-1:][0]
+            kj = kd['j'][-1:][0]
+            kd = kd['d'][-1:][0]
+
             if repr(ky) in ("inf", "nan") or repr(kj) in ("inf", "nan") or repr(kd) in ("inf", "nan"):
                 print("计算出未知数据", (code, ky, kd, kj))
                 continue
