@@ -31,6 +31,7 @@ class Command(BaseCommand):
             # 写过了
             code = item.code
             sharesKdjList = SharesKdj.objects.filter(code_id=code, date_as=today)
+            print(len(sharesKdjList))
             if len(sharesKdjList):
                 continue
 
@@ -42,6 +43,7 @@ class Command(BaseCommand):
 
             # 数据不存在
             itemList = item.shares_set.all()
+            print(len(itemList) +"---")
             if len(itemList) == 0:
                 continue
 
