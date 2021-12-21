@@ -28,8 +28,7 @@ class Command(BaseCommand):
         for item in SharesName.objects.filter(status=1).all():
 
             code = item.code
-            info = SharesKdj.objects.filter(code_id=code, date_as=datetime.now().date().strftime('%Y-%m-%d'))
-            print(info)
+            info = SharesKdj.objects.filter(code_id=code, date_as=datetime.now().date().strftime('%Y-%m-%d')).get()
             if info != None:
                 continue
 
