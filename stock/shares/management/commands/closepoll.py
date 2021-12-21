@@ -33,12 +33,13 @@ class Command(BaseCommand):
             kd = self.talib_KDJ(itemList)
             itemListLen = len(itemList)
             x = np.array([v for v in range(0,  itemListLen)])
-            ky = kd['k']
-            kj = kd['j']
-            kd = kd['d']
+            ky = kd['k'][-1:]
+            kj = kd['j'][-1:]
+            kd = kd['d'][-1:]
+            shares = itemList[-1:]
 
 
-            print(kj)
+            print(shares, ky, kj, kd)
             break
         pass
 
