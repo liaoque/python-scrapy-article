@@ -1,4 +1,5 @@
 import numpy as np
+from datetime import datetime
 from django.core.management.base import BaseCommand, CommandError
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
@@ -25,11 +26,18 @@ class Command(BaseCommand):
 
     def calculateKdj(self):
         for item in SharesName.objects.all():
+
+            code = item.code_id
+            info = SharesKdj.objects.filter(code_id=code, date_as=datetime.now().date().strftime('%Y-%m-%d'))
+            if info != None:
+                continue
+
             # print(map(lambda item: {
             #     'close': item.p_end / 100,
             #     'height': item.p_max / 100,
             #     'low': item.p_min / 100,
             # }, item.shares_set.all().values()))
+            print(item)
             itemList  = item.shares_set.all()
             kd = self.talib_KDJ(itemList)
             itemListLen = len(itemList)
