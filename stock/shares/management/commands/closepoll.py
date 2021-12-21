@@ -48,11 +48,11 @@ class Command(BaseCommand):
             # 数据不是今天的
             shares = np.array(itemList)[-1:][0]
             date_as = shares.date_as
-            print(date_as , today)
             if date_as != today:
                 continue
 
             # 计算kdj
+            print(code + "：" + date_as + "：开始计算kdj")
             kd = self.talib_KDJ(itemList)
             # itemListLen = len(itemList)
             # x = np.array([v for v in range(0, itemListLen)])
@@ -60,10 +60,8 @@ class Command(BaseCommand):
             kj = kd['j'][-1:]
             kd = kd['d'][-1:]
 
-            info = SharesKdj.objects.filter(code_id=code, date_as=date_as)
-            if info == None:
-                b = SharesKdj(code_id=code, k=ky, d=kd, j=kj, cycle_type=1, date_as=date_as)
-                b.save()
+            b = SharesKdj(code_id=code, k=ky, d=kd, j=kj, cycle_type=1, date_as=date_as)
+            b.save()
             # SharesKdj
             # print(shares, ky, kj, kd, shares.code_id)
             # break
