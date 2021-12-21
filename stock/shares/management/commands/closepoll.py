@@ -41,7 +41,7 @@ class Command(BaseCommand):
             # b = SharesKdj(code_id=shares.code_id, tagline='All the latest Beatles news.')
             # b.save()
             # SharesKdj
-            print(shares, ky, kj, kd)
+            print(shares, ky, kj, kd, shares.code_id)
             break
         pass
 
