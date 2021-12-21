@@ -10,6 +10,7 @@ class SharesName(models.Model):
     temper_tonghuashun = models.IntegerField(default=0)
     temper_dongfangcaifu = models.IntegerField(default=0)
     area_id = models.IntegerField(default=0)
+    status = models.IntegerField(default=0)
 
     class Meta:
         db_table = "mc_shares_name"

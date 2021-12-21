@@ -26,6 +26,7 @@ class Items(scrapy.Item):
     temper_tonghuashun = scrapy.Field()
     area_id = scrapy.Field()
     temper_dongfangcaifu = scrapy.Field()
+    status = scrapy.Field()
     area_map = {
         "SH": 1,
         "SZ": 2,
@@ -46,12 +47,16 @@ class Items(scrapy.Item):
 
     def save_one(self, cursor):
         code = self['code'][0]
+        status = self['status'][0]
         area_id = int(self.area_map[self['area_id'][0]])
         cursor = self.findByCode(cursor, code)
         if cursor.rowcount:
             data = cursor.fetchall()
             if data[0]['area_id'] != 0:
                 sql = "update mc_shares_name set area_id = '%s'  WHERE code = %s" % (area_id, code)
+                cursor.execute(sql);
+            if data[0]['status'] != status:
+                sql = "update mc_shares_name set status = '%s'  WHERE code = %s" % (status, code)
                 cursor.execute(sql);
             return
         sql = """
@@ -79,6 +84,6 @@ class Items(scrapy.Item):
         cursor.execute(sql);
 
     def findByCode(self, cursor, code):
-        sql = "SELECT area_id FROM mc_shares_name  WHERE code = '%s'" % code
+        sql = "SELECT area_id,status FROM mc_shares_name  WHERE code = '%s'" % code
         cursor.execute(sql);
         return cursor
