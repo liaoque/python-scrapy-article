@@ -38,10 +38,11 @@ class Command(BaseCommand):
             kj = kd['j'][-1:]
             kd = kd['d'][-1:]
             shares = np.array(itemList)[-1:]
-            # b = SharesKdj(code_id=shares.code_id, tagline='All the latest Beatles news.')
+            # SharesKdj.obj
+            # b = SharesKdj(code_id=shares.code_id, k=ky, d=kd,j=kj, cycle_type=1, date_as=shares.date_as)
             # b.save()
             # SharesKdj
-            print(shares, ky, kj, kd, shares.code_id)
+            print(shares, ky, kj, kd, shares['code_id'])
             break
         pass
 
