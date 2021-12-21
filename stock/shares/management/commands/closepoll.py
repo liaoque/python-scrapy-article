@@ -61,6 +61,7 @@ class Command(BaseCommand):
             ky = kd['k'][-1:]
             kj = kd['j'][-1:]
             kd = kd['d'][-1:]
+            print("计算出未知数据", (code, ky, kd, kj))
             if repr(ky) in ("inf", "nan") or repr(kj) in ("inf", "nan") or repr(kd) in ("inf", "nan"):
                 print("计算出未知数据", (code, ky, kd, kj))
                 continue
