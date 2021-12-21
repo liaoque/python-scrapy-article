@@ -40,8 +40,12 @@ class Command(BaseCommand):
             #     'low': item.p_min / 100,
             # }, item.shares_set.all().values()))
 
-            # 数据不是今天的
+            # 数据不存在
             itemList = item.shares_set.all()
+            if len(itemList):
+                continue
+
+            # 数据不是今天的
             shares = np.array(itemList)[-1:][0]
             date_as = shares.date_as
             if date_as != today:
@@ -49,8 +53,8 @@ class Command(BaseCommand):
 
             # 计算kdj
             kd = self.talib_KDJ(itemList)
-            itemListLen = len(itemList)
-            x = np.array([v for v in range(0, itemListLen)])
+            # itemListLen = len(itemList)
+            # x = np.array([v for v in range(0, itemListLen)])
             ky = kd['k'][-1:]
             kj = kd['j'][-1:]
             kd = kd['d'][-1:]
