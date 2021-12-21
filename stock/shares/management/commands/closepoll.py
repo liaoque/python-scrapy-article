@@ -31,7 +31,7 @@ class Command(BaseCommand):
             # 写过了
             code = item.code
             sharesKdjList = SharesKdj.objects.filter(code_id=code, date_as=today)
-            if sharesKdjList[0] != None:
+            if len(sharesKdjList):
                 continue
 
             # print(map(lambda item: {
