@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
     def calculateKdj(self):
         today = datetime.now().date().strftime('%Y-%m-%d')
-        for item in SharesName.objects.filter(status=1)[:1]:
+        for item in SharesName.objects.filter(status=1):
 
             # 写过了
             code = item.code
