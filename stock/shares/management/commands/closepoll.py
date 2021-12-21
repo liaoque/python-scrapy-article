@@ -25,11 +25,13 @@ class Command(BaseCommand):
         pass
 
     def calculateKdj(self):
-        for item in SharesName.objects.filter(status=1).all():
+        today = datetime.now().date().strftime('%Y-%m-%d')
+        for item in SharesName.objects.filter(status=1):
 
+            # 写过了
             code = item.code
-            info = SharesKdj.objects.get(code_id=code, date_as=datetime.now().date().strftime('%Y-%m-%d'))
-            if info != None:
+            sharesKdjList = SharesKdj.objects.filter(code_id=code, date_as=today)
+            if sharesKdjList[0] != None:
                 continue
 
             # print(map(lambda item: {
@@ -37,20 +39,25 @@ class Command(BaseCommand):
             #     'height': item.p_max / 100,
             #     'low': item.p_min / 100,
             # }, item.shares_set.all().values()))
-            print(item)
-            itemList  = item.shares_set.all()
+
+            # 数据不是今天的
+            itemList = item.shares_set.all()
+            shares = np.array(itemList)[-1:][0]
+            date_as = shares.date_as
+            if date_as != today:
+                continue
+
+            # 计算kdj
             kd = self.talib_KDJ(itemList)
             itemListLen = len(itemList)
-            x = np.array([v for v in range(0,  itemListLen)])
+            x = np.array([v for v in range(0, itemListLen)])
             ky = kd['k'][-1:]
             kj = kd['j'][-1:]
             kd = kd['d'][-1:]
-            shares = np.array(itemList)[-1:][0]
-            code =shares.code_id
-            date_as = shares.date_as
-            info = SharesKdj.objects.filter(code_id=code,date_as=date_as)
+
+            info = SharesKdj.objects.filter(code_id=code, date_as=date_as)
             if info == None:
-                b = SharesKdj(code_id=code, k=ky, d=kd,j=kj, cycle_type=1, date_as=date_as)
+                b = SharesKdj(code_id=code, k=ky, d=kd, j=kj, cycle_type=1, date_as=date_as)
                 b.save()
             # SharesKdj
             # print(shares, ky, kj, kd, shares.code_id)
