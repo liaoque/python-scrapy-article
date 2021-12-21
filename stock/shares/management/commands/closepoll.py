@@ -27,7 +27,7 @@ class Command(BaseCommand):
     def calculateKdj(self):
         for item in SharesName.objects.all():
 
-            code = item.code_id
+            code = item.code
             info = SharesKdj.objects.filter(code_id=code, date_as=datetime.now().date().strftime('%Y-%m-%d'))
             if info != None:
                 continue
