@@ -43,7 +43,7 @@ class Command(BaseCommand):
 
             # 数据不存在
             itemList = item.shares_set.all()
-            print(len(itemList) +"---")
+            print(str(len(itemList)) +"---")
             if len(itemList) == 0:
                 continue
 
