@@ -2,6 +2,7 @@ import numpy as np
 from django.core.management.base import BaseCommand, CommandError
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
+from shares.model.shares_kdj import SharesKdj
 # from ....shares.model.shares_kdj import SharesKdj
 # from ....shares.model.shares import Shares
 import numpy as np
@@ -36,9 +37,10 @@ class Command(BaseCommand):
             ky = kd['k'][-1:]
             kj = kd['j'][-1:]
             kd = kd['d'][-1:]
-            shares = itemList[-1:]
-
-
+            shares = np.array(itemList)[-1:]
+            # b = SharesKdj(code_id=shares.code_id, tagline='All the latest Beatles news.')
+            # b.save()
+            # SharesKdj
             print(shares, ky, kj, kd)
             break
         pass
