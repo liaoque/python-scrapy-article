@@ -36,6 +36,7 @@ class Shares_add(scrapy.Spider):
     def start_requests(self):
         self.connect()
         results = self.findStoks()
+        print(results)
         for item in results:
             code = item[0]
             self.init_area_request(code)
