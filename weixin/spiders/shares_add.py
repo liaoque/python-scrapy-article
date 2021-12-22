@@ -13,11 +13,6 @@ class Shares_add(scrapy.Spider):
     total = 1
     allowed_domains = ['.10jqka.com.cn']
     start_urls = []
-    area_map = {
-        "SH": "m:1+t:2,m:1+t:23",
-        "SZ": "m:0+t:6,m:0+t:80",
-        "BJ": "m:0+t:81+s:2048",
-    }
     headers = {
         "HOST": "q.10jqka.com.cn"
     }
@@ -50,7 +45,8 @@ class Shares_add(scrapy.Spider):
         headers = copy.deepcopy(self.headers)
         headers['hexin-v'] = self.settings.get('TONG_HEXIN')
         url = self.get_url(code)
-        coo = self.settings.get('TONG_COOKIE'),
+        coo = self.settings.get('TONG_COOKIE')
+        print(url, coo, headers)
         return scrapy.Request(url, cookies=coo, headers=headers, callback=self.parse_each, dont_filter=True)
 
     def parse_each(self, response):
