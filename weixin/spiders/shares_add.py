@@ -48,9 +48,9 @@ class Shares_add(scrapy.Spider):
         url = self.get_url(code)
         coo = self.settings.get('TONG_COOKIE')
         print(url, coo, headers)
-        return scrapy.Request(url, cookies=coo, headers=headers, callback=self.parse_each, dont_filter=True)
+        return scrapy.Request(url, cookies=coo, headers=headers, callback=self.parse, dont_filter=True)
 
-    def parse_each(self, response):
+    def parse(self, response):
         pass
 
 
