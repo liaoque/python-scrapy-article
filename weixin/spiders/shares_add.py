@@ -51,6 +51,7 @@ class Shares_add(scrapy.Spider):
         return scrapy.Request(url, cookies=coo, headers=headers, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
+        print(response.text)
         pass
 
 
