@@ -98,7 +98,7 @@ AUTOTHROTTLE_ENABLED = True
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-cp = configparser.ConfigParser()
+cp = configparser.RawConfigParser()
 cp.read("config.ini")
 host = cp.get("db", "db_host")
 database = cp.get("db", "db_database")
