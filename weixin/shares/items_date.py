@@ -58,11 +58,11 @@ class Items(scrapy.Item):
     pass
 
     def findByCode(self, cursor, code, date_as):
-        sql = "SELECT id FROM mc_shares  WHERE code_id = '%s' and date_as='%s'" % (code, date_as)
+        sql = "SELECT code_id FROM mc_shares  WHERE code_id = '%s' and date_as='%s'" % (code, date_as)
         cursor.execute(sql);
         return cursor
 
     def exitsByCode(self, cursor, code, date_as):
-        sql = "SELECT id FROM mc_shares  WHERE code_id = '%s' and date_as='%s'" % (code, date_as)
+        sql = "SELECT code_id FROM mc_shares  WHERE code_id = '%s' and date_as='%s'" % (code, date_as)
         cursor.execute(sql);
         return cursor.rowcount
