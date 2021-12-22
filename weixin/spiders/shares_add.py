@@ -36,7 +36,7 @@ class Shares_add(scrapy.Spider):
     def start_requests(self):
         self.connect()
         results = self.findStoks()
-        print(results)
+
         for item in results:
             code = item[0]
             self.init_area_request(code)
@@ -57,6 +57,7 @@ class Shares_add(scrapy.Spider):
 
     def findStoks(self):
         today = datetime.now().date().strftime('%Y-%m-%d')
+        today = '2021-12-22'
         sql = 'SELECT code_id FROM `mc_shares_kdj` where j < 0 and (code_id < 300000 or code_id > 400000) and date_as=\'%s\''%(today);
         results = []
         try:
