@@ -13,7 +13,7 @@ from urllib.request import Request
 
 import configparser
 
-cp = configparser.ConfigParser()
+cp = configparser.RawConfigParser()
 cp.read("config.ini")
 host = cp.get("db", "db_host")
 database = cp.get("db", "db_database")

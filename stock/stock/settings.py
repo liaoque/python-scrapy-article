@@ -73,7 +73,7 @@ WSGI_APPLICATION = 'stock.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-cp = configparser.ConfigParser()
+cp = configparser.RawConfigParser()
 cp.read("../config.ini")
 host = cp.get("db", "db_host")
 database = cp.get("db", "db_database")

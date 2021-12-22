@@ -11,7 +11,7 @@ from datetime import datetime, date, timedelta
 from urllib.request import urlopen
 from urllib.request import Request
 
-cp = configparser.ConfigParser()
+cp = configparser.RawConfigParser()
 cp.read("config.ini")
 host = cp.get("db", "db_host")
 database = cp.get("db", "db_database")
