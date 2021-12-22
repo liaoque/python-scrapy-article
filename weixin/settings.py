@@ -110,3 +110,7 @@ MYSQL_DBNAME = database
 MYSQL_USER = user
 MYSQL_PORT = 3306
 MYSQL_PASSWORD = password
+
+
+TONG_COOKIE = cp.get("tong", "cookie")
+TONG_HEXIN = cp.get("tong", "hexin")
