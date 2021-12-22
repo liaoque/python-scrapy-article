@@ -60,6 +60,7 @@ class Shares_add(scrapy.Spider):
         sql = 'SELECT code_id FROM `mc_shares_kdj` where j < 0 and (code_id < 300000 or code_id > 400000) and date_as=\'%s\''%(today);
         results = []
         try:
+            print(sql)
             # 执行SQL语句
             self.cursor.execute(sql)
             # 获取所有记录列表
