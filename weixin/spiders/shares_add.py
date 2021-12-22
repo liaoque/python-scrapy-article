@@ -21,6 +21,8 @@ class Shares_add(scrapy.Spider):
     headers = {
         "HOST": "q.10jqka.com.cn"
     }
+    db = None
+    cursor = None
 
     def connect(self):
         if self.db == None:
