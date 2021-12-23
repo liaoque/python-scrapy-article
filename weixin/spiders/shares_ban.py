@@ -9,7 +9,7 @@ import MySQLdb
 import MySQLdb.cursors
 
 from scrapy.loader import ItemLoader
-import weixin.shares_ban.items as SharesItems
+import weixin.shares.items_ban as SharesItems
 
 class Shares_ban(scrapy.Spider):
     name = 'shares_ban'
