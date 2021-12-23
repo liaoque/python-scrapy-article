@@ -1,9 +1,8 @@
 import scrapy
 import json
-from scrapy.loader import ItemLoader
-import sys
-import re
 
+
+from scrapy.loader import ItemLoader
 import weixin.shares.items as SharesItems
 import time
 import copy
