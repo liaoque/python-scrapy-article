@@ -24,7 +24,7 @@ class Shares_ban(scrapy.Spider):
 
     def start_requests(self):
         url="http://ai.10jqka.com.cn/transfer/transfer/get?unique=1&allfields=0&websource=1"
-        scrapy.Request(url,  callback=self.parse, dont_filter=True)
+        yield scrapy.Request(url,  callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         result = json.loads(response.text)
