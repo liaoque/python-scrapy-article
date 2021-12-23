@@ -36,16 +36,15 @@ class Shares_ban(scrapy.Spider):
         # remain_avoid_cycle: 2
         # stock: "000159"
         # stock_name: "国际实业"
-        for listItem in result["result"]:
-            for item in listItem:
-                print(item)
-                item_loader = ItemLoader(item=SharesItems.Items())
-                item_loader.add_value("code", item['stock'])
-                item_loader.add_value("avoid_cycle", item['avoid_cycle'])
-                item_loader.add_value("remain_avoid_cycle", item['remain_avoid_cycle'])
-                item_loader.add_value("avoid_reason", item['avoid_reason'])
-                item_loader.add_value("date_as", item['ctime'])
-                yield item_loader.load_item()
+        for item in result["result"]:
+            print(item)
+            item_loader = ItemLoader(item=SharesItems.Items())
+            item_loader.add_value("code", item['stock'])
+            item_loader.add_value("avoid_cycle", item['avoid_cycle'])
+            item_loader.add_value("remain_avoid_cycle", item['remain_avoid_cycle'])
+            item_loader.add_value("avoid_reason", item['avoid_reason'])
+            item_loader.add_value("date_as", item['ctime'])
+            yield item_loader.load_item()
 
         pass
 
