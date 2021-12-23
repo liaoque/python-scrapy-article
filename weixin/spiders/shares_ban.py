@@ -38,6 +38,7 @@ class Shares_ban(scrapy.Spider):
         # stock_name: "国际实业"
         for listItem in result["result"]:
             for item in listItem:
+                print(item)
                 item_loader = ItemLoader(item=SharesItems.Items())
                 item_loader.add_value("code", item['stock'])
                 item_loader.add_value("avoid_cycle", item['avoid_cycle'])
@@ -47,24 +48,6 @@ class Shares_ban(scrapy.Spider):
                 yield item_loader.load_item()
 
         pass
-
-
-
-    def findStoks(self):
-        today = datetime.now().date().strftime('%Y-%m-%d')
-        # today = '2021-12-22'
-        sql = 'SELECT code_id FROM `mc_shares_kdj` where j < 0 and (code_id < 300000 or code_id > 400000) and date_as=\'%s\''%(today);
-        results = []
-        try:
-            print(sql)
-            # 执行SQL语句
-            self.cursor.execute(sql)
-            # 获取所有记录列表
-            results = self.cursor.fetchall()
-        except:
-            print("Error: unable to fecth data")
-        return results
-
 
     def __del__(self):
         if self.db != None:
