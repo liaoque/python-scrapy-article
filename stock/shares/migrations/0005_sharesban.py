@@ -19,7 +19,6 @@ class Migration(migrations.Migration):
                 ('avoid_cycle', models.FloatField(default=0, help_text='回避天数')),
                 ('avoid_reason', models.CharField(help_text='原因', max_length=20)),
                 ('date_as', models.DateField()),
-                ('code', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shares.sharesname')),
             ],
             options={
                 'db_table': 'mc_shares_ban',
