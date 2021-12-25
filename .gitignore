@@ -1,6 +1,6 @@
 weixin/__pycache__
 weixin/*/__pycache__
 .vscode
-.test
+.test/*
 .idea
 config.ini
