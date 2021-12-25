@@ -6,7 +6,7 @@ from .shares_name import SharesName
 
 
 class SharesBan(models.Model):
-    code = models.ForeignKey(SharesName, on_delete=models.CASCADE)
+    code = models.ForeignKey(SharesName, default=0, on_delete=models.CASCADE)
     remain_avoid_cycle = models.IntegerField(default=0, help_text="剩余回避天数")
     avoid_cycle = models.FloatField(default=0, help_text="回避天数")
     avoid_reason = models.CharField(max_length=20, help_text='原因')

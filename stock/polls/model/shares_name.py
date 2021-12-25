@@ -7,7 +7,7 @@ from .shares import Shares as SharesModels
 from shares.model.shares_name import SharesName as SharesNameModels
 # Create your models here.
 import numpy as np
-import talib
+# import talib
 
 from plotly.offline import plot
 from plotly.graph_objs import Scatter

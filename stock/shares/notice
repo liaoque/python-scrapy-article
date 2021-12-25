@@ -11,3 +11,17 @@
 
 
 # python manage.py  closepoll
+
+SELECT code_id FROM `mc_shares_kdj` where j <0 and date_as = '2021-12-24'
+and code_id not in (SELECT code_id FROM `mc_shares_ban` )
+and code_id not in (SELECT code FROM `mc_shares_name` where name like "%ST%" )
+and (code_id < 300000 or code_id > 600000) and code_id < 800000
+
+
+id date_as 交点前一天买数量， 交点买数量， 总符合条件数，拐弯买点数量， 符合条件数
+id date_as 交点前一天， 买点, 2天后价值
+id date_as 交点， 买点, 2天后价值
+id date_as 拐点，买点, 2天后价值
+
+
+

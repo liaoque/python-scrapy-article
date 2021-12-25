@@ -18,3 +18,12 @@ class SharesName(models.Model):
 
     def __str__(self):
         return self.name
+
+    class SkillType():
+        kdj = 1
+
+        class AccountType():
+            intersection_pre = 1
+            intersection_today = 2
+            turn_tomorrow = 3
+

@@ -4,6 +4,9 @@ from django.core.management.base import BaseCommand, CommandError
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
 from shares.model.shares_kdj import SharesKdj
+from shares.model.shares import Shares
+from shares.model.shares_kdj_compute import SharesKdjCompute
+from shares.model.shares_kdj_compute_detail import SharesKdjComputeDetail
 # from ....shares.model.shares_kdj import SharesKdj
 # from ....shares.model.shares import Shares
 import numpy as np
@@ -92,3 +95,32 @@ class Command(BaseCommand):
         # indicators['j'] = 3 * indicators['d'] - 2 * indicators['k']
         indicators['j'] = np.array(list(map(lambda x, y: 3 * x - 2 * y, indicators['k'], indicators['d'])))
         return indicators
+
+    def KdjCompute(self):
+        today = datetime.now().date().strftime('%Y-%m-%d')
+        data = Shares.objects.filter(date_as=today)[:1]
+        if len(data) == 0:
+            # 当天不 需要计算
+            return
+        first, second, third, fourth, fifth = Shares.objects.filter(group_by='date_as')[-5:]
+        intersection_total = SharesKdjCompute.compute.intersection_total(third, fourth, fifth)
+        intersection_today = SharesKdjCompute.compute.intersection_today(third, fourth, fifth)
+        intersection_pre = SharesKdjCompute.compute.intersection_pre(second, third, fourth, fifth)
+        turn_total = SharesKdjCompute.compute.turn_total(third, fourth, fifth)
+        turn_tomorrow = SharesKdjCompute.compute.turn_tomorrow(third, fourth, fifth)
+
+
+        # shill_type = SharesName.skill_type.kdj
+        # SharesKdjCompute.saveSharesKdjCompute(intersection_pre_num=len(intersection_pre),
+        #                           intersection_num=len(intersection_today),
+        #                           intersection_total=intersection_total[0]['c'],
+        #                           turn_num=len(turn_tomorrow),
+        #                           turn_total=turn_total[0]['c'],
+        #                           shill_type=shill_type,
+        #                           date_as=today)
+
+
+
+
+
+
