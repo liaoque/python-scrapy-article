@@ -109,19 +109,20 @@ class Command(BaseCommand):
         result = np.array(SharesKdj.objects.values('date_as').annotate(counts=Count(id)))[-5:]
         third, fourth, fifth = [x['date_as'].strftime('%Y-%m-%d') for x in result]
         intersection_total = SharesKdjCompute.Compute.intersection_total(first=third, second=fourth, third=fifth)
-        print([x for x in intersection_total])
+        print([x.c for x in intersection_total])
         if len(result) < 4:
             return
+
         if len(result) == 4:
             second, third, fourth, fifth = result
         else:
             first, second, third, fourth, fifth = result
-        intersection_total = SharesKdjCompute.Compute.intersection_total(third, fourth, fifth)
-        intersection_today = SharesKdjCompute.Compute.intersection_today(third, fourth, fifth)
-        intersection_pre = SharesKdjCompute.Compute.intersection_pre(second, third, fourth, fifth)
+        intersection_total = SharesKdjCompute.Compute.intersection_total(first=third, second=fourth, third=fifth)
+        intersection_today = SharesKdjCompute.Compute.intersection_today(first=third, second=fourth, third=fifth)
+        intersection_pre = SharesKdjCompute.Compute.intersection_pre(first=second, second=third, third=fourth, fourth=fifth)
         if len(result) > 4:
-            turn_total = SharesKdjCompute.Compute.turn_total(third, fourth, fifth)
-            turn_tomorrow = SharesKdjCompute.Compute.turn_tomorrow(third, fourth, fifth)
+            turn_total = SharesKdjCompute.Compute.turn_total(first=third, second=fourth, third=fifth)
+            turn_tomorrow = SharesKdjCompute.Compute.turn_tomorrow(first=third, second=fourth, third=fifth)
 
         print(intersection_total, intersection_today, intersection_pre,turn_total, turn_tomorrow)
 
