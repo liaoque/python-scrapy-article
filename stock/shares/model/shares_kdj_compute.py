@@ -26,9 +26,9 @@ class SharesKdjCompute(models.Model):
             sql = '''
             select count(1) as c from (
                           select code_id, min(j) as minj, max(j) as maxj from mc_shares_kdj
-                            where date_as in ('%s', '%s', '%s') group by code_id
+                            where date_as in (%s, %s, %s) group by code_id
                       ) a
-                      left join  (select k, d,code_id,j from mc_shares_kdj where date_as = '%s') b on a.code_id = b.code_id
+                      left join  (select k, d,code_id,j from mc_shares_kdj where date_as = %s) b on a.code_id = b.code_id
                       where (a.minj < b.k and b.k < a.maxj)  and (a.minj < b.d and b.d < a.maxj)
                             and b.k <=b.j and b.d <= b.j
             				and b.j < 30
