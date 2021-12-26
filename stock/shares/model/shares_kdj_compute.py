@@ -52,7 +52,7 @@ class SharesKdjCompute(models.Model):
                   left join  (select p_end,code_id from mc_shares where date_as = '%s') sc on sa.code_id = sc.code_id
                  where sb.p_end < sc.p_end
                 '''
-            return SharesKdjCompute.objects.raw(sql, first, second, third, second, first, third)
+            return SharesKdjCompute.objects.raw(sql, params=(first, second, third, second, first, third))
 
         def intersection_today(self, first, second, third, fourth):
             sql = '''
@@ -70,7 +70,7 @@ class SharesKdjCompute(models.Model):
                   left join  (select p_end,code_id from mc_shares where date_as = '%s') sc on sa.code_id = sc.code_id
                  where sb.p_end < sc.p_end
                 '''
-            return SharesKdjCompute.objects.raw(sql, first, second, third, second, second, fourth)
+            return SharesKdjCompute.objects.raw(sql, params=(first, second, third, second, second, fourth))
 
         def turn_total(self, first, second, third):
             sql = '''
@@ -79,7 +79,7 @@ class SharesKdjCompute(models.Model):
                       left join  (select code_id,j from mc_shares_kdj where date_as = '%s') c on a.code_id = c.code_id
               where (a.j > b.j and b.j < c.j)
             '''
-            return SharesKdjCompute.objects.raw(sql, first, second, third, second)
+            return SharesKdjCompute.objects.raw(sql, params=(first, second, third, second))
 
         # 计算以转折做为买点的数据
         def turn_tomorrow(self, first, second, third, fifth):
@@ -94,7 +94,7 @@ class SharesKdjCompute(models.Model):
               left join  (select p_end,code_id from mc_shares where date_as = '%s') sc on sa.code_id = sc.code_id
             where sb.p_end < sc.p_end
             '''
-            return SharesKdjCompute.objects.raw(sql, first, second, third, third, fifth)
+            return SharesKdjCompute.objects.raw(sql, params=(first, second, third, third, fifth))
 
     def saveSharesKdjCompute(self, intersection_pre_num, intersection_num, intersection_total, turn_num, turn_total,
                              shill_type, date_as):
