@@ -107,11 +107,11 @@ class Command(BaseCommand):
             # 当天不 需要计算
             return
 
-        result = np.array(SharesKdj.objects.values('date_as').annotate(counts=Count(id)))[-5:]
-        third, fourth, fifth = [x['date_as'].strftime('%Y-%m-%d') for x in result]
-        intersection_total = SharesKdjCompute.Compute.intersection_total(first=third, second=fourth, third=fifth)
-        intersection_total = intersection_total[0].c
-        print(intersection_total)
+        # result = np.array(SharesKdj.objects.values('date_as').annotate(counts=Count(id)))[-5:]
+        # third, fourth, fifth = [x['date_as'].strftime('%Y-%m-%d') for x in result]
+        # intersection_total = SharesKdjCompute.Compute.intersection_total(first=third, second=fourth, third=fifth)
+        # intersection_total = intersection_total[0].c
+        # print(intersection_total)
 
         result = np.array(SharesKdj.objects.values('date_as').annotate(counts=Count(id)))[-5:]
         if len(result) < 4:
@@ -121,25 +121,26 @@ class Command(BaseCommand):
         else:
             first, second, third, fourth, fifth = [x['date_as'].strftime('%Y-%m-%d') for x in result]
 
+        turn_total = 0
+        turn_tomorrow = []
         intersection_total = SharesKdjCompute.Compute.intersection_total(first=third, second=fourth, third=fifth)
-        intersection_total = intersection_total[0].c
-        # print([x.c for x in intersection_total])
         intersection_today = SharesKdjCompute.Compute.intersection_today(first=third, second=fourth, third=fifth)
         intersection_pre = SharesKdjCompute.Compute.intersection_pre(first=second, second=third, third=fourth, fourth=fifth)
         if len(result) > 4:
-            turn_total = SharesKdjCompute.Compute.turn_total(first=third, second=fourth, third=fifth)
+            turn_total_result = SharesKdjCompute.Compute.turn_total(first=third, second=fourth, third=fifth)
+            turn_total = turn_total_result[0].c
             turn_tomorrow = SharesKdjCompute.Compute.turn_tomorrow(first=third, second=fourth, third=fifth)
 
-        print(intersection_total, intersection_today, intersection_pre,turn_total, turn_tomorrow)
+        # print(intersection_total, intersection_today, intersection_pre,turn_total, turn_tomorrow)
 
-        # shill_type = SharesName.skill_type.kdj
-        # SharesKdjCompute.saveSharesKdjCompute(intersection_pre_num=len(intersection_pre),
-        #                           intersection_num=len(intersection_today),
-        #                           intersection_total=intersection_total[0]['c'],
-        #                           turn_num=len(turn_tomorrow),
-        #                           turn_total=turn_total[0]['c'],
-        #                           shill_type=shill_type,
-        #                           date_as=today)
+        shill_type = SharesName.skill_type.kdj
+        SharesKdjCompute.saveSharesKdjCompute(intersection_pre_num=len(intersection_pre),
+                                  intersection_num=len(intersection_today),
+                                  intersection_total=intersection_total[0].c,
+                                  turn_num=len(turn_tomorrow),
+                                  turn_total=turn_total,
+                                  shill_type=shill_type,
+                                  date_as=today)
 
 
 
