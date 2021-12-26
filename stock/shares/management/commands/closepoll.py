@@ -107,6 +107,9 @@ class Command(BaseCommand):
             # 当天不 需要计算
             return
         result = np.array(SharesKdj.objects.values('date_as').annotate(counts=Count(id)))[-5:]
+        third, fourth, fifth = result
+        intersection_total = SharesKdjCompute.Compute.intersection_total(third, fourth, fifth)
+        print(intersection_total)
         if len(result) < 4:
             return
         if len(result) == 4:
