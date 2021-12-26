@@ -18,8 +18,8 @@ class SharesKdjCompute(models.Model):
         db_table = "mc_shares_compute"
         # abstract = True
 
-    def __str__(self):
-        return self.date_as
+    # def __str__(self):
+    #     return self.date_as
 
     class Compute():
         def intersection_total(first, second, third):
