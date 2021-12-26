@@ -22,7 +22,7 @@ class SharesKdjCompute(models.Model):
         return self.date_as
 
     class Compute():
-        def intersection_total(self, first, second, third):
+        def intersection_total(first, second, third):
             sql = '''
             select count(1) as c from (
                           select code_id, min(j) as minj, max(j) as maxj from mc_shares_kdj
