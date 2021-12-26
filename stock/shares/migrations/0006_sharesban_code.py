@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='sharesban',
             name='code',
             field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='shares.sharesname'),
