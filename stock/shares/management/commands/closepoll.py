@@ -114,7 +114,7 @@ class Command(BaseCommand):
         result = np.array(SharesKdj.objects.values('date_as').annotate(counts=Count(id)))[-5:]
         third, fourth, fifth = [x['date_as'].strftime('%Y-%m-%d') for x in result]
         intersection_total = SharesKdjCompute.Compute.intersection_total(first=third, second=fourth, third=fifth)
-        print(intersection_total[0])
+        print(intersection_total[0].c)
         if len(result) == 4:
             second, third, fourth, fifth = [x['date_as'].strftime('%Y-%m-%d') for x in result]
         else:
