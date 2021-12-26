@@ -33,7 +33,7 @@ class SharesKdjCompute(models.Model):
                             and b.k <=b.j and b.d <= b.j
             				and b.j < 30
             '''
-            return SharesKdjCompute.object.raw(sql, first, second, third, second)
+            return SharesKdjCompute.objects.raw(sql, first, second, third, second)
 
         # 计算以交点作为买点的数据
         def intersection_pre(self, first, second, third):
@@ -52,7 +52,7 @@ class SharesKdjCompute(models.Model):
                   left join  (select p_end,code_id from mc_shares where date_as = '%s') sc on sa.code_id = sc.code_id
                  where sb.p_end < sc.p_end
                 '''
-            return SharesKdjCompute.object.raw(sql, first, second, third, second, first, third)
+            return SharesKdjCompute.objects.raw(sql, first, second, third, second, first, third)
 
         def intersection_today(self, first, second, third, fourth):
             sql = '''
@@ -70,7 +70,7 @@ class SharesKdjCompute(models.Model):
                   left join  (select p_end,code_id from mc_shares where date_as = '%s') sc on sa.code_id = sc.code_id
                  where sb.p_end < sc.p_end
                 '''
-            return SharesKdjCompute.object.raw(sql, first, second, third, second, second, fourth)
+            return SharesKdjCompute.objects.raw(sql, first, second, third, second, second, fourth)
 
         def turn_total(self, first, second, third):
             sql = '''
@@ -79,7 +79,7 @@ class SharesKdjCompute(models.Model):
                       left join  (select code_id,j from mc_shares_kdj where date_as = '%s') c on a.code_id = c.code_id
               where (a.j > b.j and b.j < c.j)
             '''
-            return SharesKdjCompute.object.raw(sql, first, second, third, second)
+            return SharesKdjCompute.objects.raw(sql, first, second, third, second)
 
         # 计算以转折做为买点的数据
         def turn_tomorrow(self, first, second, third, fifth):
@@ -94,13 +94,20 @@ class SharesKdjCompute(models.Model):
               left join  (select p_end,code_id from mc_shares where date_as = '%s') sc on sa.code_id = sc.code_id
             where sb.p_end < sc.p_end
             '''
-            return SharesKdjCompute.object.raw(sql, first, second, third, third, fifth)
+            return SharesKdjCompute.objects.raw(sql, first, second, third, third, fifth)
 
     def saveSharesKdjCompute(self, intersection_pre_num, intersection_num, intersection_total, turn_num, turn_total,
                              shill_type, date_as):
         result = self.objects.filter(date_as=date_as)
         if len(result):
-            pass
+            kdjCompute = self(id=result[0].id,
+                              intersection_pre_num=intersection_pre_num,
+                              intersection_num=intersection_num,
+                              intersection_total=intersection_total,
+                              turn_num=turn_num,
+                              turn_total=turn_total,
+                              shill_type=shill_type,
+                              date_as=date_as)
         else:
             kdjCompute = self(intersection_pre_num=intersection_pre_num,
                               intersection_num=intersection_num,
@@ -109,4 +116,4 @@ class SharesKdjCompute(models.Model):
                               turn_total=turn_total,
                               shill_type=shill_type,
                               date_as=date_as)
-            kdjCompute.save()
+        return kdjCompute.save()

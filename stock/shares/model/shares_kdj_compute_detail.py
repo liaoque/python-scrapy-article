@@ -28,7 +28,15 @@ class SharesKdjComputeDetail(models.Model):
                                    shill_account_type, date_as):
         result = self.objects.filter(code_id=code, date_as=date_as)
         if len(result):
-            pass
+            kdjComputeDetail = self(id=result[0].id,
+                                    code_id=code,
+                                    buy_amount=buy_amount,
+                                    buy_date_as=buy_date_as,
+                                    buy_amount_end=buy_amount_end,
+                                    buy_date_as_end=buy_date_as_end,
+                                    shill_type=shill_type,
+                                    shill_account_type=shill_account_type,
+                                    date_as=date_as)
         else:
             kdjComputeDetail = self(code_id=code,
                                     buy_amount=buy_amount,
@@ -38,4 +46,4 @@ class SharesKdjComputeDetail(models.Model):
                                     shill_type=shill_type,
                                     shill_account_type=shill_account_type,
                                     date_as=date_as)
-            kdjComputeDetail.save()
+        return kdjComputeDetail.save()
