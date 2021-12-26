@@ -33,7 +33,7 @@ class SharesKdjCompute(models.Model):
                             and b.k <=b.j and b.d <= b.j
             				and b.j < 30
             '''
-            return SharesKdjCompute.objects.raw(sql, first, second, third, second)
+            return SharesKdjCompute.objects.raw(sql, params=(first, second, third, second,))
 
         # 计算以交点作为买点的数据
         def intersection_pre(self, first, second, third):
