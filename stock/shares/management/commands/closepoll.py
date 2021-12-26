@@ -108,7 +108,7 @@ class Command(BaseCommand):
         intersection_pre = SharesKdjCompute.Compute.intersection_pre(second, third, fourth, fifth)
         turn_total = SharesKdjCompute.Compute.turn_total(third, fourth, fifth)
         turn_tomorrow = SharesKdjCompute.Compute.turn_tomorrow(third, fourth, fifth)
-
+        print(intersection_total, intersection_today, intersection_pre,turn_total, turn_tomorrow)
 
         # shill_type = SharesName.skill_type.kdj
         # SharesKdjCompute.saveSharesKdjCompute(intersection_pre_num=len(intersection_pre),
