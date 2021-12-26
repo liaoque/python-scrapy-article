@@ -23,7 +23,8 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        self.calculateKdj()
+        # self.calculateKdj()
+        self.KdjCompute()
 
         pass
 
@@ -98,6 +99,7 @@ class Command(BaseCommand):
 
     def KdjCompute(self):
         today = datetime.now().date().strftime('%Y-%m-%d')
+        today = '2021-12-24'
         data = Shares.objects.filter(date_as=today)[:1]
         if len(data) == 0:
             # 当天不 需要计算
