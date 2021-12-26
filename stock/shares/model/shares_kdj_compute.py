@@ -24,7 +24,7 @@ class SharesKdjCompute(models.Model):
     class Compute():
         def intersection_total(first, second, third):
             sql = '''
-            select count(1) as c from (
+            select 1 as id,count(1) as c from (
                           select code_id, min(j) as minj, max(j) as maxj from mc_shares_kdj
                             where date_as in (%s, %s, %s) group by code_id
                       ) a
