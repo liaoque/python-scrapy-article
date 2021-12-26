@@ -104,7 +104,7 @@ class Command(BaseCommand):
         if len(data) == 0:
             # 当天不 需要计算
             return
-        result = Shares.objects.values('date_as')[-5:]
+        result = Shares.objects.values('date_as')
         print(result)
         # first, second, third, fourth, fifth = Shares.objects.values('date_as')[-5:]
         # print(first, second, third, fourth, fifth)
