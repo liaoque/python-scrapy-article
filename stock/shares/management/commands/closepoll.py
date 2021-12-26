@@ -104,8 +104,8 @@ class Command(BaseCommand):
         if len(data) == 0:
             # 当天不 需要计算
             return
-        result = SharesKdj.objects.values('date_as').all()[-5:]
-        print(result)
+        result = SharesKdj.objects.values('date_as').all()
+        print(result, len(result))
         # first, second, third, fourth, fifth = SharesKdj.objects.values('date_as')[-5:]
         # print(first, second, third, fourth, fifth)
         # intersection_total = SharesKdjCompute.Compute.intersection_total(third, fourth, fifth)
