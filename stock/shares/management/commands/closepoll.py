@@ -106,18 +106,22 @@ class Command(BaseCommand):
         if len(data) == 0:
             # 当天不 需要计算
             return
+
         result = np.array(SharesKdj.objects.values('date_as').annotate(counts=Count(id)))[-5:]
-        third, fourth, fifth = [x['date_as'].strftime('%Y-%m-%d') for x in result]
-        intersection_total = SharesKdjCompute.Compute.intersection_total(first=third, second=fourth, third=fifth)
-        print([x.c for x in intersection_total])
         if len(result) < 4:
             return
 
-        if len(result) == 4:
-            second, third, fourth, fifth = result
-        else:
-            first, second, third, fourth, fifth = result
+        result = np.array(SharesKdj.objects.values('date_as').annotate(counts=Count(id)))[-5:]
+        third, fourth, fifth = [x['date_as'].strftime('%Y-%m-%d') for x in result]
         intersection_total = SharesKdjCompute.Compute.intersection_total(first=third, second=fourth, third=fifth)
+        print(intersection_total[0])
+        if len(result) == 4:
+            second, third, fourth, fifth = [x['date_as'].strftime('%Y-%m-%d') for x in result]
+        else:
+            first, second, third, fourth, fifth = [x['date_as'].strftime('%Y-%m-%d') for x in result]
+
+        intersection_total = SharesKdjCompute.Compute.intersection_total(first=third, second=fourth, third=fifth)
+        # print([x.c for x in intersection_total])
         intersection_today = SharesKdjCompute.Compute.intersection_today(first=third, second=fourth, third=fifth)
         intersection_pre = SharesKdjCompute.Compute.intersection_pre(first=second, second=third, third=fourth, fourth=fifth)
         if len(result) > 4:
