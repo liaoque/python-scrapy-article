@@ -1,6 +1,8 @@
 import numpy as np
 from datetime import datetime
 from django.core.management.base import BaseCommand, CommandError
+from django.db.models import Count
+
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
 from shares.model.shares_kdj import SharesKdj
@@ -104,7 +106,7 @@ class Command(BaseCommand):
         if len(data) == 0:
             # 当天不 需要计算
             return
-        result = np.array(SharesKdj.objects.values('date_as').annotate(counts='id'))[-60:]
+        result = np.array(SharesKdj.objects.values('date_as').annotate(counts=Count(id)))[-60:]
         print(result, len(result))
         # first, second, third, fourth, fifth = SharesKdj.objects.values('date_as')[-5:]
         # print(first, second, third, fourth, fifth)
