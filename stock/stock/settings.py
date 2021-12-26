@@ -91,7 +91,10 @@ DATABASES = {
         'PASSWORD': password,
         'HOST': host,
         'PORT': port,
-        'TBLSPACE': 'stock_'
+        'TBLSPACE': 'stock_',
+        'OPTIONS': {
+            'charset': 'utf8mb4_general_ci'
+        },
     }
 }
 
