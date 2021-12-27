@@ -59,7 +59,7 @@ class SharesKdjCompute(models.Model):
 
         def intersection_today(self, first, second, third, fourth):
             sql = '''
-                select sa.code_id, (sc.p_end - sb.p_end)/sb.p_end*100 from (
+                select sa.code_id, (sc.p_end - sb.p_end)/sb.p_end*100 as rate, (sc.p_end - sb.p_end) as buy_amount from (
                               select a.code_id from (
                                   select code_id, min(j) as minj, max(j) as maxj from mc_shares_kdj
                                     where date_as in ('%s', '%s', '%s') group by code_id
@@ -87,7 +87,7 @@ class SharesKdjCompute(models.Model):
         # 计算以转折做为买点的数据
         def turn_tomorrow(self, first, second, third, fifth):
             sql = '''
-            select sa.code_id, (sc.p_end - sb.p_end)/sb.p_end*100 from (
+            select sa.code_id, (sc.p_end - sb.p_end)/sb.p_end*100 as rate, (sc.p_end - sb.p_end) as buy_amount from (
               select a.code_id,a.j from (select code_id,j from mc_shares_kdj where date_as = '%s' and j <10) a
                       left join  (select  k, d,code_id,j from mc_shares_kdj where date_as = '%s') b on a.code_id = b.code_id
                       left join  (select code_id,j from mc_shares_kdj where date_as = '%s') c on a.code_id = c.code_id
