@@ -134,7 +134,7 @@ class Command(BaseCommand):
 
         # print(intersection_total, intersection_today, intersection_pre,turn_total, turn_tomorrow)
 
-        shill_type = SharesName.skill_type.kdj
+        shill_type = SharesName.SkillType.kdj
         SharesKdjCompute.saveSharesKdjCompute(intersection_pre_num=len(intersection_pre),
                                   intersection_num=len(intersection_today),
                                   intersection_total=intersection_total[0].c,
@@ -143,18 +143,31 @@ class Command(BaseCommand):
                                   shill_type=shill_type,
                                   date_as=today)
 
+        shill_account_type = SharesName.SkillType.AccountType.intersection_pre
         for item in intersection_pre:
-            # SharesKdjComputeDetail.saveSharesKdjComputeDetail(
-            #     code=item.code_id, buy_amount=item.code, buy_date_as=item.code,
-            #     buy_amount_end=item.code, buy_date_as_end=item.code, shill_type=,
-            #     shill_account_type=, date_as=item.code
-            # )
+            SharesKdjComputeDetail.saveSharesKdjComputeDetail(
+                code=item.code_id, buy_amount=item.buy_amount, buy_date_as=item.buy_date_as,
+                buy_amount_end=item.buy_amount_end, buy_date_as_end=item.buy_date_as_end, shill_type=shill_type,
+                shill_account_type=shill_account_type, date_as=today
+            )
             print(item)
 
+        shill_account_type = SharesName.SkillType.AccountType.intersection_today
         for item in intersection_today:
+            SharesKdjComputeDetail.saveSharesKdjComputeDetail(
+                code=item.code_id, buy_amount=item.buy_amount, buy_date_as=item.buy_date_as,
+                buy_amount_end=item.buy_amount_end, buy_date_as_end=item.buy_date_as_end, shill_type=shill_type,
+                shill_account_type=shill_account_type, date_as=today
+            )
             print(item)
 
+        shill_account_type = SharesName.SkillType.AccountType.turn_tomorrow
         for item in turn_tomorrow:
+            SharesKdjComputeDetail.saveSharesKdjComputeDetail(
+                code=item.code_id, buy_amount=item.buy_amount, buy_date_as=item.buy_date_as,
+                buy_amount_end=item.buy_amount_end, buy_date_as_end=item.buy_date_as_end, shill_type=shill_type,
+                shill_account_type=shill_account_type, date_as=today
+            )
             print(item)
 
 
