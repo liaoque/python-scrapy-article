@@ -8,9 +8,12 @@ from .shares_name import SharesName
 class SharesKdjCompute(models.Model):
     intersection_pre_num = models.IntegerField(default=0, help_text='交点前一天')
     intersection_num = models.IntegerField(default=0, help_text='交点')
-    intersection_total = models.FloatField(default=0, help_text='交点-总')
+    intersection_total = models.IntegerField(default=0, help_text='交点-总')
+    intersection_pre_total_amount = models.FloatField(default=0, help_text='交点前一天-总盈利')
+    intersection_total_amount = models.FloatField(default=0, help_text='交点-总盈利')
     turn_num = models.IntegerField(default=0, help_text='转折点')
     turn_total = models.IntegerField(default=0, help_text='转折点-总')
+    turn_total_amount = models.FloatField(default=0, help_text='转折点-总盈利')
     shill_type = models.IntegerField(default=0, help_text='技术指标：1.kdj')
     date_as = models.DateField()
 

@@ -25,8 +25,8 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        self.calculateKdj()
-        # self.KdjCompute()
+        # self.calculateKdj()
+        self.KdjCompute()
 
         pass
 
@@ -101,7 +101,7 @@ class Command(BaseCommand):
 
     def KdjCompute(self):
         today = datetime.now().date().strftime('%Y-%m-%d')
-        today = '2021-12-24'
+        # today = '2021-12-24'
         data = Shares.objects.filter(date_as=today)[:1]
         if len(data) == 0:
             # 当天不 需要计算
@@ -141,6 +141,9 @@ class Command(BaseCommand):
                                   turn_total=turn_total,
                                   shill_type=shill_type,
                                   date_as=today)
+
+        for item in intersection_pre:
+            print(item)
 
 
 
