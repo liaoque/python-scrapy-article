@@ -53,10 +53,10 @@ class Items(scrapy.Item):
         if cursor.rowcount:
             data = cursor.fetchall()
             if data[0]['area_id'] != 0:
-                sql = "update mc_shares_name set area_id = '%s'  WHERE code = %s" % (area_id, code)
+                sql = "update mc_shares_name set area_id = '%s'  WHERE code = '%s'" % (area_id, code)
                 cursor.execute(sql);
             if data[0]['status'] != status:
-                sql = "update mc_shares_name set status = '%s'  WHERE code = %s" % (status, code)
+                sql = "update mc_shares_name set status = '%s'  WHERE code = '%s'" % (status, code)
                 cursor.execute(sql);
             return
         sql = """
@@ -73,13 +73,13 @@ class Items(scrapy.Item):
     def save_temper_tonghuashun(self, cursor):
         code = self['code'][0]
         temper_tonghuashun = self['temper_tonghuashun'][0]
-        sql = "update mc_shares_name set temper_tonghuashun = '%d'  WHERE code = %s" % (temper_tonghuashun, code)
+        sql = "update mc_shares_name set temper_tonghuashun = '%d'  WHERE code = '%s'" % (temper_tonghuashun, code)
         cursor.execute(sql);
 
     def save_temper_dongfangcaifu(self, cursor):
         code = self['code'][0]
         temper_dongfangcaifu = self['temper_dongfangcaifu'][0]
-        sql = "update mc_shares_name set temper_dongfangcaifu = '%d'  WHERE code = %s" % (
+        sql = "update mc_shares_name set temper_dongfangcaifu = '%d'  WHERE code = '%s'" % (
             temper_dongfangcaifu, code)
         cursor.execute(sql);
 
