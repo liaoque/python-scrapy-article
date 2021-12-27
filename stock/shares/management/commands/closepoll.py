@@ -25,8 +25,8 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        # self.calculateKdj()
-        self.KdjCompute()
+        self.calculateKdj()
+        # self.KdjCompute()
 
         pass
 
