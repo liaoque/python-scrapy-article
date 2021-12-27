@@ -32,6 +32,7 @@ class Command(BaseCommand):
 
     def calculateKdj(self):
         today = datetime.now().date().strftime('%Y-%m-%d')
+        today = '2021-12-27'
         for item in SharesName.objects.filter(status=1):
 
             # 写过了
@@ -143,9 +144,18 @@ class Command(BaseCommand):
                                   date_as=today)
 
         for item in intersection_pre:
+            # SharesKdjComputeDetail.saveSharesKdjComputeDetail(
+            #     code=item.code_id, buy_amount=item.code, buy_date_as=item.code,
+            #     buy_amount_end=item.code, buy_date_as_end=item.code, shill_type=,
+            #     shill_account_type=, date_as=item.code
+            # )
             print(item)
 
+        for item in intersection_today:
+            print(item)
 
+        for item in turn_tomorrow:
+            print(item)
 
 
 

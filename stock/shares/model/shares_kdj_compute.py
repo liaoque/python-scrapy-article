@@ -41,7 +41,7 @@ class SharesKdjCompute(models.Model):
         # 计算以交点作为买点的数据
         def intersection_pre(self, first, second, third):
             sql = '''
-                select sa.code_id, (sc.p_end - sb.p_end)/sb.p_end*100 from (
+                select sa.code_id, (sc.p_end - sb.p_end)/sb.p_end*100 as rate, (sc.p_end - sb.p_end) as buy_amount from (
                               select a.code_id from (
                                   select code_id, min(j) as minj, max(j) as maxj from mc_shares_kdj
                                     where date_as in ('%s', '%s', '%s') group by code_id
