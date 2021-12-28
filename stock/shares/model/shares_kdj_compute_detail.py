@@ -26,7 +26,9 @@ class SharesKdjComputeDetail(models.Model):
 
     def saveSharesKdjComputeDetail(code, buy_amount, buy_date_as, buy_amount_end, buy_date_as_end, shill_type,
                                    shill_account_type, date_as):
-        result = SharesKdjComputeDetail.objects.filter(code_id=code, date_as=date_as)
+        result = SharesKdjComputeDetail.objects.filter(code_id=code, date_as=date_as,
+                                                       shill_type=shill_type,
+                                                      shill_account_type=shill_account_type)
         if len(result):
             kdjComputeDetail = SharesKdjComputeDetail(id=result[0].id,
                                                       code_id=code,

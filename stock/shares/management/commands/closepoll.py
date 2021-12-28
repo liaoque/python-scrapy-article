@@ -151,7 +151,7 @@ class Command(BaseCommand):
                 shill_type=shill_type,
                 shill_account_type=shill_account_type, date_as=today
             )
-            print(item)
+
 
         shill_account_type = SharesName.SkillType.AccountType.intersection_today
         for item in intersection_today:
@@ -161,7 +161,6 @@ class Command(BaseCommand):
                 shill_type=shill_type,
                 shill_account_type=shill_account_type, date_as=today
             )
-            print(item)
 
         shill_account_type = SharesName.SkillType.AccountType.turn_tomorrow
         for item in turn_tomorrow:
@@ -171,7 +170,6 @@ class Command(BaseCommand):
                 shill_type=shill_type,
                 shill_account_type=shill_account_type, date_as=today
             )
-            print(item)
 
 
 
