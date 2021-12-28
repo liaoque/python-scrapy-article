@@ -89,7 +89,7 @@ class SharesKdjCompute(models.Model):
         # 计算以转折做为买点的数据
         def turn_tomorrow(first, second, third, fifth):
             sql = '''
-            select 1 as id,sb.p_end as buy_amount, sb.date_as as buy_date_as, 
+            select 1 as id,sa.code_id,sb.p_end as buy_amount, sb.date_as as buy_date_as, 
                                 sc.p_end as buy_amount_end, sc.date_as as buy_date_as_end from (
               select a.code_id,a.j from (select code_id,j from mc_shares_kdj where date_as = %s and j <10) a
                       left join  (select  k, d,code_id,j from mc_shares_kdj where date_as = %s) b on a.code_id = b.code_id
