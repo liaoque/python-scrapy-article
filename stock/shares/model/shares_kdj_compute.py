@@ -71,8 +71,8 @@ class SharesKdjCompute(models.Model):
                                     and b.k <=b.j and b.d <= b.j
                                     and b.j < 30
                 ) sa
-                  left join  (select p_end,code_id from mc_shares where date_as = %s) sb on sa.code_id = sb.code_id
-                  left join  (select p_end,code_id from mc_shares where date_as = %s) sc on sa.code_id = sc.code_id
+                  left join  (select p_end,code_id,date_as from mc_shares where date_as = %s) sb on sa.code_id = sb.code_id
+                  left join  (select p_end,code_id,date_as from mc_shares where date_as = %s) sc on sa.code_id = sc.code_id
                  where sb.p_end < sc.p_end
                 '''
             return SharesKdjCompute.objects.raw(sql, params=(first, second, third, second, second, fourth))
@@ -96,8 +96,8 @@ class SharesKdjCompute(models.Model):
                       left join  (select code_id,j from mc_shares_kdj where date_as = %s) c on a.code_id = c.code_id
               where (a.j > b.j and b.j < c.j)
             ) sa
-              left join  (select p_end,code_id from mc_shares where date_as = %s) sb on sa.code_id = sb.code_id
-              left join  (select p_end,code_id from mc_shares where date_as = %s) sc on sa.code_id = sc.code_id
+              left join  (select p_end,code_id,date_as from mc_shares where date_as = %s) sb on sa.code_id = sb.code_id
+              left join  (select p_end,code_id,date_as from mc_shares where date_as = %s) sc on sa.code_id = sc.code_id
             where sb.p_end < sc.p_end
             '''
             return SharesKdjCompute.objects.raw(sql, params=(first, second, third, third, fifth))
