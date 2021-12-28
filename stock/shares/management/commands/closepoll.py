@@ -146,8 +146,9 @@ class Command(BaseCommand):
         shill_account_type = SharesName.SkillType.AccountType.intersection_pre
         for item in intersection_pre:
             SharesKdjComputeDetail.saveSharesKdjComputeDetail(
-                code=item.code_id, buy_amount=item.buy_amount, buy_date_as=item.buy_date_as,
-                buy_amount_end=item.buy_amount_end, buy_date_as_end=item.buy_date_as_end, shill_type=shill_type,
+                code=item.code_id, buy_amount=item.buy_amount, buy_date_as=item.buy_date_as.strftime('%Y-%m-%d') ,
+                buy_amount_end=item.buy_amount_end, buy_date_as_end=item.buy_date_as_end.strftime('%Y-%m-%d') ,
+                shill_type=shill_type,
                 shill_account_type=shill_account_type, date_as=today
             )
             print(item)
@@ -155,8 +156,9 @@ class Command(BaseCommand):
         shill_account_type = SharesName.SkillType.AccountType.intersection_today
         for item in intersection_today:
             SharesKdjComputeDetail.saveSharesKdjComputeDetail(
-                code=item.code_id, buy_amount=item.buy_amount, buy_date_as=item.buy_date_as,
-                buy_amount_end=item.buy_amount_end, buy_date_as_end=item.buy_date_as_end, shill_type=shill_type,
+                code=item.code_id, buy_amount=item.buy_amount, buy_date_as=item.buy_date_as.strftime('%Y-%m-%d') ,
+                buy_amount_end=item.buy_amount_end, buy_date_as_end=item.buy_date_as_end.strftime('%Y-%m-%d') ,
+                shill_type=shill_type,
                 shill_account_type=shill_account_type, date_as=today
             )
             print(item)
@@ -164,8 +166,9 @@ class Command(BaseCommand):
         shill_account_type = SharesName.SkillType.AccountType.turn_tomorrow
         for item in turn_tomorrow:
             SharesKdjComputeDetail.saveSharesKdjComputeDetail(
-                code=item.code_id, buy_amount=item.buy_amount, buy_date_as=item.buy_date_as,
-                buy_amount_end=item.buy_amount_end, buy_date_as_end=item.buy_date_as_end, shill_type=shill_type,
+                code=item.code_id, buy_amount=item.buy_amount, buy_date_as=item.buy_date_as.strftime('%Y-%m-%d') ,
+                buy_amount_end=item.buy_amount_end, buy_date_as_end=item.buy_date_as_end.strftime('%Y-%m-%d') ,
+                shill_type=shill_type,
                 shill_account_type=shill_account_type, date_as=today
             )
             print(item)
