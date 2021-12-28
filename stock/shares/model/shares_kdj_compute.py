@@ -41,7 +41,7 @@ class SharesKdjCompute(models.Model):
         # 计算以交点作为买点的数据
         def intersection_pre(first, second, third):
             sql = '''
-                select sa.code_id, sb.p_end as buy_amount, sb.date_as as buy_date_as, 
+                select 1 as id,sa.code_id, sb.p_end as buy_amount, sb.date_as as buy_date_as, 
                                 sc.p_end as buy_amount_end, sc.date_as as buy_date_as_end from (
                               select a.code_id from (
                                   select code_id, min(j) as minj, max(j) as maxj from mc_shares_kdj
@@ -60,7 +60,7 @@ class SharesKdjCompute(models.Model):
 
         def intersection_today(first, second, third, fourth):
             sql = '''
-                select sa.code_id, sb.p_end as buy_amount, sb.date_as as buy_date_as, 
+                select 1 as id,sa.code_id, sb.p_end as buy_amount, sb.date_as as buy_date_as, 
                                 sc.p_end as buy_amount_end, sc.date_as as buy_date_as_end from (
                               select a.code_id from (
                                   select code_id, min(j) as minj, max(j) as maxj from mc_shares_kdj
@@ -79,7 +79,7 @@ class SharesKdjCompute(models.Model):
 
         def turn_total(first, second, third):
             sql = '''
-            select count(1) as c from (select code_id,j from mc_shares_kdj where date_as = %s and j <10) a
+            select 1 as id,count(1) as c from (select code_id,j from mc_shares_kdj where date_as = %s and j <10) a
                       left join  (select  k, d,code_id,j from mc_shares_kdj where date_as = %s) b on a.code_id = b.code_id
                       left join  (select code_id,j from mc_shares_kdj where date_as = %s) c on a.code_id = c.code_id
               where (a.j > b.j and b.j < c.j)
@@ -89,7 +89,7 @@ class SharesKdjCompute(models.Model):
         # 计算以转折做为买点的数据
         def turn_tomorrow(first, second, third, fifth):
             sql = '''
-            select sb.p_end as buy_amount, sb.date_as as buy_date_as, 
+            select 1 as id,sb.p_end as buy_amount, sb.date_as as buy_date_as, 
                                 sc.p_end as buy_amount_end, sc.date_as as buy_date_as_end from (
               select a.code_id,a.j from (select code_id,j from mc_shares_kdj where date_as = %s and j <10) a
                       left join  (select  k, d,code_id,j from mc_shares_kdj where date_as = %s) b on a.code_id = b.code_id
