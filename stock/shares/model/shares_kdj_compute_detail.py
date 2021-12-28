@@ -24,11 +24,11 @@ class SharesKdjComputeDetail(models.Model):
     def __str__(self):
         return self.code
 
-    def saveSharesKdjComputeDetail(self, code, buy_amount, buy_date_as, buy_amount_end, buy_date_as_end, shill_type,
+    def saveSharesKdjComputeDetail(code, buy_amount, buy_date_as, buy_amount_end, buy_date_as_end, shill_type,
                                    shill_account_type, date_as):
-        result = self.objects.filter(code_id=code, date_as=date_as)
+        result = SharesKdjComputeDetail.objects.filter(code_id=code, date_as=date_as)
         if len(result):
-            kdjComputeDetail = self(id=result[0].id,
+            kdjComputeDetail = SharesKdjComputeDetail(id=result[0].id,
                                     code_id=code,
                                     buy_amount=buy_amount,
                                     buy_date_as=buy_date_as,
@@ -38,7 +38,7 @@ class SharesKdjComputeDetail(models.Model):
                                     shill_account_type=shill_account_type,
                                     date_as=date_as)
         else:
-            kdjComputeDetail = self(code_id=code,
+            kdjComputeDetail = SharesKdjComputeDetail(code_id=code,
                                     buy_amount=buy_amount,
                                     buy_date_as=buy_date_as,
                                     buy_amount_end=buy_amount_end,
