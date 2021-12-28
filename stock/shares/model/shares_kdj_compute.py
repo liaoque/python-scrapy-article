@@ -45,15 +45,15 @@ class SharesKdjCompute(models.Model):
                                 sc.p_end as buy_amount_end, sc.date_as as buy_date_as_end from (
                               select a.code_id from (
                                   select code_id, min(j) as minj, max(j) as maxj from mc_shares_kdj
-                                    where date_as in ('%s', '%s', '%s') group by code_id
+                                    where date_as in (%s, %s, %s) group by code_id
                               ) a
-                              left join  (select k, d,code_id,j from mc_shares_kdj where date_as = '%s') b on a.code_id = b.code_id
+                              left join  (select k, d,code_id,j from mc_shares_kdj where date_as = %s) b on a.code_id = b.code_id
                               where (a.minj < b.k and b.k < a.maxj)  and (a.minj < b.d and b.d < a.maxj)
                                     and b.k <=b.j and b.d <= b.j
                                     and b.j < 30
                 ) sa
-                  left join  (select p_end,code_id,date_as from mc_shares where date_as = '%s') sb on sa.code_id = sb.code_id
-                  left join  (select p_end,code_id,date_as from mc_shares where date_as = '%s') sc on sa.code_id = sc.code_id
+                  left join  (select p_end,code_id,date_as from mc_shares where date_as = %s) sb on sa.code_id = sb.code_id
+                  left join  (select p_end,code_id,date_as from mc_shares where date_as = %s) sc on sa.code_id = sc.code_id
                  where sb.p_end < sc.p_end
                 '''
             return SharesKdjCompute.objects.raw(sql, params=(first, second, third, second, first, third))
@@ -64,24 +64,24 @@ class SharesKdjCompute(models.Model):
                                 sc.p_end as buy_amount_end, sc.date_as as buy_date_as_end from (
                               select a.code_id from (
                                   select code_id, min(j) as minj, max(j) as maxj from mc_shares_kdj
-                                    where date_as in ('%s', '%s', '%s') group by code_id
+                                    where date_as in (%s, %s, %s) group by code_id
                               ) a
-                              left join  (select k, d,code_id,j from mc_shares_kdj where date_as = '%s') b on a.code_id = b.code_id
+                              left join  (select k, d,code_id,j from mc_shares_kdj where date_as = %s) b on a.code_id = b.code_id
                               where (a.minj < b.k and b.k < a.maxj)  and (a.minj < b.d and b.d < a.maxj)
                                     and b.k <=b.j and b.d <= b.j
                                     and b.j < 30
                 ) sa
-                  left join  (select p_end,code_id from mc_shares where date_as = '%s') sb on sa.code_id = sb.code_id
-                  left join  (select p_end,code_id from mc_shares where date_as = '%s') sc on sa.code_id = sc.code_id
+                  left join  (select p_end,code_id from mc_shares where date_as = %s) sb on sa.code_id = sb.code_id
+                  left join  (select p_end,code_id from mc_shares where date_as = %s) sc on sa.code_id = sc.code_id
                  where sb.p_end < sc.p_end
                 '''
             return SharesKdjCompute.objects.raw(sql, params=(first, second, third, second, second, fourth))
 
         def turn_total(first, second, third):
             sql = '''
-            select count(1) as c from (select code_id,j from mc_shares_kdj where date_as = '%s' and j <10) a
-                      left join  (select  k, d,code_id,j from mc_shares_kdj where date_as = '%s') b on a.code_id = b.code_id
-                      left join  (select code_id,j from mc_shares_kdj where date_as = '%s') c on a.code_id = c.code_id
+            select count(1) as c from (select code_id,j from mc_shares_kdj where date_as = %s and j <10) a
+                      left join  (select  k, d,code_id,j from mc_shares_kdj where date_as = %s) b on a.code_id = b.code_id
+                      left join  (select code_id,j from mc_shares_kdj where date_as = %s) c on a.code_id = c.code_id
               where (a.j > b.j and b.j < c.j)
             '''
             return SharesKdjCompute.objects.raw(sql, params=(first, second, third))
@@ -91,13 +91,13 @@ class SharesKdjCompute(models.Model):
             sql = '''
             select sb.p_end as buy_amount, sb.date_as as buy_date_as, 
                                 sc.p_end as buy_amount_end, sc.date_as as buy_date_as_end from (
-              select a.code_id,a.j from (select code_id,j from mc_shares_kdj where date_as = '%s' and j <10) a
-                      left join  (select  k, d,code_id,j from mc_shares_kdj where date_as = '%s') b on a.code_id = b.code_id
-                      left join  (select code_id,j from mc_shares_kdj where date_as = '%s') c on a.code_id = c.code_id
+              select a.code_id,a.j from (select code_id,j from mc_shares_kdj where date_as = %s and j <10) a
+                      left join  (select  k, d,code_id,j from mc_shares_kdj where date_as = %s) b on a.code_id = b.code_id
+                      left join  (select code_id,j from mc_shares_kdj where date_as = %s) c on a.code_id = c.code_id
               where (a.j > b.j and b.j < c.j)
             ) sa
-              left join  (select p_end,code_id from mc_shares where date_as = '%s') sb on sa.code_id = sb.code_id
-              left join  (select p_end,code_id from mc_shares where date_as = '%s') sc on sa.code_id = sc.code_id
+              left join  (select p_end,code_id from mc_shares where date_as = %s) sb on sa.code_id = sb.code_id
+              left join  (select p_end,code_id from mc_shares where date_as = %s) sc on sa.code_id = sc.code_id
             where sb.p_end < sc.p_end
             '''
             return SharesKdjCompute.objects.raw(sql, params=(first, second, third, third, fifth))
