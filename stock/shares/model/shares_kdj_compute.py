@@ -84,7 +84,7 @@ class SharesKdjCompute(models.Model):
                       left join  (select code_id,j from mc_shares_kdj where date_as = '%s') c on a.code_id = c.code_id
               where (a.j > b.j and b.j < c.j)
             '''
-            return SharesKdjCompute.objects.raw(sql, params=(first, second, third, second))
+            return SharesKdjCompute.objects.raw(sql, params=(first, second, third))
 
         # 计算以转折做为买点的数据
         def turn_tomorrow(first, second, third, fifth):
