@@ -129,6 +129,9 @@ class Command(BaseCommand):
         intersection_pre = SharesKdjCompute.Compute.intersection_pre(first=third, second=fourth, third=fifth)
         if len(result) > 4:
             turn_total_result = SharesKdjCompute.Compute.turn_total(first=first, second=second, third=third)
+            print(turn_total_result)
+            print(turn_total_result[0])
+            print(turn_total_result[0]['c'])
             turn_total = turn_total_result[0].c
             turn_tomorrow = SharesKdjCompute.Compute.turn_tomorrow(first=first, second=second, third=third, fourth=fifth)
 
