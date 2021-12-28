@@ -130,7 +130,7 @@ class Command(BaseCommand):
         if len(result) > 4:
             turn_total_result = SharesKdjCompute.Compute.turn_total(first=first, second=second, third=third)
             turn_total = turn_total_result[0].c
-            turn_tomorrow = SharesKdjCompute.Compute.turn_tomorrow(first=first, second=second, third=third, fourth=fifth)
+            turn_tomorrow = SharesKdjCompute.Compute.turn_tomorrow(first=first, second=second, third=third, fifth=fifth)
 
         # print(intersection_total, intersection_today, intersection_pre,turn_total, turn_tomorrow)
 
