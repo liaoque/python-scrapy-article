@@ -125,7 +125,7 @@ class Command(BaseCommand):
         turn_total = 0
         turn_tomorrow = []
         intersection_total = SharesKdjCompute.Compute.intersection_total(first=third, second=fourth, third=fifth)
-        intersection_today = SharesKdjCompute.Compute.intersection_today(first=third, second=fourth, third=fifth)
+        intersection_today = SharesKdjCompute.Compute.intersection_today(first=second, second=third, third=fourth, fourth=fifth)
         intersection_pre = SharesKdjCompute.Compute.intersection_pre(first=second, second=third, third=fourth, fourth=fifth)
         if len(result) > 4:
             turn_total_result = SharesKdjCompute.Compute.turn_total(first=third, second=fourth, third=fifth)
