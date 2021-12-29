@@ -26,6 +26,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.calculateKdj()
+        print("开始计算kdj-----")
         self.KdjCompute()
 
         pass
