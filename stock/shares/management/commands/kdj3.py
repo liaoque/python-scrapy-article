@@ -29,17 +29,59 @@ class Command(BaseCommand):
         dateList = self.getAllDates()
         # for item in dateList:
         #     print(item.date_as)
-        print(dateList[-1])
-        print(dateList[-4])
-        print(dateList[-100])
-        # while len2 > 0:
-        #     dates = dateList[len2-5:5]
-        #     print(dates, dates[0], dates[4])
-        #     break
-        # pass
+        i = 0
+        while i < len(dateList):
+            first = dateList[0+i]
+            second = dateList[1+i]
+            if 5+i >= len(dateList):
+                break
+            fifth = dateList[5+i]
+            result = self.compute1(first, second, fifth)
+            print("%s-%s-%s-收益大于3%的：%d"%(first, second, fifth, len(result)))
+            for item in result:
+                print("%s--%s"%(item.code_id, str(item.rate)))
+            print("---------")
+
+            result = self.compute2(first, second, fifth)
+            print("%s-%s-%s-收益小于0%的：%d"%(first, second, fifth, len(result)))
+            for item in result:
+                print("%s--%s" % (item.code_id, str(item.rate)))
+            print("---------")
 
     def getAllDates(self):
         sql = '''
             select 1 as id, date_as from mc_shares_kdj group by date_as;
             '''
         return SharesKdjCompute.objects.raw(sql)
+
+    def compute1(self, first, second, fifth):
+        sql = '''
+            SELECT 1 as id, mc_shares_kdj.code_id,(e.p_end / c.p_end) as rate FROM `mc_shares_kdj`
+            left join (select p_end,code_id from mc_shares where date_as = %s) c on c.code_id = mc_shares_kdj.code_id
+            left join (select p_end,code_id from mc_shares where date_as = %s) d on d.code_id = mc_shares_kdj.code_id
+            left join (select p_end,code_id,p_end from mc_shares where date_as = %s) e on e.code_id = mc_shares_kdj.code_id
+            where j <16 and date_as = %s and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
+            and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like "%ST%" )
+            and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
+            and mc_shares_kdj.code_id < 800000
+            and  ((k - j) > 0 and (d - j) > 0) and ((k - j) <=5 and (d - j) <= 5)
+            and c.p_end > d.p_end
+            having rate >= 1.03
+        '''
+        return SharesKdjCompute.objects.raw(sql,params=(second, first, fifth, second,))
+
+    def compute2(self, first, second, fifth):
+        sql = '''
+            SELECT 1 as id, mc_shares_kdj.code_id,(e.p_end / c.p_end) as rate FROM `mc_shares_kdj`
+            left join (select p_end,code_id from mc_shares where date_as = %s) c on c.code_id = mc_shares_kdj.code_id
+            left join (select p_end,code_id from mc_shares where date_as = %s) d on d.code_id = mc_shares_kdj.code_id
+            left join (select p_end,code_id,p_end from mc_shares where date_as = %s) e on e.code_id = mc_shares_kdj.code_id
+            where j <16 and date_as = %s and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
+            and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like "%ST%" )
+            and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
+            and mc_shares_kdj.code_id < 800000
+            and  ((k - j) > 0 and (d - j) > 0) and ((k - j) <=5 and (d - j) <= 5)
+            and c.p_end > d.p_end
+            having rate < 0
+        '''
+        return SharesKdjCompute.objects.raw(sql,params=(second, first, fifth, second,))
