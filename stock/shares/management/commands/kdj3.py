@@ -62,7 +62,7 @@ class Command(BaseCommand):
             SELECT 1 as id, mc_shares_kdj.code_id,(e.p_end / c.p_end) as rate FROM `mc_shares_kdj`
             left join (select p_end,code_id from mc_shares where date_as = %s) c on c.code_id = mc_shares_kdj.code_id
             left join (select p_end,code_id from mc_shares where date_as = %s) d on d.code_id = mc_shares_kdj.code_id
-            left join (select p_end,code_id,p_end from mc_shares where date_as = %s) e on e.code_id = mc_shares_kdj.code_id
+            left join (select p_end,code_id,p_max from mc_shares where date_as = %s) e on e.code_id = mc_shares_kdj.code_id
             where j <16 and date_as = %s and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
             and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like "%s" )
             and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
@@ -78,7 +78,7 @@ class Command(BaseCommand):
             SELECT 1 as id, mc_shares_kdj.code_id,(e.p_end / c.p_end) as rate FROM `mc_shares_kdj`
             left join (select p_end,code_id from mc_shares where date_as = %s) c on c.code_id = mc_shares_kdj.code_id
             left join (select p_end,code_id from mc_shares where date_as = %s) d on d.code_id = mc_shares_kdj.code_id
-            left join (select p_end,code_id,p_end from mc_shares where date_as = %s) e on e.code_id = mc_shares_kdj.code_id
+            left join (select p_end,code_id,p_max from mc_shares where date_as = %s) e on e.code_id = mc_shares_kdj.code_id
             where j <16 and date_as = %s and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
             and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like "%s" )
             and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
