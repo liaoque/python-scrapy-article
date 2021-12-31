@@ -28,11 +28,12 @@ class Command(BaseCommand):
         print("开始计算-----")
         dateList = self.getAllDates()
         len2 = len(dateList) / 5
-        while len2 > 0:
-            dates = dateList[len2-5:5]
-            print(dates, dates[0], dates[4])
-            break
-        pass
+        print(len2)
+        # while len2 > 0:
+        #     dates = dateList[len2-5:5]
+        #     print(dates, dates[0], dates[4])
+        #     break
+        # pass
 
     def getAllDates(self):
         sql = '''
