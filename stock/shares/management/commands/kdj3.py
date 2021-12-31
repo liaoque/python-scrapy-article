@@ -38,6 +38,7 @@ class Command(BaseCommand):
             fifth = dateList[5+i].date_as
             result = self.compute1(first, second, fifth)
             print(result)
+
             # slen = len(result)
             # print("%s-%s-%s-收益大于3%的：%d"%(first, second, fifth, slen))
             # for item in result:
@@ -50,6 +51,7 @@ class Command(BaseCommand):
             # for item in result:
             #     print("%s--%s" % (item.code_id, str(item.rate)))
             # print("---------")
+            i = i + 1
 
     def getAllDates(self):
         sql = '''
