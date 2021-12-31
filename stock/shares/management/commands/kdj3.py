@@ -27,9 +27,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("开始计算-----")
         dateList = self.getAllDates()
-        len = len(dateList) / 5
-        while len > 0:
-            dates = dateList[len-5:5]
+        len2 = len(dateList) / 5
+        while len2 > 0:
+            dates = dateList[len2-5:5]
             print(dates, dates[0], dates[4])
             break
         pass
