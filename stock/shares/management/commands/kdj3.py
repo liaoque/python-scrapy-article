@@ -36,6 +36,6 @@ class Command(BaseCommand):
 
     def getAllDates(self):
         sql = '''
-            select date from mc_shares_kdj group by date;
+            select date_as from mc_shares_kdj group by date;
             '''
         return SharesKdjCompute.objects.raw(sql)
