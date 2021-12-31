@@ -85,6 +85,6 @@ class Command(BaseCommand):
             and mc_shares_kdj.code_id < 800000
             and  ((k - j) > 0 and (d - j) > 0) and ((k - j) <=5 and (d - j) <= 5)
             and c.p_end > d.p_end
-            having rate < 0
+            having rate < 1
         '''
         return SharesKdjCompute.objects.raw(sql,params=(second, first, fifth, second,'%ST%',))
