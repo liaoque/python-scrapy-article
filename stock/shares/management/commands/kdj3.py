@@ -31,7 +31,7 @@ class Command(BaseCommand):
         #     print(item.date_as)
         print(dateList[-1])
         print(dateList[-4])
-        print(dateList[-5])
+        print(dateList[-100])
         # while len2 > 0:
         #     dates = dateList[len2-5:5]
         #     print(dates, dates[0], dates[4])
