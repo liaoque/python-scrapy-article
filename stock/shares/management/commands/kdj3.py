@@ -35,7 +35,7 @@ class Command(BaseCommand):
             second = dateList[1+i].date_as
             if 5+i >= len(dateList):
                 break
-            fifth = dateList[4+i].date_as
+            fifth = dateList[3+i].date_as
             result = self.compute1(first, second, fifth)
             slen = len(result)
             print("%s-%s-%s-收益大于3的：%s"%(first, second, fifth, slen))
