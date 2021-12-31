@@ -31,11 +31,11 @@ class Command(BaseCommand):
         #     print(item.date_as)
         i = 0
         while i < len(dateList):
-            first = dateList[0+i]
-            second = dateList[1+i]
+            first = dateList[0+i].date_as
+            second = dateList[1+i].date_as
             if 5+i >= len(dateList):
                 break
-            fifth = dateList[5+i]
+            fifth = dateList[5+i].date_as
             result = self.compute1(first, second, fifth)
             print("%s-%s-%s-收益大于3%的：%d"%(first, second, fifth, len(result)))
             for item in result:
