@@ -24,7 +24,7 @@ class Shares_industry_date(scrapy.Spider):
         "BJ": "m:0+t:81+s:2048",
     }
     headers = {
-        # "HOST": "24.push2.eastmoney.com"
+        "HOST": "24.push2.eastmoney.com"
     }
     db = None
     cursor = None
