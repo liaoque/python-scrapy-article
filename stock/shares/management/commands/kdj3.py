@@ -46,6 +46,7 @@ class Command(BaseCommand):
                 break
             fifth = dateList[4+i].date_as
             result = self.compute1(first, second, fifth)
+            print(result)
             slen = len(result)
             print("%s-%s-%s-收益大于3的：%s"%(first, second, fifth, slen))
             for item in result:
@@ -108,7 +109,6 @@ class Command(BaseCommand):
             )
             having rate < 1
         '''
-        print(sql)
         return SharesKdjCompute.objects.raw(sql,params=(second, first, fifth, second,'%ST%',first,second,))
 
     def compute3(self, first, second):
