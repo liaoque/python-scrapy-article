@@ -51,7 +51,6 @@ class Shares_industry_date(scrapy.Spider):
     def start_requests(self):
         self.connect()
         results = self.findIndustry()
-        print(results)
 
         for item in results:
             code = item[0]
@@ -69,6 +68,7 @@ class Shares_industry_date(scrapy.Spider):
 
     def parse_content(self, response):
         result = json.loads(response.text)
+        print(result)
         for item in result["data"]["klines"]:
             res = item.split(',')
             item_loader = ItemLoader(item=SharesIndustyDateItems.Items())
