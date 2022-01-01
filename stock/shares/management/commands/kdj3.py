@@ -60,27 +60,6 @@ class Command(BaseCommand):
             print("---------")
             i = i + 1
 
-        while i < len(dateList):
-            first = dateList[0+i].date_as
-            second = dateList[1+i].date_as
-            if 4+i >= len(dateList):
-                break
-            fifth = dateList[4+i].date_as
-            result = self.compute1(first, second, fifth)
-            slen = len(result)
-            print("%s-%s-%s-收益大于3的：%s"%(first, second, fifth, slen))
-            for item in result:
-                print("%s--%s"%(item.code_id, str(item.rate)))
-            print("---------")
-
-            result = self.compute2(first, second, fifth)
-            slen = len(result)
-            print("%s-%s-%s-收益小于0的：%s"%(first, second, fifth, slen))
-            for item in result:
-                print("%s--%s" % (item.code_id, str(item.rate)))
-            print("---------")
-            i = i + 1
-
     def getAllDates(self):
         sql = '''
             select 1 as id, date_as from mc_shares_kdj group by date_as;
