@@ -69,7 +69,7 @@ class Shares_industry_date(scrapy.Spider):
 
     def parse_content(self, response):
         result = json.loads(response.text)
-        for item in result["data"]["diff"]:
+        for item in result["data"]["klines"]:
             res = item.split(',')
             item_loader = ItemLoader(item=SharesIndustyDateItems.Items())
             # 文档标题
