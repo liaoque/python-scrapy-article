@@ -108,6 +108,7 @@ class Command(BaseCommand):
             )
             having rate < 1
         '''
+        print(sql)
         return SharesKdjCompute.objects.raw(sql,params=(second, first, fifth, second,'%ST%',first,second,))
 
     def compute3(self, first, second):
