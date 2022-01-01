@@ -25,7 +25,7 @@ class Shares_industry(scrapy.Spider):
     }
 
     def get_url(self, industry):
-        return "http://92.push2.eastmoney.com/api/qt/clist/get?cb=&pn=2&pz=1000&po=1&" \
+        return "http://92.push2.eastmoney.com/api/qt/clist/get?cb=&pn=1&pz=1000&po=1&" \
                "np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=b:" + \
                str(industry) + "+f:!50&fields=f12,f14&_=1641007887744"
 
@@ -47,6 +47,8 @@ class Shares_industry(scrapy.Spider):
             headers['industry_name'] = item["f14"]
             yield scrapy.Request(url, headers=headers, callback=self.parse_content, dont_filter=True)
 
+# "https://46.push2.eastmoney.com/api/qt/clist/get?cb=&pn=2&pz=20&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=b:BK0484+f:!50&fields=f1&_=1641013357526"
+# "http://92.push2.eastmoney.com/api/qt/clist/get?cb=&pn=2&pz=1000&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=b:BK0484+f:!50&fields=f12,f14&_=1641007887744"
     def parse_content(self, response):
         industry_code = response.request.headers.getlist('industry_code')[0].decode("UTF-8")
         industry_name = response.request.headers.getlist('industry_name')[0].decode("UTF-8")
