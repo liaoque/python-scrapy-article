@@ -112,7 +112,7 @@ class Command(BaseCommand):
 
     def compute3(self, first, second):
         sql = '''
-        SELECT mc_shares_kdj.code_id FROM `mc_shares_kdj`
+        SELECT 1 as id, mc_shares_kdj.code_id FROM `mc_shares_kdj`
 left join (select p_end,code_id from mc_shares where date_as = %s) c on c.code_id = mc_shares_kdj.code_id
 left join (select p_end,code_id from mc_shares where date_as = %s) d on d.code_id = mc_shares_kdj.code_id
 left join (select code_id,industry_code_id from mc_shares_join_industry) f on f.code_id = mc_shares_kdj.code_id
