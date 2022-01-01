@@ -34,7 +34,7 @@ class Shares_industry(scrapy.Spider):
         url = "https://56.push2.eastmoney.com/api/qt/clist/get?cb=&pn=1&pz=1000&" \
               "po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&" \
               "fs=m:90+t:2+f:!50&fields=f12,f13,f14&_=1641007970988"
-        return scrapy.Request(url, callback=self.parse_each, dont_filter=True)
+        yield scrapy.Request(url, callback=self.parse_each, dont_filter=True)
 
     def parse_each(self, response):
         result = json.loads(response.text)
