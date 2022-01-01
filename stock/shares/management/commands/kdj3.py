@@ -14,7 +14,6 @@ from shares.model.shares_kdj_compute_detail import SharesKdjComputeDetail
 import numpy as np
 import talib
 
-" /bin/cp /alidata/python/python-scrapy-article/stock/* /alidata/python/python-scrapy-article-master/stock -rf"
 
 
 class Command(BaseCommand):
@@ -41,22 +40,22 @@ class Command(BaseCommand):
 
         i = 0
         while i < slen1:
-            first = dateList[0+i].date_as
-            second = dateList[1+i].date_as
-            if 4+i >= len(dateList):
+            first = dateList[0 + i].date_as
+            second = dateList[1 + i].date_as
+            if 4 + i >= len(dateList):
                 break
-            fifth = dateList[4+i].date_as
+            fifth = dateList[4 + i].date_as
             result = self.compute1(first, second, fifth)
 
             slen = len(result)
-            print("%s-%s-%s-收益大于3的：%s"%(first, second, fifth, slen))
+            print("%s-%s-%s-收益大于3的：%s" % (first, second, fifth, slen))
             for item in result:
-                print("%s--%s"%(item.code_id, str(item.rate)))
+                print("%s--%s" % (item.code_id, str(item.rate)))
             print("---------")
 
             result = self.compute2(first, second, fifth)
             slen = len(result)
-            print("%s-%s-%s-收益小于0的：%s"%(first, second, fifth, slen))
+            print("%s-%s-%s-收益小于0的：%s" % (first, second, fifth, slen))
             for item in result:
                 print("%s--%s" % (item.code_id, str(item.rate)))
             print("---------")
@@ -88,7 +87,7 @@ class Command(BaseCommand):
             )
             having rate >= 1.03
         '''
-        return SharesKdjCompute.objects.raw(sql,params=(second, first, fifth, second,'%ST%',first,second,))
+        return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, second,))
 
     def compute2(self, first, second, fifth):
         sql = '''
@@ -110,7 +109,7 @@ class Command(BaseCommand):
             )
             having rate < 1
         '''
-        return SharesKdjCompute.objects.raw(sql,params=(second, first, fifth, second,'%ST%',first,second,))
+        return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, second,))
 
     def compute3(self, first, second):
         sql = '''
