@@ -11,6 +11,7 @@ class SharesName(models.Model):
     temper_dongfangcaifu = models.IntegerField(default=0)
     area_id = models.IntegerField(default=0)
     status = models.IntegerField(default=0)
+    code_type = models.IntegerField(default=0, help_text="1股票，2行业板块")
 
     class Meta:
         db_table = "mc_shares_name"

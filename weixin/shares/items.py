@@ -27,6 +27,7 @@ class Items(scrapy.Item):
     area_id = scrapy.Field()
     temper_dongfangcaifu = scrapy.Field()
     status = scrapy.Field()
+    code_type = scrapy.Field()
     area_map = {
         "SH": 1,
         "SZ": 2,
@@ -43,11 +44,13 @@ class Items(scrapy.Item):
         if 'temper_dongfangcaifu' in self:
             self.save_temper_dongfangcaifu(cursor)
             return
+
     pass
 
     def save_one(self, cursor):
         code = self['code'][0]
         status = self['status'][0]
+        code_type = self['code_type'][0]
         area_id = int(self.area_map[self['area_id'][0]])
         cursor = self.findByCode(cursor, code)
         if cursor.rowcount:
@@ -56,17 +59,21 @@ class Items(scrapy.Item):
                 sql = "update mc_shares_name set area_id = '%s'  WHERE code = '%s'" % (area_id, code)
                 cursor.execute(sql);
             if data[0]['status'] != status:
-                sql = "update mc_shares_name set status = '%s'  WHERE code = '%s'" % (status, code)
+                sql = "update mc_shares_name set status = '%s' WHERE code = '%s'" % (status, code)
+                cursor.execute(sql);
+            if data[0]['code_type'] != 0:
+                sql = "update mc_shares_name set code_type = '%s'  WHERE code = '%s'" % (code_type, code)
                 cursor.execute(sql);
             return
         sql = """
-                    INSERT INTO mc_shares_name (name, code, area_id)
-                    VALUES (%s, %s, %s)
+                    INSERT INTO mc_shares_name (name, code, area_id, code_type)
+                    VALUES (%s, %s, %s, %s)
                     """;
         params = (
             self["name"][0],
             code,
             area_id,
+            code_type,
         )
         cursor.execute(sql, params)
 
@@ -84,6 +91,6 @@ class Items(scrapy.Item):
         cursor.execute(sql);
 
     def findByCode(self, cursor, code):
-        sql = "SELECT area_id,status FROM mc_shares_name  WHERE code = '%s'" % code
+        sql = "SELECT area_id,status,code_type FROM mc_shares_name  WHERE code = '%s'" % code
         cursor.execute(sql);
         return cursor

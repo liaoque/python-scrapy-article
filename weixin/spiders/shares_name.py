@@ -68,6 +68,7 @@ class Shares_name(scrapy.Spider):
             item_loader = ItemLoader(item=SharesItems.Items())
             item_loader.add_value("code", code)
             item_loader.add_value("name", name)
+            item_loader.add_value("code_type", '1')
             item_loader.add_value("area_id", area)
             item_loader.add_value("status", status)
             yield item_loader.load_item()
