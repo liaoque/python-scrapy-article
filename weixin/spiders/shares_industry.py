@@ -65,7 +65,7 @@ class Shares_industry(scrapy.Spider):
         for item in result["data"]["diff"]:
             name = item["f14"] + ""
             code_id = item["f12"] + ""
-            if code_id < '100000' or (code_id < '400000' and code_id <= '300000') or  (code_id < '600000' and code_id <= '700000') :
+            if code_id < '100000' or (code_id < '400000' and code_id >= '300000') or  (code_id < '700000' and code_id >= '600000') :
                 print("加入行业：%s--%s" % (industry_name, name))
                 item_loader2 = ItemLoader(item=SharesItemsIndustry.Items())
                 item_loader2.add_value("code_id", code_id)
