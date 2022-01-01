@@ -33,6 +33,7 @@ class Command(BaseCommand):
         first = dateList[slen1 - 2].date_as
         second = dateList[slen1 - 1].date_as
         result = self.compute3(first, second)
+        print(result)
         print("%s-%s-挑选出股票：%s个" % (first, second, len(result)))
         for item in result:
             print("%s" % (item.code_id))
@@ -46,7 +47,7 @@ class Command(BaseCommand):
                 break
             fifth = dateList[4+i].date_as
             result = self.compute1(first, second, fifth)
-            print(result)
+
             slen = len(result)
             print("%s-%s-%s-收益大于3的：%s"%(first, second, fifth, slen))
             for item in result:
