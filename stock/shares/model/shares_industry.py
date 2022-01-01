@@ -9,7 +9,7 @@ class SharesIndustry(models.Model):
     code = models.ForeignKey(SharesName, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = "mc_shares_industry"
+        db_table = "mc_shares_join_industry"
         # abstract = True
 
     def __str__(self):

@@ -23,7 +23,7 @@ class Items(scrapy.Item):
         if self.exitsByCode(cursor, code_id, industry_code_id):
             return
         sql = """
-            INSERT INTO mc_shares_industry (code_id, industry_code_id)
+            INSERT INTO mc_shares_join_industry (code_id, industry_code_id)
             VALUES (%s, %s)
             """;
         params = (
@@ -35,6 +35,6 @@ class Items(scrapy.Item):
     pass
 
     def exitsByCode(self, cursor, code_id, industry_code_id):
-        sql = "SELECT code_id FROM mc_shares_industry  WHERE code_id = '%s' and industry_code_id='%s'" % (code_id, industry_code_id)
+        sql = "SELECT code_id FROM mc_shares_join_industry  WHERE code_id = '%s' and industry_code_id='%s'" % (code_id, industry_code_id)
         cursor.execute(sql);
         return cursor.rowcount
