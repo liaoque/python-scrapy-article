@@ -49,7 +49,6 @@ class Shares_industry(scrapy.Spider):
 
     def parse_content(self, response):
         result = json.loads(response.text)
-        self.total = result["data"]["total"] / 200 + 1
 
         industry_code = response.request.headers.getlist('industry_code')[0].decode("UTF-8")
         industry_name = response.request.headers.getlist('industry_name')[0].decode("UTF-8")
