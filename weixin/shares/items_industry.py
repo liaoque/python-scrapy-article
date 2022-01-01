@@ -24,7 +24,7 @@ class Items(scrapy.Item):
             return
         sql = """
             INSERT INTO mc_shares_industry (code_id, industry_code_id)
-            VALUES (%s, %s, %s,  %s,  %s, %s, %s, %s,  %s,  %s)
+            VALUES (%s, %s)
             """;
         params = (
             code_id,
