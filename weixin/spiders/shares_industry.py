@@ -63,7 +63,9 @@ class Shares_industry(scrapy.Spider):
         yield item_loader.load_item()
 
         for item in result["data"]["diff"]:
+            name = item["f14"] + ""
             code_id = item["f12"] + ""
+            print("加入行业：%s--%s" % (industry_name, name))
             item_loader2 = ItemLoader(item=SharesItemsIndustry.Items())
             item_loader2.add_value("code_id", code_id)
             item_loader2.add_value("industry_code_id", industry_code)
