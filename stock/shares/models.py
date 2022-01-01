@@ -12,4 +12,5 @@ from .model.shares_ban import SharesBan
 from .model.shares_kdj_compute import SharesKdjCompute
 from .model.shares_kdj_compute_detail import SharesKdjComputeDetail
 from .model.shares_join_industry import SharesJoinIndustry
+from .model.shares_industry import SharesIndustry
 

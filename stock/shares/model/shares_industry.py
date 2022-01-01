@@ -2,17 +2,21 @@ from django.db import models
 
 from .shares_name import SharesName
 # Create your models here.
+from datetime import datetime
 
-
-class SharesJoinIndustry(models.Model):
-    industry_code = models.ForeignKey(SharesName, related_name='industry_code_id', on_delete=models.CASCADE)
-    code = models.ForeignKey(SharesName, on_delete=models.CASCADE)
+class SharesIndustry(models.Model):
+    code = models.ForeignKey(SharesName, name='code', on_delete=models.CASCADE)
+    p_min = models.IntegerField(default=0)
+    p_max = models.IntegerField(default=0)
+    p_start = models.IntegerField(default=0)
+    p_end = models.IntegerField(default=0)
+    date_as = models.DateField()
 
     class Meta:
-        db_table = "mc_shares_join_industry"
+        db_table = "mc_shares_industry"
         # abstract = True
 
     def __str__(self):
-        return self.industry_code_id + "----" + self.code
+        return self.code + ":" + datetime.strftime(self.date_as, '%Y-%m-%d')
 
 

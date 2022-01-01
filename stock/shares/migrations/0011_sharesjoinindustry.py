@@ -12,14 +12,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='SharesIndustry',
+            name='SharesJoinIndustry',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shares.sharesname')),
                 ('industry_code', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='industry_code_id', to='shares.sharesname')),
             ],
             options={
-                'db_table': 'mc_shares_industry',
+                'db_table': 'mc_shares_join_industry',
             },
         ),
     ]

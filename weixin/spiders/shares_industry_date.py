@@ -1,33 +1,42 @@
-from datetime import datetime
-
 import scrapy
 import json
+
 from scrapy.loader import ItemLoader
-import sys
+import weixin.shares.items_industry_date as SharesIndustyDateItems
+import time
+import copy
 import MySQLdb
 import MySQLdb.cursors
-
-import weixin.shares.items_date as SharesDateItems
 import time
+from datetime import datetime
 
 
-class Shares(scrapy.Spider):
-    name = 'shares'
+# http://zx.10jqka.com.cn/indval/getallindustry
+# https://www.liujiangblog.com/course/django/88
+class Shares_industry(scrapy.Spider):
+    name = 'shares_industry'
+    total = 1
     allowed_domains = ['.eastmoney.com']
     start_urls = []
+    area_map = {
+        "SH": "m:1+t:2,m:1+t:23",
+        "SZ": "m:0+t:6,m:0+t:80",
+        "BJ": "m:0+t:81+s:2048",
+    }
     headers = {
-        "HOST": "push2his.eastmoney.com",
-        'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+        "HOST": "92.push2.eastmoney.com"
     }
     db = None
     cursor = None
 
-    def get_url(self, code, days):
+    def get_url(self, industry, days):
         if days <= 0:
             days = 100000
-        return 'https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=' + \
-               str(code) + '&cb=&klt=101&fqt=0&lmt=' + str(days) + \
-               '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
+        return "https://24.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&" \
+               "secid=90." + str(industry) + "&ut=fa5fd1943c7b386f172d6893dbfba10b&" \
+                                             "fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&" \
+                                             "klt=101&fqt=1&beg=0&end=20500101&smplmt=755&lmt=" + str(
+            days) + "&_=1641017528891"
 
     def connect(self):
         if self.db == None:
@@ -40,23 +49,16 @@ class Shares(scrapy.Spider):
 
     # http://11.push2.eastmoney.com/api/qt/clist/get?cb=&pn=1&pz=20&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152&_=1584074266443"
     def start_requests(self):
-        self.connect()
-        results = self.findStoks()
+        results = self.findIndustry()
         for item in results:
             code = item[0]
             days = 0
-
-            stock_info = self.findStokByCode(code)
+            stock_info = self.findIndustryByCode(code)
             if stock_info:
-                days = (datetime.now().date() - stock_info[2]).days
+                days = (datetime.now().date() - stock_info[1]).days
                 if days < 1:
                     return
-            area_id = item[2]
-            if area_id == 1:
-                s_code = "1." + code
-            else:
-                s_code = "0." + code
-            url = self.get_url(s_code, days)
+            url = self.get_url(code, days)
             yield scrapy.Request(url,
                                  headers=self.headers,
                                  dont_filter=True,
@@ -64,30 +66,20 @@ class Shares(scrapy.Spider):
 
     def parse_content(self, response):
         result = json.loads(response.text)
-        # title = response.css('span a::text').extract_first();
-        # url = response.css('span a::attr(href)').extract_first();
-        # img = response.css('img::attr(src)').extract_first();
-        # text_type = response.css('.h70 .fl_l::text').extract_first();
-        for item in result["data"]["klines"]:
+        for item in result["data"]["diff"]:
             res = item.split(',')
-            item_loader = ItemLoader(item=SharesDateItems.Items())
-
+            item_loader = ItemLoader(item=SharesIndustyDateItems.Items())
             # 文档标题
-            item_loader.add_value("name", result["data"]["name"])
             item_loader.add_value("code", result["data"]["code"])
             item_loader.add_value("p_min", res[4])
             item_loader.add_value("p_max", res[3])
             item_loader.add_value("p_start", res[1])
             item_loader.add_value("p_end", res[2])
-            item_loader.add_value("p_range", res[7])
-            item_loader.add_value("buy_count", res[5])
-            item_loader.add_value("buy_sum", res[6])
             item_loader.add_value("date_as", res[0])
             yield item_loader.load_item()
-        pass
 
-    def findStoks(self):
-        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1';
+    def findIndustry(self):
+        sql = 'select code,name from mc_shares_name where code_type = 2';
         results = []
         try:
             # 执行SQL语句
@@ -98,8 +90,11 @@ class Shares(scrapy.Spider):
             print("Error: unable to fecth data")
         return results
 
-    def findStokByCode(self, code):
-        sql = "SELECT code_id as code,name,date_as FROM `mc_shares` WHERE code_id = '%s' ORDER BY date_as DESC LIMIT 1" % (code);
+    def findIndustryByCode(self, code):
+        sql = "SELECT code_id as code,date_as " \
+              "FROM `mc_shares_industry`" \
+              " WHERE code_id = '%s' ORDER BY date_as DESC LIMIT 1" % (
+                  code);
         results = []
         try:
             # 执行SQL语句
@@ -109,8 +104,3 @@ class Shares(scrapy.Spider):
         except:
             print("Error: unable to fecth data")
         return results
-
-    def __del__(self):
-        if self.db != None:
-            self.cursor.close()
-            self.db.close()
