@@ -13,8 +13,8 @@ from datetime import datetime
 
 # http://zx.10jqka.com.cn/indval/getallindustry
 # https://www.liujiangblog.com/course/django/88
-class Shares_industry(scrapy.Spider):
-    name = 'shares_industry'
+class Shares_industry_date(scrapy.Spider):
+    name = 'shares_industry_date'
     total = 1
     allowed_domains = ['.eastmoney.com']
     start_urls = []
