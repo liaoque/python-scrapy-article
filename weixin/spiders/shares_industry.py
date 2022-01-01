@@ -48,8 +48,6 @@ class Shares_industry(scrapy.Spider):
             yield scrapy.Request(url, headers=headers, callback=self.parse_content, dont_filter=True)
 
     def parse_content(self, response):
-        result = json.loads(response.text)
-
         industry_code = response.request.headers.getlist('industry_code')[0].decode("UTF-8")
         industry_name = response.request.headers.getlist('industry_name')[0].decode("UTF-8")
         print("加入行业：%s" % (industry_name))
@@ -61,6 +59,8 @@ class Shares_industry(scrapy.Spider):
         item_loader.add_value("code_type", '2')
         yield item_loader.load_item()
 
+        result = json.loads(response.text)
+        print(result)
         for item in result["data"]["diff"]:
             name = item["f14"] + ""
             code_id = item["f12"] + ""
