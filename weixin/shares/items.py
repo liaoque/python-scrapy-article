@@ -32,6 +32,7 @@ class Items(scrapy.Item):
         "SH": 1,
         "SZ": 2,
         "BJ": 3,
+        "90": 90,
     }
 
     def save(self, cursor):
