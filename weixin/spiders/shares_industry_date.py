@@ -51,6 +51,7 @@ class Shares_industry_date(scrapy.Spider):
     def start_requests(self):
         results = self.findIndustry()
         for item in results:
+            print(item)
             code = item[0]
             days = 0
             stock_info = self.findIndustryByCode(code)
