@@ -55,13 +55,13 @@ class Items(scrapy.Item):
         cursor = self.findByCode(cursor, code)
         if cursor.rowcount:
             data = cursor.fetchall()
-            if data[0]['area_id'] != 0:
+            if data[0]['area_id'] == 0:
                 sql = "update mc_shares_name set area_id = '%s'  WHERE code = '%s'" % (area_id, code)
                 cursor.execute(sql);
             if data[0]['status'] != status:
                 sql = "update mc_shares_name set status = '%s' WHERE code = '%s'" % (status, code)
                 cursor.execute(sql);
-            if data[0]['code_type'] != 0:
+            if data[0]['code_type'] == 0:
                 sql = "update mc_shares_name set code_type = '%s'  WHERE code = '%s'" % (code_type, code)
                 cursor.execute(sql);
             return
