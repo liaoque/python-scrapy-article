@@ -86,7 +86,7 @@ class Command(BaseCommand):
                 where date_as = %s and z.p_end < mc_shares_industry.p_end
             )
             and c.p_max - c.p_end <= 5
-            and c.p_end - c.p_start > 5
+            and cast(c.p_end AS int) - cast(c.p_start AS int) > 5
             having rate >= 1.03
         '''
         return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, second,))
@@ -110,7 +110,7 @@ class Command(BaseCommand):
                 where date_as = %s and z.p_end < mc_shares_industry.p_end
             )
             and c.p_max - c.p_end <= 5
-            and c.p_end - c.p_start > 5
+            and cast(c.p_end AS int) - cast(c.p_start AS int) > 5
             having rate < 1
         '''
         return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, second,))
@@ -133,5 +133,5 @@ and f.industry_code_id in (
     where date_as = %s and z.p_end < mc_shares_industry.p_end
     ) 
 and c.p_max - c.p_end <= 5
-and c.p_end - c.p_start > 5 '''
+and cast(c.p_end AS int) - cast(c.p_start AS int) > 5 '''
         return SharesKdjCompute.objects.raw(sql, params=(second, first, second, '%ST%', first, second,))
