@@ -74,11 +74,11 @@ class Command(BaseCommand):
             left join (select p_end,code_id from mc_shares where date_as = %s) d on d.code_id = mc_shares_kdj.code_id
             left join (select p_end,code_id,p_max from mc_shares where date_as = %s) e on e.code_id = mc_shares_kdj.code_id
             left join (select code_id,industry_code_id from mc_shares_join_industry) f on f.code_id = mc_shares_kdj.code_id
-            where j <18 and date_as = %s and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
+            where j <40 and date_as = %s and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
             and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
             and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
             and mc_shares_kdj.code_id < 800000
-            and  ((k - j) <= 0 and (d - j) <= 0) and ((k - j) >=-20 and (d - j) >=-20)
+            and  ((k - j) <= 0 and (d - j) <= 0) 
             and c.p_end > d.p_end
             and f.industry_code_id in (
                 select mc_shares_industry.code_id from mc_shares_industry
@@ -98,11 +98,11 @@ class Command(BaseCommand):
             left join (select p_end,code_id from mc_shares where date_as = %s) d on d.code_id = mc_shares_kdj.code_id
             left join (select p_end,code_id,p_max from mc_shares where date_as = %s) e on e.code_id = mc_shares_kdj.code_id
             left join (select code_id,industry_code_id from mc_shares_join_industry) f on f.code_id = mc_shares_kdj.code_id
-            where j <18 and date_as = %s and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
+            where j <40 and date_as = %s and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
             and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
             and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
             and mc_shares_kdj.code_id < 800000
-           and  ((k - j) <= 0 and (d - j) <= 0) and ((k - j) >=-20 and (d - j) >=-20)
+           and  ((k - j) <= 0 and (d - j) <= 0) 
             and c.p_end > d.p_end
             and f.industry_code_id in (
                 select mc_shares_industry.code_id from mc_shares_industry
@@ -121,11 +121,11 @@ class Command(BaseCommand):
 left join (select p_end,code_id,p_max,p_start from mc_shares where date_as = %s) c on c.code_id = mc_shares_kdj.code_id
 left join (select p_end,code_id from mc_shares where date_as = %s) d on d.code_id = mc_shares_kdj.code_id
 left join (select code_id,industry_code_id from mc_shares_join_industry) f on f.code_id = mc_shares_kdj.code_id
-where j <18 and date_as = %s and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
+where j <40 and date_as = %s and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
 and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
 and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
 and mc_shares_kdj.code_id < 800000
-and  ((k - j) <= 0 and (d - j) <= 0) and ((k - j) >=-20 and (d - j) >=-20)
+and  ((k - j) <= 0 and (d - j) <= 0)
 and c.p_end > d.p_end
 and f.industry_code_id in (
     select mc_shares_industry.code_id from mc_shares_industry
