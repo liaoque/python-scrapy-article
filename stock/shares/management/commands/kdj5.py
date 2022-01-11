@@ -42,9 +42,9 @@ class Command(BaseCommand):
         while i < slen1:
             first = dateList[0 + i].date_as
             second = dateList[1 + i].date_as
-            if 4 + i >= len(dateList):
+            if 3 + i >= len(dateList):
                 break
-            fifth = dateList[4 + i].date_as
+            fifth = dateList[3 + i].date_as
             result = self.compute1(first, second, fifth)
 
             slen = len(result)
