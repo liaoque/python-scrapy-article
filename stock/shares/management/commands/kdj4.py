@@ -78,7 +78,7 @@ class Command(BaseCommand):
             and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
             and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
             and mc_shares_kdj.code_id < 800000
-            and  ((k - j) <= 0 and (d - j) <= 0) and ((k - j) >=-5 and (d - j) >=-5)
+           and  ((k - j) <= 0 and (d - j) <= 0) and ((k - j) >=-20 and (d - j) >=-20)
             and c.p_end > d.p_end
             and f.industry_code_id in (
                 select mc_shares_industry.code_id from mc_shares_industry
@@ -100,7 +100,7 @@ class Command(BaseCommand):
             and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
             and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
             and mc_shares_kdj.code_id < 800000
-            and  ((k - j) <= 0 and (d - j) <= 0) and ((k - j) >=-5 and (d - j) >=-5)
+           and  ((k - j) <= 0 and (d - j) <= 0) and ((k - j) >=-20 and (d - j) >=-20)
             and c.p_end > d.p_end
             and f.industry_code_id in (
                 select mc_shares_industry.code_id from mc_shares_industry
@@ -121,7 +121,7 @@ where j <16 and date_as = %s and mc_shares_kdj.code_id not in (SELECT code_id FR
 and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
 and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
 and mc_shares_kdj.code_id < 800000
-and  ((k - j) <= 0 and (d - j) <= 0) and ((k - j) >=-5 and (d - j) >=-5)
+and  ((k - j) <= 0 and (d - j) <= 0) and ((k - j) >=-20 and (d - j) >=-20)
 and c.p_end > d.p_end
 and f.industry_code_id in (
     select mc_shares_industry.code_id from mc_shares_industry
