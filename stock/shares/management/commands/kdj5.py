@@ -85,8 +85,8 @@ class Command(BaseCommand):
                 left join (select code_id,p_end from mc_shares_industry where date_as = %s) z on z.code_id = mc_shares_industry.code_id
                 where date_as = %s and z.p_end < mc_shares_industry.p_end
             )
-            and d.p_max - d.p_end <= 5
-            and cast(d.p_end AS signed) - cast(d.p_start AS signed) > 5
+            and c.p_max - c.p_end <= 5
+            and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5
             having rate >= 1.03
         '''
         return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, second,))
@@ -109,8 +109,8 @@ class Command(BaseCommand):
                 left join (select code_id,p_end from mc_shares_industry where date_as = %s) z on z.code_id = mc_shares_industry.code_id
                 where date_as = %s and z.p_end < mc_shares_industry.p_end
             )
-            and d.p_max - d.p_end <= 5
-            and cast(d.p_end AS signed) - cast(d.p_start AS signed) > 5
+            and c.p_max - c.p_end <= 5
+            and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5
             having rate < 1
         '''
         return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, second,))
@@ -132,6 +132,6 @@ and f.industry_code_id in (
     left join (select code_id,p_end from mc_shares_industry where date_as = %s) z on z.code_id = mc_shares_industry.code_id
     where date_as = %s and z.p_end < mc_shares_industry.p_end
     ) 
-and d.p_max - d.p_end <= 5
-and cast(d.p_end AS signed) - cast(d.p_start AS signed) > 5 '''
+and c.p_max - c.p_end <= 5
+and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5 '''
         return SharesKdjCompute.objects.raw(sql, params=(second, first, second, '%ST%', first, second,))
