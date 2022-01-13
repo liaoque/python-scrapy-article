@@ -78,7 +78,7 @@ class Command(BaseCommand):
                  select ikdj.code_id from mc_shares_industry_kdj ikdj
                     left join mc_shares_industry t on t.code_id = ikdj.code_id  and t.date_as = ikdj.date_as
                     left join mc_shares_industry y on y.code_id = ikdj.code_id
-                        and y.date_as = DATE_FORMAT(DATE_SUB(ikdj.date_as,INTERVAL 1 DAY),'%Y-%m-%d')
+                        and y.date_as = DATE_FORMAT(DATE_SUB(ikdj.date_as,INTERVAL 1 DAY), %s)
                     where ikdj.date_as = %s and t.p_end > y.p_end
                     and ikdj.j > ikdj.k and ikdj.j > ikdj.d
             )
@@ -86,7 +86,7 @@ class Command(BaseCommand):
             and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5
             having rate >= 1.03
         '''
-        return SharesIndustryKdj.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, second,))
+        return SharesIndustryKdj.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, '%Y-%m-%d', second,))
 
     def compute2(self, first, second, fifth):
         sql = '''
@@ -105,7 +105,7 @@ class Command(BaseCommand):
                  select ikdj.code_id from mc_shares_industry_kdj ikdj
                     left join mc_shares_industry t on t.code_id = ikdj.code_id  and t.date_as = ikdj.date_as
                     left join mc_shares_industry y on y.code_id = ikdj.code_id
-                        and y.date_as = DATE_FORMAT(DATE_SUB(ikdj.date_as,INTERVAL 1 DAY),'%Y-%m-%d')
+                        and y.date_as = DATE_FORMAT(DATE_SUB(ikdj.date_as,INTERVAL 1 DAY), %s)
                     where ikdj.date_as = %s and t.p_end > y.p_end
                     and ikdj.j > ikdj.k and ikdj.j > ikdj.d
             )
@@ -113,7 +113,7 @@ class Command(BaseCommand):
             and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5
             having rate < 1
         '''
-        return SharesIndustryKdj.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, second,))
+        return SharesIndustryKdj.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, '%Y-%m-%d', second,))
 
     def compute3(self, first, second):
         sql = '''
@@ -131,10 +131,10 @@ and f.industry_code_id in (
     select ikdj.code_id from mc_shares_industry_kdj ikdj
     left join mc_shares_industry t on t.code_id = ikdj.code_id  and t.date_as = ikdj.date_as
     left join mc_shares_industry y on y.code_id = ikdj.code_id
-        and y.date_as = DATE_FORMAT(DATE_SUB(ikdj.date_as,INTERVAL 1 DAY),'%Y-%m-%d')
+        and y.date_as = DATE_FORMAT(DATE_SUB(ikdj.date_as,INTERVAL 1 DAY), %s)
     where ikdj.date_as = %s and t.p_end > y.p_end
     and ikdj.j > ikdj.k and ikdj.j > ikdj.d
     ) 
 and c.p_max - c.p_end <= 5
 and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5 '''
-        return SharesIndustryKdj.objects.raw(sql, params=(second, first, second, '%ST%', first, second,))
+        return SharesIndustryKdj.objects.raw(sql, params=(second, first, second, '%ST%', first, '%Y-%m-%d',second,))
