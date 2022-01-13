@@ -45,13 +45,14 @@ class Command(BaseCommand):
 
             # 数据不存在
             itemList = item.sharesindustry_set.filter(date_as__lte=today).all()
-            print(code + "：" + str(len(itemList)) +"---")
+
             if len(itemList) == 0:
                 continue
 
             # 数据不是今天的
             shares = np.array(itemList)[-1:][0]
             date_as = str(shares.date_as)
+            print(code + "：" + str(date_as) + "---" + str(today))
             if date_as != today:
                 continue
 
