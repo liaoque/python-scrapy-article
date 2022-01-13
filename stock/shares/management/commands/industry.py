@@ -45,7 +45,7 @@ class Command(BaseCommand):
 
             # 数据不存在
             itemList = item.sharesindustry_set.filter(date_as__lte=today).all()
-            # print(str(len(itemList)) +"---")
+            print(code + "：" + str(len(itemList)) +"---")
             if len(itemList) == 0:
                 continue
 
