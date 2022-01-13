@@ -203,7 +203,7 @@ SELECT mc_shares_join_industry.code_id from mc_shares_join_industry
     GROUP BY mc_shares_join_industry.industry_code_id
 
 
-
+// 预测行业 j处于交点，且过交点
     select ikdj.code_id from mc_shares_industry_kdj ikdj
     left join mc_shares_industry t on t.code_id = ikdj.code_id  and t.date_as = ikdj.date_as
     left join mc_shares_industry y on y.code_id = ikdj.code_id
