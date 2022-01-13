@@ -86,7 +86,7 @@ class Command(BaseCommand):
             and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5
             having rate >= 1.03
         '''
-        return SharesIndustryKdj.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, '%Y-%m-%d', second,))
+        return SharesIndustryKdj.objects.raw(sql, params=(second, first, fifth, second, '%ST%', '%Y-%m-%d', second,))
 
     def compute2(self, first, second, fifth):
         sql = '''
@@ -113,7 +113,7 @@ class Command(BaseCommand):
             and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5
             having rate < 1
         '''
-        return SharesIndustryKdj.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, '%Y-%m-%d', second,))
+        return SharesIndustryKdj.objects.raw(sql, params=(second, first, fifth, second, '%ST%', '%Y-%m-%d', second,))
 
     def compute3(self, first, second):
         sql = '''
@@ -137,4 +137,4 @@ and f.industry_code_id in (
     ) 
 and c.p_max - c.p_end <= 5
 and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5 '''
-        return SharesIndustryKdj.objects.raw(sql, params=(second, first, second, '%ST%', first, '%Y-%m-%d',second,))
+        return SharesIndustryKdj.objects.raw(sql, params=(second, first, second, '%ST%', '%Y-%m-%d',second,))
