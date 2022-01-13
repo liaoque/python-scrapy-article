@@ -2,7 +2,7 @@
 
 # python manage.py startapp shares 创建模块
 
-# python manage.py makemigrations shares 创建 迁移模型
+# python manage.py makemigrations shares 创建 迁移模型 shares是模块名字
 # python manage.py sqlmigrate shares 0002 展示sql
 # python manage.py migrate 迁移
 
@@ -145,3 +145,59 @@ and f.industry_code_id in (
 having rate > 1.03
 
 
+
+
+SELECT 1 as id, mc_shares_kdj.code_id FROM `mc_shares_kdj`
+left join (select p_end,code_id,p_max,p_start from mc_shares where date_as = '2022-01-04') c on c.code_id = mc_shares_kdj.code_id
+left join (select p_end,code_id,p_max,p_start from mc_shares where date_as = '2021-12-31') d on d.code_id = mc_shares_kdj.code_id
+left join (select code_id,industry_code_id from mc_shares_join_industry) f on f.code_id = mc_shares_kdj.code_id
+where  j <40 and date_as = '2022-01-04' and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
+and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like '%ST%' )
+and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
+and mc_shares_kdj.code_id < 800000
+and  ((k - j) <= 0 and (d - j) <= 0)
+and c.p_end > d.p_end
+and f.industry_code_id in (
+    select mc_shares_industry.code_id from mc_shares_industry
+    left join (select code_id,p_end from mc_shares_industry where date_as = '2021-12-31') z on z.code_id = mc_shares_industry.code_id
+    where date_as = '2022-01-04' and z.p_end < mc_shares_industry.p_end
+    )
+and c.p_max - c.p_end <= 5
+and cast(d.p_end AS signed) - cast(d.p_start AS signed) > 5
+
+
+SELECT 1 as id, mc_shares_kdj.code_id FROM `mc_shares_kdj`
+left join (select p_end,code_id from mc_shares where date_as = '2022-01-11') c on c.code_id = mc_shares_kdj.code_id
+left join (select p_end,code_id from mc_shares where date_as = '2022-01-10') d on d.code_id = mc_shares_kdj.code_id
+left join (select code_id,industry_code_id from mc_shares_join_industry) f on f.code_id = mc_shares_kdj.code_id
+where j <16 and date_as = '2022-01-11' and mc_shares_kdj.code_id not in (SELECT code_id FROM `mc_shares_ban` )
+and mc_shares_kdj.code_id not in (SELECT code FROM `mc_shares_name` where name like '%ST%' )
+and (mc_shares_kdj.code_id < 300000 or mc_shares_kdj.code_id > 600000)
+and mc_shares_kdj.code_id < 800000
+and  ((k - j) <= 0 and (d - j) <= 0) and ((k - j) >=-5 and (d - j) >=-5)
+and c.p_end > d.p_end
+and f.industry_code_id in (
+    select mc_shares_industry.code_id from mc_shares_industry
+    left join (select code_id,p_end from mc_shares_industry where date_as = '2022-01-10') z on z.code_id = mc_shares_industry.code_id
+    where date_as = '2022-01-11' and z.p_end < mc_shares_industry.p_end
+    )
+
+// 当天涨幅超过3%，且行业是涨的
+SELECT mc_shares.code_id, p_end /p_start as rate FROM `mc_shares`
+LEFT JOIN mc_shares_kdj on mc_shares.code_id = mc_shares_kdj.code_id and mc_shares.date_as = mc_shares_kdj.date_as
+WHERE mc_shares.date_as = '2022-01-13' and p_end > p_start
+and mc_shares_kdj.j < 70
+and mc_shares.code_id in (
+    SELECT mc_shares_join_industry.code_id from mc_shares_join_industry
+    LEFT JOIN mc_shares_industry a on  mc_shares_join_industry.industry_code_id =a.code_id and a.date_as = '2022-01-13'
+    LEFT JOIN mc_shares_industry b on  mc_shares_join_industry.industry_code_id =b.code_id and b.date_as = '2022-01-12'
+    where a.p_end > b.p_end
+)
+HAVING rate>1.03
+
+
+SELECT mc_shares_join_industry.code_id from mc_shares_join_industry
+    LEFT JOIN mc_shares_industry a on  mc_shares_join_industry.industry_code_id =a.code_id and a.date_as = '2022-01-13'
+    LEFT JOIN mc_shares_industry b on  mc_shares_join_industry.industry_code_id =b.code_id and b.date_as = '2022-01-12'
+    where a.p_end > b.p_end
+    GROUP BY mc_shares_join_industry.industry_code_id

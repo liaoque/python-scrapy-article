@@ -25,25 +25,10 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        # self.calculateKdj()
+        self.calculateKdj()
         print("开始计算kdj-----")
-        # today = datetime.now().date().strftime('%Y-%m-%d')
-        # self.KdjCompute(today)
-        self.KdjCompute('2021-12-28')
-        self.KdjCompute('2021-12-29')
-        self.KdjCompute('2021-12-30')
-        self.KdjCompute('2021-12-31')
-        self.KdjCompute('2022-01-04')
-        self.KdjCompute('2022-01-05')
-        self.KdjCompute('2022-01-06')
-        self.KdjCompute('2022-01-07')
-        self.KdjCompute('2022-01-10')
-        self.KdjCompute('2022-01-11')
-        self.KdjCompute('2022-01-12')
-        self.KdjCompute('2022-01-13')
-        # self.KdjCompute(today)
-        # self.KdjCompute(today)
-
+        today = datetime.now().date().strftime('%Y-%m-%d')
+        self.KdjCompute(today)
         pass
 
     def calculateKdj(self):
