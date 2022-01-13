@@ -20,16 +20,16 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        self.calculateKdj()
+        # today = datetime.now().date().strftime('%Y-%m-%d')
+        # self.calculateKdj(today)
+        self.calculateKdj('2022-01-12')
         print("开始计算kdj-----")
 
         pass
 
-    def calculateKdj(self):
-        today = datetime.now().date().strftime('%Y-%m-%d')
+    def calculateKdj(self, today):
         # today = '2021-12-27'
         for item in SharesName.objects.filter(status=1,code_type=2):
-
             # 写过了
             code = item.code
             sharesKdjList = SharesIndustryKdj.objects.filter(code_id=code, date_as=today)
@@ -44,7 +44,7 @@ class Command(BaseCommand):
             # }, item.shares_set.all().values()))
 
             # 数据不存在
-            itemList = item.sharesindustry_set.all()
+            itemList = item.sharesindustry_set.filter(date_as__lte=today).all()
             # print(str(len(itemList)) +"---")
             if len(itemList) == 0:
                 continue
