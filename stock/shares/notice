@@ -201,3 +201,12 @@ SELECT mc_shares_join_industry.code_id from mc_shares_join_industry
     LEFT JOIN mc_shares_industry b on  mc_shares_join_industry.industry_code_id =b.code_id and b.date_as = '2022-01-12'
     where a.p_end > b.p_end
     GROUP BY mc_shares_join_industry.industry_code_id
+
+
+
+    select ikdj.code_id from mc_shares_industry_kdj ikdj
+    left join mc_shares_industry t on t.code_id = ikdj.code_id  and t.date_as = ikdj.date_as
+    left join mc_shares_industry y on y.code_id = ikdj.code_id
+        and y.date_as = DATE_FORMAT(DATE_SUB(ikdj.date_as,INTERVAL 1 DAY),'%Y-%m-%d')
+    where ikdj.date_as = '2022-01-13' and t.p_end > y.p_end
+    and ikdj.j > ikdj.k and ikdj.j > ikdj.d
