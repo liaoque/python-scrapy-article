@@ -44,7 +44,7 @@ class Command(BaseCommand):
             # }, item.shares_set.all().values()))
 
             # 数据不存在
-            itemList = item.shares_industry_set.all()
+            itemList = item.sharesindustry_set.all()
             # print(str(len(itemList)) +"---")
             if len(itemList) == 0:
                 continue
