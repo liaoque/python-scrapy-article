@@ -51,7 +51,7 @@ class Command(BaseCommand):
             # 数据不是今天的
             shares = np.array(itemList)[-1:][0]
             date_as = str(shares.date_as)
-            print(code + "：" + str(date_as) + "---" + str(today) + "----" + len(itemList))
+            print(code + "：" + str(date_as) + "---" + str(today) + "----" + str(len(itemList)))
             if date_as != today:
                 continue
 
