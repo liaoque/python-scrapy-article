@@ -22,7 +22,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # today = datetime.now().date().strftime('%Y-%m-%d')
         # self.calculateKdj(today)
-        self.calculateKdj('2022-01-12')
+        self.calculateKdj('2022-01-11')
         print("开始计算kdj-----")
 
         pass
@@ -51,7 +51,7 @@ class Command(BaseCommand):
             # 数据不是今天的
             shares = np.array(itemList)[-1:][0]
             date_as = str(shares.date_as)
-            print(code + "：" + str(date_as) + "---" + str(today))
+            print(code + "：" + str(date_as) + "---" + str(today) + "----" + len(itemList))
             if date_as != today:
                 continue
 
