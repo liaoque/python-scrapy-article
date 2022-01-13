@@ -20,9 +20,20 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        today = datetime.now().date().strftime('%Y-%m-%d')
-        self.calculateKdj(today)
-
+        # today = datetime.now().date().strftime('%Y-%m-%d')
+        # self.calculateKdj(today)
+        self.calculateKdj('2021-12-28')
+        self.calculateKdj('2021-12-29')
+        self.calculateKdj('2021-12-30')
+        self.calculateKdj('2021-12-31')
+        self.calculateKdj('2022-01-04')
+        self.calculateKdj('2022-01-05')
+        self.calculateKdj('2022-01-06')
+        self.calculateKdj('2022-01-07')
+        self.calculateKdj('2022-01-10')
+        self.calculateKdj('2022-01-11')
+        self.calculateKdj('2022-01-12')
+        self.calculateKdj('2022-01-13')
         print("开始计算kdj-----")
 
         pass
