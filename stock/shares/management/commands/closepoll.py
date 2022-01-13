@@ -129,7 +129,7 @@ class Command(BaseCommand):
         # intersection_total = intersection_total[0].c
         # print(intersection_total)
 
-        result = np.array(SharesKdj.objects.values('date_as').annotate(counts=Count(id)))[-5:]
+        result = np.array(SharesKdj.objects.filter(date_as__lte=today).values('date_as').annotate(counts=Count(id)))[-5:]
         if len(result) < 4:
             return
         if len(result) == 4:
