@@ -32,12 +32,6 @@ class Command(BaseCommand):
         for item in SharesName.objects.filter(status=1,code_type=2):
             # 写过了
             code = item.code
-
-            itemList = item.sharesindustry_set.filter(date_as__lte=today).order_by('date_as').all()
-            for v in itemList:
-                print(v.date_as)
-            break
-
             sharesKdjList = SharesIndustryKdj.objects.filter(code_id=code, date_as=today)
             # print(len(sharesKdjList))
             if len(sharesKdjList):
@@ -51,9 +45,6 @@ class Command(BaseCommand):
 
             # 数据不存在
             itemList = item.sharesindustry_set.filter(date_as__lte=today).order_by('date_as').all()
-            for v in itemList:
-                print(v.date_as)
-            break
             if len(itemList) == 0:
                 continue
 
