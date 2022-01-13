@@ -25,9 +25,24 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        self.calculateKdj()
+        # self.calculateKdj()
         print("开始计算kdj-----")
-        self.KdjCompute()
+        # today = datetime.now().date().strftime('%Y-%m-%d')
+        # self.KdjCompute(today)
+        self.KdjCompute('2021-12-28')
+        self.KdjCompute('2021-12-29')
+        self.KdjCompute('2021-12-30')
+        self.KdjCompute('2021-12-31')
+        self.KdjCompute('2022-01-04')
+        self.KdjCompute('2022-01-05')
+        self.KdjCompute('2022-01-06')
+        self.KdjCompute('2022-01-07')
+        self.KdjCompute('2022-01-10')
+        self.KdjCompute('2022-01-11')
+        self.KdjCompute('2022-01-12')
+        self.KdjCompute('2022-01-13')
+        # self.KdjCompute(today)
+        # self.KdjCompute(today)
 
         pass
 
@@ -101,8 +116,7 @@ class Command(BaseCommand):
         indicators['j'] = np.array(list(map(lambda x, y: 3 * x - 2 * y, indicators['k'], indicators['d'])))
         return indicators
 
-    def KdjCompute(self):
-        today = datetime.now().date().strftime('%Y-%m-%d')
+    def KdjCompute(self, today):
         # today = '2021-12-24'
         data = Shares.objects.filter(date_as=today)[:1]
         if len(data) == 0:
@@ -128,11 +142,14 @@ class Command(BaseCommand):
         intersection_total = SharesKdjCompute.Compute.intersection_total(first=second, second=third, third=fourth)
         intersection_today = SharesKdjCompute.Compute.intersection_today(first=second, second=third, third=fourth, fourth=fifth)
         intersection_pre = SharesKdjCompute.Compute.intersection_pre(first=second, second=third, third=fourth)
+        intersection_pre_total_amount = sum([x.buy_amount - x.buy_amount_end for x in intersection_pre])
+        intersection_total_amount = sum([x.buy_amount - x.buy_amount_end for x in intersection_today])
+        turn_total_amount = 0
         if len(result) > 4:
             turn_total_result = SharesKdjCompute.Compute.turn_total(first=first, second=second, third=third)
             turn_total = turn_total_result[0].c
             turn_tomorrow = SharesKdjCompute.Compute.turn_tomorrow(first=first, second=second, third=third, fifth=fifth)
-
+            turn_total_amount = sum([x.buy_amount - x.buy_amount_end for x in turn_tomorrow])
         # print(intersection_total, intersection_today, intersection_pre,turn_total, turn_tomorrow)
 
         shill_type = SharesName.SkillType.kdj
@@ -142,6 +159,9 @@ class Command(BaseCommand):
                                   turn_num=len(turn_tomorrow),
                                   turn_total=turn_total,
                                   shill_type=shill_type,
+                                  intersection_pre_total_amount=intersection_pre_total_amount,
+                                  intersection_total_amount=intersection_total_amount,
+                                  turn_total_amount=turn_total_amount,
                                   date_as=today)
 
         shill_account_type = SharesName.SkillType.AccountType.intersection_pre
