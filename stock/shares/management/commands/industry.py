@@ -44,8 +44,7 @@ class Command(BaseCommand):
             # }, item.shares_set.all().values()))
 
             # 数据不存在
-            itemList = item.sharesindustry_set.filter(date_as__lte=today).order_by('-date_as').all()
-
+            itemList = item.sharesindustry_set.filter(date_as__lte=today).order_by('date_as').all()
             if len(itemList) == 0:
                 continue
 
