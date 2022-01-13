@@ -55,6 +55,10 @@ class Command(BaseCommand):
             if date_as != today:
                 continue
 
+            for v in itemList:
+                print(v.date_as)
+            break
+
             # 计算kdj
             print(code + "：" + date_as + "：开始计算kdj")
             kd = self.talib_KDJ(itemList)
