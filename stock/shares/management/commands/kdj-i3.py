@@ -82,7 +82,7 @@ class Command(BaseCommand):
                     where ikdj.date_as = %s and t.p_end > y.p_end
                     and ikdj.j > ikdj.k and ikdj.j > ikdj.d
             )
-            and c.p_max - c.p_end <= 5
+          
             and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5
             having rate >= 1.03
         '''
@@ -109,7 +109,7 @@ class Command(BaseCommand):
                     where ikdj.date_as = %s and t.p_end > y.p_end
                     and ikdj.j > ikdj.k and ikdj.j > ikdj.d
             )
-            and c.p_max - c.p_end <= 5
+   
             and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5
             having rate < 1
         '''
@@ -135,6 +135,6 @@ and f.industry_code_id in (
     where ikdj.date_as = %s and t.p_end > y.p_end
     and ikdj.j > ikdj.k and ikdj.j > ikdj.d
     ) 
-and c.p_max - c.p_end <= 5
+
 and cast(c.p_end AS signed) - cast(c.p_start AS signed) > 5 '''
         return SharesIndustryKdj.objects.raw(sql, params=(second, first, second, '%ST%', '%Y-%m-%d',second,))
