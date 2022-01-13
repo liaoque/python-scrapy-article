@@ -45,6 +45,9 @@ class Command(BaseCommand):
 
             # 数据不存在
             itemList = item.sharesindustry_set.filter(date_as__lte=today).order_by('date_as').all()
+            for v in itemList:
+                print(v.date_as)
+            break
             if len(itemList) == 0:
                 continue
 
@@ -54,10 +57,6 @@ class Command(BaseCommand):
             # print(code + "：" + str(date_as) + "---" + str(today) + "----" + str(len(itemList)))
             if date_as != today:
                 continue
-
-            for v in itemList:
-                print(v.date_as)
-            break
 
             # 计算kdj
             print(code + "：" + date_as + "：开始计算kdj")
