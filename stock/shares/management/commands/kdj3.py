@@ -15,9 +15,8 @@ import numpy as np
 import talib
 
 
-
 class Command(BaseCommand):
-    help = '计算各种指标'
+    help = '即将相交的kdj'
 
     def add_arguments(self, parser):
         # parser.add_argument('poll_ids', nargs='+', type=int)
@@ -34,9 +33,10 @@ class Command(BaseCommand):
         result = self.compute3(first, second)
         print(result)
         print("%s-%s-挑选出股票：%s个" % (first, second, len(result)))
-        for item in result:
-            print('%s'% (item.code_id))
-        print("---------")
+        print(",".join(["'" + item.code_id + "'" for item in result]))
+        # for item in result:
+        #     print('%s'% (item.code_id))
+        # print("---------")
 
         i = 0
         while i < slen1:
