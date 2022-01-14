@@ -56,12 +56,12 @@ class Command(BaseCommand):
 
             # 计算kdj
             print(code + "：" + date_as + "：开始计算macd")
-            macdDIFF, macdDEA, macd = self.talib_Macd(itemList)
+            macdDIFF1, macdDEA1, macd1 = self.talib_Macd(itemList)
             i = 0
-            while i < len(macd):
-                macdDIFF = macdDIFF[i]
-                macdDEA = macdDEA[i]
-                macd = macd[i]
+            while i < len(macd1):
+                macdDIFF = macdDIFF1[i]
+                macdDEA = macdDEA1[i]
+                macd = macd1[i]
                 i += 1
                 if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
                     print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
