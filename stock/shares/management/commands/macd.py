@@ -25,14 +25,14 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        self.calculateKdj()
+        # today = datetime.now().date().strftime('%Y-%m-%d')
+        # self.calculateKdj(today)
         # print("开始计算kdj-----")
         # today = datetime.now().date().strftime('%Y-%m-%d')
         # self.KdjCompute(today)
         pass
 
-    def calculateKdj(self):
-        today = datetime.now().date().strftime('%Y-%m-%d')
+    def calculateKdj(self, today):
         # today = '2021-12-27'
         for item in SharesName.objects.filter(status=1, code_type=1):
 
@@ -42,13 +42,6 @@ class Command(BaseCommand):
             # print(len(sharesKdjList))
             if len(sharesKdjList):
                 continue
-
-            # print(map(lambda item: {
-            #     'close': item.p_end / 100,
-            #     'height': item.p_max / 100,
-            #     'low': item.p_min / 100,
-            # }, item.shares_set.all().values()))
-
             # 数据不存在
             itemList = item.shares_set.all()
             # print(str(len(itemList)) +"---")
@@ -62,22 +55,31 @@ class Command(BaseCommand):
                 continue
 
             # 计算kdj
-            print(code + "：" + date_as + "：开始计算kdj")
+            print(code + "：" + date_as + "：开始计算macd")
             macdDIFF, macdDEA, macd = self.talib_Macd(itemList)
-            # print("计算出未知数据", (code, macd))
-            # return
-            # itemListLen = len(itemList)
-            # x = np.array([v for v in range(0, itemListLen)])
-            macdDIFF = macdDIFF[-1:][0]
-            macdDEA = macdDEA[-1:][0]
-            macd = macd[-1:][0]
+            i = 0
+            while i < len(macd):
+                macdDIFF = macdDIFF[i]
+                macdDEA = macdDEA[i]
+                macd = macd[i]
+                i += 1
+                if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
+                    print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
+                    continue
+                b = SharesMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1, date_as=date_as)
+                b.save()
 
-            if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
-                print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
-                continue
 
-            b = SharesMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1, date_as=date_as)
-            b.save()
+            # macdDIFF = macdDIFF[-1:][0]
+            # macdDEA = macdDEA[-1:][0]
+            # macd = macd[-1:][0]
+            #
+            # if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
+            #     print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
+            #     continue
+            #
+            # b = SharesMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1, date_as=date_as)
+            # b.save()
             # break
         pass
 
@@ -88,7 +90,6 @@ class Command(BaseCommand):
                                                 signalperiod=9, signalmatype=1)
         macd = macd * 2
         return (macdDIFF, macdDEA, macd)
-
 
     # def KdjCompute(self, today):
     #     # today = '2021-12-24'
