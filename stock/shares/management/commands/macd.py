@@ -64,23 +64,21 @@ class Command(BaseCommand):
             # 计算kdj
             print(code + "：" + date_as + "：开始计算kdj")
             macdDIFF, macdDEA, macd = self.talib_Macd(itemList)
-            print("计算出未知数据", (code, macd))
-            return
+            # print("计算出未知数据", (code, macd))
+            # return
             # itemListLen = len(itemList)
             # x = np.array([v for v in range(0, itemListLen)])
-            # ky = kd['k'][-1:][0]
-            # kj = kd['j'][-1:][0]
-            # kd = kd['d'][-1:][0]
-            #
-            # if repr(ky) in ("inf", "nan") or repr(kj) in ("inf", "nan") or repr(kd) in ("inf", "nan"):
-            #     print("计算出未知数据", (code, ky, kd, kj))
-            #     continue
-            #
-            # b = SharesMacd(code_id=code, k=ky, d=kd, j=kj, cycle_type=1, date_as=date_as)
-            # b.save()
-            # SharesKdj
-            # print(shares, ky, kj, kd, shares.code_id)
-            # break
+            macdDIFF = macdDIFF[-1:][0]
+            macdDEA = macdDEA[-1:][0]
+            macd = macd[-1:][0]
+
+            if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
+                print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
+                continue
+
+            b = SharesMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1, date_as=date_as)
+            b.save()
+            break
         pass
 
     def talib_Macd(self, data):
