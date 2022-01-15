@@ -57,31 +57,16 @@ class Command(BaseCommand):
             # 计算kdj
             print(code + "：" + date_as + "：开始计算macd")
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(itemList)
-            i = 0
-            while i < len(macd1):
-                date_as = itemList[i].date_as
-                macdDIFF = macdDIFF1[i]
-                macdDEA = macdDEA1[i]
-                macd = macd1[i]
-                i += 1
-                if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
-                    print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
-                    continue
-                b = SharesMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1, date_as=date_as)
-                b.save()
+            macdDIFF = macdDIFF1[-1:][0]
+            macdDEA = macdDEA1[-1:][0]
+            macd = macd1[-1:][0]
 
+            if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
+                print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
+                continue
 
-            # macdDIFF = macdDIFF[-1:][0]
-            # macdDEA = macdDEA[-1:][0]
-            # macd = macd[-1:][0]
-            #
-            # if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
-            #     print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
-            #     continue
-            #
-            # b = SharesMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1, date_as=date_as)
-            # b.save()
-            # break
+            b = SharesMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1, date_as=date_as)
+            b.save()
         pass
 
     def talib_Macd(self, data):
