@@ -25,12 +25,29 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        today = datetime.now().date().strftime('%Y-%m-%d')
-        self.macdTodaySearch(today)
-        # print("开始计算kdj-----")
-        # today = datetime.now().date().strftime('%Y-%m-%d')
-        # self.KdjCompute(today)
-        pass
+        # 查找所有股票
+        for item in SharesName.objects.filter(status=1,code_type=1):
+            # 查该股所有日期
+            diffTotal = 0
+            end_date = None
+            for sharesItem in Shares.objects.filter(code_id=item.code):
+                if end_date and sharesItem.date_as < end_date :
+                    continue
+                result = self.macdTodaySearch(item.code, sharesItem.date_as)
+                if result:
+                    # 计算收益
+                    diff, end_date = self.sell(item.code, sharesItem.date_as)
+                    diffTotal += diff
+                    break
+                result = self.macdYestodaySearch(item.code, sharesItem.date_as)
+                if result:
+                    # 计算收益
+                    diff, end_date = self.sell(item.code, sharesItem.date_as)
+                    diffTotal += diff
+                    break
+            print("code：%s， 总收益：%d", item.code, diffTotal)
+
+
 
     def macdTodaySearch(self, code_id, today):
         # 当天和前 10个工作日 dea 上行
@@ -51,7 +68,7 @@ class Command(BaseCommand):
             left join (select k,d,j,code_id from mc_shares 
                     where date_as < %s and code_id =%s order by date_as desc limit 1) c 
             on c.code_id = a.code_id
-        where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j
+        where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j 
         and a.date_as = %s and a.code_id = %s
         '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id, today, code_id,))
@@ -101,3 +118,45 @@ class Command(BaseCommand):
             return False
         print("%s获得股票：%s" % (today, code_id))
         return True
+
+    def sell(self, code_id, today):
+        # 以最高点之后的，转折点作为卖价
+        sql = '''
+            select p_end from mc_shares  where date_as = %s and code_id =  %s 
+            '''
+        result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
+        if len(result) == 0:
+            return False
+        start_p = result[0].p_end
+
+        # 往后10个工作日
+        sql = '''
+        select date_as from mc_shares  where date_as > %s and code_id =  %s order by date_as asc limit 10
+        '''
+        result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
+        if len(result) == 0:
+            return False
+
+        for key in range(len(result)):
+            today = result[key].date_as
+            if key + 1 > len(result):
+                break
+            tomorrow = result[key + 1].date_as
+            # j 下行
+            sql = '''
+                        SELECT 1 as id, a.code_id FROM `mc_shares_kdj` a
+                            left join (select k,d,j,code_id from mc_shares 
+                                    where date_as = %s and code_id =%s order by date_as asc limit 1) c 
+                            on c.code_id = a.code_id
+                        where c.j < a.j
+                        and a.date_as = %s and a.code_id = %s
+                        '''
+            result = SharesKdjCompute.objects.raw(sql, params=(tomorrow, code_id, today, code_id,))
+            if len(result) == 0:
+                continue
+            sql = '''select p_end from mc_shares  where date_as = %s and code_id =  %s '''
+            result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
+            end_p = result[0].p_end
+            diff = start_p - end_p
+            return diff, today
+        return False
