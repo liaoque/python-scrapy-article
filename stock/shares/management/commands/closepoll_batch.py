@@ -27,8 +27,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.calculateKdj()
         print("开始计算kdj-----")
-        today = datetime.now().date().strftime('%Y-%m-%d')
-        self.KdjCompute(today)
         pass
 
     def calculateKdj(self):
