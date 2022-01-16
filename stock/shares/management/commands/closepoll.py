@@ -39,19 +39,11 @@ class Command(BaseCommand):
             # 写过了
             code = item.code
             sharesKdjList = SharesKdj.objects.filter(code_id=code, date_as=today)
-            # print(len(sharesKdjList))
             if len(sharesKdjList):
                 continue
 
-            # print(map(lambda item: {
-            #     'close': item.p_end / 100,
-            #     'height': item.p_max / 100,
-            #     'low': item.p_min / 100,
-            # }, item.shares_set.all().values()))
-
             # 数据不存在
             itemList = item.shares_set.all()
-            # print(str(len(itemList)) +"---")
             if len(itemList) == 0:
                 continue
 
@@ -64,9 +56,6 @@ class Command(BaseCommand):
             # 计算kdj
             print(code + "：" + date_as + "：开始计算kdj")
             kd = self.talib_KDJ(itemList)
-            # print("计算出未知数据", (code,  kd))
-            # itemListLen = len(itemList)
-            # x = np.array([v for v in range(0, itemListLen)])
             ky = kd['k'][-1:][0]
             kj = kd['j'][-1:][0]
             kd = kd['d'][-1:][0]
@@ -77,9 +66,6 @@ class Command(BaseCommand):
 
             b = SharesKdj(code_id=code, k=ky, d=kd, j=kj, cycle_type=1, date_as=date_as)
             b.save()
-            # SharesKdj
-            # print(shares, ky, kj, kd, shares.code_id)
-            # break
         pass
 
     def talib_KDJ(self, data, fastk_period=9, slowk_period=3, slowd_period=3):

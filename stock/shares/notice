@@ -219,3 +219,12 @@ select ikdj.code_id,mc_shares_name.name from mc_shares_industry_kdj ikdj
     where ikdj.date_as = '2022-01-13' and t.p_end > y.p_end
     and ikdj.j > ikdj.k and ikdj.j > ikdj.d
 
+
+
+买点，Kdj
+> 交叉向上。今天：macd：总体趋势上行 （dea > max(dea)）
+> 交叉向上。明天：macd：距离交叉 < 11 % (dea - diff / dea + diff) ) 
+
+卖点,
+> kdj达到最高点后向下 或者 kdj到达最高点：macd：距离交叉 < 11 % (dea - diff / dea + diff) )，或者(diff - dea) < 0.05
+> 买入后如果亏损，确认 macd dea线是否上行，如果上行就留着等涨，否则持有两天后，abs(macd) > .05割肉
