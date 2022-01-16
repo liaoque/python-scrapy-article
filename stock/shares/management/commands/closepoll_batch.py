@@ -53,13 +53,13 @@ class Command(BaseCommand):
 
             # 计算kdj
             print(code + "：" + date_as + "：开始计算kdj")
-            kd = self.talib_KDJ(itemList)
+            kd2 = self.talib_KDJ(itemList)
 
             i = 0
             for item in itemList:
-                ky = kd['k'][i]
-                kj = kd['j'][i]
-                kd = kd['d'][i]
+                ky = kd2['k'][i]
+                kj = kd2['j'][i]
+                kd = kd2['d'][i]
                 i +=1
                 if repr(ky) in ("inf", "nan") or repr(kj) in ("inf", "nan") or repr(kd) in ("inf", "nan"):
                     print("计算出未知数据", (code, ky, kd, kj))
