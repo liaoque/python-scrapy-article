@@ -57,9 +57,9 @@ class Command(BaseCommand):
 
             i = 0
             for item in itemList:
-                ky = kd['k'][i][0]
-                kj = kd['j'][i][0]
-                kd = kd['d'][i][0]
+                ky = kd['k'][i]
+                kj = kd['j'][i]
+                kd = kd['d'][i]
                 i +=1
                 if repr(ky) in ("inf", "nan") or repr(kj) in ("inf", "nan") or repr(kd) in ("inf", "nan"):
                     print("计算出未知数据", (code, ky, kd, kj))
