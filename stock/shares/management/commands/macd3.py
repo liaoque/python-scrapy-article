@@ -26,12 +26,14 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # 查找所有股票
-        for item in SharesName.objects.filter(status=1,code_type=1):
+        for item in SharesName.objects.filter(status=1, code_type=1):
             # 查该股所有日期
             diffTotal = 0
             end_date = None
+            total, success, error = 0, 0, 0
+
             for sharesItem in Shares.objects.filter(code_id=item.code):
-                if end_date and sharesItem.date_as < end_date :
+                if end_date and sharesItem.date_as < end_date:
                     continue
                 result = self.macdTodaySearch(item.code, sharesItem.date_as)
                 if result:
@@ -43,11 +45,14 @@ class Command(BaseCommand):
                 if result:
                     # 计算收益
                     diff, end_date = self.sell(item.code, sharesItem.date_as)
+                    total += 1
+                    if diff > 0:
+                        success += 1
+                    else:
+                        error + 1
                     diffTotal += diff
                     break
             print("code：%s， 总收益：%d", item.code, diffTotal)
-
-
 
     def macdTodaySearch(self, code_id, today):
         # 当天和前 10个工作日 dea 上行
