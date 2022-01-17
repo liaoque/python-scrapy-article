@@ -28,21 +28,16 @@ class Command(BaseCommand):
         # 查找所有股票
         for item in SharesName.objects.filter(status=1, code_type=1):
             # 查该股所有日期
-            diffTotal = 0
-            end_date = None
-            total, success, error = 0, 0, 0
-
             for sharesItem in Shares.objects.filter(code_id=item.code)[-1:]:
                 print(sharesItem.date_as)
                 result = self.macdTodaySearch(item.code, sharesItem.date_as)
                 if result:
-                    print("today-code：%s", item.code, diffTotal)
+                    print("today-code：%s" % item.code)
                     break
                 result = self.macdYestodaySearch(item.code, sharesItem.date_as)
                 if result:
-                    print("yestoday-code：%s", item.code, diffTotal)
+                    print("yestoday-code：%s" % item.code)
                     break
-
 
     def macdTodaySearch(self, code_id, today):
         # 当天和前 10个工作日 dea 上行
