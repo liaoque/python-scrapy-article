@@ -128,7 +128,7 @@ class Command(BaseCommand):
 
         if targetDateAs == None:
             return False
-        print("%s获得股票：%s" % (today, code_id))
+        # print("%s获得股票：%s" % (today, code_id))
         return True
 
     def sell(self, code_id, today):
