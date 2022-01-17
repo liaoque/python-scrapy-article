@@ -39,6 +39,8 @@ class Command(BaseCommand):
                 if result:
                     # 计算收益
                     diff, end_date = self.sell(item.code, sharesItem.date_as)
+                    if diff == False:
+                        continue
                     total += 1
                     diffTotal += diff
                     if diff > 0:
@@ -50,6 +52,8 @@ class Command(BaseCommand):
                 if result:
                     # 计算收益
                     diff, end_date = self.sell(item.code, sharesItem.date_as)
+                    if diff == False:
+                        continue
                     total += 1
                     if diff > 0:
                         success += 1
