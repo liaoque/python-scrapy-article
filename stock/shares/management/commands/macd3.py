@@ -33,8 +33,7 @@ class Command(BaseCommand):
             total, success, error = 0, 0, 0
 
             for sharesItem in Shares.objects.filter(code_id=item.code)[-1:]:
-                if end_date and sharesItem.date_as < end_date:
-                    continue
+                print(sharesItem.date_as)
                 result = self.macdTodaySearch(item.code, sharesItem.date_as)
                 if result:
                     print("today-code：%s", item.code, diffTotal)
