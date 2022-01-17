@@ -142,7 +142,7 @@ class Command(BaseCommand):
             '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
         if len(result) == 0:
-            return False
+            return False,False
         start_p = result[0].p_end
 
         # 往后10个工作日
@@ -152,7 +152,7 @@ class Command(BaseCommand):
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
         dateLen = len(result)
         if dateLen == 0:
-            return False
+            return False,False
 
         for key in range(dateLen):
             today = result[key].date_as
@@ -180,4 +180,4 @@ class Command(BaseCommand):
         if dateLen < 11:
             print("已遍历完成")
 
-        return False
+        return False,False
