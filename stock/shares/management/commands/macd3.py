@@ -54,7 +54,7 @@ class Command(BaseCommand):
         # 检查是否存在交点
         sql = '''
         SELECT 1 as id, a.code_id FROM `mc_shares_kdj` a
-            left join (select k,d,j,code_id from mc_shares 
+            left join (select k,d,j,code_id from mc_shares_kdj 
                     where date_as < %s and code_id =%s order by date_as desc limit 1) c 
             on c.code_id = a.code_id
         where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j 
@@ -92,7 +92,7 @@ class Command(BaseCommand):
             # 检查是否存在交点
             sql = '''
                     SELECT 1 as id, a.code_id FROM `mc_shares_kdj` a
-                        left join (select k,d,j,code_id from mc_shares 
+                        left join (select k,d,j,code_id from mc_shares_kdj 
                                 where date_as < %s and code_id =%s order by date_as desc limit 1) c 
                         on c.code_id = a.code_id
                     where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j
