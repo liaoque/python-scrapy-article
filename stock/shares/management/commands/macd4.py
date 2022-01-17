@@ -138,13 +138,14 @@ class Command(BaseCommand):
 
         # 往后10个工作日
         sql = '''
-        select date_as from mc_shares  where date_as > %s and code_id =  %s order by date_as asc limit 10
+        select date_as from mc_shares  where date_as > %s and code_id =  %s order by date_as asc limit 11
         '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
-        if len(result) == 0:
+        dateLen = len(result)
+        if dateLen == 0:
             return False
 
-        for key in range(len(result)):
+        for key in range(dateLen):
             today = result[key].date_as
             if key + 1 > len(result):
                 break
@@ -158,12 +159,16 @@ class Command(BaseCommand):
                     where c.j < a.j
                     and a.date_as = %s and a.code_id = %s
                     '''
-            result = SharesKdjCompute.objects.raw(sql, params=(tomorrow, code_id, today, code_id,))
-            if len(result) == 0:
+            result2 = SharesKdjCompute.objects.raw(sql, params=(tomorrow, code_id, today, code_id,))
+            if len(result2) == 0:
                 continue
             sql = '''select p_end from mc_shares  where date_as = %s and code_id =  %s '''
-            result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
-            end_p = result[0].p_end
+            result2 = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
+            end_p = result2[0].p_end
             diff = start_p - end_p
             return diff, today
+
+        if dateLen < 11:
+            print("已遍历完成")
+
         return False
