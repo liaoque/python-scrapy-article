@@ -228,3 +228,25 @@ select ikdj.code_id,mc_shares_name.name from mc_shares_industry_kdj ikdj
 卖点,
 > kdj达到最高点后向下 或者 kdj到达最高点：macd：距离交叉 < 11 % (dea - diff / dea + diff) )，或者(diff - dea) < 0.05
 > 买入后如果亏损，确认 macd dea线是否上行，如果上行就留着等涨，否则持有两天后，abs(macd) > .05割肉
+
+
+SELECT
+    1 AS id,
+    mc_shares_macd.code_id
+FROM
+    mc_shares_macd
+LEFT JOIN(
+    SELECT
+        MAX(dea) AS max_dea,
+        code_id
+    FROM
+        mc_shares_macd
+    WHERE
+        date_as < '2022-01-17' AND date_as > '2022-01-01'
+    GROUP BY
+        code_id
+) c
+ON
+    c.code_id = mc_shares_macd.code_id
+WHERE
+    mc_shares_macd.date_as = '2022-01-17' AND max_dea < mc_shares_macd.dea

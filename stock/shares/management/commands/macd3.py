@@ -63,15 +63,13 @@ class Command(BaseCommand):
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id, today, code_id,))
         if len(result) == 0:
             return False
-
-        print("%s获得股票：%s" % (today, code_id))
         return True
 
     def macdYestodaySearch(self, code_id, today):
         # macd：距离交叉 < 11%(dea-diff/dea+ diff) )
         sql = '''
                 select  1 as id, mc_shares_macd.code_id, (dea-diff)/(dea+ diff) as rate from mc_shares_macd 
-                    where date_as = %s and code_id <  %s 
+                    where date_as = %s and code_id <  %s and dea > diff
                     having rate < 0.11
                 '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
@@ -105,5 +103,4 @@ class Command(BaseCommand):
 
         if targetDateAs == None:
             return False
-        print("%s获得股票：%s" % (today, code_id))
         return True
