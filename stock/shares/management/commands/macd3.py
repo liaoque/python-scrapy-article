@@ -71,7 +71,7 @@ class Command(BaseCommand):
         # macd：距离交叉 < 11%(dea-diff/dea+ diff) )
         sql = '''
                 select  1 as id, mc_shares_macd.code_id, (dea-diff)/(dea+ diff) as rate from mc_shares_macd 
-                    where date_as = %s and code_id <  %s and dea > diff
+                    where date_as = %s and code_id =  %s and dea > diff
                     having rate < 0.11
                 '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
@@ -81,7 +81,7 @@ class Command(BaseCommand):
         # 查前3个交易日
         sql = '''
         select  1 as id, date_as from mc_shares_macd  
-                where date_as = %s and code_id < %s order by date_as desc limit 3 
+                where date_as = %s and code_id = %s order by date_as desc limit 3 
         '''
         dateList = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
         if len(dateList) == 0:
