@@ -61,7 +61,7 @@ class Command(BaseCommand):
             left join (select max(dea) as max_dea, code_id from mc_shares_macd
                         where date_as < %s and code_id = %s order by date_as desc limit 10) c
                 on c.code_id = mc_shares_macd.code_id 
-            where date_as = %s and max_dea < dea and code_id = %s
+            where mc_shares_macd.date_as = %s and max_dea < mc_shares_macd.dea and mc_shares_macd.code_id = %s
         '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id, today, code_id,))
         if len(result) == 0:
