@@ -58,8 +58,10 @@ class Command(BaseCommand):
         # 当天和前 10个工作日 dea 上行
         sql = '''
         select  1 as id, mc_shares_macd.code_id from mc_shares_macd 
-            left join (select max(dea) as max_dea, code_id from mc_shares_macd
-                        where date_as < %s and code_id = %s order by date_as desc limit 10) c
+            left join (
+                select MAX(dea) AS max_dea, code_id from (
+                    select dea, code_id from mc_shares_macd where date_as < %s and code_id = %s order by date_as desc limit 10
+                ) t) c
                 on c.code_id = mc_shares_macd.code_id 
             where mc_shares_macd.date_as = %s and max_dea < mc_shares_macd.dea and mc_shares_macd.code_id = %s
         '''
@@ -149,13 +151,13 @@ class Command(BaseCommand):
             tomorrow = result[key + 1].date_as
             # j 下行
             sql = '''
-                        SELECT 1 as id, a.code_id FROM `mc_shares_kdj` a
-                            left join (select k,d,j,code_id from mc_shares_kdj 
-                                    where date_as = %s and code_id =%s order by date_as asc limit 1) c 
-                            on c.code_id = a.code_id
-                        where c.j < a.j
-                        and a.date_as = %s and a.code_id = %s
-                        '''
+                    SELECT 1 as id, a.code_id FROM `mc_shares_kdj` a
+                        left join (select k,d,j,code_id from mc_shares_kdj 
+                                where date_as = %s and code_id =%s order by date_as asc limit 1) c 
+                        on c.code_id = a.code_id
+                    where c.j < a.j
+                    and a.date_as = %s and a.code_id = %s
+                    '''
             result = SharesKdjCompute.objects.raw(sql, params=(tomorrow, code_id, today, code_id,))
             if len(result) == 0:
                 continue

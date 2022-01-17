@@ -250,3 +250,5 @@ ON
     c.code_id = mc_shares_macd.code_id
 WHERE
     mc_shares_macd.date_as = '2022-01-17' AND max_dea < mc_shares_macd.dea
+
+
