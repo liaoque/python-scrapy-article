@@ -26,6 +26,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # 查找所有股票
+        bill = 0
         for item in SharesName.objects.filter(status=1, code_type=1):
             # 查该股所有日期
             diffTotal = 0
@@ -62,6 +63,10 @@ class Command(BaseCommand):
                     diffTotal += diff
                     continue
             print("code：%s， 总收益：%d， 成功： %d，失败：%d"%(item.code, diffTotal, success, error))
+            if diffTotal >0:
+                bill +=1
+        print("正收益： %d" % (bill))
+
 
     def macdTodaySearch(self, code_id, today):
         # 当天和前 10个工作日 dea 上行
