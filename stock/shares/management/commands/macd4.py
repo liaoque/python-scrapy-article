@@ -87,7 +87,7 @@ class Command(BaseCommand):
         if len(result) == 0:
             return False
 
-        print("%s获得股票：%s" % (today, code_id))
+        # print("%s获得股票：%s" % (today, code_id))
         return True
 
     def macdYestodaySearch(self, code_id, today):
