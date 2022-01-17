@@ -13,6 +13,7 @@ from shares.model.shares_kdj_compute_detail import SharesKdjComputeDetail
 # from ....shares.model.shares import Shares
 import numpy as np
 import talib
+import sys
 
 " /bin/cp /alidata/python/python-scrapy-article/stock/* /alidata/python/python-scrapy-article-master/stock -rf"
 
@@ -63,6 +64,7 @@ class Command(BaseCommand):
                     diffTotal += diff
                     continue
             print("code：%s， 总收益：%d， 成功： %d，失败：%d"%(item.code, diffTotal, success, error))
+            sys.stdout.flush()
             if diffTotal >0:
                 bill +=1
         print("正收益： %d" % (bill))
