@@ -32,18 +32,27 @@ class Command(BaseCommand):
             end_date = None
             total, success, error = 0, 0, 0
 
-            for sharesItem in Shares.objects.filter(code_id=item.code)[-1:]:
+            for sharesItem in Shares.objects.filter(code_id=item.code):
                 if end_date and sharesItem.date_as < end_date:
                     continue
                 result = self.macdTodaySearch(item.code, sharesItem.date_as)
                 if result:
-                    print("today-code：%s", item.code, diffTotal)
+                    # 计算收益
+                    diff, end_date = self.sell(item.code, sharesItem.date_as)
+                    diffTotal += diff
                     break
                 result = self.macdYestodaySearch(item.code, sharesItem.date_as)
                 if result:
-                    print("yestoday-code：%s", item.code, diffTotal)
+                    # 计算收益
+                    diff, end_date = self.sell(item.code, sharesItem.date_as)
+                    total += 1
+                    if diff > 0:
+                        success += 1
+                    else:
+                        error + 1
+                    diffTotal += diff
                     break
-
+            print("code：%s， 总收益：%d", item.code, diffTotal)
 
     def macdTodaySearch(self, code_id, today):
         # 当天和前 10个工作日 dea 上行
