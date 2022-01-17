@@ -27,6 +27,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # 查找所有股票
         for item in SharesName.objects.filter(status=1, code_type=1):
+            if (item.code > '300000' and item.code < '600000') or item.code > '700000':
+                continue
             # 查该股所有日期
             for sharesItem in Shares.objects.filter(code_id=item.code).order_by('-date_as')[:1]:
                 result = self.macdTodaySearch(item.code, sharesItem.date_as)
