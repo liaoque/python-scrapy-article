@@ -46,7 +46,7 @@ class Command(BaseCommand):
                     if diff > 0:
                         success += 1
                     else:
-                        error + 1
+                        error += 1
                     continue
                 result = self.macdYestodaySearch(item.code, sharesItem.date_as)
                 if result:
@@ -58,7 +58,7 @@ class Command(BaseCommand):
                     if diff > 0:
                         success += 1
                     else:
-                        error + 1
+                        error += 1
                     diffTotal += diff
                     continue
             print("code：%s， 总收益：%d， 成功： %d，失败：%d"%(item.code, diffTotal, success, error))
