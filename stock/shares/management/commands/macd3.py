@@ -28,10 +28,7 @@ class Command(BaseCommand):
         # 查找所有股票
         for item in SharesName.objects.filter(status=1, code_type=1):
             # 查该股所有日期
-            print(item.code)
             for sharesItem in Shares.objects.filter(code_id=item.code).order_by('-date_as')[:1]:
-                print(sharesItem.date_as)
-                break
                 result = self.macdTodaySearch(item.code, sharesItem.date_as)
                 if result:
                     print("today-code：%s" % item.code)
