@@ -39,12 +39,13 @@ class Command(BaseCommand):
                 if result:
                     # 计算收益
                     diff, end_date = self.sell(item.code, sharesItem.date_as)
+                    total += 1
                     diffTotal += diff
                     if diff > 0:
                         success += 1
                     else:
                         error + 1
-                    break
+                    continue
                 result = self.macdYestodaySearch(item.code, sharesItem.date_as)
                 if result:
                     # 计算收益
@@ -55,7 +56,7 @@ class Command(BaseCommand):
                     else:
                         error + 1
                     diffTotal += diff
-                    break
+                    continue
             print("code：%s， 总收益：%d， 成功： %d，失败：%d"%(item.code, diffTotal, success, error))
 
     def macdTodaySearch(self, code_id, today):
