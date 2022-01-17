@@ -156,7 +156,7 @@ class Command(BaseCommand):
 
         for key in range(dateLen):
             today = result[key].date_as
-            if key + 1 > dateLen:
+            if key + 1 >= dateLen:
                 break
             tomorrow = result[key + 1].date_as
             # j 下行
