@@ -129,7 +129,7 @@ class Command(BaseCommand):
     def sell(self, code_id, today):
         # 以最高点之后的，转折点作为卖价
         sql = '''
-            select p_end from mc_shares  where date_as = %s and code_id =  %s 
+            select 1 as id,p_end from mc_shares  where date_as = %s and code_id =  %s 
             '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
         if len(result) == 0:
@@ -138,7 +138,7 @@ class Command(BaseCommand):
 
         # 往后10个工作日
         sql = '''
-        select date_as from mc_shares  where date_as > %s and code_id =  %s order by date_as asc limit 11
+        select 1 as id,date_as from mc_shares  where date_as > %s and code_id =  %s order by date_as asc limit 11
         '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
         dateLen = len(result)
@@ -162,7 +162,7 @@ class Command(BaseCommand):
             result2 = SharesKdjCompute.objects.raw(sql, params=(tomorrow, code_id, today, code_id,))
             if len(result2) == 0:
                 continue
-            sql = '''select p_end from mc_shares  where date_as = %s and code_id =  %s '''
+            sql = '''select 1 as id,p_end from mc_shares  where date_as = %s and code_id =  %s '''
             result2 = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
             end_p = result2[0].p_end
             diff = start_p - end_p
