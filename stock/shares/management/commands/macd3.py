@@ -70,7 +70,7 @@ class Command(BaseCommand):
     def macdYestodaySearch(self, code_id, today):
         # macd：距离交叉 < 11%(dea-diff/dea+ diff) )
         sql = '''
-                select  1 as id, mc_shares_macd.code_id, (dea-diff)/(dea+ dif) as rate from mc_shares_macd 
+                select  1 as id, mc_shares_macd.code_id, (dea-diff)/(dea+ diff) as rate from mc_shares_macd 
                     where date_as = %s and code_id <  %s 
                     having rate < 0.11
                 '''
