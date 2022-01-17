@@ -56,7 +56,7 @@ class Command(BaseCommand):
                         error + 1
                     diffTotal += diff
                     break
-            print("code：%s， 总收益：%d， 成功： %d，失败：%d", item.code, diffTotal, success, error)
+            print("code：%s， 总收益：%d， 成功： %d，失败：%d"%(item.code, diffTotal, success, error))
 
     def macdTodaySearch(self, code_id, today):
         # 当天和前 10个工作日 dea 上行
