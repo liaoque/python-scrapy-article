@@ -42,7 +42,7 @@ class Command(BaseCommand):
                     slist.append(item.code)
                     print("yestoday-code：%s" % item.code)
                     break
-        print(",".join(["\"" + item.code_id + "\"" for item in slist]))
+        print(",".join(["\"" + item + "\"" for item in slist]))
 
 
     def macdTodaySearch(self, code_id, today):
