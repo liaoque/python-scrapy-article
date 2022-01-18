@@ -29,7 +29,7 @@ class Command(BaseCommand):
         # 查找所有股票
         bill = 0
         for item in SharesName.objects.filter(status=1, code_type=1):
-            if (item.code > '300000' and item.code < '600000') or item.code > '700000':
+            if (item.code > '300000' and item.code < '600000') or item.code > '680000':
                 continue
             # 查该股所有日期
             diffTotal = 0
@@ -113,7 +113,7 @@ class Command(BaseCommand):
             return False
 
         # 上一个交易日
-        yesterday = dateList[0]
+        yesterday = dateList[0].date_as
         # macd：距离交叉 < 11%(dea-diff/dea+ diff) )
         sql = '''
                 select  1 as id, a.code_id, (a.dea-a.diff)/(a.dea+ a.diff) as rate from mc_shares_macd a 
