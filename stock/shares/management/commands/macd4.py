@@ -177,7 +177,16 @@ class Command(BaseCommand):
             if key + 1 >= dateLen:
                 break
 
-            # if key > 2:
+            if key > 2:
+                sql = '''
+                        select  1 as id, a.code_id, (a.dea-a.diff)/(a.dea+ a.diff) as rate, (a.dea-a.diff) as sub1 from mc_shares_macd a 
+                            where a.date_as = %s and a.code_id =  %s and a.dea > a.diff 
+                            having ABS(rate) < 0.11 or  abs(sub1) < 0.08
+                        '''
+                result = SharesKdjCompute.objects.raw(sql, params=(code_id, today,))
+                if len(result) == 0:
+                    return False
+
 
             tomorrow = result[key + 1].date_as
             # j 下行
