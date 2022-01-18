@@ -85,7 +85,7 @@ class Command(BaseCommand):
             return False
 
         # 上一个交易日
-        yesterday = dateList[1]
+        yesterday = dateList[1].date_as
         # macd：距离交叉 < 11%(dea-diff/dea+ diff) )
         sql = '''
                 select  1 as id, a.code_id, (a.dea-a.diff)/(a.dea+ a.diff) as rate from mc_shares_macd a 
