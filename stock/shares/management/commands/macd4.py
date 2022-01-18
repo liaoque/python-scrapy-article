@@ -43,9 +43,11 @@ class Command(BaseCommand):
                 result = self.macdTodaySearch(item.code, sharesItem.date_as)
                 if result:
                     # 计算收益
+                    print("%s买入" % (sharesItem.date_as))
                     diff, end_date = self.sell(item.code, sharesItem.date_as)
                     if diff == False:
                         continue
+                    print("%s卖出" % (sharesItem.date_as))
                     total += 1
                     diffTotal += diff
                     if diff > 0:
@@ -56,9 +58,11 @@ class Command(BaseCommand):
                 result = self.macdYestodaySearch(item.code, sharesItem.date_as)
                 if result:
                     # 计算收益
+                    print("%s买入" % (sharesItem.date_as))
                     diff, end_date = self.sell(item.code, sharesItem.date_as)
                     if diff == False:
                         continue
+                    print("%s卖出" % (sharesItem.date_as))
                     total += 1
                     if diff > 0:
                         success += 1
@@ -66,6 +70,7 @@ class Command(BaseCommand):
                         error += 1
                     diffTotal += diff
                     continue
+            break
             print("code：%s， 总收益：%d， 成功： %d，失败：%d" % (item.code, diffTotal, success, error))
             sys.stdout.flush()
             if diffTotal > 0:
