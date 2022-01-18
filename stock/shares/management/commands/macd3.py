@@ -81,7 +81,7 @@ class Command(BaseCommand):
                         where date_as <= %s and code_id = %s order by date_as desc limit 4 
                 '''
         dateList = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
-        if len(dateList) == 0:
+        if len(dateList) < 2:
             return False
 
         # 上一个交易日
