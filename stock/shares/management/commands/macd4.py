@@ -37,7 +37,7 @@ class Command(BaseCommand):
             end_date = None
             total, success, error = 0, 0, 0
 
-            for sharesItem in Shares.objects.filter(code_id=item.code,date_as__gte='2021-12-01'):
+            for sharesItem in Shares.objects.filter(code_id=item.code, date_as__gte='2021-12-01'):
                 if end_date and sharesItem.date_as < end_date:
                     continue
                 result = self.macdTodaySearch(item.code, sharesItem.date_as)
@@ -176,6 +176,9 @@ class Command(BaseCommand):
             today = result[key].date_as
             if key + 1 >= dateLen:
                 break
+
+            # if key > 2:
+
             tomorrow = result[key + 1].date_as
             # j 下行
             sql = '''
@@ -190,9 +193,9 @@ class Command(BaseCommand):
             if len(result2) == 0:
                 continue
             sql = '''select 1 as id,p_end from mc_shares  where date_as = %s and code_id =  %s '''
-            result2 = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
+            result2 = SharesKdjCompute.objects.raw(sql, params=(tomorrow, code_id,))
             end_p = result2[0].p_end
-            diff = start_p - end_p
+            diff = end_p - start_p
             return diff, today
 
         if dateLen < 11:
