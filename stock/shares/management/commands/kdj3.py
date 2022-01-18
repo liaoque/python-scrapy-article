@@ -33,7 +33,7 @@ class Command(BaseCommand):
         result = self.compute3(first, second)
         print(result)
         print("%s-%s-挑选出股票：%s个" % (first, second, len(result)))
-        print(",".join(["'" + item.code_id + "'" for item in result]))
+        print(",".join(["\"" + item.code_id + "\"" for item in result]))
         # for item in result:
         #     print('%s'% (item.code_id))
         # print("---------")
