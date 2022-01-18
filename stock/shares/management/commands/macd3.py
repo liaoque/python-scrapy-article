@@ -75,24 +75,30 @@ class Command(BaseCommand):
         return True
 
     def macdYestodaySearch(self, code_id, today):
-        # macd：距离交叉 < 11%(dea-diff/dea+ diff) )
-        sql = '''
-                select  1 as id, mc_shares_macd.code_id, (dea-diff)/(dea+ diff) as rate from mc_shares_macd 
-                    where date_as = %s and code_id =  %s and dea > diff
-                    having ABS(rate) < 0.11
-                '''
-        result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
-        if len(result) == 0:
-            return False
-
         # 查前3个交易日
         sql = '''
-        select  1 as id, date_as from mc_shares_macd  
-                where date_as = %s and code_id = %s order by date_as desc limit 3 
-        '''
+                select  1 as id, date_as from mc_shares_macd  
+                        where date_as = %s and code_id = %s order by date_as desc limit 3 
+                '''
         dateList = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
         if len(dateList) == 0:
             return False
+
+        # 上一个交易日
+        yesterday = dateList[0]
+        # macd：距离交叉 < 11%(dea-diff/dea+ diff) )
+        sql = '''
+                select  1 as id, a.code_id, (a.dea-a.diff)/(a.dea+ a.diff) as rate from mc_shares_macd a 
+                    left join mc_shares_macd b on b.code_id = a.code_id and b.date_as = %s
+                    where a.date_as = %s and a.code_id =  %s and a.dea > a.diff 
+                    and a.dea > b.dea and a.diff > b.diff
+                    having ABS(rate) < 0.11
+                '''
+        result = SharesKdjCompute.objects.raw(sql, params=(yesterday, today, code_id,))
+        if len(result) == 0:
+            return False
+
+
 
         targetDateAs = None
         for item in dateList:
