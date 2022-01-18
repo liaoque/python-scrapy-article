@@ -36,10 +36,16 @@ class Command(BaseCommand):
             diffTotal = 0
             end_date = None
             total, success, error = 0, 0, 0
-
+            skip = 0
             for sharesItem in Shares.objects.filter(code_id=item.code, date_as__gte='2021-12-01'):
                 if end_date and sharesItem.date_as <= end_date:
                     continue
+
+                if skip > 0:
+                    # yesterday 卖出后，跳过3个工作日
+                    skip -= 1
+                    continue
+
                 result = self.macdTodaySearch(item.code, sharesItem.date_as)
                 if result:
                     # 计算收益
@@ -63,6 +69,7 @@ class Command(BaseCommand):
                     if diff == False:
                         continue
                     print("yesterday %s卖出%s" % (end_date, item.code))
+                    skip = 3
                     total += 1
                     if diff > 0:
                         success += 1
@@ -184,14 +191,13 @@ class Command(BaseCommand):
                             where a.date_as = %s and a.code_id =  %s and a.dea > a.diff 
                             having ABS(rate) < 0.11 or  abs(sub1) < 0.08
                         '''
-                result2 = SharesKdjCompute.objects.raw(sql, params=(today,code_id,))
+                result2 = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
                 if len(result2) > 0:
                     sql = '''select 1 as id,p_end from mc_shares  where date_as = %s and code_id =  %s '''
                     result2 = SharesKdjCompute.objects.raw(sql, params=(tomorrow, code_id,))
                     end_p = result2[0].p_end
                     diff = end_p - start_p
                     return diff, today
-
 
             tomorrow = result[key + 1].date_as
             # j 下行
