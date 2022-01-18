@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     diff, end_date = self.sell(item.code, sharesItem.date_as)
                     if diff == False:
                         continue
-                    print("%s卖出%" % (sharesItem.date_as, item.code))
+                    print("%s卖出%" % (end_date, item.code))
                     total += 1
                     diffTotal += diff
                     if diff > 0:
@@ -62,7 +62,7 @@ class Command(BaseCommand):
                     diff, end_date = self.sell(item.code, sharesItem.date_as)
                     if diff == False:
                         continue
-                    print("%s卖出%" % (sharesItem.date_as, item.code))
+                    print("%s卖出%" % (end_date, item.code))
                     total += 1
                     if diff > 0:
                         success += 1
