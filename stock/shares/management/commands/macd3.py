@@ -78,7 +78,7 @@ class Command(BaseCommand):
         # 查前3个交易日
         sql = '''
                 select  1 as id, date_as from mc_shares_macd  
-                        where date_as = %s and code_id = %s order by date_as desc limit 3 
+                        where date_as <= %s and code_id = %s order by date_as desc limit 3 
                 '''
         dateList = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
         if len(dateList) == 0:
