@@ -29,6 +29,8 @@ class Command(BaseCommand):
         # 查找所有股票
         bill = 0
         for item in SharesName.objects.filter(status=1, code_type=1):
+            if (item.code > '300000' and item.code < '600000') or item.code > '700000':
+                continue
             # 查该股所有日期
             diffTotal = 0
             end_date = None
@@ -91,7 +93,7 @@ class Command(BaseCommand):
             left join (select k,d,j,code_id from mc_shares_kdj 
                     where date_as < %s and code_id =%s order by date_as desc limit 1) c 
             on c.code_id = a.code_id
-        where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j 
+        where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j and a.j < 35
         and a.date_as = %s and a.code_id = %s
         '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id, today, code_id,))
@@ -129,7 +131,7 @@ class Command(BaseCommand):
                         left join (select k,d,j,code_id from mc_shares_kdj 
                                 where date_as < %s and code_id =%s order by date_as desc limit 1) c 
                         on c.code_id = a.code_id
-                    where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j
+                    where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j and a.j < 35
                     and a.date_as = %s and a.code_id = %s
                     '''
             result = SharesKdjCompute.objects.raw(sql, params=(item.date_as, code_id, item.date_as, code_id,))
