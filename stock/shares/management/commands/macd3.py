@@ -26,6 +26,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # 查找所有股票
+        slist = []
         for item in SharesName.objects.filter(status=1, code_type=1):
             if (item.code > '300000' and item.code < '600000') or item.code > '700000':
                 continue
@@ -33,12 +34,16 @@ class Command(BaseCommand):
             for sharesItem in Shares.objects.filter(code_id=item.code).order_by('-date_as')[:1]:
                 result = self.macdTodaySearch(item.code, sharesItem.date_as)
                 if result:
+                    slist.append(item.code)
                     print("today-code：%s" % item.code)
                     break
                 result = self.macdYestodaySearch(item.code, sharesItem.date_as)
                 if result:
+                    slist.append(item.code)
                     print("yestoday-code：%s" % item.code)
                     break
+        print(",".join(["\"" + item.code_id + "\"" for item in slist]))
+
 
     def macdTodaySearch(self, code_id, today):
         # 当天和前 10个工作日 dea 上行
@@ -61,7 +66,7 @@ class Command(BaseCommand):
             left join (select k,d,j,code_id from mc_shares_kdj 
                     where date_as < %s and code_id =%s order by date_as desc limit 1) c 
             on c.code_id = a.code_id
-        where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j and a.j < 35
+        where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j and a.j < 60
         and a.date_as = %s and a.code_id = %s
         '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id, today, code_id,))
