@@ -179,13 +179,18 @@ class Command(BaseCommand):
 
             if key > 2:
                 sql = '''
-                        select  1 as id, a.code_id, (a.dea-a.diff)/(a.dea+ a.diff) as rate, (a.dea-a.diff) as sub1 from mc_shares_macd a 
+                        select  1 as id, a.code_id, (a.dea-a.diff)/(a.dea+ a.diff) as rate, (a.dea-a.diff) as sub1 
+                            from mc_shares_macd a 
                             where a.date_as = %s and a.code_id =  %s and a.dea > a.diff 
                             having ABS(rate) < 0.11 or  abs(sub1) < 0.08
                         '''
-                result = SharesKdjCompute.objects.raw(sql, params=(code_id, today,))
-                if len(result) == 0:
-                    return False
+                result2 = SharesKdjCompute.objects.raw(sql, params=(today,code_id,))
+                if len(result2) > 0:
+                    sql = '''select 1 as id,p_end from mc_shares  where date_as = %s and code_id =  %s '''
+                    result2 = SharesKdjCompute.objects.raw(sql, params=(tomorrow, code_id,))
+                    end_p = result2[0].p_end
+                    diff = end_p - start_p
+                    return diff, today
 
 
             tomorrow = result[key + 1].date_as
