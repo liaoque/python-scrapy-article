@@ -28,6 +28,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # 查找所有股票
         bill = 0
+        negative = 0
         for item in SharesName.objects.filter(status=1, code_type=1):
             if (item.code > '300000' and item.code < '600000') or item.code > '680000':
                 continue
@@ -69,7 +70,9 @@ class Command(BaseCommand):
             sys.stdout.flush()
             if diffTotal > 0:
                 bill += 1
-        print("正收益： %d" % (bill))
+            elif diffTotal < 0:
+                negative += 1
+        print("正收益： %d, 负收益：%d" % (bill, negative))
 
     def macdTodaySearch(self, code_id, today):
         # 当天和前 10个工作日 dea 上行
