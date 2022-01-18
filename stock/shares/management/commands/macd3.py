@@ -74,7 +74,7 @@ class Command(BaseCommand):
         sql = '''
                 select  1 as id, mc_shares_macd.code_id, (dea-diff)/(dea+ diff) as rate from mc_shares_macd 
                     where date_as = %s and code_id =  %s and dea > diff
-                    having rate < 0.11
+                    having ABS(rate) < 0.11
                 '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
         if len(result) == 0:
