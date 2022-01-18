@@ -92,7 +92,7 @@ class Command(BaseCommand):
                     left join mc_shares_macd b on b.code_id = a.code_id and b.date_as = %s
                     where a.date_as = %s and a.code_id =  %s and a.dea > a.diff 
                     and a.diff >= b.diff
-                    having ABS(rate) < 0.11
+                    having ABS(rate) < 0.21
                 '''
         result = SharesKdjCompute.objects.raw(sql, params=(yesterday, today, code_id,))
         if len(result) == 0:
