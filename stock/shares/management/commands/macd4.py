@@ -36,7 +36,7 @@ class Command(BaseCommand):
             end_date = None
             total, success, error = 0, 0, 0
 
-            for sharesItem in Shares.objects.filter(code_id=item.code):
+            for sharesItem in Shares.objects.filter(code_id=item.code,date_as__lte='2021-12-01'):
                 if end_date and sharesItem.date_as < end_date:
                     continue
                 result = self.macdTodaySearch(item.code, sharesItem.date_as)
