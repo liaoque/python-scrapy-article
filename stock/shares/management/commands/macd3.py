@@ -95,7 +95,6 @@ class Command(BaseCommand):
                     having ABS(rate) < 0.11
                 '''
         result = SharesKdjCompute.objects.raw(sql, params=(yesterday, today, code_id,))
-        print(result)
         if len(result) == 0:
             return False
 
