@@ -106,24 +106,22 @@ class Command(BaseCommand):
             left join (select k,d,j,code_id from mc_shares_kdj 
                     where date_as < %s and code_id =%s order by date_as desc limit 1) c 
             on c.code_id = a.code_id
-        where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j and a.j < 35
+        where c.k > c.j and c.d > c.j and a.k < a.j and a.d < a.j and a.j < 60
         and a.date_as = %s and a.code_id = %s
         '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, code_id, today, code_id,))
         if len(result) == 0:
             return False
-
-        # print("%s获得股票：%s" % (today, code_id))
         return True
 
     def macdYestodaySearch(self, code_id, today):
         # 查前3个交易日
         sql = '''
                 select  1 as id, date_as from mc_shares_macd  
-                        where date_as <= %s and code_id = %s order by date_as desc limit 3 
+                        where date_as < %s and code_id = %s order by date_as desc limit 3 
                 '''
         dateList = SharesKdjCompute.objects.raw(sql, params=(today, code_id,))
-        if len(dateList) == 0:
+        if len(dateList) < 2:
             return False
 
         # 上一个交易日

@@ -44,7 +44,6 @@ class Command(BaseCommand):
                     break
         print(",".join(["\"" + item + "\"" for item in slist]))
 
-
     def macdTodaySearch(self, code_id, today):
         # 当天和前 10个工作日 dea 上行
         sql = '''
@@ -97,8 +96,6 @@ class Command(BaseCommand):
         result = SharesKdjCompute.objects.raw(sql, params=(yesterday, today, code_id,))
         if len(result) == 0:
             return False
-
-
 
         targetDateAs = None
         for item in dateList:
