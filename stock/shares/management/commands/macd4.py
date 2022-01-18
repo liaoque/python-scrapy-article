@@ -80,9 +80,9 @@ class Command(BaseCommand):
             print("code：%s， 总收益：%d， 成功： %d，失败：%d" % (item.code, diffTotal, success, error))
             sys.stdout.flush()
             if diffTotal > 0:
-                bill += 1
+                bill += diffTotal
             elif diffTotal < 0:
-                negative += 1
+                negative += diffTotal
         print("正收益： %d, 负收益：%d" % (bill, negative))
 
     def macdTodaySearch(self, code_id, today):
