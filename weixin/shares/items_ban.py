@@ -22,6 +22,16 @@ class Items(scrapy.Item):
         code = self['code'][0]
         date_as = self['date_as'][0]
         if self.exitsByCode(cursor, code, date_as):
+            sql = """
+            update mc_shares_ban set avoid_cycle = %s, remain_avoid_cycle = %s, avoid_reason = %s where code_id = %s
+            """
+            params = (
+                self["avoid_cycle"][0],
+                self["remain_avoid_cycle"][0],
+                self["avoid_reason"][0],
+                code,
+            )
+            cursor.execute(sql, params)
             return
         sql = """
             INSERT INTO mc_shares_ban (code_id, avoid_cycle, remain_avoid_cycle, avoid_reason, date_as)
