@@ -77,7 +77,8 @@ class Command(BaseCommand):
                         error += 1
                     diffTotal += diff
                     continue
-            print("code：%s， 总收益：%d， 成功： %d，失败：%d" % (item.code, diffTotal, success, error))
+            if success and error:
+                print("code：%s， 总收益：%d， 成功： %d，失败：%d" % (item.code, diffTotal, success, error))
             sys.stdout.flush()
             if diffTotal > 0:
                 bill += diffTotal
