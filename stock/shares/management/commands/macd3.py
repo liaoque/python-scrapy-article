@@ -45,6 +45,13 @@ class Command(BaseCommand):
         print(",".join(["\"" + item + "\"" for item in slist]))
 
     def macdTodaySearch(self, code_id, today):
+        sql = '''
+        select code_id from mc_shares_ban where code_id = %s and remain_avoid_cycle = 0
+        '''
+        result = SharesKdjCompute.objects.raw(sql, params=(code_id))
+        if len(result) == 1:
+            return False
+
         # 当天和前 10个工作日 dea 上行
         sql = '''
         select  1 as id, mc_shares_macd.code_id from mc_shares_macd 
@@ -74,6 +81,12 @@ class Command(BaseCommand):
         return True
 
     def macdYestodaySearch(self, code_id, today):
+        sql = '''
+                select code_id from mc_shares_ban where code_id = %s and remain_avoid_cycle = 0
+                '''
+        result = SharesKdjCompute.objects.raw(sql, params=(code_id))
+        if len(result) == 1:
+            return False
         # 查前3个交易日
         sql = '''
                 select  1 as id, date_as from mc_shares_macd  
