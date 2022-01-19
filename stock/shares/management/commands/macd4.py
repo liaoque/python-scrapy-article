@@ -132,7 +132,7 @@ class Command(BaseCommand):
                     left join mc_shares_macd b on b.code_id = a.code_id and b.date_as = %s
                     left join mc_shares_kdj x on x.code_id = a.code_id and x.date_as = a.date_as
                     where a.date_as = %s and a.code_id =  %s and a.dea > a.diff 
-                    and a.diff >= b.diff and x.j < 50
+                    and a.diff >= b.diff and x.j < 60
                     having ABS(rate) < 0.11
                 '''
         result = SharesKdjCompute.objects.raw(sql, params=(yesterday, today, code_id,))
