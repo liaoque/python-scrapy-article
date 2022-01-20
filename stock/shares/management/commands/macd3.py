@@ -46,7 +46,7 @@ class Command(BaseCommand):
 
     def macdTodaySearch(self, code_id, today):
         sql = '''
-        select code_id from mc_shares_ban where code_id = %s and remain_avoid_cycle = 0
+        select id from mc_shares_ban where code_id = %s and remain_avoid_cycle = 0
         '''
         result = SharesKdjCompute.objects.raw(sql, params=(code_id))
         if len(result) == 1:
@@ -82,7 +82,7 @@ class Command(BaseCommand):
 
     def macdYestodaySearch(self, code_id, today):
         sql = '''
-                select code_id from mc_shares_ban where code_id = %s and remain_avoid_cycle = 0
+                select id from mc_shares_ban where code_id = %s and remain_avoid_cycle = 0
                 '''
         result = SharesKdjCompute.objects.raw(sql, params=(code_id))
         if len(result) == 1:
