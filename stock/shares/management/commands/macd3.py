@@ -48,7 +48,7 @@ class Command(BaseCommand):
         sql = '''
         select id from mc_shares_ban where code_id = %s and remain_avoid_cycle = 0
         '''
-        result = SharesKdjCompute.objects.raw(sql, params=(code_id))
+        result = SharesKdjCompute.objects.raw(sql, params=(code_id,))
         if len(result) == 1:
             return False
 
@@ -84,7 +84,7 @@ class Command(BaseCommand):
         sql = '''
                 select id from mc_shares_ban where code_id = %s and remain_avoid_cycle = 0
                 '''
-        result = SharesKdjCompute.objects.raw(sql, params=(code_id))
+        result = SharesKdjCompute.objects.raw(sql, params=(code_id,))
         if len(result) == 1:
             return False
         # 查前3个交易日
