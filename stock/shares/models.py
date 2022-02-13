@@ -15,4 +15,6 @@ from .model.shares_join_industry import SharesJoinIndustry
 from .model.shares_industry import SharesIndustry
 from .model.shares_industry_kdj import SharesIndustryKdj
 from .model.shares_macd import SharesMacd
+from .model.futrues_hot import FutruesHot
+from .model.futrues_join_shares import FutruesJoinShares
 

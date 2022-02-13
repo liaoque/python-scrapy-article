@@ -26,4 +26,14 @@ export PATH="/usr/local/opt/mysql-client/bin:$PATH"
 pip install mysqlclient
 
 
+热门金属列表
+http://ai.10jqka.com.cn/commodity/stocklinkage/info/getdetail
 
+热门商品咨询
+http://ai.10jqka.com.cn/commodity/stocklinkage/info/getconsultation?indexid=S002981544
+
+历史价格
+http://ai.10jqka.com.cn/commodity/stocklinkage/info/commodityhistory?indexid=S004242721&daynum=60
+
+关联股票
+http://ai.10jqka.com.cn/commodity/stocklinkage/info/stocklink?commodityid=301
