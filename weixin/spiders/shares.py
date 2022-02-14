@@ -50,7 +50,7 @@ class Shares(scrapy.Spider):
             if stock_info:
                 days = (datetime.now().date() - stock_info[2]).days
                 if days < 1:
-                    return
+                    continue
             area_id = item[2]
             if area_id == 1:
                 s_code = "1." + code
