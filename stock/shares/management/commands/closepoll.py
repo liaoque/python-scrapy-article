@@ -14,7 +14,7 @@ from shares.model.shares_kdj_compute_detail import SharesKdjComputeDetail
 import numpy as np
 import talib
 
-" /bin/cp /alidata/python/python-scrapy-article/stock/* /alidata/python/python-scrapy-article-master/stock -rf"
+# " /bin/cp /alidata/python/python-scrapy-article/stock/* /alidata/python/python-scrapy-article-master/stock -rf"
 
 
 class Command(BaseCommand):

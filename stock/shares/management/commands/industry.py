@@ -9,7 +9,7 @@ from shares.model.shares_industry_kdj import SharesIndustryKdj
 import numpy as np
 import talib
 
-" /bin/cp /alidata/python/python-scrapy-article/stock/* /alidata/python/python-scrapy-article-master/stock -rf"
+# " /bin/cp /alidata/python/python-scrapy-article/stock/* /alidata/python/python-scrapy-article-master/stock -rf"
 
 
 class Command(BaseCommand):
