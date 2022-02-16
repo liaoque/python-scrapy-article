@@ -58,7 +58,7 @@ class Command(BaseCommand):
             print(code + "：" + date_as + "：开始计算macd")
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(itemList)
             i = 0
-            while i < len(macd1):
+            while len(macd1) -10 < len(macd1):
                 date_as = itemList[i].date_as
                 macdDIFF = macdDIFF1[i]
                 macdDEA = macdDEA1[i]
