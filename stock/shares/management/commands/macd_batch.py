@@ -57,7 +57,7 @@ class Command(BaseCommand):
             # 计算kdj
             print(code + "：" + date_as + "：开始计算macd")
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(itemList)
-            i = len(macd1) - 10
+            i = 0
             while i < len(macd1):
                 date_as = itemList[i].date_as
                 macdDIFF = macdDIFF1[i]
