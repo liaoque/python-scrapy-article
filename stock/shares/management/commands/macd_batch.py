@@ -38,10 +38,6 @@ class Command(BaseCommand):
 
             # 写过了
             code = item.code
-            sharesKdjList = SharesMacd.objects.filter(code_id=code, date_as=today)
-            # print(len(sharesKdjList))
-            if len(sharesKdjList):
-                continue
             # 数据不存在
             itemList = item.shares_set.all()
             # print(str(len(itemList)) +"---")
@@ -57,9 +53,13 @@ class Command(BaseCommand):
             # 计算kdj
             print(code + "：" + date_as + "：开始计算macd")
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(itemList)
-            i = 0
+            i = len(macd1) -10
             while i < len(macd1):
                 date_as = itemList[i].date_as
+                sharesKdjList = SharesMacd.objects.filter(code_id=code, date_as=date_as)
+                # print(len(sharesKdjList))
+                if len(sharesKdjList):
+                    continue
                 macdDIFF = macdDIFF1[i]
                 macdDEA = macdDEA1[i]
                 macd = macd1[i]
