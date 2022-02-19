@@ -51,8 +51,7 @@ class Command(BaseCommand):
                 date_as = itemList[i].date_as
                 sharesKdjList = SharesMacd.objects.filter(code_id=code, date_as=date_as)
                 if len(sharesKdjList):
-                    print(code)
-                    print(date_as)
+                    i += 1
                     continue
                 macdDIFF = macdDIFF1[i]
                 macdDEA = macdDEA1[i]
