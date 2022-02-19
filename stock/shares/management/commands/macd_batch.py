@@ -44,16 +44,7 @@ class Command(BaseCommand):
             # print(str(len(itemList)) +"---")
             if len(itemList) == 0:
                 continue
-
-            # 数据不是今天的
-            shares = np.array(itemList)[-1:][0]
-            date_as = str(shares.date_as)
-            if date_as != today:
-                continue
-
             # 计算kdj
-            print(code + "：" + date_as + "：开始计算macd")
-            sys.stdout.flush()
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(itemList)
             i = len(macd1) -10
             while i < len(macd1):
