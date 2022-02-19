@@ -46,7 +46,9 @@ class Command(BaseCommand):
                 continue
             # 计算kdj
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(itemList)
-            i = len(macd1) -10
+            i = 0
+            if len(macd1) > 10:
+                i = 10
             while i < len(macd1):
                 date_as = itemList[i].date_as
                 sharesKdjList = SharesMacd.objects.filter(code_id=code, date_as=date_as)
