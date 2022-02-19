@@ -13,6 +13,7 @@ from shares.model.shares_kdj_compute_detail import SharesKdjComputeDetail
 # from ....shares.model.shares import Shares
 import numpy as np
 import talib
+import sys
 
 " /bin/cp /alidata/python/python-scrapy-article/stock/* /alidata/python/python-scrapy-article-master/stock -rf"
 
@@ -52,6 +53,7 @@ class Command(BaseCommand):
 
             # 计算kdj
             print(code + "：" + date_as + "：开始计算macd")
+            sys.stdout.flush()
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(itemList)
             i = len(macd1) -10
             while i < len(macd1):
@@ -66,6 +68,7 @@ class Command(BaseCommand):
                 i += 1
                 if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
                     print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
+                    sys.stdout.flush()
                     continue
                 b = SharesMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1, date_as=date_as)
                 b.save()
