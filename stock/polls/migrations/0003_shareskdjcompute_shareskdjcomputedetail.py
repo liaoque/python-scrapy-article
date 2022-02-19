@@ -7,7 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('shares', '0016_alter_sharesmacd_cycle_type'),
-        ('polls', '0002_shares_sharesname'),
+        ('polls', '0001_initial'),
     ]
 
     operations = [
