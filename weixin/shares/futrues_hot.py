@@ -26,7 +26,7 @@ class Items(scrapy.Item):
         id = self['id'][0]
         if self.exitsById(cursor, id):
             sql = """
-            update mc_shares_ban set 
+            update mc_futrues_hot set 
                 today_zdf = %s, five_zdf = %s, ten_zdf = %s, 
                 twenty_zdf = %s, sixty_zdf = %s
                 where id = %s
@@ -43,7 +43,7 @@ class Items(scrapy.Item):
             return
         else:
             sql = """
-                INSERT INTO mc_shares_ban (
+                INSERT INTO mc_futrues_hot (
                 id, code, name, industry
                 , today_zdf, five_zdf, ten_zdf, twenty_zdf
                 , sixty_zdf
