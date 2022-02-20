@@ -2,7 +2,7 @@ import scrapy
 import json
 
 from scrapy.loader import ItemLoader
-import weixin.shares.items as SharesItems
+import weixin.shares.futrues_hot as SharesItems
 import time
 import copy
 
