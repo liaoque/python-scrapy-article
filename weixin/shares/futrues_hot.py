@@ -49,7 +49,7 @@ class Items(scrapy.Item):
                 , sixty_zdf
                 )
                 VALUES (%s, %s, %s,  %s, %s
-                , %s, %s,  %s, %s, %s
+                , %s, %s,  %s, %s
                 )
                 """;
             params = (
