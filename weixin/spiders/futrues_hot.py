@@ -35,7 +35,7 @@ class Futrues_hot(scrapy.Spider):
     def start_requests(self):
         url = "http://ai.10jqka.com.cn/commodity/stocklinkage/info/getdetail"
         headers = self.headers
-        return scrapy.Request(url, headers=headers, callback=self.parse_each, dont_filter=True)
+        yield scrapy.Request(url, headers=headers, callback=self.parse_each, dont_filter=True)
 
     def parse_each(self, response):
         result = json.loads(response.text)
