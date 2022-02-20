@@ -19,7 +19,7 @@ import copy
 #
 # 关联股票
 # http://ai.10jqka.com.cn/commodity/stocklinkage/info/stocklink?commodityid=301
-class futrues_hot(scrapy.Spider):
+class Futrues_hot(scrapy.Spider):
     name = 'futrues_hot'
     total = 1
     allowed_domains = ['.10jqka.com.cn']
