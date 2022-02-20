@@ -64,6 +64,10 @@ class Command(BaseCommand):
                 print("计算出未知数据", (code, ky, kd, kj))
                 continue
 
+            sharesKdjList = SharesKdj.objects.filter(code_id=code, date_as=date_as)
+            if len(sharesKdjList):
+                continue
+
             b = SharesKdj(code_id=code, k=ky, d=kd, j=kj, cycle_type=1, date_as=date_as)
             b.save()
         pass
