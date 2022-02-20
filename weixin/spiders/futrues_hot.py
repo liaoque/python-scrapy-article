@@ -29,7 +29,7 @@ class Futrues_hot(scrapy.Spider):
         "HOST": "ai.10jqka.com.cn"
     }
 
-    def get_url(self, n, area):
+    def get_url(self, n):
         return "http://ai.10jqka.com.cn/commodity/stocklinkage/info/stocklink?commodityid=" + str(n)
 
     def start_requests(self):
