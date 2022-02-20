@@ -32,11 +32,11 @@ class Items(scrapy.Item):
                 where id = %s
             """
             params = (
-                int(self["today_zdf"][0]) * 100,
-                int(self["five_zdf"][0]) * 100,
-                int(self["ten_zdf"][0]) * 100,
-                int(self["twenty_zdf"][0]) * 100,
-                int(self["sixty_zdf"][0]) * 100,
+                float(self["today_zdf"][0]) * 100,
+                float(self["five_zdf"][0]) * 100,
+                float(self["ten_zdf"][0]) * 100,
+                float(self["twenty_zdf"][0]) * 100,
+                float(self["sixty_zdf"][0]) * 100,
                 id,
             )
             cursor.execute(sql, params)
@@ -57,16 +57,16 @@ class Items(scrapy.Item):
                 self["code"][0],
                 self["name"][0],
                 self["industry"][0],
-                self["today_zdf"][0],
-                self["five_zdf"][0],
-                self["ten_zdf"][0],
-                self["twenty_zdf"][0],
-                self["sixty_zdf"][0],
+                float(self["today_zdf"][0]) * 100,
+                float(self["five_zdf"][0]) * 100,
+                float(self["ten_zdf"][0]) * 100,
+                float(self["twenty_zdf"][0]) * 100,
+                float(self["sixty_zdf"][0]) * 100,
             )
             cursor.execute(sql, params)
 
         stock_code = self['stock_code'][0]
-        if self.exitsByCode(cursor, id) != 0:
+        if self.exitsByCode(cursor, stock_code, id) != 0:
             sql = """
                     INSERT INTO mc_futrues_join_shares (
                     code, futrues_id)
@@ -86,7 +86,7 @@ class Items(scrapy.Item):
         return cursor.rowcount
 
 
-    def exitsByCode(self, cursor, code):
-        sql = "SELECT id FROM mc_futrues_join_shares  WHERE code = '%s' " % (code)
+    def exitsByCode(self, cursor, code, futrues_id):
+        sql = "SELECT id FROM mc_futrues_join_shares  WHERE code = '%s'and futrues_id=%s " % (code, futrues_id)
         cursor.execute(sql);
         return cursor.rowcount
