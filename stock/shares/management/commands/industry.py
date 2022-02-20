@@ -51,8 +51,8 @@ class Command(BaseCommand):
             shares = np.array(itemList)[-1:][0]
             date_as = str(shares.date_as)
             # print(code + "：" + str(date_as) + "---" + str(today) + "----" + str(len(itemList)))
-            if date_as != today:
-                continue
+            # if date_as != today:
+            #     continue
 
             # 计算kdj
             print(code + "：" + date_as + "：开始计算kdj")
