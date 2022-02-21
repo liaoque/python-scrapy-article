@@ -43,6 +43,8 @@ class Command(BaseCommand):
         and c.p_end > c.p_start 
         and (c.p_end - d.p_end) /c.p_start < 0.09 
         and t.name not like %s
+        and (t.code_id < 300000 or t.code_id > 600000)
+        and t.code_id < 680000
         group by t.code_id 
         HAVING c.buy_count = max_c and c.buy_count / min_c > 5;
         '''
