@@ -42,11 +42,12 @@ class Command(BaseCommand):
         where t.date_as >= %s 
         and c.p_end > c.p_start 
         and (c.p_end - d.p_end) /c.p_start < 0.09 
-        and t.name not like "ST%"
+        and t.name not like %s
         group by t.code_id 
         HAVING c.buy_count = max_c and c.buy_count / min_c > 5;
         '''
-        result = SharesKdjCompute.objects.raw(sql, params=(today, yesterday, daysBefore5,))
+        result = SharesKdjCompute.objects.raw(sql, params=(today, yesterday, daysBefore5,"ST%",))
+        print(result)
         print("%s-%s-通过交易量挑选出股票：%s个" % (today, yesterday, len(result)))
 
         print(",".join(["\"" + item.code_id + "\"" for item in result]))
