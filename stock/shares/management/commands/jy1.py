@@ -39,7 +39,10 @@ class Command(BaseCommand):
         FROM mc_shares t 
         LEFT JOIN (SELECT code_id,buy_count,p_start,p_end FROM `mc_shares` WHERE date_as =%s) c on c.code_id = t.code_id 
         LEFT JOIN (SELECT code_id,buy_count,p_start,p_end FROM `mc_shares` WHERE date_as =%s) d on d.code_id = t.code_id 
-        where t.date_as >= %s and c.p_end > c.p_start and (c.p_end - d.p_end) /c.p_start < 0.09 
+        where t.date_as >= %s 
+        and c.p_end > c.p_start 
+        and (c.p_end - d.p_end) /c.p_start < 0.09 
+        and t.name not like "ST%"
         group by t.code_id 
         HAVING c.buy_count = max_c and c.buy_count / min_c > 5;
         '''
