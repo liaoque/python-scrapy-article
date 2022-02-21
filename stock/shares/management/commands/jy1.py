@@ -35,7 +35,7 @@ class Command(BaseCommand):
         daysBefore5 = dateList[slen1 - 5].date_as
 
         sql = '''
-        SELECT 1 as id, max(t.buy_count) as max_c, MIN(t.buy_count) as min_c, t.code_id,c.buy_count 
+        SELECT 1 as id, max(t.buy_count) as max_c, sum(t.buy_count)/5 as min_c, t.code_id,c.buy_count 
         FROM mc_shares t 
         LEFT JOIN (SELECT code_id,buy_count,p_start,p_end FROM `mc_shares` WHERE date_as =%s) c on c.code_id = t.code_id 
         LEFT JOIN (SELECT code_id,buy_count,p_start,p_end FROM `mc_shares` WHERE date_as =%s) d on d.code_id = t.code_id 
@@ -46,7 +46,7 @@ class Command(BaseCommand):
         and (t.code_id < 300000 or t.code_id > 600000)
         and t.code_id < 680000
         group by t.code_id 
-        HAVING c.buy_count = max_c and c.buy_count / min_c > 5;
+        HAVING c.buy_count = max_c and c.buy_count / min_c > 2;
         '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, yesterday, daysBefore5,"ST%",))
         print(result)
