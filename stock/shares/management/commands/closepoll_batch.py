@@ -58,6 +58,7 @@ class Command(BaseCommand):
 
             i = 0
             for item in itemList:
+                print(item.date_as != today, item.date_as , today)
                 if item.date_as != today:
                     continue
                 ky = kd2['k'][i]
