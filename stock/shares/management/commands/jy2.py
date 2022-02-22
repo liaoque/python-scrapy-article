@@ -29,7 +29,7 @@ class Command(BaseCommand):
     def seek(self):
         # 当天和前 10个工作日 dea 上行
         dateList = self.getAllDates()
-        dateList =dateList[:len(dateList)-3]
+        # dateList =dateList[:len(dateList)-3]
         slen1 = len(dateList)
         firstDay = dateList[slen1 - 1].date_as
         secondDay = dateList[slen1 - 2].date_as
