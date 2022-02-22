@@ -33,7 +33,7 @@ class Command(BaseCommand):
 
     def calculateKdj(self):
         today = datetime.now().date().strftime('%Y-%m-%d')
-        # today = '2021-12-27'
+        today = '2022-02-16'
         for item in SharesName.objects.filter(status=1,code_type=1):
 
             # 写过了
