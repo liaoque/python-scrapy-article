@@ -32,13 +32,14 @@ class Command(BaseCommand):
     def calculateKdj(self):
         today = datetime.now().date().strftime('%Y-%m-%d')
         # today = '2021-12-27'
+        today = '2022-02-16'
         for item in SharesName.objects.filter(status=1,code_type=1):
 
             # 写过了
             code = item.code
-            sharesKdjList = SharesKdj.objects.filter(code_id=code, date_as=today)
-            if len(sharesKdjList):
-                continue
+            # sharesKdjList = SharesKdj.objects.filter(code_id=code, date_as=today)
+            # if len(sharesKdjList):
+            #     continue
 
             # 数据不存在
             itemList = item.shares_set.all()
@@ -46,17 +47,19 @@ class Command(BaseCommand):
                 continue
 
             # 数据不是今天的
-            shares = np.array(itemList)[-1:][0]
-            date_as = str(shares.date_as)
+            # shares = np.array(itemList)[-1:][0]
+            # date_as = str(shares.date_as)
             # if date_as != today:
             #     continue
 
             # 计算kdj
-            print(code + "：" + date_as + "：开始计算kdj")
+            # print(code + "：" + date_as + "：开始计算kdj")
             kd2 = self.talib_KDJ(itemList)
 
             i = 0
             for item in itemList:
+                if item.date_as != today:
+                    continue
                 ky = kd2['k'][i]
                 kj = kd2['j'][i]
                 kd = kd2['d'][i]
@@ -64,6 +67,11 @@ class Command(BaseCommand):
                 if repr(ky) in ("inf", "nan") or repr(kj) in ("inf", "nan") or repr(kd) in ("inf", "nan"):
                     print("计算出未知数据", (code, ky, kd, kj))
                     continue
+
+                sharesKdjList = SharesKdj.objects.filter(code_id=code, date_as=item.date_as)
+                if len(sharesKdjList):
+                    continue
+
                 b = SharesKdj(code_id=code, k=ky, d=kd, j=kj, cycle_type=1, date_as=item.date_as)
                 b.save()
         pass
