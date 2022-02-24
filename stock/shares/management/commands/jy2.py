@@ -37,9 +37,9 @@ class Command(BaseCommand):
         yesterday = dateList[slen1 - 4].date_as
         daysBefore5 = dateList[slen1 - 7].date_as
 
-        # today 放量且放量是5日均值的2倍，且第二天没到 today的一半
+        # today 放量且放量是前4日均值的2倍，且第二天没到 today的一半
         sql = '''
-        SELECT 1 as id, max(t.buy_count) as max_c, sum(t.buy_count)/5 as min_c, t.code_id,c.buy_count 
+        SELECT 1 as id, max(t.buy_count) as max_c, (sum(t.buy_count) - max_c)/4 as min_c, t.code_id,c.buy_count 
         FROM mc_shares t 
         LEFT JOIN (SELECT code_id,buy_count,p_start,p_end FROM `mc_shares` WHERE date_as =%s) f on f.code_id = t.code_id 
         LEFT JOIN (SELECT code_id,buy_count,p_start,p_end FROM `mc_shares` WHERE date_as =%s) s on s.code_id = t.code_id 
