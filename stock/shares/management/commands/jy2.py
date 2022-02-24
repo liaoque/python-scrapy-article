@@ -37,6 +37,7 @@ class Command(BaseCommand):
         yesterday = dateList[slen1 - 4].date_as
         daysBefore5 = dateList[slen1 - 7].date_as
 
+        # today 放量且放量是5日均值的2倍，且第二天没到 today的一半
         sql = '''
         SELECT 1 as id, max(t.buy_count) as max_c, sum(t.buy_count)/5 as min_c, t.code_id,c.buy_count 
         FROM mc_shares t 
@@ -49,6 +50,7 @@ class Command(BaseCommand):
         and f.p_end < f.p_start 
         and s.p_end < s.p_start 
         and c.p_end > c.p_start 
+        and t.p_end + (t.p_end - t.p_start) / 2 > s.p_end 
         and t.name not like %s
         and (t.code_id < 300000 or t.code_id > 600000)
         and t.code_id < 680000
