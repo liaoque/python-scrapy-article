@@ -50,7 +50,7 @@ class Command(BaseCommand):
         and f.p_end < f.p_start 
         and s.p_end < s.p_start 
         and c.p_end > c.p_start 
-        and c.p_end + (c.p_end - c.p_start) / 2 > s.p_end 
+        and c.p_end + (c.p_end - c.p_start) / 2 < s.p_end 
         and t.name not like %s
         and (t.code_id < 300000 or t.code_id > 600000)
         and t.code_id < 680000
