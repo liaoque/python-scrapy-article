@@ -24,12 +24,11 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        dateList = self.getAllDates()
-        self.seek(dateList)
-        self.seek2(dateList)
+        self.seek()
 
-    def seek(self, dateList):
+    def seek(self):
         # 当天和前 10个工作日 dea 上行
+        dateList = self.getAllDates()
         # dateList =dateList[:len(dateList)-3]
         slen1 = len(dateList)
         firstDay = dateList[slen1 - 1].date_as
@@ -58,36 +57,13 @@ class Command(BaseCommand):
         group by t.code_id 
         HAVING c.buy_count = max_c and c.buy_count / min_c > 2;
         '''
-        result = SharesKdjCompute.objects.raw(sql, params=(
-            firstDay, secondDay, today, yesterday, daysBefore5, today, "ST%",))
+        result = SharesKdjCompute.objects.raw(sql, params=(firstDay, secondDay, today, yesterday, daysBefore5, today, "ST%",))
         print(result)
         print("%s-%s-通过交易量挑选出股票：%s个" % (today, yesterday, len(result)))
 
         print(",".join(["\"" + item.code_id + "\"" for item in result]))
 
-    def seek2(self, dateList):
-        slen1 = len(dateList)
-        today = dateList[slen1 - 1].date_as
-        day5 = dateList[slen1 - 5].date_as
-        day10 = dateList[slen1 - 10].date_as
-        sql = '''
-            SELECT t.code_id, max(t.p_end) as p_end,
-            FROM mc_shares t 
-            LEFT JOIN (SELECT code_id,p_end FROM `mc_shares` WHERE date_as =%s) f on f.code_id = t.code_id 
-            LEFT JOIN (SELECT code_id,min(p_end) as p_end FROM `mc_shares` WHERE date_as < %s and date_as > %s) m on m.code_id = t.code_id 
-            where t.date_as >= %s 
-            and t.name not like %s
-            and (t.code_id < 300000 or t.code_id > 600000)
-            and t.code_id < 680000
-            and f.p_end < p_end
-            and m.p_end < p_end
-            and abs(f.p_end - m.p_end)  / f.p_end < 0.01
-            group by t.code_id, t.date_as 
-            '''
-        result = SharesKdjCompute.objects.raw(sql, params=(today, day5, day10, "ST%",))
-        print(result)
-        print("%s-%s-5天的调整的股票：%s个" % (today, day5, len(result)))
-        print(",".join(["\"" + item.code_id + "\"" for item in result]))
+
 
     def getAllDates(self):
         sql = '''
