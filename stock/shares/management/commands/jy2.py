@@ -79,10 +79,10 @@ class Command(BaseCommand):
             and t.name not like %s
             and (t.code_id < 300000 or t.code_id > 600000)
             and t.code_id < 680000
-            and f.p_end < max_end
-            and m.p_end < max_end
             and abs(f.p_end - m.p_end)  / f.p_end < 0.01
             group by t.code_id, t.date_as 
+            having  f.p_end < max_end
+            and m.p_end < max_end
             '''
         result = SharesKdjCompute.objects.raw(sql, params=(today, day5, day10,day5, "ST%",))
         print(result)
