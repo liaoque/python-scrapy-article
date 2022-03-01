@@ -84,7 +84,7 @@ class Command(BaseCommand):
             and abs(f.p_end - m.p_end)  / f.p_end < 0.01
             group by t.code_id, t.date_as 
             '''
-        result = SharesKdjCompute.objects.raw(sql, params=(today, day5, day10, "ST%",))
+        result = SharesKdjCompute.objects.raw(sql, params=(today, day5, day10,day5, "ST%",))
         print(result)
         print("%s-%s-5天的调整的股票：%s个" % (today, day5, len(result)))
         print(",".join(["\"" + item.code_id + "\"" for item in result]))
