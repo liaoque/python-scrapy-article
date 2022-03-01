@@ -71,7 +71,7 @@ class Command(BaseCommand):
         day5 = dateList[slen1 - 5].date_as
         day10 = dateList[slen1 - 10].date_as
         sql = '''
-            SELECT t.code_id, max(t.p_end) as p_end
+            SELECT t.code_id, max(t.p_end) as max_end
             FROM mc_shares t 
             LEFT JOIN (SELECT code_id,p_end FROM `mc_shares` WHERE date_as =%s) f on f.code_id = t.code_id 
             LEFT JOIN (SELECT code_id,min(p_end) as p_end FROM `mc_shares` WHERE date_as < %s and date_as > %s) m on m.code_id = t.code_id 
@@ -79,8 +79,8 @@ class Command(BaseCommand):
             and t.name not like %s
             and (t.code_id < 300000 or t.code_id > 600000)
             and t.code_id < 680000
-            and f.p_end < p_end
-            and m.p_end < p_end
+            and f.p_end < max_end
+            and m.p_end < max_end
             and abs(f.p_end - m.p_end)  / f.p_end < 0.01
             group by t.code_id, t.date_as 
             '''
