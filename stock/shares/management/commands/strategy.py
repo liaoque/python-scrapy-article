@@ -5,6 +5,7 @@ from django.db.models import Count
 
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
+from shares.model.shares_kdj import SharesKdj
 from shares.model.shares import Shares
 # import numpy as np
 # import talib
@@ -18,6 +19,7 @@ from shares.model.shares import Shares
 #           之后跌超过6% 卖出 1000股, 并以第二天的收盘价购买500股
 #           不满足以上两个条件， 收盘价卖出 500股
 #       第二天 未跌3%，不发生买入和卖出交易
+#       止盈策略 kdj
 
 class Command(BaseCommand):
     help = '使用策略'
@@ -50,6 +52,21 @@ class Command(BaseCommand):
                 # 第二天开始重新轮回
                 income = self.seek(code, result['sharesToday'].date_as, income)
                 break
+            elif result['all'] == True:
+                income += result['sell'] * 1000 - total - result['buy'] * 500
+                print("%止盈策略，当前收入 %s" % (result['sharesToday'].date_as, income))
+                # 寻找买入时机
+                while 1:
+                    sharesKdj = SharesKdj.objects.filter(code_id=code, date_as__lte=result['sharesToday'].date_as).order_by(
+                        '-date_as')
+                    if sharesKdj[0].j > sharesKdj[1].j and sharesKdj[2].j > sharesKdj[1].j:
+                        result = {
+                            'sharesToday': Shares.objects.filter(code_id=code, date_as=sharesKdj[0].date_as)[0]
+                        }
+                        break
+                print("%s 找到准入时机" % (result['sharesToday'].date_as))
+                income = self.seek(code, result['sharesToday'].date_as, income)
+                pass
             else:
                 income += result['sell'] * 500 - result['buy'] * 500 + result['income'] * 500
                 print("%s当前收入 %s" % (result['sharesToday'].date_as, income))
@@ -70,6 +87,7 @@ class Command(BaseCommand):
         buy = 0
         sell = 0
         income = 0
+        allincome = False
         all = False
         if (p_start - sharesToday.p_min) / sharesToday.p_start > 0.03:
             # sharesToday.p_start - sharesToday.p_start *0.03 买入500
@@ -86,7 +104,12 @@ class Command(BaseCommand):
                 sell = sharesToday.p_end
             pass
         else:
-            income = sharesToday.p_end - sharesToday.p_start
+            sharesKdj = SharesKdj.objects.filter(code_id=item.code, date_as__lte=item.date_as).order_by('-date_as')
+            if sharesKdj[0].j < sharesKdj[1].j and sharesKdj[2].j < sharesKdj[1].j:
+                sell = sharesToday.p_end
+                allincome = True
+            else:
+                income = sharesToday.p_end - sharesToday.p_start
             pass
         return {
             'all': all,
@@ -94,5 +117,6 @@ class Command(BaseCommand):
             'sell': sell,
             'buy': buy,
             'income': income,
+            'allincome': allincome,
             'sharesToday': sharesToday
         }
