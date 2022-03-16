@@ -56,13 +56,18 @@ class Command(BaseCommand):
                 income += result['sell'] * 500 - total - result['buy'] * 500
                 print("%s 止盈策略，当前收入 %s" % (result['sharesToday'].date_as, income))
                 # 寻找买入时机
+                date_as = result['sharesToday'].date_as
                 while 1:
-                    sharesKdj = SharesKdj.objects.filter(code_id=code, date_as__lte=result['sharesToday'].date_as).order_by('-date_as')
+                    sharesKdj = SharesKdj.objects.filter(code_id=code, date_as__lte=date_as).order_by('-date_as')
                     if sharesKdj[0].j > sharesKdj[1].j and sharesKdj[2].j > sharesKdj[1].j:
                         result = {
                             'sharesToday': Shares.objects.filter(code_id=code, date_as=sharesKdj[0].date_as)[0]
                         }
                         break
+                    sharesToday = Shares.objects.filter(code_id=code, date_as__gt=date_as).order_by('date_as')
+                    if len(sharesToday) == 0:
+                        return 0
+                    date_as = sharesToday[0].date_as
                 print("%s 找到准入时机" % (result['sharesToday'].date_as))
                 income = self.seek(code, result['sharesToday'].date_as, income)
                 pass
