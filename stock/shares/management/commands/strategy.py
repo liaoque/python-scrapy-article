@@ -52,7 +52,7 @@ class Command(BaseCommand):
                 # 第二天开始重新轮回
                 income = self.seek(code, result['sharesToday'].date_as, income)
                 break
-            elif result['all'] == True:
+            elif result['allincome'] == True:
                 income += result['sell'] * 1000 - total - result['buy'] * 500
                 print("%止盈策略，当前收入 %s" % (result['sharesToday'].date_as, income))
                 # 寻找买入时机
