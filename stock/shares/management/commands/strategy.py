@@ -70,7 +70,7 @@ class Command(BaseCommand):
                     date_as = sharesToday[0].date_as
                 print("%s 找到准入时机" % (result['sharesToday'].date_as))
                 income = self.seek(code, result['sharesToday'].date_as, income)
-                pass
+                break
             else:
                 income += result['sell'] * 500 - result['buy'] * 500 + result['income'] * 500
                 print("%s当前收入 %s" % (result['sharesToday'].date_as, income))
