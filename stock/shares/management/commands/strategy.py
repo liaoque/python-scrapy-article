@@ -51,7 +51,7 @@ class Command(BaseCommand):
                 # 第二天开始重新轮回
                 income += self.seek(code, result['sharesToday'].date_as)
             else:
-                income += result['sell'] * 500 - result['buy'] * 500
+                income += result['sell'] * 500 - result['buy'] * 500 + result['income'] * 500
                 print("%s当前收入 %s" % (sharesToday.date_as, income))
             sharesToday = result['sharesToday']
         return income;
@@ -69,12 +69,15 @@ class Command(BaseCommand):
         p_start = sharesToday.p_start
         buy = 0
         sell = 0
+        income = 0
+        all = False
         if (p_start - sharesToday.p_min) / sharesToday.p_start > 0.03:
             # sharesToday.p_start - sharesToday.p_start *0.03 买入500
             buy = (sharesToday.p_start - sharesToday.p_start * 0.03)
             if (sharesToday.p_start - sharesToday.p_min) / sharesToday.p_start > 0.06:
                 # 全部卖出
                 sell = sharesToday.p_start - sharesToday.p_start * 0.06
+                all = True
             elif (sharesToday.p_max - sharesToday.p_start) / sharesToday.p_start > 0.03:
                 #  sharesToday.p_start + sharesToday.p_start *0.03 卖出500
                 sell = (sharesToday.p_start + sharesToday.p_start * 0.03)
@@ -83,11 +86,13 @@ class Command(BaseCommand):
                 sell = sharesToday.p_end
             pass
         else:
+            income = sharesToday.p_end - sharesToday.p_start
             pass
         return {
-            'all': False,
+            'all': all,
             'stop': False,
             'sell': sell,
             'buy': buy,
+            'income': income,
             'sharesToday': sharesToday
         }
