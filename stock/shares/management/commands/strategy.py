@@ -29,17 +29,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for item in SharesName.objects.filter(status=1, code_type=1):
             code = item.code
-            income = self.seek(code, "2021-12-31")
+            income = self.seek(code, "2021-12-31", 0)
             print("%s 总收入 %s" % (code, income))
             break
 
-    def seek(self, code, today):
+    def seek(self, code, today, income):
         sharesToday = Shares.objects.filter(code_id=code, date_as__gt=today).order_by('date_as')
         if len(sharesToday) == 0:
             return 0
         sharesToday = sharesToday[0]
         total = sharesToday.p_end * 500
-        income = 0
         while True:
             result = self.nextSeek(sharesToday)
             if result['stop'] == True:
@@ -49,7 +48,7 @@ class Command(BaseCommand):
                 income += result['sell'] * 1000 - total - result['buy'] * 500
                 print("%s全部抛售，当前收入 %s" % (result['sharesToday'].date_as,income))
                 # 第二天开始重新轮回
-                income += self.seek(code, result['sharesToday'].date_as)
+                income = self.seek(code, result['sharesToday'].date_as, income)
                 break
             else:
                 income += result['sell'] * 500 - result['buy'] * 500 + result['income'] * 500
