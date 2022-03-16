@@ -31,6 +31,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for item in SharesName.objects.filter(status=1, code_type=1):
             code = item.code
+            code = '600223'
             income = self.seek(code, "2021-12-31", 0)
             print("%s 总收入 %s" % (code, income))
             break
