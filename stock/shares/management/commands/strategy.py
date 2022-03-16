@@ -50,6 +50,7 @@ class Command(BaseCommand):
                 print("%s全部抛售，当前收入 %s" % ( sharesToday.date_as,income))
                 # 第二天开始重新轮回
                 income += self.seek(code, result['sharesToday'].date_as)
+                break
             else:
                 income += result['sell'] * 500 - result['buy'] * 500 + result['income'] * 500
                 print("%s当前收入 %s" % (sharesToday.date_as, income))
