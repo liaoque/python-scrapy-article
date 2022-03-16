@@ -54,7 +54,7 @@ class Command(BaseCommand):
                 break
             elif result['allincome'] == True:
                 income += result['sell'] * 500 - total - result['buy'] * 500
-                print("%止盈策略，当前收入 %s" % (result['sharesToday'].date_as, income))
+                print("%s 止盈策略，当前收入 %s" % (result['sharesToday'].date_as, income))
                 # 寻找买入时机
                 while 1:
                     sharesKdj = SharesKdj.objects.filter(code_id=code, date_as__lte=result['sharesToday'].date_as).order_by('-date_as')
