@@ -43,7 +43,7 @@ class Command(BaseCommand):
         while True:
             result = self.nextSeek(sharesToday)
             if result['stop'] == True:
-                print("停止" % (sharesToday.date_as))
+                print("%s 停止 " % (sharesToday.date_as))
                 break
             elif result['all'] == True:
                 income += result['sell'] * 1000 - total - result['buy'] * 500
