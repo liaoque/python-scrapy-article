@@ -39,7 +39,7 @@ class Command(BaseCommand):
     def seek(self, code, today, income):
         sharesToday = Shares.objects.filter(code_id=code, date_as__gt=today).order_by('date_as')
         if len(sharesToday) == 0:
-            return 0
+            return income
         sharesToday = sharesToday[0]
         total = sharesToday.p_end * 500
         while True:
