@@ -7,6 +7,8 @@ from django.db.models import Count
 from shares.model.shares_name import SharesName
 from shares.model.shares_kdj import SharesKdj
 from shares.model.shares import Shares
+
+
 # import numpy as np
 # import talib
 # import sys
@@ -29,12 +31,15 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
+        income = 0;
         for item in SharesName.objects.filter(status=1, code_type=1):
             code = item.code
-            code = '600223'
-            income = self.seek(code, "2021-12-31", 0)
-            print("%s 总收入 %s" % (code, income))
-            break
+            # code = '600223'
+            income2 = self.seek(code, "2021-12-31", 0)
+            print("%s 总收入 %s" % (code, income2))
+            income += income2
+            # break
+        print("总收入 %s" % (code, income))
 
     def seek(self, code, today, income):
         sharesToday = Shares.objects.filter(code_id=code, date_as__gt=today).order_by('date_as')
@@ -45,17 +50,17 @@ class Command(BaseCommand):
         while True:
             result = self.nextSeek(sharesToday)
             if result['stop'] == True:
-                print("%s 停止 " % (sharesToday.date_as))
+                # print("%s 停止 " % (sharesToday.date_as))
                 break
             elif result['all'] == True:
                 income += result['sell'] * 1000 - total - result['buy'] * 500
-                print("%s全部抛售，当前收入 %s" % (result['sharesToday'].date_as,income))
+                # print("%s全部抛售，当前收入 %s" % (result['sharesToday'].date_as, income))
                 # 第二天开始重新轮回
                 income = self.seek(code, result['sharesToday'].date_as, income)
                 break
             elif result['allincome'] == True:
                 income += result['sell'] * 500 - total - result['buy'] * 500
-                print("%s 止盈策略，当前收入 %s" % (result['sharesToday'].date_as, income))
+                # print("%s 止盈策略，当前收入 %s" % (result['sharesToday'].date_as, income))
                 # 寻找买入时机
                 date_as = result['sharesToday'].date_as
                 while 1:
@@ -69,12 +74,12 @@ class Command(BaseCommand):
                             'sharesToday': Shares.objects.filter(code_id=code, date_as=sharesKdj[0].date_as)[0]
                         }
                         break
-                print("%s 找到准入时机" % (result['sharesToday'].date_as))
+                # print("%s 找到准入时机" % (result['sharesToday'].date_as))
                 income = self.seek(code, result['sharesToday'].date_as, income)
                 break
             else:
                 income += result['sell'] * 500 - result['buy'] * 500 + result['income'] * 500
-                print("%s当前收入 %s" % (result['sharesToday'].date_as, income))
+                # print("%s当前收入 %s" % (result['sharesToday'].date_as, income))
             sharesToday = result['sharesToday']
         return income;
 
@@ -109,7 +114,8 @@ class Command(BaseCommand):
                 sell = sharesToday.p_end
             pass
         else:
-            sharesKdj = SharesKdj.objects.filter(code_id=item.code, date_as__lte=sharesToday.date_as).order_by('-date_as')
+            sharesKdj = SharesKdj.objects.filter(code_id=item.code, date_as__lte=sharesToday.date_as).order_by(
+                '-date_as')
             if sharesKdj[0].j < sharesKdj[1].j and sharesKdj[2].j < sharesKdj[1].j:
                 sell = sharesToday.p_end
                 allincome = True
