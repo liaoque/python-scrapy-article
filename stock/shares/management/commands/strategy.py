@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 income = self.seek(code, result['sharesToday'].date_as, income)
                 break
             elif result['allincome'] == True:
-                income += result['sell'] * 1000 - total - result['buy'] * 500
+                income += result['sell'] * 500 - total - result['buy'] * 500
                 print("%止盈策略，当前收入 %s" % (result['sharesToday'].date_as, income))
                 # 寻找买入时机
                 while 1:
