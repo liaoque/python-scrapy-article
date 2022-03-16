@@ -116,7 +116,7 @@ class Command(BaseCommand):
         else:
             sharesKdj = SharesKdj.objects.filter(code_id=item.code, date_as__lte=sharesToday.date_as).order_by(
                 '-date_as')
-            if sharesKdj[0].j < sharesKdj[1].j and sharesKdj[2].j < sharesKdj[1].j:
+            if len(sharesKdj) > 2 and sharesKdj[0].j < sharesKdj[1].j and sharesKdj[2].j < sharesKdj[1].j:
                 sell = sharesToday.p_end
                 allincome = True
             else:
