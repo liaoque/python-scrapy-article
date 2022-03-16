@@ -42,14 +42,14 @@ class Command(BaseCommand):
         income = 0
         while True:
             result = self.nextSeek(sharesToday)
-            if result.stop == True:
+            if result['stop'] == True:
                 break
-            elif result.all == True:
-                income += result.sell * 1000 - total - result.buy * 500
+            elif result['all'] == True:
+                income += result['sell'] * 1000 - total - result['buy'] * 500
                 # 第二天开始重新轮回
                 income += self.seek(self, code, result.sharesToday.date_as)
             else:
-                income += result.sell * 500 - result.buy * 500
+                income += result['sell'] * 500 - result['buy'] * 500
         return income;
 
     def nextSeek(self, item):
