@@ -49,16 +49,16 @@ class Command(BaseCommand):
                 income += result['sell'] * 1000 - total - result['buy'] * 500
                 print("%s全部抛售，当前收入 %s" % ( sharesToday.date_as,income))
                 # 第二天开始重新轮回
-                income += self.seek(code, result.sharesToday.date_as)
+                income += self.seek(code, result['sharesToday'].date_as)
             else:
                 income += result['sell'] * 500 - result['buy'] * 500
                 print("%s当前收入 %s" % (sharesToday.date_as, income))
+            sharesToday = result['sharesToday']
         return income;
 
     def nextSeek(self, item):
         sharesToday = Shares.objects.filter(code_id=item.code, date_as__gt=item.date_as).order_by('date_as')
         if len(sharesToday) == 0:
-
             return {
                 'all': False,
                 'stop': True,
