@@ -37,7 +37,7 @@ class Command(BaseCommand):
             if code < '300000' and code > '600000' and code < '700000':
                 # code = '600223'
                 income2 = self.seek(code, "2021-12-31", 0)
-                print("%s 总收入 %s" % (code, income2))
+                print("%s 总收入 %s" % (income2))
                 income += income2
                 # break
         print("总收入 %s" % (income))
