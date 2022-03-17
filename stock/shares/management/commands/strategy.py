@@ -39,7 +39,7 @@ class Command(BaseCommand):
             print("%s 总收入 %s" % (code, income2))
             income += income2
             # break
-        print("总收入 %s" % (code, income))
+        print("总收入 %s" % (income))
 
     def seek(self, code, today, income):
         sharesToday = Shares.objects.filter(code_id=code, date_as__gt=today).order_by('date_as')
