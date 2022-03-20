@@ -34,7 +34,7 @@ class Command(BaseCommand):
         income = 0;
         for item in SharesName.objects.filter(status=1, code_type=1):
             code = item.code
-            if code < '300000' or code > '600000' or code < '700000':
+            if code < '300000' and (code > '300000' or code < '600000') and (code > '600000' or code < '700000'):
                 # code = '600223'
                 income2 = self.seek(code, "2021-12-31", 0)
                 print("%s 总收入 %s" % (code, income2))
