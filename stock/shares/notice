@@ -10,6 +10,10 @@
 # python manage.py createsuperuser 创建管理员
 
 
+# 打印sql
+# from django.db import connection
+# print(connection.queries)
+
 # python manage.py  closepoll
 # python manage.py  kdj3
 
