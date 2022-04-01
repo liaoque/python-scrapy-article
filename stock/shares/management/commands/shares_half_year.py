@@ -50,8 +50,8 @@ class Command(BaseCommand):
             return
 
         halfYearSharesEnd = Shares.objects.filter(code_id=code,
-                                               date_as=date_end
-                                               )[0]
+                                               date_as__lte=date_end
+                                               ).order_by('-date_as')[0]
 
         # if SharesHalfYear.objects.filter(code_id=code, p_year=int(p_year), p_year_half=p_year_half).count():
         #     return
