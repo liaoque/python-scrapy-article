@@ -38,7 +38,7 @@ class Command(BaseCommand):
                 for item in Shares.objects.filter(code_id=code,
                                                   date_as__gte=date_start,
                                                   date_as__lte=date_end
-                                                  ).annotate(p_start1=Min('p_start'),  p_end1=Max('p_start')):
+                                                  ).aggregate(p_start1=Min('p_start'),  p_end1=Max('p_start')):
                     print(item)
                 print(connection.queries)
                 date_start = p_year + "-07-01"
@@ -46,7 +46,7 @@ class Command(BaseCommand):
                 for item in Shares.objects.filter(code_id=code,
                                                   date_as__gte=date_start,
                                                   date_as__lte=date_end
-                                                  ).annotate(p_start1=Min('p_start'),  p_end1=Max('p_start')):
+                                                  ).aggregate(p_start1=Min('p_start'),  p_end1=Max('p_start')):
                     print(item)
                 p_year = str(int(p_year) + 1)
                 # sql = '''
