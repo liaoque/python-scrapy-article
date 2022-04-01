@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 class SharesHalfYear(models.Model):
-    code = models.ForeignKey(SharesName, name='code', on_delete=models.CASCADE)
+    code = models.ForeignKey(SharesName, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     p_start = models.IntegerField(default=0)
     p_end = models.IntegerField(default=0)
