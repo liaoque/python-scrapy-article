@@ -48,7 +48,7 @@ class Command(BaseCommand):
                                                   date_as__lte=date_end
                                                   ).annotate(p_start1=Min('p_start'),  p_end1=Max('p_start')):
                     print(item)
-                p_year = p_year + 1
+                p_year = str(int(p_year) + 1)
                 # sql = '''
                 #     select min() from mc_shares_kdj where date_as >= '2021-12-01' group by date_as;
                 #     '''
