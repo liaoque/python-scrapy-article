@@ -43,17 +43,20 @@ class Command(BaseCommand):
 
 
     def saveHalfYear(self, code, p_year, date_start, date_end, p_year_half):
-        halfYearShares = Shares.objects.filter(code_id=code,
-                                               date_as__gte=date_start,
-                                               date_as__lte=date_end
-                                               ).aggregate(p_start1=Min('p_start'), p_end1=Max('p_start'))
-
-        if halfYearShares['p_start1'] is None:
-            return
-        if SharesHalfYear.objects.filter(code_id=code, p_year=int(p_year), p_year_half=p_year_half).count():
+        halfYearSharesStart = Shares.objects.filter(code_id=code,
+                                               date_as__gte=date_start
+                                               )
+        if len(halfYearSharesStart) == 0:
             return
 
-        halfYear = SharesHalfYear(code_id=code, p_start=halfYearShares['p_start1'],
-                                  p_end=halfYearShares['p_end1'], p_year=int(p_year),
+        halfYearSharesEnd = Shares.objects.filter(code_id=code,
+                                               date_as=date_end
+                                               )[0]
+
+        # if SharesHalfYear.objects.filter(code_id=code, p_year=int(p_year), p_year_half=p_year_half).count():
+        #     return
+
+        halfYear = SharesHalfYear(code_id=code, p_start=halfYearSharesStart[0].p_end,
+                                  p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
                                   p_year_half=p_year_half)
         halfYear.save()
