@@ -1,7 +1,7 @@
 import numpy as np
 from datetime import datetime, date
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import Count
+from django.db.models import Count,Max,Min
 
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
@@ -36,7 +36,7 @@ class Command(BaseCommand):
                 for item in Shares.objects.filter(code_id=code,
                                                   date_as__gte=date_start,
                                                   date_as__lte=date_end
-                                                  ).select_related('min(p_start),min(p_end)'):
+                                                  ).annotate(p_start=Min('p_start'),  p_end=Max('p_start')):
                     print(item)
 
                 # sql = '''
