@@ -32,13 +32,19 @@ class Command(BaseCommand):
 
             while p_year <= p_year_end:
                 date_start = p_year + "-01-01"
-                date_end = p_year + "-06-31"
+                date_end = p_year + "-06-30"
                 for item in Shares.objects.filter(code_id=code,
                                                   date_as__gte=date_start,
                                                   date_as__lte=date_end
                                                   ).select_related('min(p_start),min(p_end)'):
                     print(item)
-
+                date_start = p_year + "-07-01"
+                date_end = p_year + "-12-31"
+                for item in Shares.objects.filter(code_id=code,
+                                                  date_as__gte=date_start,
+                                                  date_as__lte=date_end
+                                                  ).select_related('min(p_start),min(p_end)'):
+                    print(item)
                 # sql = '''
                 #     select min() from mc_shares_kdj where date_as >= '2021-12-01' group by date_as;
                 #     '''
