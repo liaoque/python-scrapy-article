@@ -25,7 +25,7 @@ class Command(BaseCommand):
             code = item.code
             sharesItem = Shares.objects.filter(code_id=code).order_by('date_as')[0]
             sharesItemEnd = Shares.objects.filter(code_id=code).order_by('-date_as')[0]
-            p_year = sharesItem['date_as'].strftime('%Y')
+            p_year = sharesItem.date_as.strftime('%Y')
             p_year_end = sharesItemEnd['date_as'].strftime('%Y')
             print(p_year_end)
 
