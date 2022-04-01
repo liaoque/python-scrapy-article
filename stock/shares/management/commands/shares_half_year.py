@@ -39,6 +39,8 @@ class Command(BaseCommand):
                                                   date_as__lte=date_end
                                                   ).aggregate(p_start1=Min('p_start'), p_end1=Max('p_start')):
 
+                    print(item.p_end1)
+                    break
                     if SharesHalfYear.objects.filter(code_id=code, p_year=int(p_year), p_year_half=1).count():
                         continue
 
@@ -56,7 +58,6 @@ class Command(BaseCommand):
                                                   date_as__gte=date_start,
                                                   date_as__lte=date_end
                                                   ).aggregate(p_start1=Min('p_start'), p_end1=Max('p_start')):
-
                     if SharesHalfYear.objects.filter(code_id=code, p_year=int(p_year), p_year_half=1).count():
                         continue
 
