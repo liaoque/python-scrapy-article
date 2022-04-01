@@ -18,7 +18,7 @@ import time
 
 
 class Command(BaseCommand):
-    help = '统计上班年和下班的 最高和最低'
+    help = '统计4季度 最高和最低'
 
     def handle(self, *args, **options):
         income = 0
