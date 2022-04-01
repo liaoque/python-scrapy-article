@@ -38,7 +38,7 @@ class Command(BaseCommand):
                                       date_as__gte=date_start,
                                       date_as__lte=date_end
                                       ).aggregate(p_start1=Min('p_start'), p_end1=Max('p_start'))
-                print(halfYear.p_start1, halfYear.p_end1)
+                print(halfYear['p_start1'], halfYear['p_end1'])
                 break
 
                 # for item in halfYear:
