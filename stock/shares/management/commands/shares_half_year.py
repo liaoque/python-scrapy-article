@@ -39,6 +39,8 @@ class Command(BaseCommand):
                 date_end = p_year + "-12-31"
                 self.saveHalfYear(code, p_year, date_start, date_end, 2)
 
+                p_year = str(int(p_year) + 1)
+
 
     def saveHalfYear(self, code, p_year, date_start, date_end, p_year_half):
         halfYearShares = Shares.objects.filter(code_id=code,
