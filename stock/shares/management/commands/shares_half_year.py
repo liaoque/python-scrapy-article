@@ -50,7 +50,7 @@ class Command(BaseCommand):
 
         if halfYearShares['p_start1'] is None:
             return
-        if SharesHalfYear.objects.filter(code_id=code, p_year=int(p_year), p_year_half=1).count():
+        if SharesHalfYear.objects.filter(code_id=code, p_year=int(p_year), p_year_half=p_year_half).count():
             return
 
         halfYear = SharesHalfYear(code_id=code, p_start=halfYearShares['p_start1'],

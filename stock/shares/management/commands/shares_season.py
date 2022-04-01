@@ -33,23 +33,23 @@ class Command(BaseCommand):
             while p_year <= p_year_end:
                 date_start = p_year + "-01-01"
                 date_end = p_year + "-03-31"
-                self.saveHalfYear(code, p_year, date_start, date_end)
+                self.saveHalfYear(code, p_year, date_start, date_end, 1)
 
                 date_start = p_year + "-04-01"
                 date_end = p_year + "-06-30"
-                self.saveHalfYear(code, p_year, date_start, date_end)
+                self.saveHalfYear(code, p_year, date_start, date_end, 2)
 
                 date_start = p_year + "-07-01"
                 date_end = p_year + "-09-30"
-                self.saveHalfYear(code, p_year, date_start, date_end)
+                self.saveHalfYear(code, p_year, date_start, date_end, 3)
 
                 date_start = p_year + "-10-01"
                 date_end = p_year + "-12-31"
-                self.saveHalfYear(code, p_year, date_start, date_end)
+                self.saveHalfYear(code, p_year, date_start, date_end, 4)
 
                 p_year = str(int(p_year) + 1)
 
-    def saveHalfYear(self, code, p_year, date_start, date_end):
+    def saveHalfYear(self, code, p_year, date_start, date_end, p_season):
         halfYearShares = Shares.objects.filter(code_id=code,
                                                date_as__gte=date_start,
                                                date_as__lte=date_end
@@ -57,10 +57,10 @@ class Command(BaseCommand):
 
         if halfYearShares['p_start1'] is None:
             return
-        if SharesSeason.objects.filter(code_id=code, p_year=int(p_year), p_season=1).count():
+        if SharesSeason.objects.filter(code_id=code, p_year=int(p_year), p_season=p_season).count():
             return
 
         halfYear = SharesSeason(code_id=code, p_start=halfYearShares['p_start1'],
                                   p_end=halfYearShares['p_end1'], p_year=int(p_year),
-                                  p_season=1)
+                                  p_season=p_season)
         halfYear.save()
