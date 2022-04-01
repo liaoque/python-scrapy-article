@@ -1,7 +1,7 @@
 import numpy as np
 from datetime import datetime, date
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import Count,Max,Min
+from django.db.models import Count, Max, Min
 
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
@@ -51,7 +51,8 @@ class Command(BaseCommand):
 
     def saveHalfYear(self, code, p_year, date_start, date_end, p_season):
         halfYearSharesStart = Shares.objects.filter(code_id=code,
-                                                    date_as__gte=date_start
+                                                    date_as__gte=date_start,
+                                                    date_as__lte=date_end
                                                     )
         if len(halfYearSharesStart) == 0:
             return
@@ -64,6 +65,6 @@ class Command(BaseCommand):
         #     return
 
         halfYear = SharesSeason(code_id=code, p_start=halfYearSharesStart[0].p_end,
-                                  p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
-                                  p_season=p_season)
+                                p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
+                                p_season=p_season)
         halfYear.save()
