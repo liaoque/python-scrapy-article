@@ -2,6 +2,8 @@ import numpy as np
 from datetime import datetime, date
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count,Max,Min
+from django.db import connection
+
 
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
@@ -38,6 +40,7 @@ class Command(BaseCommand):
                                                   date_as__lte=date_end
                                                   ).annotate(p_start1=Min('p_start'),  p_end1=Max('p_start')):
                     print(item)
+                print(connection.queries)
                 date_start = p_year + "-07-01"
                 date_end = p_year + "-12-31"
                 for item in Shares.objects.filter(code_id=code,
