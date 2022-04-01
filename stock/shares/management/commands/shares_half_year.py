@@ -56,7 +56,7 @@ class Command(BaseCommand):
         # if SharesHalfYear.objects.filter(code_id=code, p_year=int(p_year), p_year_half=p_year_half).count():
         #     return
 
-        halfYear = SharesHalfYear(code_id=code, p_start=halfYearSharesStart[0].p_end,
+        halfYear = SharesHalfYear(code_id=code, p_start=halfYearSharesStart[0].p_start,
                                   p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
                                   p_year_half=p_year_half)
         halfYear.save()
