@@ -6,6 +6,7 @@ from django.db.models import Count,Max,Min
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
+from shares.model.shares_season import SharesSeason
 import time
 
 
@@ -29,19 +30,35 @@ class Command(BaseCommand):
             p_year_end = sharesItemEnd.date_as.strftime('%Y')
             print(p_year_end)
 
-
             while p_year <= p_year_end:
                 date_start = p_year + "-01-01"
                 date_end = p_year + "-03-31"
-                for item in Shares.objects.filter(code_id=code,
-                                                  date_as__gte=date_start,
-                                                  date_as__lte=date_end
-                                                  ).aggregate(p_start1=Min('p_start'),  p_end1=Max('p_start')):
-                    print(item)
+                self.saveHalfYear(code, p_year, date_start, date_end)
 
-                p_year = str(int(p_year) + 1)
-                # sql = '''
-                #     select min() from mc_shares_kdj where date_as >= '2021-12-01' group by date_as;
-                #     '''
-                # return SharesKdjCompute.objects.raw(sql)
+                date_start = p_year + "-04-01"
+                date_end = p_year + "-06-30"
+                self.saveHalfYear(code, p_year, date_start, date_end)
 
+                date_start = p_year + "-07-01"
+                date_end = p_year + "-09-30"
+                self.saveHalfYear(code, p_year, date_start, date_end)
+
+                date_start = p_year + "-10-01"
+                date_end = p_year + "-12-31"
+                self.saveHalfYear(code, p_year, date_start, date_end)
+
+    def saveHalfYear(self, code, p_year, date_start, date_end):
+        halfYearShares = Shares.objects.filter(code_id=code,
+                                               date_as__gte=date_start,
+                                               date_as__lte=date_end
+                                               ).aggregate(p_start1=Min('p_start'), p_end1=Max('p_start'))
+
+        if halfYearShares['p_start1'] is None:
+            return
+        if SharesSeason.objects.filter(code_id=code, p_year=int(p_year), p_season=1).count():
+            return
+
+        halfYear = SharesSeason(code_id=code, p_start=halfYearShares['p_start1'],
+                                  p_end=halfYearShares['p_end1'], p_year=int(p_year),
+                                  p_season=1)
+        halfYear.save()
