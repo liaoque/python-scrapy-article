@@ -39,30 +39,33 @@ class Command(BaseCommand):
                     elif p_month in [4, 6, 9, 11]:
                         p_month_day_end = "30"
                     else:
-                        p_month_day_end = time.strftime("%d", time.strptime(p_year + "-03-01", "%Y-%m-%d") - 1)
-                    date_end = p_year + "-" + str(p_month) + "-" + str(p_month_day_end)
-                    print(date_start, date_end)
-                    # self.saveMonth(code, p_year, date_start, date_end, p_month)
-                    p_month = p_month + 1
+                        localtime = time.mktime(time.strptime(p_year + "-03-01", "%Y-%m-%d"))
+                        p_month_day_end = time.strftime("%d", localtime - 1)
+                date_end = p_year + "-" + str(p_month) + "-" + str(p_month_day_end)
+                print(date_start, date_end)
+                time.sleep(1)
+                # self.saveMonth(code, p_year, date_start, date_end, p_month)
+                p_month = p_month + 1
 
-                p_year = str(int(p_year) + 1)
+            p_year = str(int(p_year) + 1)
 
-    def saveMonth(self, code, p_year, date_start, date_end, p_year_half):
-        halfYearSharesStart = Shares.objects.filter(code_id=code,
-                                                    date_as__gte=date_start,
-                                                    date_as__lte=date_end
-                                                    )
-        if len(halfYearSharesStart) == 0:
-            return
 
-        halfYearSharesEnd = Shares.objects.filter(code_id=code,
-                                                  date_as__lte=date_end
-                                                  ).order_by('-date_as')[0]
+def saveMonth(self, code, p_year, date_start, date_end, p_year_half):
+    halfYearSharesStart = Shares.objects.filter(code_id=code,
+                                                date_as__gte=date_start,
+                                                date_as__lte=date_end
+                                                )
+    if len(halfYearSharesStart) == 0:
+        return
 
-        if SharesMonth.objects.filter(code_id=code, p_year=int(p_year), p_year_half=p_year_half).count():
-            return
+    halfYearSharesEnd = Shares.objects.filter(code_id=code,
+                                              date_as__lte=date_end
+                                              ).order_by('-date_as')[0]
 
-        halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
-                               p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
-                               p_year_half=p_year_half)
-        halfYear.save()
+    if SharesMonth.objects.filter(code_id=code, p_year=int(p_year), p_year_half=p_year_half).count():
+        return
+
+    halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
+                           p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
+                           p_year_half=p_year_half)
+    halfYear.save()
