@@ -26,37 +26,25 @@ class Command(BaseCommand):
         self.season()
 
     def half_year(self):
-        sql = """
-                SELECT 1 as id, code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
-        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_half_year` where  p_year_half = 1 and p_end > p_start GROUP BY code_id) t1
-        LEFT JOIN 
-            (SELECT COUNT(1) as c, code_id FROM `mc_shares_half_year` where  p_year_half = 1 GROUP BY code_id) t2 
-        on t1.code_id = t2.code_id
-        where t1.code_id not in (SELECT code from mc_shares_name where name like "%s"  )
-        HAVING rang > 0.7 and rang < 1) c;
-                """
-        print(sql)
-        slist = SharesHalfYear.objects.raw(sql, params=("ST%",))
-        for item in slist:
-            print(type(item))
-        print("上半年---start")
-        print(",".join(["\"" + item + "\"" for item in slist]))
-        print("上半年---end")
-        sql = """
-                SELECT 1 as id, code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
-        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_half_year` where  p_year_half = 2 and p_end > p_start GROUP BY code_id) t1
-        LEFT JOIN 
-            (SELECT COUNT(1) as c, code_id FROM `mc_shares_half_year` where  p_year_half = 2 GROUP BY code_id) t2 
-        on t1.code_id = t2.code_id
-        where t1.code_id not in (SELECT code from mc_shares_name where name like "%s" )
-        HAVING rang > 0.7 and rang < 1) c;
-                """
-        print(sql)
-        slist = SharesHalfYear.objects.raw(sql, params=("ST%",))
-        print(slist)
-        print("\n下半年---start\n")
-        print(",".join(["\"" + item + "\"" for item in slist]))
-        print("下半年---end\n")
+        for half in [1, 2]:
+            sql = """
+                    SELECT 1 as id, code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
+            from (SELECT COUNT(1) as c, code_id FROM `mc_shares_half_year` where  p_year_half = %s and p_end > p_start GROUP BY code_id) t1
+            LEFT JOIN 
+                (SELECT COUNT(1) as c, code_id FROM `mc_shares_half_year` where  p_year_half = %s GROUP BY code_id) t2 
+            on t1.code_id = t2.code_id
+            where t1.code_id not in (SELECT code from mc_shares_name where name like "%s"  )
+            HAVING rang > 0.7 and rang < 1) c;
+                    """
+            print(sql)
+            slist = SharesHalfYear.objects.raw(sql, params=(half, half, "ST%",))
+            if half == 1:
+                ya = "上半年"
+            else:
+                ya = "下半年"
+            print("%s---start\n" % ya)
+            print(",".join(["\"" + item.code_id + "\"" for item in slist]))
+            print("%s---end\n" % ya)
 
     def season(self):
         for season in [1, 2, 3, 4]:
