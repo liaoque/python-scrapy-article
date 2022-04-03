@@ -42,14 +42,14 @@ class Command(BaseCommand):
                         localtime = time.mktime(time.strptime(p_year + "-03-01", "%Y-%m-%d"))  - 1
                         p_month_day_end = time.strftime("%d", time.localtime(localtime))
                     date_end = p_year + "-" + str(p_month) + "-" + str(p_month_day_end)
-                    print(date_start, date_end)
+                    # print(date_start, date_end)
                     time.sleep(1)
-                    # self.saveMonth(code, p_year, date_start, date_end, p_month)
+                    self.saveMonth(code, p_year, date_start, date_end, p_month)
                     p_month = p_month + 1
                 p_year = str(int(p_year) + 1)
 
 
-def saveMonth(self, code, p_year, date_start, date_end, p_year_half):
+def saveMonth(self, code, p_year, date_start, date_end, p_month):
     halfYearSharesStart = Shares.objects.filter(code_id=code,
                                                 date_as__gte=date_start,
                                                 date_as__lte=date_end
@@ -61,10 +61,10 @@ def saveMonth(self, code, p_year, date_start, date_end, p_year_half):
                                               date_as__lte=date_end
                                               ).order_by('-date_as')[0]
 
-    if SharesMonth.objects.filter(code_id=code, p_year=int(p_year), p_year_half=p_year_half).count():
+    if SharesMonth.objects.filter(code_id=code, p_year=int(p_year), p_month=p_month).count():
         return
 
     halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
                            p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
-                           p_year_half=p_year_half)
+                           p_month=p_month)
     halfYear.save()
