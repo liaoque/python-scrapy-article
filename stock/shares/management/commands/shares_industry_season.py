@@ -6,7 +6,7 @@ from django.db.models import Count, Max, Min
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
-from shares.model.shares_industry_season import SharesSeason
+from shares.model.shares_industry_season import SharesIndustrySeason
 import time
 
 
@@ -61,10 +61,10 @@ class Command(BaseCommand):
                                                   date_as__lte=date_end
                                                   ).order_by('-date_as')[0]
 
-        if SharesSeason.objects.filter(code_id=code, p_year=int(p_year), p_season=p_season).count():
+        if SharesIndustrySeason.objects.filter(code_id=code, p_year=int(p_year), p_season=p_season).count():
             return
 
-        halfYear = SharesSeason(code_id=code, p_start=halfYearSharesStart[0].p_start,
+        halfYear = SharesIndustrySeason(code_id=code, p_start=halfYearSharesStart[0].p_start,
                                 p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
                                 p_season=p_season)
         halfYear.save()

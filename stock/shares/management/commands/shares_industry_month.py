@@ -7,7 +7,7 @@ from django.db import connection
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
-from shares.model.shares_industry_month import SharesMonth
+from shares.model.shares_industry_month import SharesIndustryMonth
 import time
 
 
@@ -60,10 +60,10 @@ class Command(BaseCommand):
                                                   date_as__lte=date_end
                                                   ).order_by('-date_as')[0]
 
-        if SharesMonth.objects.filter(code_id=code, p_year=int(p_year), p_month=p_month).count():
+        if SharesIndustryMonth.objects.filter(code_id=code, p_year=int(p_year), p_month=p_month).count():
             return
 
-        halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
+        halfYear = SharesIndustryMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
                                p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
                                p_month=p_month)
         halfYear.save()
