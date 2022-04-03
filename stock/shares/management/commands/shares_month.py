@@ -39,8 +39,8 @@ class Command(BaseCommand):
                     elif p_month in [4, 6, 9, 11]:
                         p_month_day_end = "30"
                     else:
-                        localtime = time.mktime(time.strptime(p_year + "-03-01", "%Y-%m-%d"))
-                        p_month_day_end = time.strftime("%d", localtime - 1)
+                        localtime = time.mktime(time.strptime(p_year + "-03-01", "%Y-%m-%d"))  - 1
+                        p_month_day_end = time.strftime("%d", time.localtime(localtime))
                 date_end = p_year + "-" + str(p_month) + "-" + str(p_month_day_end)
                 print(date_start, date_end)
                 time.sleep(1)
