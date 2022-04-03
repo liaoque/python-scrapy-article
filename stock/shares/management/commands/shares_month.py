@@ -39,8 +39,8 @@ class Command(BaseCommand):
                     elif p_month in [4, 6, 9, 11]:
                         p_month_day_end = "30"
                     else:
-                        p_month_day_end = time.strftime("%Y-%m-%d", time.strptime(p_year + "-03-01", "%Y-%m-%d"))
-                    date_end = p_year + "-" + p_month + "-" + p_month_day_end
+                        p_month_day_end = time.strftime("%d", time.strptime(p_year + "-03-01", "%Y-%m-%d") - 1)
+                    date_end = p_year + "-" + str(p_month) + "-" + str(p_month_day_end)
                     print(date_start, date_end)
                     # self.saveMonth(code, p_year, date_start, date_end, p_month)
                     p_month = p_month + 1
