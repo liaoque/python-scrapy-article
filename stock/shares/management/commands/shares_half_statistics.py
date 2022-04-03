@@ -68,5 +68,5 @@ class Command(BaseCommand):
             print(sql)
             slist = SharesHalfYear.objects.raw(sql, params=())
             print("\n%s季度---start\n" % season)
-            print(",".join(["\"" + item.code_id + "\"" for item in slist]))
+            print(",".join(["\"" + item + "\"" for item in slist]))
             print("\n%s季度---end\n" % season)
