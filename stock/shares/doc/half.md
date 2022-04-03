@@ -8,5 +8,7 @@ LEFT JOIN
 on t1.code_id = t2.code_id
 where t1.code_id not in (SELECT code from mc_shares_name where name like "ST%" )
 HAVING rang > 0.7 and rang < 1;
+
+
 ```
 查询上半年 涨的概率大于70的股票
