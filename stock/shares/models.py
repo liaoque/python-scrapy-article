@@ -7,8 +7,6 @@ from .model.shares_name import SharesName
 from .model.shares import Shares
 from .model.shares_kdj import SharesKdj
 from .model.shares_ban import SharesBan
-from .model.shares_ban import SharesBan
-from .model.shares_ban import SharesBan
 from .model.shares_kdj_compute import SharesKdjCompute
 from .model.shares_kdj_compute_detail import SharesKdjComputeDetail
 from .model.shares_join_industry import SharesJoinIndustry
@@ -19,4 +17,5 @@ from .model.futrues_hot import FutruesHot
 from .model.futrues_join_shares import FutruesJoinShares
 from .model.shares_half_year import SharesHalfYear
 from .model.shares_season import SharesSeason
+from .model.shares_month import SharesMonth
 
