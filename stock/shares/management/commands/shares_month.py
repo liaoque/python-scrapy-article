@@ -31,7 +31,7 @@ class Command(BaseCommand):
             print(p_year_end)
 
             while p_year <= p_year_end:
-                p_month = 0
+                p_month = 1
                 while p_month <= 12:
                     date_start = p_year + "-" + str(p_month) + "-01"
                     if p_month in [1, 3, 5, 7, 8, 10, 12]:
