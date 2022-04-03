@@ -151,4 +151,42 @@ SELECT c.code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang
         and c.code_id  in (
             SELECT code_id FROM `mc_shares_season` where  p_season = 1 and p_year  =2022 and p_end < p_start GROUP BY code_id
             )
-    
+   
+// 查行业涨幅
+SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_half_year` where  p_year_half = 1 and p_end > p_start GROUP BY code_id) t1
+        LEFT JOIN 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_half_year` where  p_year_half = 1  GROUP BY code_id) t2 
+        on t1.code_id = t2.code_id
+        where t1.code_id not in (SELECT code from mc_shares_name where name like "ST%"  )
+        HAVING rang > 0.7 and rang < 1   ) c
+        where code_id in (
+        
+        SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_half_year` where  p_year_half = 1 and p_year  <2022 and p_end > p_start GROUP BY code_id) t1
+        LEFT JOIN 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_half_year` where  p_year_half = 1 and p_year  <2022 GROUP BY code_id) t2 
+        on t1.code_id = t2.code_id
+        where t1.code_id not in (SELECT code from mc_shares_name where name like "ST%"  )
+        HAVING rang > 0.7 and rang < 1   ) c
+        )
+        
+        
+SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 1 and p_end > p_start GROUP BY code_id) t1
+        LEFT JOIN 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 1  GROUP BY code_id) t2 
+        on t1.code_id = t2.code_id
+        where t1.code_id not in (SELECT code from mc_shares_name where name like "ST%"  )
+        HAVING rang > 0.7 and rang < 1   ) c
+        where code_id in (
+        
+        SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 1 and p_year  =2022 and p_end > p_start GROUP BY code_id) t1
+        LEFT JOIN 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 1 and p_year  =2022 GROUP BY code_id) t2 
+        on t1.code_id = t2.code_id
+        where t1.code_id not in (SELECT code from mc_shares_name where name like "ST%"  )
+        HAVING rang > 0.7 and rang < 1   ) c
+        )
+ 

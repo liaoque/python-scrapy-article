@@ -6,6 +6,7 @@ from django.db.models import Count, Max, Min
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
+from shares.model.shares_industry import SharesIndustry
 from shares.model.shares_industry_season import SharesIndustrySeason
 import time
 
@@ -22,10 +23,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         income = 0
-        for item in SharesName.objects.filter(status=1, code_type=1):
+        for item in SharesName.objects.filter(status=1, code_type=2):
             code = item.code
-            sharesItem = Shares.objects.filter(code_id=code).order_by('date_as')[0]
-            sharesItemEnd = Shares.objects.filter(code_id=code).order_by('-date_as')[0]
+            sharesItem = SharesIndustry.objects.filter(code_id=code).order_by('date_as')[0]
+            sharesItemEnd = SharesIndustry.objects.filter(code_id=code).order_by('-date_as')[0]
             p_year = sharesItem.date_as.strftime('%Y')
             p_year_end = sharesItemEnd.date_as.strftime('%Y')
             print(p_year_end)
@@ -50,14 +51,14 @@ class Command(BaseCommand):
                 p_year = str(int(p_year) + 1)
 
     def saveHalfYear(self, code, p_year, date_start, date_end, p_season):
-        halfYearSharesStart = Shares.objects.filter(code_id=code,
+        halfYearSharesStart = SharesIndustry.objects.filter(code_id=code,
                                                     date_as__gte=date_start,
                                                     date_as__lte=date_end
                                                     )
         if len(halfYearSharesStart) == 0:
             return
 
-        halfYearSharesEnd = Shares.objects.filter(code_id=code,
+        halfYearSharesEnd = SharesIndustry.objects.filter(code_id=code,
                                                   date_as__lte=date_end
                                                   ).order_by('-date_as')[0]
 
