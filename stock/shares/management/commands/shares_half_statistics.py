@@ -35,7 +35,9 @@ class Command(BaseCommand):
         where t1.code_id not in (SELECT code from mc_shares_name where name like "%s"  )
         HAVING rang > 0.7 and rang < 1) c;
                 """ % "ST%"
+        print(sql)
         slist = SharesHalfYear.objects.raw(sql, params=())
+        print(slist)
         print("上半年---start")
         print(",".join(["\"" + item + "\"" for item in slist]))
         print("上半年---end")
