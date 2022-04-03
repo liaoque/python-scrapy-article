@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 (SELECT COUNT(1) as c, code_id FROM `mc_shares_half_year` where  p_year_half = %s GROUP BY code_id) t2 
             on t1.code_id = t2.code_id
             where t1.code_id not in (SELECT code from mc_shares_name where name like "%s"  )
-            HAVING rang > 0.7 and rang < 1) c;
+            HAVING rang > 0.7 and rang < 1 and t1.code_id < '700000') c;
                     """
             print(sql)
             slist = SharesHalfYear.objects.raw(sql, params=(half, half, "ST%",))
@@ -55,7 +55,7 @@ class Command(BaseCommand):
                 (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = %s GROUP BY code_id) t2 
             on t1.code_id = t2.code_id
             where t1.code_id not in (SELECT code from mc_shares_name where name like "%s"  )
-            HAVING rang > 0.7 and rang < 1) c;
+            HAVING rang > 0.7 and rang < 1 and t1.code_id < '700000') c;
                     """
             print(sql)
             slist = SharesHalfYear.objects.raw(sql, params=(season, season, "ST%"))
