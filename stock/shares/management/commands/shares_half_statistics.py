@@ -34,9 +34,9 @@ class Command(BaseCommand):
         on t1.code_id = t2.code_id
         where t1.code_id not in (SELECT code from mc_shares_name where name like "%s"  )
         HAVING rang > 0.7 and rang < 1) c;
-                """ % "ST%"
+                """
         print(sql)
-        slist = SharesHalfYear.objects.raw(sql, params=())
+        slist = SharesHalfYear.objects.raw(sql, params=("ST%",))
         for item in slist:
             print(type(item))
         print("上半年---start")
@@ -50,9 +50,9 @@ class Command(BaseCommand):
                 on t1.code_id = t2.code_id
                 where t1.code_id not in (SELECT code from mc_shares_name where name like "%s" )
                 HAVING rang > 0.7 and rang < 1) c;
-                        """ % "ST%"
+                        """ 
         print(sql)
-        slist = SharesHalfYear.objects.raw(sql, params=())
+        slist = SharesHalfYear.objects.raw(sql, params=("ST%", ))
         print(slist)
         print("\n下半年---start\n")
         print(",".join(["\"" + item + "\"" for item in slist]))
