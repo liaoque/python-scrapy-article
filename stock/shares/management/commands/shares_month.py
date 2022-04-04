@@ -28,9 +28,9 @@ class Command(BaseCommand):
             sharesItemEnd = Shares.objects.filter(code_id=code).order_by('-date_as')[0]
             p_year = sharesItem.date_as.strftime('%Y')
             p_year_end = sharesItemEnd.date_as.strftime('%Y')
-            print(p_year_end)
-            print(connection.queries)
-            break
+            # print(p_year_end)
+            # print(connection.queries)
+            # break
 
             while p_year <= p_year_end:
                 p_month = 1
