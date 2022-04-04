@@ -190,3 +190,166 @@ SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang
         HAVING rang > 0.7 and rang < 1   ) c
         )
  
+ 
+ // 2022年 以前， 历年都增长的行业
+ SELECT t1.code_id,  t1.c / t2.c as rang, mc_shares_name.name
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 1 and p_year  !=2022 and p_end > p_start GROUP BY code_id) t1
+        LEFT JOIN 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 1 and p_year !=2022  GROUP BY code_id) t2 
+        on t1.code_id = t2.code_id
+        LEFT JOIN mc_shares_name on mc_shares_name.code = t1.code_id 
+        HAVING rang > 0.7 and rang < 1 
+   
+ // 历年增长的行业中， 普遍增长的股票   
+ select code_id from  mc_shares_join_industry where industry_code_id in (
+     SELECT code_id from (
+        SELECT t1.code_id,  t1.c / t2.c as rang, mc_shares_name.name
+            from (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 1 and p_year  !=2022 and p_end > p_start GROUP BY code_id) t1
+            LEFT JOIN 
+                (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 1 and p_year !=2022  GROUP BY code_id) t2 
+            on t1.code_id = t2.code_id
+            LEFT JOIN mc_shares_name on mc_shares_name.code = t1.code_id 
+            HAVING rang > 0.7 and rang < 1 
+     )c
+ )
+ 
+ // 历年增长的行业中， 普遍增长的股票  并 历年 1季度普遍上涨的股票 69
+ // 历年增长的行业中， 普遍增长的股票  并 历年 1季度普遍上涨的股票 且今年上涨的股票 48
+ SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 1 and p_year !=2022 and p_end > p_start GROUP BY code_id) t1
+        LEFT JOIN 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 1 and p_year !=2022  GROUP BY code_id) t2 
+        on t1.code_id = t2.code_id
+        where t1.code_id not in (SELECT code from mc_shares_name where name like "ST%"  )
+        HAVING rang > 0.7 and rang < 1   ) c
+        where code_id in (
+            select code_id from  mc_shares_join_industry where industry_code_id in (
+                 SELECT code_id from (
+                    SELECT t1.code_id,  t1.c / t2.c as rang, mc_shares_name.name
+                        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 1 and p_year  !=2022 and p_end > p_start GROUP BY code_id) t1
+                        LEFT JOIN 
+                            (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 1 and p_year !=2022  GROUP BY code_id) t2 
+                        on t1.code_id = t2.code_id
+                        LEFT JOIN mc_shares_name on mc_shares_name.code = t1.code_id 
+                        HAVING rang > 0.7 and rang < 1 
+                 )c
+             )
+        )
+        and c.code_id  in (
+            SELECT code_id FROM `mc_shares_season` where  p_season = 1 and p_year  =2022 and p_end < p_start GROUP BY code_id
+        )
+
+
+SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 2 and p_year !=2022 and p_end > p_start GROUP BY code_id) t1
+        LEFT JOIN 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 2 and p_year !=2022  GROUP BY code_id) t2 
+        on t1.code_id = t2.code_id
+        HAVING rang > 0.7 and rang < 1   ) c
+        where code_id in (
+            select code_id from  mc_shares_join_industry where industry_code_id in (
+                 SELECT code_id from (
+                    SELECT t1.code_id,  t1.c / t2.c as rang, mc_shares_name.name
+                        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 2 and p_year  !=2022 and p_end > p_start GROUP BY code_id) t1
+                        LEFT JOIN 
+                            (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 2 and p_year !=2022  GROUP BY code_id) t2 
+                        on t1.code_id = t2.code_id
+                        LEFT JOIN mc_shares_name on mc_shares_name.code = t1.code_id 
+                        HAVING rang > 0.7 and rang < 1 
+                 )c
+             )
+        )
+        and code_id not in (SELECT code from mc_shares_name where name like "ST%"  )
+        
+
+1季度48只下跌股票所属行业
+  家电行业		钢铁行业		化纤行业		装修建材		通用设备		航天航空		酿酒行业		纺织服装		
+  造纸印刷		汽车零部件	玻璃玻纤		化学制品		工程建设
+  
+1季度21只上涨股票所属行业
+                汽车零部件               装修建材       通用设备                             纺织服装
+  造纸印刷                               化学制品      工程建设
+                  水泥建材   	
+select t.code_id,mc_shares_name.name from (SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 1 and p_year !=2022 and p_end > p_start GROUP BY code_id) t1
+        LEFT JOIN 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 1 and p_year !=2022  GROUP BY code_id) t2 
+        on t1.code_id = t2.code_id
+        HAVING rang > 0.7 and rang < 1   ) c
+        where code_id in (
+            select code_id from  mc_shares_join_industry where industry_code_id in (
+                 SELECT code_id from (
+                    SELECT t1.code_id,  t1.c / t2.c as rang, mc_shares_name.name
+                        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season =1 and p_year  !=2022 and p_end > p_start GROUP BY code_id) t1
+                        LEFT JOIN 
+                            (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 1 and p_year !=2022  GROUP BY code_id) t2 
+                        on t1.code_id = t2.code_id
+                        LEFT JOIN mc_shares_name on mc_shares_name.code = t1.code_id 
+                        HAVING rang > 0.7 and rang < 1 
+                 )c
+             )
+        )
+        and code_id not in (SELECT code from mc_shares_name where name like "ST%"  )) t
+LEFT JOIN mc_shares_join_industry on mc_shares_join_industry.code_id = t.code_id 
+LEFT JOIN mc_shares_name on mc_shares_join_industry.industry_code_id = mc_shares_name.code
+where t.code_id  in (
+select code_id from  mc_shares_season where  p_season = 1 and p_year =2022 and p_end > p_start GROUP BY code_id
+)  
+ORDER BY `t`.`code_id` ASC
+
+
+
+select t.code_id,mc_shares_name.name from (SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 2 and p_year !=2022 and p_end > p_start GROUP BY code_id) t1
+        LEFT JOIN 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 2 and p_year !=2022  GROUP BY code_id) t2 
+        on t1.code_id = t2.code_id
+        HAVING rang > 0.7 and rang < 1   ) c
+        where code_id in (
+            select code_id from  mc_shares_join_industry where industry_code_id in (
+                 SELECT code_id from (
+                    SELECT t1.code_id,  t1.c / t2.c as rang, mc_shares_name.name
+                        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season =2 and p_year  !=2022 and p_end > p_start GROUP BY code_id) t1
+                        LEFT JOIN 
+                            (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 2 and p_year !=2022  GROUP BY code_id) t2 
+                        on t1.code_id = t2.code_id
+                        LEFT JOIN mc_shares_name on mc_shares_name.code = t1.code_id 
+                        HAVING rang > 0.6 and rang < 1 
+                 )c
+             )
+        )
+        and code_id not in (SELECT code from mc_shares_name where name like "ST%"  )) t
+LEFT JOIN mc_shares_join_industry on mc_shares_join_industry.code_id = t.code_id 
+LEFT JOIN mc_shares_name on mc_shares_join_industry.industry_code_id = mc_shares_name.code
+
+
+
+select m1.code, m3.name, m2.industry_code_id FROM mc_shares_name m1
+ left join mc_shares_join_industry m2 on m1.code = m2.code_id
+ LEFT JOIN mc_shares_name m3 on m2.industry_code_id = m3.code
+ where m1.code in('601038','002312','600667','002828', '601908','601139','601678','600835');
+
+
+
+select t.code_id,mc_shares_name.name from (SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 2 and p_year !=2022 and p_end > p_start GROUP BY code_id) t1
+        LEFT JOIN 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_season` where  p_season = 2 and p_year !=2022  GROUP BY code_id) t2 
+        on t1.code_id = t2.code_id
+        HAVING rang > 0.7 and rang < 1   ) c
+        where code_id in (
+            select code_id from  mc_shares_join_industry where industry_code_id in (
+                 SELECT code_id from (
+                    SELECT t1.code_id,  t1.c / t2.c as rang, mc_shares_name.name
+                        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season =2 and p_year  !=2022 and p_end > p_start GROUP BY code_id) t1
+                        LEFT JOIN 
+                            (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_season` where  p_season = 2 and p_year !=2022  GROUP BY code_id) t2 
+                        on t1.code_id = t2.code_id
+                        LEFT JOIN mc_shares_name on mc_shares_name.code = t1.code_id 
+                        HAVING rang > 0.6 and rang < 1 
+                 )c
+             )
+        )
+        and code_id not in (SELECT code from mc_shares_name where name like "ST%"  )) t
+LEFT JOIN mc_shares_join_industry on mc_shares_join_industry.code_id = t.code_id 
+LEFT JOIN mc_shares_name on mc_shares_join_industry.industry_code_id = mc_shares_name.code

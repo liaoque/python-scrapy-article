@@ -7,6 +7,10 @@ import weixin.shares.items_industry as SharesItemsIndustry
 import time
 import copy
 
+# https://zx.10jqka.com.cn/indval/getstocks?blockcode=881102
+# https://ai.10jqka.com.cn/transfer/industry/getpickstock
+# https://zx.10jqka.com.cn/indval/getallindustry
+
 
 # http://zx.10jqka.com.cn/indval/getallindustry
 # https://www.liujiangblog.com/course/django/88

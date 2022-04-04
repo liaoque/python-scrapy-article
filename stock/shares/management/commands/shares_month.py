@@ -29,6 +29,8 @@ class Command(BaseCommand):
             p_year = sharesItem.date_as.strftime('%Y')
             p_year_end = sharesItemEnd.date_as.strftime('%Y')
             print(p_year_end)
+            print(connection.queries)
+            break
 
             while p_year <= p_year_end:
                 p_month = 1
