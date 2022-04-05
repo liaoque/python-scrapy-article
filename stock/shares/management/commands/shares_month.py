@@ -51,6 +51,9 @@ class Command(BaseCommand):
                 p_year = str(int(p_year) + 1)
 
     def saveMonth(self, code, p_year, date_start, date_end, p_month):
+        if SharesMonth.objects.filter(code_id=code, p_year=int(p_year), p_month=p_month).count():
+            return
+
         halfYearSharesStart = Shares.objects.filter(code_id=code,
                                                     date_as__gte=date_start,
                                                     date_as__lte=date_end
@@ -62,8 +65,7 @@ class Command(BaseCommand):
                                                   date_as__lte=date_end
                                                   ).order_by('-date_as')[0]
 
-        if SharesMonth.objects.filter(code_id=code, p_year=int(p_year), p_month=p_month).count():
-            return
+
 
         halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
                                p_end=halfYearSharesEnd.p_end, p_year=int(p_year),

@@ -324,11 +324,34 @@ LEFT JOIN mc_shares_name on mc_shares_join_industry.industry_code_id = mc_shares
 
 
 
-select m1.code, m3.name, m2.industry_code_id FROM mc_shares_name m1
- left join mc_shares_join_industry m2 on m1.code = m2.code_id
- LEFT JOIN mc_shares_name m3 on m2.industry_code_id = m3.code
- where m1.code in('601038','002312','600667','002828', '601908','601139','601678','600835');
+// 查某个月行业的增长情况
+SELECT code_id,name,rang from (
+    SELECT t1.code_id,  t1.c / t2.c as rang, mc_shares_name.name
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_month` where  p_month =6 and p_year  !=2022 and p_end > p_start GROUP BY code_id) t1
+        LEFT JOIN 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_month` where  p_month = 6 and p_year !=2022  GROUP BY code_id) t2 
+        on t1.code_id = t2.code_id
+        LEFT JOIN mc_shares_name on mc_shares_name.code = t1.code_id 
+        HAVING rang > 0.6 and rang < 1 
+ )c
+ where code_id in (
+    select m2.industry_code_id FROM mc_shares_name m1
+    left join mc_shares_join_industry m2 on m1.code = m2.code_id
+    LEFT JOIN mc_shares_name m3 on m2.industry_code_id = m3.code
+    where m1.code in('601038','002312','600667','002828', '601908','601139','601678','600835')
+ )
+ 
+ 
+ select m2.industry_code_id,m3.name, m1.code FROM mc_shares_name m1
+    left join mc_shares_join_industry m2 on m1.code = m2.code_id
+    LEFT JOIN mc_shares_name m3 on m2.industry_code_id = m3.code
+    where m1.code in('601038','002312','600667','002828', '601908','601139','601678','600835')
 
+601139  快报发了，业绩一般
+002828  未发财报
+600667  业绩一般
+601678  业绩好
+002312  ``
 
 
 select t.code_id,mc_shares_name.name from (SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
