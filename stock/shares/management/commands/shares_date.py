@@ -32,6 +32,6 @@ class Command(BaseCommand):
 
     def getAllDates(self):
         sql = '''
-                select 1 as id, date_as from mc_shares_kdj  group by date_as;
+                select 1 as id, date_as from mc_shares_date  ;
                 '''
         return Shares.objects.raw(sql)
