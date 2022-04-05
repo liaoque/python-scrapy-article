@@ -20,4 +20,5 @@ from .model.shares_season import SharesSeason
 from .model.shares_month import SharesMonth
 from .model.shares_industry_month import SharesIndustryMonth
 from .model.shares_industry_season import SharesIndustrySeason
+from .model.shares_date import SharesDate
 
