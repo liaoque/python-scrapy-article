@@ -22,7 +22,7 @@ class Command(BaseCommand):
     help = '统计每月的 最高和最低'
 
     def handle(self, *args, **options):
-        for item in SharesName.objects.filter(status=1, code_type=1, code_id__gte='000702'):
+        for item in SharesName.objects.filter(status=1, code_type=1, code__gte='000702'):
             code = item.code
             sharesItem = Shares.objects.filter(code_id=code).order_by('date_as')[0]
             sharesItemEnd = Shares.objects.filter(code_id=code).order_by('-date_as')[0]
