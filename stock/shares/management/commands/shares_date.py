@@ -23,10 +23,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         dateList = self.getAllDates()
-        for date_as in dateList:
-            if SharesDate.objects.filter(date_as=date_as).count():
+        for item in dateList:
+            if SharesDate.objects.filter(date_as=item.date_as).count():
                 return
-            sharesDate = SharesDate(date_as=date_as)
+            sharesDate = SharesDate(date_as=item.date_as)
             sharesDate.save()
 
 
