@@ -78,6 +78,7 @@ class Command(BaseCommand):
             left join mc_shares_name on mc_shares_join_industry.industry_code_id = mc_shares_name.code 
             where t1.code_id not in (SELECT code from mc_shares_name where name like "%s" ) 
             and t1.code_id not in (SELECT code_id from mc_shares_ban) 
+            and ( t1.code_id < '300000' or (t1.code_id > '600000' and t1.code_id < '700000' ) )
             HAVING rang > 0.7 and rang < 1 order by rang desc
             ) c
                     """
