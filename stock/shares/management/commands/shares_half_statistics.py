@@ -69,7 +69,7 @@ class Command(BaseCommand):
     def month(self):
         for season in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]:
             sql = """
-            SELECT 1 as id, code_id FROM ( SELECT t1.code_id, t1.c / t2.c as rang,t3.name,mc_shares_name.name 
+            SELECT 1 as id, code_id FROM ( SELECT t1.code_id, t1.c / t2.c as rang,t3.name,mc_shares_name.name as industry_name
             from (SELECT COUNT(1) as c, code_id FROM `mc_shares_month` where p_month =  %s and p_end > p_start GROUP BY code_id) t1 
             LEFT JOIN (SELECT COUNT(1) as c, code_id FROM `mc_shares_month` where p_month =  %s GROUP BY code_id) t2 
                 on t1.code_id = t2.code_id 
