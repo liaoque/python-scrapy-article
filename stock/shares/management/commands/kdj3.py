@@ -85,9 +85,22 @@ class Command(BaseCommand):
                 left join (select code_id,p_end from mc_shares_industry where date_as = %s) z on z.code_id = mc_shares_industry.code_id
                 where date_as = %s and z.p_end < mc_shares_industry.p_end
             )
+            and mc_shares_kdj.code_id in (
+                SELECT code_id FROM `mc_shares_kdj`
+                where  (k - j) > 5 
+                and date_as = %s
+                )
+            and mc_shares_kdj.code_id in (
+                select mc_shares_macd.code_id from mc_shares_macd
+                left join (select code_id,macd from mc_shares_macd where date_as = %s) z on z.code_id = mc_shares_macd.code_id
+                where date_as = %s and z.macd < mc_shares_macd.macd
+                )
             having rate >= 1.03
         '''
-        return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, second,))
+        return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second,
+                                                         '%ST%', first, second,
+                                                         second, first, second,
+                                                         ))
 
     def compute2(self, first, second, fifth):
         sql = '''
@@ -107,9 +120,22 @@ class Command(BaseCommand):
                 left join (select code_id,p_end from mc_shares_industry where date_as = %s) z on z.code_id = mc_shares_industry.code_id
                 where date_as = %s and z.p_end < mc_shares_industry.p_end
             )
+            and mc_shares_kdj.code_id in (
+                SELECT code_id FROM `mc_shares_kdj`
+                where  (k - j) > 5 
+                and date_as = %s
+                )
+            and mc_shares_kdj.code_id in (
+                select mc_shares_macd.code_id from mc_shares_macd
+                left join (select code_id,macd from mc_shares_macd where date_as = %s) z on z.code_id = mc_shares_macd.code_id
+                where date_as = %s and z.macd < mc_shares_macd.macd
+                )
             having rate < 1
         '''
-        return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, second,))
+        return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second,
+                                                         '%ST%', first, second,
+                                                         second, first, second,
+                                                         ))
 
     def compute3(self, before_yesterday, yesterday):
         sql = '''
