@@ -99,7 +99,7 @@ class Command(BaseCommand):
         '''
         return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second,
                                                          '%ST%', first, second,
-                                                         second, first, second,
+                                                         first, first, second,
                                                          ))
 
     def compute2(self, first, second, fifth):
@@ -134,10 +134,10 @@ class Command(BaseCommand):
         '''
         return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second,
                                                          '%ST%', first, second,
-                                                         second, first, second,
+                                                         first, first, second,
                                                          ))
 
-    def compute3(self, before_yesterday, yesterday):
+    def compute3(self, yesterday, today):
         sql = '''
         SELECT 1 as id, mc_shares_kdj.code_id FROM `mc_shares_kdj`
 left join (select p_end,code_id from mc_shares where date_as = %s) c on c.code_id = mc_shares_kdj.code_id
@@ -166,7 +166,7 @@ and mc_shares_kdj.code_id in (
     )
         '''
         return SharesKdjCompute.objects.raw(sql, params=(
-            yesterday, before_yesterday, yesterday, '%ST%',
-            before_yesterday, yesterday, before_yesterday, yesterday,
-            before_yesterday, yesterday,
+            today, yesterday, today, '%ST%',
+            yesterday, today, yesterday,
+            yesterday, today,
         ))
