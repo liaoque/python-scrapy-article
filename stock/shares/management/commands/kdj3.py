@@ -111,7 +111,7 @@ class Command(BaseCommand):
         '''
         return SharesKdjCompute.objects.raw(sql, params=(second, first, fifth, second, '%ST%', first, second,))
 
-    def compute3(self, yesterday, before_yesterday):
+    def compute3(self, before_yesterday, yesterday):
         sql = '''
         SELECT 1 as id, mc_shares_kdj.code_id FROM `mc_shares_kdj`
 left join (select p_end,code_id from mc_shares where date_as = %s) c on c.code_id = mc_shares_kdj.code_id
