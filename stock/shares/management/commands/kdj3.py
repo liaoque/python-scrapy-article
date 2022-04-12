@@ -135,6 +135,6 @@ and mc_shares_kdj.code_id in (
     )
         '''
         return SharesKdjCompute.objects.raw(sql, params=(
-            before_yesterday, yesterday, before_yesterday, '%ST%',
-            yesterday, before_yesterday, before_yesterday,
+            yesterday, before_yesterday, yesterday, '%ST%',
+            before_yesterday, yesterday, before_yesterday,
         ))
