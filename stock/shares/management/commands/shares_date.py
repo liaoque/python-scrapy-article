@@ -25,7 +25,7 @@ class Command(BaseCommand):
         dateList = self.getAllDates()
         for item in dateList:
             if SharesDate.objects.filter(date_as=item.date_as).count():
-                return
+                continue
             sharesDate = SharesDate(date_as=item.date_as)
             sharesDate.save()
 
