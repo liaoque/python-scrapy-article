@@ -133,8 +133,14 @@ and mc_shares_kdj.code_id in (
     where  (k - j) > 5 
     and date_as = %s
     )
+and mc_shares_kdj.code_id in (
+    select mc_shares_macd.code_id from mc_shares_macd
+    left join (select code_id,macd from mc_shares_macd where date_as = %s) z on z.code_id = mc_shares_macd.code_id
+    where date_as = %s and z.macd < mc_shares_macd.macd
+    )
         '''
         return SharesKdjCompute.objects.raw(sql, params=(
             yesterday, before_yesterday, yesterday, '%ST%',
-            before_yesterday, yesterday, before_yesterday,
+            before_yesterday, yesterday, before_yesterday, yesterday,
+            before_yesterday, yesterday,
         ))
