@@ -32,6 +32,6 @@ class Command(BaseCommand):
 
     def getAllDates(self):
         sql = '''
-                select 1 as id, date_as from mc_shares_date  ;
+                select 1 as id, date_as from mc_shares where date_as >= '2022-03-31' group  by date_as ;
                 '''
         return Shares.objects.raw(sql)
