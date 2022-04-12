@@ -94,6 +94,7 @@ class Command(BaseCommand):
                 select mc_shares_macd.code_id from mc_shares_macd
                 left join (select code_id,macd from mc_shares_macd where date_as = %s) z on z.code_id = mc_shares_macd.code_id
                 where date_as = %s and z.macd < mc_shares_macd.macd
+                and mc_shares_macd.diff > mc_shares_macd.dea
                 )
             having rate >= 1.03
         '''
@@ -129,6 +130,7 @@ class Command(BaseCommand):
                 select mc_shares_macd.code_id from mc_shares_macd
                 left join (select code_id,macd from mc_shares_macd where date_as = %s) z on z.code_id = mc_shares_macd.code_id
                 where date_as = %s and z.macd < mc_shares_macd.macd
+                and mc_shares_macd.diff > mc_shares_macd.dea
                 )
             having rate < 1
         '''
@@ -163,6 +165,7 @@ and mc_shares_kdj.code_id in (
     select mc_shares_macd.code_id from mc_shares_macd
     left join (select code_id,macd from mc_shares_macd where date_as = %s) z on z.code_id = mc_shares_macd.code_id
     where date_as = %s and z.macd < mc_shares_macd.macd
+    and mc_shares_macd.diff > mc_shares_macd.dea
     )
         '''
         return SharesKdjCompute.objects.raw(sql, params=(
