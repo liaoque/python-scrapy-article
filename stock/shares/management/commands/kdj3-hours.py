@@ -65,5 +65,4 @@ and mc_shares_kdj_hours.code_id in (
         return SharesKdjCompute.objects.raw(sql, params=(
             today, yesterday, today, '%ST%',
             yesterday, today, yesterday,
-            yesterday, today,
         ))
