@@ -21,4 +21,7 @@ from .model.shares_month import SharesMonth
 from .model.shares_industry_month import SharesIndustryMonth
 from .model.shares_industry_season import SharesIndustrySeason
 from .model.shares_date import SharesDate
+from .model.shares_date import SharesDate
+from .model.shares_hours import SharesHours
+from .model.shares_kdj_hours import SharesKdjHours
 

@@ -38,7 +38,7 @@ class Items(scrapy.Item):
         if self.exitsByCode(cursor, code, date_as):
             return
         sql = """
-            INSERT INTO mc_shares_hourse (name, code_id, p_min, p_max, p_start, p_end, date_as)
+            INSERT INTO mc_shares_hours (name, code_id, p_min, p_max, p_start, p_end, date_as)
             VALUES (%s, %s, %s,  %s,  %s, %s, %s)
             """;
         params = (
@@ -55,11 +55,11 @@ class Items(scrapy.Item):
     pass
 
     def findByCode(self, cursor, code, date_as):
-        sql = "SELECT code_id FROM mc_shares_hourse  WHERE code_id = '%s' and date_as='%s'" % (code, date_as)
+        sql = "SELECT code_id FROM mc_shares_hours  WHERE code_id = '%s' and date_as='%s'" % (code, date_as)
         cursor.execute(sql);
         return cursor
 
     def exitsByCode(self, cursor, code, date_as):
-        sql = "SELECT code_id FROM mc_shares_hourse  WHERE code_id = '%s' and date_as='%s'" % (code, date_as)
+        sql = "SELECT code_id FROM mc_shares_hours  WHERE code_id = '%s' and date_as='%s'" % (code, date_as)
         cursor.execute(sql);
         return cursor.rowcount
