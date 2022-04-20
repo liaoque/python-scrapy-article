@@ -39,7 +39,7 @@ class Items(scrapy.Item):
             return
         sql = """
             INSERT INTO mc_shares_hourse (name, code_id, p_min, p_max, p_start, p_end, date_as)
-            VALUES (%s, %s, %s,  %s,  %s, %s, %s, %s,  %s,  %s)
+            VALUES (%s, %s, %s,  %s,  %s, %s, %s)
             """;
         params = (
             self["name"][0],
