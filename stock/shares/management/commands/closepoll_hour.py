@@ -42,7 +42,7 @@ class Command(BaseCommand):
                 continue
 
             # 数据不存在
-            itemList = item.shareshours_set.all()
+            itemList = SharesHours.objects.filter(code_id=code).order_by('date_as').all()
             if len(itemList) == 0:
                 continue
 
