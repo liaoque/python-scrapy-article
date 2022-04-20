@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
     def getAllDates(self):
         sql = '''
-            select 1 as id, date_as from mc_shares_date where date_as >= '2022-04-01' ;
+            select 1 as id, date_as from mc_shares_kdj_hours where date_as >= '2022-04-01' group date_as order by date_as asc;
             '''
         return SharesKdjCompute.objects.raw(sql)
 
