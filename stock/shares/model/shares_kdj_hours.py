@@ -11,7 +11,7 @@ class SharesKdjHours(models.Model):
     d = models.FloatField(default=0)
     j = models.FloatField(default=0)
     cycle_type = models.IntegerField(default=0, help_text='1.9,3,3')
-    date_as = models.DateField()
+    date_as = models.DateTimeField()
 
     class Meta:
         db_table = "mc_shares_kdj_hours"

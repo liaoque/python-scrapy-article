@@ -12,7 +12,7 @@ class SharesHours(models.Model):
     p_max = models.IntegerField(default=0)
     p_start = models.IntegerField(default=0)
     p_end = models.IntegerField(default=0)
-    date_as = models.DateField()
+    date_as = models.DateTimeField()
 
     class Meta:
         db_table = "mc_shares_hours"
