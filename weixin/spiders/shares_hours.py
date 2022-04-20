@@ -7,7 +7,7 @@ import sys
 import MySQLdb
 import MySQLdb.cursors
 
-import weixin.shares.items_date as SharesDateItems
+import weixin.shares.items_hours as SharesDateItems
 import time
 
 
