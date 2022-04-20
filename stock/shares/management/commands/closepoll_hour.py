@@ -42,7 +42,7 @@ class Command(BaseCommand):
                 continue
 
             # 数据不存在
-            itemList = item.shares_hourse_set.all()
+            itemList = item.shareshourse_set.all()
             if len(itemList) == 0:
                 continue
 
