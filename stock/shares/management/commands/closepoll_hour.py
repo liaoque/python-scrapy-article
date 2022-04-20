@@ -5,7 +5,7 @@ from django.db.models import Count
 
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
-from shares.model.shares_kdj_hours import SharesHourKdjs
+from shares.model.shares_kdj_hours import SharesKdjHours
 from shares.model.shares_hours import SharesHours
 from shares.model.shares_kdj_compute import SharesKdjCompute
 from shares.model.shares_kdj_compute_detail import SharesKdjComputeDetail
@@ -63,11 +63,11 @@ class Command(BaseCommand):
                 print("计算出未知数据", (code, ky, kd, kj))
                 continue
 
-            sharesKdjList = SharesHourKdjs.objects.filter(code_id=code, date_as=date_as)
+            sharesKdjList = SharesKdjHours.objects.filter(code_id=code, date_as=date_as)
             if len(sharesKdjList):
                 continue
 
-            b = SharesHourKdjs(code_id=code, k=ky, d=kd, j=kj, cycle_type=1, date_as=date_as)
+            b = SharesKdjHours(code_id=code, k=ky, d=kd, j=kj, cycle_type=1, date_as=date_as)
             b.save()
         pass
 
