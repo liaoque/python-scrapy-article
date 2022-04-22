@@ -3,18 +3,18 @@
 
 // 4月  增长的行业中，增长的股票
 select t.code_id,mc_shares_name.name from (SELECT code_id FROM (SELECT t1.code_id,  t1.c / t2.c as rang 
-        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_month` where  p_month = 4 and p_year !=2022 and p_end > p_start GROUP BY code_id) t1
+        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_month` where  p_month = 6 and p_year !=2022 and p_end > p_start GROUP BY code_id) t1
         LEFT JOIN 
-            (SELECT COUNT(1) as c, code_id FROM `mc_shares_month` where  p_month = 4 and p_year !=2022  GROUP BY code_id) t2 
+            (SELECT COUNT(1) as c, code_id FROM `mc_shares_month` where  p_month = 6 and p_year !=2022  GROUP BY code_id) t2 
         on t1.code_id = t2.code_id
         HAVING rang > 0.7 and rang < 1   ) c
         where code_id in (
             select code_id from  mc_shares_join_industry where industry_code_id in (
                  SELECT code_id from (
                     SELECT t1.code_id,  t1.c / t2.c as rang, mc_shares_name.name
-                        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_month` where  p_month =4 and p_year  !=2022 and p_end > p_start GROUP BY code_id) t1
+                        from (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_month` where  p_month =6 and p_year  !=2022 and p_end > p_start GROUP BY code_id) t1
                         LEFT JOIN 
-                            (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_month` where  p_month = 4 and p_year !=2022  GROUP BY code_id) t2 
+                            (SELECT COUNT(1) as c, code_id FROM `mc_shares_industry_month` where  p_month = 6 and p_year !=2022  GROUP BY code_id) t2 
                         on t1.code_id = t2.code_id
                         LEFT JOIN mc_shares_name on mc_shares_name.code = t1.code_id 
                         HAVING rang > 0.5 and rang < 1 
