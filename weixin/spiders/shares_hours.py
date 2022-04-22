@@ -47,11 +47,11 @@ class Shares(scrapy.Spider):
             code = item[0]
             days = 0
 
-            stock_info = self.findStokByCode(code)
-            if stock_info:
-                days = (datetime.now().date() - stock_info[2]).days
-                if days < 1:
-                    continue
+            # stock_info = self.findStokByCode(code)
+            # if stock_info:
+                # days = (datetime.now().date() - stock_info[2]).days
+                # if days < 1:
+                #     continue
             area_id = item[2]
             if area_id == 1:
                 s_code = "1." + code
