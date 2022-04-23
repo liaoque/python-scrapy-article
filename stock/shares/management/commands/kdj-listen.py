@@ -65,8 +65,8 @@ class Command(BaseCommand):
 
     def findSellPoint(self, codeItem):
         result = SharesMacd.objects.filter(date_as=codeItem.code_id, date_as__gte=codeItem.date_as)
-        item = None
-        for key, value in result:
+        item = result[4]
+        for key, value in result[:4]:
             if key + 1 > len(result):
                 break
             if value.diff < result[key + 1].diff:
@@ -76,8 +76,8 @@ class Command(BaseCommand):
 
     def findBuyPoint(self, codeItem):
         result = SharesMacd.objects.filter(date_as=codeItem.code_id, date_as__gte=codeItem.date_as)
-        item = result[4]
-        for key, value in result[:4]:
+        item = None
+        for key, value in result:
             if key + 1 > len(result):
                 break
             if value.diff < result[key + 1].diff:
