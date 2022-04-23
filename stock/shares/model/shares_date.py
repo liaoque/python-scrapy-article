@@ -12,4 +12,4 @@ class SharesDate(models.Model):
         db_table = "mc_shares_date"
 
     def __str__(self):
-        return self.mc_shares_date
+        return self.date_as
