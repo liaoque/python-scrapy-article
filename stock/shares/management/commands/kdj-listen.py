@@ -32,10 +32,13 @@ class Command(BaseCommand):
             where a.date_as = %s  
                and a.code_id not in ( select code_id from mc_shares_date_listen )
                and a.j < -10
+               and (a.code_id < 300000 or a.code_id > 600000)
+               and a.code_id < 680000
+               and a.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
             ;
             '''
 
-        result = SharesKdj.objects.raw(sql, params=(date,date,))
+        result = SharesKdj.objects.raw(sql, params=(date,date,'%ST%',))
         print("%s-挑选出-10的股票：%s个" % (date, len(result)))
         print(",".join(["\"" + item.code_id + "\"" for item in result]))
         for item in result:
