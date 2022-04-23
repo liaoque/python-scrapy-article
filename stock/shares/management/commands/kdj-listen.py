@@ -85,7 +85,7 @@ class Command(BaseCommand):
         for value in result:
             if key + 1 >= len(result):
                 break
-            if value.diff < result[key + 1].diff:
+            if result[key + 1].diff - value.diff > 0.01 :
                 item = result[key + 1]
                 break
             key += 1
