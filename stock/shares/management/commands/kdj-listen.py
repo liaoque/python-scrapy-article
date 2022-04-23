@@ -28,7 +28,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("开始计算-----")
         dateList = self.getAllDates()
-        for item in dateList[-15:]:
+        for item in dateList[-1:]:
             self.getkdj10(item.date_as)
 
         dateList = self.getAllDateListens()
@@ -82,7 +82,7 @@ class Command(BaseCommand):
         for value in result:
             if key + 1 > len(result):
                 break
-            if value.diff < result[key + 1].diff:
+            if value["diff"] < result[key + 1]["diff"]:
                 item = result[key + 1]
                 break
             key += 1
