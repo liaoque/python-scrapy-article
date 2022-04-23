@@ -28,7 +28,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("开始计算-----")
         dateList = self.getAllDates()
-        for item in dateList[-15:]:
+        for item in dateList[-1:]:
             self.getkdj10(item.date_as)
 
         dateList = self.getAllDateListens()
@@ -62,12 +62,12 @@ class Command(BaseCommand):
 
 
     def findSellPoint(self, codeItem):
-        result = SharesMacd.objects.filter(date_as=codeItem.code_id, date_as__gte=codeItem.date_as)
+        result = SharesKdj.objects.filter(date_as=codeItem.code_id, date_as__gte=codeItem.date_as)
         item = result[4]
         for key, value in result[:4]:
             if key + 1 > len(result):
                 break
-            if value.diff < result[key + 1].diff:
+            if value.j > result[key + 1].j:
                 item = result[key + 1]
                 break
         return item
