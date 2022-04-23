@@ -13,7 +13,7 @@ import talib
 
 
 class Command(BaseCommand):
-    help = '记录每天10以下的kdj股票'
+    help = '记录每天-10以下的kdj股票'
 
     def add_arguments(self, parser):
         # parser.add_argument('poll_ids', nargs='+', type=int)
