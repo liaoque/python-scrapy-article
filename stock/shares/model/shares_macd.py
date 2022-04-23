@@ -18,4 +18,4 @@ class SharesMacd(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.code
+        return self.code_id
