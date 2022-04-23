@@ -60,32 +60,31 @@ class Command(BaseCommand):
                 codeItem.delete()
             break
 
-
     def findSellPoint(self, codeItem):
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.date_as)
         item = result[4]
-        for key in result[:4]:
-            print(key)
-            value = result[key]
+        key = 0
+        for value in result[:4]:
             if key + 1 > len(result):
                 break
             if value.j > result[key + 1].j:
                 item = result[key + 1]
                 break
+            key += 1
         return item
 
     def findBuyPoint(self, codeItem):
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.date_as)
         item = None
         print(result)
-        for key in result:
-            print(key)
-            value = result[key]
+        key = 0
+        for value in result:
             if key + 1 > len(result):
                 break
             if value.diff < result[key + 1].diff:
                 item = result[key + 1]
                 break
+            key += 1
         return item
 
     def getkdj10(self, date):
