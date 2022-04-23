@@ -45,7 +45,7 @@ class Command(BaseCommand):
                     codeItem.save()
                 pass
 
-            allCodeIds = SharesDateListen.objects.objects.filter(date_as=item.date_as, buy_date_as__neq=None)
+            allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date_as__neq=None)
             print("寻找卖出点-----")
             for codeItem in allCodeIds:
                 codeItemResult = self.findSellPoint(codeItem)
