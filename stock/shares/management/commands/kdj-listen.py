@@ -88,6 +88,9 @@ class Command(BaseCommand):
             if key + 1 >= len(result):
                 break
             if result[key + 1].diff - value.diff > 0.01 :
+                sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as__gte=value.date_as)[0]
+                if sharesKdjItem.j > 50:
+                    continue
                 item = result[key + 1]
                 break
             key += 1
