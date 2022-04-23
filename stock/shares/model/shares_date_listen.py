@@ -10,7 +10,7 @@ class SharesDateListen(models.Model):
     p_start = models.IntegerField(default=0)
     type = models.IntegerField(default=0, help_text="1.kdj-10的股票")
     buy_start = models.IntegerField(default=0)
-    buy_date_as = models.DateField(default='')
+    buy_date_as = models.DateField(null=True)
     date_as = models.DateField()
 
 

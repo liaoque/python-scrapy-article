@@ -7,9 +7,9 @@ from .shares_name import SharesName
 
 class SharesBuys(models.Model):
     code = models.ForeignKey(SharesName, name='code', on_delete=models.CASCADE)
-    buy_date_as = models.DateField(default='')
+    buy_date_as = models.DateField(null=True)
     buy_start = models.IntegerField(default=0)
-    sell_date_as = models.DateField(default='')
+    sell_date_as = models.DateField(null=True)
     sell_end = models.IntegerField(default=0)
 
 
