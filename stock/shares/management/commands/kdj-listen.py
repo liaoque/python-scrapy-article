@@ -25,14 +25,13 @@ class Command(BaseCommand):
         for item in dateList[-15:]:
             self.getkdj10(item.date_as)
 
-
-
     def getkdj10(self, date):
         sql = '''
-            select 1 as id, code_id from mc_shares_kdj 
-            where date_as = %s  
-               and code_id not in ( select code_id from mc_shares_date_listen )
-               and j < -10
+            select 1 as id, a.code_id from mc_shares_kdj  a
+            left join ( select code_id,p_end from mc_shares where date_as = %s ) c  on a.code_id = c.code_id
+            where a.date_as = %s  
+               and a.code_id not in ( select code_id from mc_shares_date_listen )
+               and a.j < -10
             ;
             '''
 
