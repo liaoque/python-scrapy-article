@@ -28,7 +28,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("开始计算-----")
         dateList = self.getAllDates()
-        for item in dateList[-1:]:
+        for item in dateList[-15:]:
             self.getkdj10(item.date_as)
 
         dateList = self.getAllDateListens()
@@ -90,7 +90,7 @@ class Command(BaseCommand):
 
     def getkdj10(self, date):
         sql = '''
-            select 1 as id, a.code_id,c.p_end  from mc_shares_kdj  a
+            select 1 as id, a.code_id,c.p_end,a.date_as  from mc_shares_kdj  a
             left join ( select code_id,p_end from mc_shares where date_as = %s ) c  on a.code_id = c.code_id
             where a.date_as = %s  
                and a.code_id not in ( select code_id from mc_shares_date_listen )
