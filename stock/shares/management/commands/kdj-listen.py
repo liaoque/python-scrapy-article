@@ -60,8 +60,8 @@ class Command(BaseCommand):
                     buys.save()
                     codeItem.delete()
                 pass
+            break
 
-                pass
 
     def findSellPoint(self, codeItem):
         result = SharesMacd.objects.filter(date_as=codeItem.code_id, date_as__gte=codeItem.date_as)
