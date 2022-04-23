@@ -67,7 +67,7 @@ class Command(BaseCommand):
         item = result[4]
         key = 0
         for value in result[:4]:
-            if key + 1 > len(result):
+            if key + 1 >= 4:
                 break
             if value.j > result[key + 1].j:
                 item = result[key + 1]
@@ -80,9 +80,9 @@ class Command(BaseCommand):
         item = None
         key = 0
         for value in result:
-            if key + 1 > len(result):
+            if key + 1 >= len(result):
                 break
-            if value["diff"] < result[key + 1]["diff"]:
+            if value.diff < result[key + 1].diff:
                 item = result[key + 1]
                 break
             key += 1
