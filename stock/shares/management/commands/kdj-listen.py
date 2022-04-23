@@ -62,7 +62,7 @@ class Command(BaseCommand):
 
 
     def findSellPoint(self, codeItem):
-        result = SharesKdj.objects.filter(date_as=codeItem.code_id, date_as__gte=codeItem.date_as)
+        result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.date_as)
         item = result[4]
         for key, value in result[:4]:
             if key + 1 > len(result):
@@ -73,7 +73,7 @@ class Command(BaseCommand):
         return item
 
     def findBuyPoint(self, codeItem):
-        result = SharesMacd.objects.filter(date_as=codeItem.code_id, date_as__gte=codeItem.date_as)
+        result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.date_as)
         item = None
         for key, value in result:
             if key + 1 > len(result):
