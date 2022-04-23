@@ -8,9 +8,15 @@ from shares.model.shares_name import SharesName
 from shares.model.shares_kdj import SharesKdj
 from shares.model.shares import Shares
 from shares.model.shares_date_listen import SharesDateListen
+from shares.model.shares_macd import SharesMacd
+from shares.model.shares_buys import SharesBuys
 import numpy as np
 import talib
 
+
+# 1. 先记录 j < 0 作为参考点
+# 2. 记录 diff 的上涨走势 且 J < 40  作为买点
+# 3. 判断 j 下调走势作为卖点，或者3天强制卖出
 
 class Command(BaseCommand):
     help = '记录每天-10以下的kdj股票'
@@ -25,6 +31,60 @@ class Command(BaseCommand):
         for item in dateList[-15:]:
             self.getkdj10(item.date_as)
 
+        dateList = self.getAllDateListens()
+        for item in dateList:
+            allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date='')
+            print("寻找买入点-----")
+            for codeItem in allCodeIds:
+                codeItemResult = self.findBuyPoint(codeItem)
+                if codeItemResult != None:
+                    print("找到买入点--%s---%s", codeItemResult.date_as, codeItemResult.p_start)
+                    codeItem.buy_date_as = codeItemResult.date_as
+                    codeItem.buy_start = codeItemResult.p_start
+                    codeItem.save()
+                pass
+
+            allCodeIds = SharesDateListen.objects.objects.filter(date_as=item.date_as, buy_date_as__neq='')
+            print("寻找卖出点-----")
+            for codeItem in allCodeIds:
+                codeItemResult = self.findSellPoint(codeItem)
+                if codeItemResult != None:
+                    print("找到卖出点--%s---%s", codeItemResult.date_as, codeItemResult.p_end)
+                    buys = SharesBuys(
+                        code_id=codeItem.code_id,
+                        buy_date_as=codeItem.buy_date_as,
+                        buy_start=codeItem.p_start,
+                        sell_date_as=codeItemResult.date_as,
+                        sell_end=codeItemResult.p_end,
+                    )
+                    buys.save()
+                    codeItem.delete()
+                pass
+
+                pass
+
+    def findSellPoint(self, codeItem):
+        result = SharesMacd.objects.filter(date_as=codeItem.code_id, date_as__gte=codeItem.date_as)
+        item = None
+        for key, value in result:
+            if key + 1 > len(result):
+                break
+            if value.diff < result[key + 1].diff:
+                item = result[key + 1]
+                break
+        return item
+
+    def findBuyPoint(self, codeItem):
+        result = SharesMacd.objects.filter(date_as=codeItem.code_id, date_as__gte=codeItem.date_as)
+        item = None
+        for key, value in result:
+            if key + 1 > len(result):
+                break
+            if value.diff < result[key + 1].diff:
+                item = result[key + 1]
+                break
+        return item
+
     def getkdj10(self, date):
         sql = '''
             select 1 as id, a.code_id,c.p_end  from mc_shares_kdj  a
@@ -38,7 +98,7 @@ class Command(BaseCommand):
             ;
             '''
 
-        result = SharesKdj.objects.raw(sql, params=(date,date,'%ST%',))
+        result = SharesKdj.objects.raw(sql, params=(date, date, '%ST%',))
         print(result)
         print("%s-挑选出-10的股票：%s个" % (date, len(result)))
         print(",".join(["\"" + item.code_id + "\"" for item in result]))
@@ -50,6 +110,12 @@ class Command(BaseCommand):
                 type=1,
             )
             listen.save()
+
+    def getAllDateListens(self):
+        sql = '''
+            select 1 as id, date_as from mc_shares_date_listen group by date_as ;
+            '''
+        return SharesDateListen.objects.raw(sql)
 
     def getAllDates(self):
         sql = '''
