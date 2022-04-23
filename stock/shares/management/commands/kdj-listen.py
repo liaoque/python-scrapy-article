@@ -65,6 +65,7 @@ class Command(BaseCommand):
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.date_as)
         item = result[4]
         for key in result[:4]:
+            print(key)
             value = result[key]
             if key + 1 > len(result):
                 break
@@ -78,6 +79,7 @@ class Command(BaseCommand):
         item = None
         print(result)
         for key in result:
+            print(key)
             value = result[key]
             if key + 1 > len(result):
                 break
