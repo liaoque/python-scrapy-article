@@ -68,7 +68,7 @@ class Command(BaseCommand):
 
         key = 0
         for value in result:
-            if key + 1 >= 5:
+            if key + 1 >= len(result):
                 break
             if value.j > result[key + 1].j:
                 item = result[key + 1]
