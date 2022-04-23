@@ -7,7 +7,7 @@ from django.db.models import Count
 from shares.model.shares_name import SharesName
 from shares.model.shares_kdj import SharesKdj
 from shares.model.shares import Shares
-from shares.model.shares_kdj_listen import SharesKdjListen
+from shares.model.shares_date_listen import SharesKdjListen
 import numpy as np
 import talib
 
