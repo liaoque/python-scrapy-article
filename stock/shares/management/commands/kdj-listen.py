@@ -78,7 +78,6 @@ class Command(BaseCommand):
     def findBuyPoint(self, codeItem):
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.date_as)
         item = None
-        print(result)
         key = 0
         for value in result:
             if key + 1 > len(result):
