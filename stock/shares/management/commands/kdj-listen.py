@@ -39,9 +39,9 @@ class Command(BaseCommand):
                 codeItemResult = self.findBuyPoint(codeItem)
                 if codeItemResult != None:
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                    print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_start)
+                    print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
                     codeItem.buy_date_as = codeItemResult.date_as
-                    codeItem.buy_start = sharesItem.p_start
+                    codeItem.buy_start = sharesItem.p_end
                     codeItem.save()
                 pass
 
