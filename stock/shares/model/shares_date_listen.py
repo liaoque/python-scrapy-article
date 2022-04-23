@@ -9,8 +9,8 @@ class SharesDateListen(models.Model):
     code = models.ForeignKey(SharesName, name='code', on_delete=models.CASCADE)
     p_start = models.IntegerField(default=0)
     type = models.IntegerField(default=0, help_text="1.kdj-10的股票")
-    buy_date_as = models.DateField()
     buy_start = models.IntegerField(default=0)
+    buy_date_as = models.DateField(default='')
     date_as = models.DateField()
 
 
