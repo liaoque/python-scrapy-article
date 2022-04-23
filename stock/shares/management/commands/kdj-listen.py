@@ -48,18 +48,16 @@ class Command(BaseCommand):
             print("寻找卖出点-----")
             for codeItem in allCodeIds:
                 codeItemResult = self.findSellPoint(codeItem)
-                if codeItemResult != None:
-                    print("找到卖出点--%s---%s", codeItemResult.date_as, codeItemResult.p_end)
-                    buys = SharesBuys(
-                        code_id=codeItem.code_id,
-                        buy_date_as=codeItem.buy_date_as,
-                        buy_start=codeItem.p_start,
-                        sell_date_as=codeItemResult.date_as,
-                        sell_end=codeItemResult.p_end,
-                    )
-                    buys.save()
-                    codeItem.delete()
-                pass
+                print("找到卖出点--%s---%s", codeItemResult.date_as, codeItemResult.p_end)
+                buys = SharesBuys(
+                    code_id=codeItem.code_id,
+                    buy_date_as=codeItem.buy_date_as,
+                    buy_start=codeItem.p_start,
+                    sell_date_as=codeItemResult.date_as,
+                    sell_end=codeItemResult.p_end,
+                )
+                buys.save()
+                codeItem.delete()
             break
 
 
