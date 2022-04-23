@@ -64,10 +64,13 @@ class Command(BaseCommand):
 
     def findSellPoint(self, codeItem):
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.buy_date_as)
-        item = result[4]
+        item = None
+        if len(result) > 4:
+            item = result[4]
+            result = result[:5]
         key = 0
-        for value in result[:4]:
-            if key + 1 >= 4:
+        for value in result:
+            if key + 1 >= 5:
                 break
             if value.j > result[key + 1].j:
                 item = result[key + 1]
