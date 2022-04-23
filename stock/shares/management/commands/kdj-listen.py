@@ -33,7 +33,7 @@ class Command(BaseCommand):
 
         dateList = self.getAllDateListens()
         for item in dateList:
-            allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date='')
+            allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date=None)
             print("寻找买入点-----")
             for codeItem in allCodeIds:
                 codeItemResult = self.findBuyPoint(codeItem)
@@ -44,7 +44,7 @@ class Command(BaseCommand):
                     codeItem.save()
                 pass
 
-            allCodeIds = SharesDateListen.objects.objects.filter(date_as=item.date_as, buy_date_as__neq='')
+            allCodeIds = SharesDateListen.objects.objects.filter(date_as=item.date_as, buy_date_as__neq=None)
             print("寻找卖出点-----")
             for codeItem in allCodeIds:
                 codeItemResult = self.findSellPoint(codeItem)
