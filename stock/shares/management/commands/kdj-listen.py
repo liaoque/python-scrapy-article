@@ -39,6 +39,7 @@ class Command(BaseCommand):
             '''
 
         result = SharesKdj.objects.raw(sql, params=(date,date,'%ST%',))
+        print(result)
         print("%s-挑选出-10的股票：%s个" % (date, len(result)))
         print(",".join(["\"" + item.code_id + "\"" for item in result]))
         for item in result:
