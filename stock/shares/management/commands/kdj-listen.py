@@ -67,13 +67,6 @@ class Command(BaseCommand):
     def findSellPoint(self, codeItem):
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.buy_date_as)
         item = None
-        sharesCollect = Shares.objects.filter(date_as__gte=codeItem.buy_date_as, code_id=codeItem.code_id)
-        #  如果买入价，大于当前收盘价，卖出
-        if codeItem.buy_start > sharesCollect[0].p_end:
-            print("买入价错误--%s---%s", codeItem.buy_start, sharesCollect[0].p_end)
-            item = result[1]
-            return item
-
         key = 0
         for value in result:
             if key + 1 >= len(result):
@@ -100,6 +93,13 @@ class Command(BaseCommand):
                 item = result[key + 1]
                 break
             key += 1
+
+        if item != None:
+            sharesCollect = Shares.objects.filter(date_as__gte=item.date_as, code_id=codeItem.code_id)
+            #  如果买入价，大于当前收盘价，卖出
+            if item.p_start > sharesCollect[0].p_start:
+                item = None
+
         return item
 
     def getkdj10(self, date):
