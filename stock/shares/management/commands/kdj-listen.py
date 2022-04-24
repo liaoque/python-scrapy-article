@@ -67,7 +67,7 @@ class Command(BaseCommand):
     def findSellPoint(self, codeItem):
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.buy_date_as)
         item = None
-        sharesCollect = Shares.objects.filter(date_as__gte=codeItem.buy_date_ass, code_id=codeItem.code_id)
+        sharesCollect = Shares.objects.filter(date_as__gte=codeItem.buy_date_as, code_id=codeItem.code_id)
 
         key = 0
         for value in result:
