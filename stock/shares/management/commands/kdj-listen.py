@@ -82,7 +82,7 @@ class Command(BaseCommand):
             hammerBody = math.fabs(sharesCollect[key].p_end - sharesCollect[key].p_start)
             hammerHeader = math.fabs(sharesCollect[key].p_max - hammerMax)
             hammerFooter = math.fabs(sharesCollect[key].p_min - hammerMin)
-
+            print("倒锤头%s--%s---%s---%s", codeItem.code_id, hammerHeader, hammerBody, hammerFooter)
             if hammerHeader < hammerBody and hammerBody * 2 < hammerFooter:
                 item = result
                 break
