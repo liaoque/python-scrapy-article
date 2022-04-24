@@ -12,6 +12,7 @@ from shares.model.shares_macd import SharesMacd
 from shares.model.shares_buys import SharesBuys
 import numpy as np
 import talib
+import math
 
 
 # 1. 先记录 j < 0 作为参考点
@@ -66,6 +67,7 @@ class Command(BaseCommand):
 
     def findSellPoint(self, codeItem):
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.buy_date_as)
+        sharesCollect = Shares.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.buy_date_as)
         item = None
         key = 0
         for value in result:
@@ -74,9 +76,18 @@ class Command(BaseCommand):
             if value.j > result[key + 1].j:
                 item = result[key + 1]
                 break
+            # 倒锤头
+            hammerMax = max(sharesCollect[key].p_end, sharesCollect[key].p_start)
+            hammerMin = min(sharesCollect[key].p_end, sharesCollect[key].p_start)
+            hammerBody = math.fabs(sharesCollect[key].p_end - sharesCollect[key].p_start)
+            hammerHeader = math.fabs(sharesCollect[key].p_max - hammerMax)
+            hammerFooter = math.fabs(sharesCollect[key].p_min - hammerMin)
+
+            if hammerHeader < hammerBody and hammerBody * 2 < hammerFooter:
+                item = result[key + 1]
+                break
+
             key += 1
-        if item == None and len(result) > 4:
-            item = result[4]
         return item
 
     def findBuyPoint(self, codeItem):
@@ -86,7 +97,7 @@ class Command(BaseCommand):
         for value in result:
             if key + 1 >= len(result):
                 break
-            if result[key + 1].diff - value.diff > 0.01 :
+            if result[key + 1].diff - value.diff > 0.01:
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=value.date_as)[0]
                 if sharesKdjItem.j > 50:
                     continue
@@ -99,7 +110,7 @@ class Command(BaseCommand):
             sharesCollect = Shares.objects.filter(date_as__gt=item.date_as, code_id=codeItem.code_id)
             #  如果买入价，大于当前收盘价，卖出
             if sharesItem.p_end * 0.994 > sharesCollect[0].p_start:
-                print("不符合买入价%s--%s---%s", codeItem.code_id,sharesItem.p_end * 0.994, sharesCollect[0].p_start)
+                print("不符合买入价%s--%s---%s", codeItem.code_id, sharesItem.p_end * 0.994, sharesCollect[0].p_start)
                 item = None
 
         return item
