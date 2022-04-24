@@ -79,7 +79,7 @@ class Command(BaseCommand):
 
                 #  如果买入价，大于当前收盘价，卖出
             if codeItem.buy_start > sharesCollect[key].p_end:
-                print("买入价错误--%s---%s", codeItem.buy_start, sharesCollect.p_end)
+                print("买入价错误--%s---%s", codeItem.buy_start, sharesCollect[key].p_end)
                 item = result[key + 1]
                 break
             key += 1
