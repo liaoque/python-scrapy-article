@@ -73,20 +73,21 @@ class Command(BaseCommand):
         for value in result:
             if key + 1 >= len(result):
                 break
-            if value.j > result[key + 1].j:
-                item = result[key + 1]
-                break
             # 倒锤头
             hammerMax = max(sharesCollect[key].p_end, sharesCollect[key].p_start)
             hammerMin = min(sharesCollect[key].p_end, sharesCollect[key].p_start)
             hammerBody = math.fabs(sharesCollect[key].p_end - sharesCollect[key].p_start)
             hammerHeader = math.fabs(sharesCollect[key].p_max - hammerMax)
             hammerFooter = math.fabs(sharesCollect[key].p_min - hammerMin)
-            print("倒锤头%s--%s--%d---%d---%d", sharesCollect[key].date_as,codeItem.code_id, hammerHeader, hammerBody, hammerFooter)
+            print("倒锤头%s--%s--%d---%d---%d", sharesCollect[key].date_as, codeItem.code_id, hammerHeader, hammerBody,
+                  hammerFooter)
             if hammerHeader < hammerBody and hammerBody * 2 < hammerFooter:
                 item = result
                 break
 
+            if value.j > result[key + 1].j:
+                item = result[key + 1]
+                break
             key += 1
         return item
 
