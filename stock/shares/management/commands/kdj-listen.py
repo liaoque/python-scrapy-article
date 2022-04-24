@@ -99,7 +99,7 @@ class Command(BaseCommand):
             sharesCollect = Shares.objects.filter(date_as__gt=item.date_as, code_id=codeItem.code_id)
             #  如果买入价，大于当前收盘价，卖出
             if sharesItem.p_end * 0.994 > sharesCollect[0].p_start:
-                print("不符合买入价--%s---%s", sharesItem.p_end * 0.994, sharesCollect[0].p_start)
+                print("不符合买入价%s--%s---%s", codeItem.code_id,sharesItem.p_end * 0.994, sharesCollect[0].p_start)
                 item = None
 
         return item
