@@ -95,9 +95,10 @@ class Command(BaseCommand):
             key += 1
 
         if item != None:
+            sharesItem = Shares.objects.filter(date_as=item.date_as, code_id=codeItem.code_id)[0]
             sharesCollect = Shares.objects.filter(date_as__gte=item.date_as, code_id=codeItem.code_id)
             #  如果买入价，大于当前收盘价，卖出
-            if item.p_start > sharesCollect[0].p_start:
+            if sharesItem.p_start > sharesCollect[0].p_start:
                 item = None
 
         return item
