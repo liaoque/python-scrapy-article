@@ -84,7 +84,7 @@ class Command(BaseCommand):
             hammerFooter = math.fabs(sharesCollect[key].p_min - hammerMin)
 
             if hammerHeader < hammerBody and hammerBody * 2 < hammerFooter:
-                item = result[key + 1]
+                item = result
                 break
 
             key += 1
