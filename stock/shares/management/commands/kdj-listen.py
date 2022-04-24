@@ -96,7 +96,7 @@ class Command(BaseCommand):
 
         if item != None:
             sharesItem = Shares.objects.filter(date_as=item.date_as, code_id=codeItem.code_id)[0]
-            sharesCollect = Shares.objects.filter(date_as__gte=item.date_as, code_id=codeItem.code_id)
+            sharesCollect = Shares.objects.filter(date_as__gt=item.date_as, code_id=codeItem.code_id)
             #  如果买入价，大于当前收盘价，卖出
             if sharesItem.p_end * 0.994 > sharesCollect[0].p_start:
                 print("不符合买入价--%s---%s", sharesItem.p_end * 0.994, sharesCollect[0].p_start)
