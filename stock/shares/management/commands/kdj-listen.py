@@ -82,7 +82,7 @@ class Command(BaseCommand):
             print("倒锤头%s--%s--%d---%d---%d", sharesCollect[key].date_as, codeItem.code_id, hammerHeader, hammerBody,
                   hammerFooter)
             if hammerHeader < hammerBody and hammerBody * 2 < hammerFooter:
-                item = result
+                item = value
                 break
 
             if value.j > result[key + 1].j:
