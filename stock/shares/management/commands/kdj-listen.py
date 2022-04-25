@@ -103,20 +103,26 @@ class Command(BaseCommand):
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=value.date_as)[0]
                 if sharesKdjItem.j > 50:
                     continue
+                shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id).order_by('-date_as')[:6]
+                sharesSum = sum([item.p_end for item in shares[:5]])
+                print([item.p_end for item in shares[:5]], sharesSum, shares[5].p_end)
+                if sharesSum / 5 > shares[5].p_end:
+                    item = result[key + 1]
+                break
 
-                shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id).order_by(
-                    '-date_as')[:14]
-                shares = shares[::-1]
-                close = [item.p_end / 100 for item in shares]
-                pre_end =shares[len(shares) -1].p_end / 100
-                close.append(pre_end)
-                emaList = talib.EMA(np.array(close), timeperiod=7)
-                print("%s--%s--%s--%s", sharesKdjItem.date_as, codeItem.code_id, emaList[len(emaList) - 1] , emaList[len(emaList) - 2])
-                if emaList[len(emaList) - 1] > emaList[len(emaList) - 2]:
-                    preShares = Shares.objects.filter(date_as__gte=sharesKdjItem.date_as, code_id=codeItem.code_id)
-                    if len(preShares) and (preShares[0].p_end - preShares[0].p_start) /2 + preShares[0].p_start > pre_end:
-                        item = result[key + 1]
-                        break
+                # shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id).order_by(
+                #     '-date_as')[:14]
+                # shares = shares[::-1]
+                # close = [item.p_end / 100 for item in shares]
+                # pre_end =shares[len(shares) -1].p_end / 100
+                # close.append(pre_end)
+                # emaList = talib.EMA(np.array(close), timeperiod=7)
+                # print("%s--%s--%s--%s", sharesKdjItem.date_as, codeItem.code_id, emaList[len(emaList) - 1] , emaList[len(emaList) - 2])
+                # if emaList[len(emaList) - 1] > emaList[len(emaList) - 2]:
+                #     preShares = Shares.objects.filter(date_as__gte=sharesKdjItem.date_as, code_id=codeItem.code_id)
+                #     if len(preShares) and (preShares[0].p_end - preShares[0].p_start) /2 + preShares[0].p_start > pre_end:
+                #         item = result[key + 1]
+                #         break
             key += 1
 
         # if item != None:
