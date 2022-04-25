@@ -1,5 +1,5 @@
 import numpy as np
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count
 
@@ -13,7 +13,6 @@ from shares.model.shares_buys import SharesBuys
 import numpy as np
 import talib
 import math
-
 
 
 # 1. 先记录 j < 0 作为参考点
@@ -145,9 +144,9 @@ class Command(BaseCommand):
                 preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
                 sharesItem = Shares.objects.filter(date_as__lte=result[key + 2].date_as, code_id=codeItem.code_id)[
                     0]
-                if sharesItem and ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) > preEma:
+                if sharesItem and ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
                     print("找到买入点--%s---%s--%s--%s", result[key + 2].date_as, codeItem.code_id,
-                          ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start), preEma )
+                          ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100, preEma)
                     item = result[key + 1]
                     break
             key += 1
