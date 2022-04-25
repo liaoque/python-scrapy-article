@@ -45,6 +45,8 @@ class Command(BaseCommand):
                     if codeItemResult != None:
                         sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
                         print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                        if datetime.datetime.now().hour < 15:
+                            continue
                         codeItem.buy_date_as = codeItemResult.date_as
                         codeItem.buy_pre = buy_pre
                         codeItem.buy_start = sharesItem.p_end
@@ -59,6 +61,8 @@ class Command(BaseCommand):
                         continue
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
                     print("找到卖出点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                    if datetime.datetime.now().hour < 15:
+                        continue
                     buys = SharesBuys(
                         code_id=codeItem.code_id,
                         buy_date_as=codeItem.buy_date_as,
