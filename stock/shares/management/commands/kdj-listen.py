@@ -103,18 +103,17 @@ class Command(BaseCommand):
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=value.date_as)[0]
                 if sharesKdjItem.j > 50:
                     continue
+
                 shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id).order_by(
                     '-date_as')[:14]
                 shares = shares[::-1]
-                for item in shares:
-                    print("%s--%s--%s" % (item.code_id, item.date_as, str(item.p_end)))
                 close = [item.p_end / 100 for item in shares]
+                close.push(shares[len(shares) -1] * 0.96)
                 emaList = talib.EMA(np.array(close), timeperiod=7)
-                print(emaList)
-                return None
-
-                item = result[key + 1]
-                break
+                print(emaList, emaList[len(emaList) - 1] , emaList[len(emaList) - 2])
+                if emaList[len(emaList) - 1] > emaList[len(emaList) - 2]:
+                    item = result[key + 1]
+                    break
             key += 1
 
         # if item != None:
