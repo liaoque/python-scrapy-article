@@ -39,6 +39,9 @@ class Command(BaseCommand):
                 for codeItem in allCodeIds:
                     codeItemResult = self.findBuyPoint(codeItem)
                     if codeItemResult != None:
+                        if len(SharesDateListen.objects.filter(code_id=codeItem.code_id)):
+                            continue
+
                         sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
                         print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
                         codeItem.buy_date_as = codeItemResult.date_as
