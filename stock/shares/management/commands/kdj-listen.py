@@ -148,7 +148,7 @@ class Command(BaseCommand):
                     0]
                 if ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
                     item = result[key + 1]
-                    pre_ema = preEma
+                    pre_ema = preEma * 100
                     break
             key += 1
         return item, pre_ema
