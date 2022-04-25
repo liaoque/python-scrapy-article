@@ -111,7 +111,7 @@ class Command(BaseCommand):
         item = None
         key = 0
         for value in result:
-            if key + 1 >= len(result):
+            if key + 2 >= len(result):
                 break
             if result[key + 1].diff - value.diff > 0.01:
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=value.date_as)[0]
