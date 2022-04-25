@@ -81,7 +81,7 @@ class Command(BaseCommand):
             hammerFooter = math.fabs(sharesCollect[key].p_min - hammerMin)
             if hammerHeader < hammerBody and hammerBody * 2 < hammerFooter:
                 print("倒锤头%s--%s--%d---%d---%d", sharesCollect[key].date_as, codeItem.code_id,
-                      hammerHeader, hammerBody,  hammerFooter)
+                      hammerHeader, hammerBody, hammerFooter)
                 item = value
                 break
 
@@ -92,7 +92,7 @@ class Command(BaseCommand):
         return item
 
     def findBuyPoint(self, codeItem):
-        #计算ema
+        # 计算ema
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.date_as)
         item = None
         key = 0
@@ -103,21 +103,22 @@ class Command(BaseCommand):
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=value.date_as)[0]
                 if sharesKdjItem.j > 50:
                     continue
-                shares = Shares.objects.filter(date_as__lte=result[key + 1].date_as, code_id=codeItem.code_id).order_by('-date_as')[:6]
+                shares = Shares.objects.filter(date_as__lte=result[key + 1].date_as, code_id=codeItem.code_id).order_by(
+                    '-date_as')[:6]
                 sharesSum = sum([item.p_end for item in shares[1:]])
-                print(sharesKdjItem.date_as, codeItem.code_id, [item.p_end for item in shares[1:]], sharesSum, shares[0].p_end)
+                print(sharesKdjItem.date_as, codeItem.code_id, [item.p_end for item in shares[1:]], sharesSum,
+                      shares[0].p_end)
                 if sharesSum / 5 > shares[0].p_end:
                     # 5/15*X5 + 4/15*X4 + 3/15 * X3 + 2/15 * X2 + 1 / 15 * X1
                     shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
                     close = [item.p_end / 100 for item in shares]
                     emaList = talib.EMA(np.array(close), timeperiod=5)
                     print(emaList)
-                    preEma = (emaList[len(emaList) - 1] +.01) - 4/15*close[-1] + 3/15 *close[-2] + 2/15 * close[-3] + 1 / 15 * close[-4]
-                    preEma = preEma/(5/15)
-
-
-                    sharesItem = Shares.objects.filter(date_as__lte=result[key + 2].date_as, code_id=codeItem.code_id)[0]
-                    print(sharesKdjItem.date_as, codeItem.code_id,sharesItem.p_end, preEma, close[-1] , 3/15 *close[-2] )
+                    # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
+                    preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
+                    sharesItem = Shares.objects.filter(date_as__lte=result[key + 2].date_as, code_id=codeItem.code_id)[
+                        0]
+                    print(sharesKdjItem.date_as, codeItem.code_id,sharesItem.p_end, preEma, emaList[-1] )
                     if sharesItem and sharesItem.p_end > preEma:
                         item = result[key + 1]
                 break
