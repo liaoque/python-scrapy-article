@@ -103,7 +103,7 @@ class Command(BaseCommand):
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=value.date_as)[0]
                 if sharesKdjItem.j > 50:
                     continue
-                shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id).order_by('-date_as')[:6]
+                shares = Shares.objects.filter(date_as__lte=result[key + 1].date_as, code_id=codeItem.code_id).order_by('-date_as')[:6]
                 sharesSum = sum([item.p_end for item in shares[1:]])
                 print(sharesKdjItem.date_as, codeItem.code_id, [item.p_end for item in shares[1:]], sharesSum, shares[0].p_end)
                 if sharesSum / 5 > shares[0].p_end:
