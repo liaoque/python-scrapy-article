@@ -92,6 +92,12 @@ class Command(BaseCommand):
         return item
 
     def findBuyPoint(self, codeItem):
+        #计算ema
+        shares = Shares.objects.filter(date_as__lte=codeItem.date_as, code_id=codeItem.code_id).orderby('-date_as')[:7]
+        close = [item.p_end for item in shares]
+        emaList = talib.EMA(np.array(close), timeperiod=13)
+        print(emaList)
+
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.date_as)
         item = None
         key = 0
@@ -106,13 +112,13 @@ class Command(BaseCommand):
                 break
             key += 1
 
-        if item != None:
-            sharesItem = Shares.objects.filter(date_as=item.date_as, code_id=codeItem.code_id)[0]
-            sharesCollect = Shares.objects.filter(date_as__gt=item.date_as, code_id=codeItem.code_id)
-            #  如果买入价，大于当前收盘价，卖出
-            if sharesItem.p_end * 0.994 > sharesCollect[0].p_start:
-                print("不符合买入价%s--%s---%s", codeItem.code_id, sharesItem.p_end * 0.994, sharesCollect[0].p_start)
-                item = None
+        # if item != None:
+        #     sharesItem = Shares.objects.filter(date_as=item.date_as, code_id=codeItem.code_id)[0]
+        #     sharesCollect = Shares.objects.filter(date_as__gt=item.date_as, code_id=codeItem.code_id)
+        #     #  如果买入价，大于当前收盘价，卖出
+        #     if sharesItem.p_end * 0.994 > sharesCollect[0].p_start:
+        #         print("不符合买入价%s--%s---%s", codeItem.code_id, sharesItem.p_end * 0.994, sharesCollect[0].p_start)
+        #         item = None
 
         return item
 
