@@ -116,7 +116,7 @@ class Command(BaseCommand):
                 break
             if result[key + 1].diff - value.diff > 0.01:
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=value.date_as)[0]
-                if sharesKdjItem.j > 50:
+                if sharesKdjItem.j > 55:
                     continue
                 shares = Shares.objects.filter(date_as__lte=result[key + 1].date_as, code_id=codeItem.code_id).order_by(
                     '-date_as')[:6]
