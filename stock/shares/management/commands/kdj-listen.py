@@ -62,7 +62,11 @@ class Command(BaseCommand):
                         sell_end=sharesItem.p_end,
                     )
                     buys.save()
-                    codeItem.delete()
+                    if codeItem.buy_start > sharesItem.p_end:
+                        codeItem.delete()
+                    else:
+                        codeItem.date_as = codeItemResult.date_as
+                        codeItem.save()
                 # break
 
     def findSellPoint(self, codeItem):
@@ -153,7 +157,7 @@ class Command(BaseCommand):
             left join ( select code_id,p_end from mc_shares where date_as = %s ) c  on a.code_id = c.code_id
             where a.date_as = %s  
                and a.code_id not in ( select code_id from mc_shares_date_listen )
-               and a.j < 0
+               and a.j < -10
                and (a.code_id < 300000 or a.code_id > 600000)
                and a.code_id < 680000
                and a.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
