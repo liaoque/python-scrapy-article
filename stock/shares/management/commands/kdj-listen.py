@@ -131,7 +131,8 @@ class Command(BaseCommand):
                 shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
                 close = [item.p_end / 100 for item in shares]
                 emaList7 = talib.EMA(np.array(close), timeperiod=7)
-                if emaList7[-1] < emaList7[-2]:
+                emaList4 = talib.EMA(np.array(close), timeperiod=4)
+                if not (emaList4[-2] < emaList7[-2] and emaList4[-1] > emaList7[-1]):
                     continue
 
                 emaList = talib.EMA(np.array(close), timeperiod=5)
