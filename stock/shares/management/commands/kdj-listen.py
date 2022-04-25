@@ -160,7 +160,7 @@ class Command(BaseCommand):
 
 
     def getTodayPend(self, code_id):
-        sharesNameItem = SharesName.objects.filter(status = 1 , code_type =1, code_id=code_id)[0]
+        sharesNameItem = SharesName.objects.filter(status = 1 , code_type =1, code=code_id)[0]
         if sharesNameItem.area_id == 1:
             s_code = "1." + str(code_id)
         else:
