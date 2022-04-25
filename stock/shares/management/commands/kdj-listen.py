@@ -120,13 +120,13 @@ class Command(BaseCommand):
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=result[key + 1].date_as)[0]
                 if sharesKdjItem.j > 55:
                     continue
-                shares = Shares.objects.filter(date_as__lte=result[key + 1].date_as, code_id=codeItem.code_id).order_by(
-                    '-date_as')[:6]
-                sharesSum = sum([item.p_end for item in shares[1:]])
-                if codeItem.code_id == '001317':
-                    print(sharesKdjItem.date_as, codeItem.code_id, [item.p_end for item in shares[1:]], sharesSum,
-                      shares[0].p_end)
-                if sharesSum / 5 > shares[0].p_end:
+                # shares = Shares.objects.filter(date_as__lte=result[key + 1].date_as, code_id=codeItem.code_id).order_by(
+                #     '-date_as')[:6]
+                # sharesSum = sum([item.p_end for item in shares[1:]])
+                # if codeItem.code_id == '001317':
+                #     print(sharesKdjItem.date_as, codeItem.code_id, [item.p_end for item in shares[1:]], sharesSum,
+                #       shares[0].p_end)
+                # if sharesSum / 5 > shares[0].p_end:
                     shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
                     close = [item.p_end / 100 for item in shares]
                     emaList = talib.EMA(np.array(close), timeperiod=5)
