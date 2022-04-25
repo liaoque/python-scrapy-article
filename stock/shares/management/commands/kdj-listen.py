@@ -109,13 +109,12 @@ class Command(BaseCommand):
                 print(sharesKdjItem.date_as, codeItem.code_id, [item.p_end for item in shares[1:]], sharesSum,
                       shares[0].p_end)
                 if sharesSum / 5 > shares[0].p_end:
-                    # 5/15*X5 + 4/15*X4 + 3/15 * X3 + 2/15 * X2 + 1 / 15 * X1
                     shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
                     close = [item.p_end / 100 for item in shares]
-                    emaList = talib.EMA(np.array(close), timeperiod=5)
-                    print(emaList)
+                    emaList = talib.EMA(np.array(close), timeperiod=7)
+                    # print(emaList)
                     # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
-                    preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
+                    preEma = ((emaList[-1] + .01) * (7 + 1) - (7 - 1) * emaList[-1]) / 2
                     sharesItem = Shares.objects.filter(date_as__lte=result[key + 2].date_as, code_id=codeItem.code_id)[
                         0]
                     print(sharesKdjItem.date_as, codeItem.code_id,sharesItem.p_end, preEma, emaList[-1] )
