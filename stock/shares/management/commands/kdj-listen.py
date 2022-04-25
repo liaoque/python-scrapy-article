@@ -175,7 +175,8 @@ class Command(BaseCommand):
         '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
         print(url)
         r = requests.get(url)
-        return r.json()["data"]["klines"][0].split(',')[2]
+        print(r.json()["data"]["klines"][0].split(',')[2])
+        return float(r.json()["data"]["klines"][0].split(',')[2])
         pass
 
     def getkdj10(self, date):
