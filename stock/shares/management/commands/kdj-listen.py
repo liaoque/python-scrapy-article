@@ -110,7 +110,6 @@ class Command(BaseCommand):
 
         # 计算ema
         date_as = date_as + timedelta(days=-1)
-        print(date_as)
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
         item = None
         key = 0
