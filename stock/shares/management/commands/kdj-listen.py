@@ -35,53 +35,54 @@ class Command(BaseCommand):
             date_as = item.date_as
             self.getkdj10(item.date_as)
 
-            dateList = self.getAllDateListens()
-            for item in dateList:
-                item.date_as = date_as
-                allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date_as=None)
-                print("寻找买入点-----")
-                for codeItem in allCodeIds:
-                    codeItemResult, buy_pre = self.findBuyPoint(codeItem)
-                    if codeItemResult != None:
-                        sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                        print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
-                        if datetime.now().hour < 15:
-                            continue
-                        codeItem.buy_date_as = codeItemResult.date_as
-                        codeItem.buy_pre = buy_pre
-                        codeItem.buy_start = sharesItem.p_end
-                        codeItem.save()
-                    pass
-
-                allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_start__gt=0)
-                print("寻找卖出点-----")
-                for codeItem in allCodeIds:
-                    codeItemResult = self.findSellPoint(codeItem)
-                    if codeItemResult == None:
-                        continue
+            # dateList = self.getAllDateListens()
+            # for item in dateList:
+            #     item.date_as = date_as
+            #     allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date_as=None)
+            allCodeIds = SharesDateListen.objects.filter(buy_date_as=None)
+            print("寻找买入点-----")
+            for codeItem in allCodeIds:
+                codeItemResult, buy_pre = self.findBuyPoint(codeItem)
+                if codeItemResult != None:
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                    print("找到卖出点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                    print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
                     if datetime.now().hour < 15:
                         continue
-                    buys = SharesBuys(
+                    codeItem.buy_date_as = codeItemResult.date_as
+                    codeItem.buy_pre = buy_pre
+                    codeItem.buy_start = sharesItem.p_end
+                    codeItem.save()
+                pass
+
+            allCodeIds = SharesDateListen.objects.filter(buy_start__gt=0)
+            print("寻找卖出点-----")
+            for codeItem in allCodeIds:
+                codeItemResult = self.findSellPoint(codeItem)
+                if codeItemResult == None:
+                    continue
+                sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
+                print("找到卖出点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                if datetime.now().hour < 15:
+                    continue
+                buys = SharesBuys(
+                    code_id=codeItem.code_id,
+                    buy_date_as=codeItem.buy_date_as,
+                    buy_start=codeItem.buy_start,
+                    buy_pre=codeItem.buy_pre,
+                    sell_date_as=codeItemResult.date_as,
+                    sell_end=sharesItem.p_end,
+                )
+                buys.save()
+                codeItem.delete()
+                if codeItem.buy_start >= sharesItem.p_end:
+                    # 亏损的情况下继续监控
+                    listen = SharesDateListen(
                         code_id=codeItem.code_id,
-                        buy_date_as=codeItem.buy_date_as,
-                        buy_start=codeItem.buy_start,
-                        buy_pre=codeItem.buy_pre,
-                        sell_date_as=codeItemResult.date_as,
-                        sell_end=sharesItem.p_end,
+                        p_start=sharesItem.p_end,
+                        date_as=codeItemResult.date_as,
+                        type=1,
                     )
-                    buys.save()
-                    codeItem.delete()
-                    if codeItem.buy_start >= sharesItem.p_end:
-                        # 亏损的情况下继续监控
-                        listen = SharesDateListen(
-                            code_id=codeItem.code_id,
-                            p_start=sharesItem.p_end,
-                            date_as=codeItemResult.date_as,
-                            type=1,
-                        )
-                        listen.save()
+                    listen.save()
             # break
 
     def findSellPoint(self, codeItem):
