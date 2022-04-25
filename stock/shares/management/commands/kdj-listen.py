@@ -118,7 +118,7 @@ class Command(BaseCommand):
                     sharesItem = Shares.objects.filter(date_as__lte=result[key + 2].date_as, code_id=codeItem.code_id)[
                         0]
                     print(sharesKdjItem.date_as, codeItem.code_id,sharesItem.p_end, preEma, emaList[-1] )
-                    if sharesItem and (sharesItem.p_end - sharesItem.p_start)/2 * sharesItem.p_start < preEma:
+                    if sharesItem and (sharesItem.p_end - sharesItem.p_start)/2 * sharesItem.p_start > preEma:
                         item = result[key + 1]
                 break
 
