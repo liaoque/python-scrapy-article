@@ -93,9 +93,7 @@ class Command(BaseCommand):
 
     def findBuyPoint(self, codeItem):
         #计算ema
-        shares = Shares.objects.filter(date_as__lte=codeItem.date_as, code_id=codeItem.code_id).order_by('-date_as')[:7]
-        for item in shares:
-            print("%s--%s--%s" % (item.code_id, item.date_as, str(item.p_end)))
+        shares = Shares.objects.filter(date_as__lte=codeItem.date_as, code_id=codeItem.code_id).order_by('-date_as')[:14]
         shares = shares[::-1]
         for item in shares:
             print("%s--%s--%s" % (item.code_id, item.date_as, str(item.p_end)))
