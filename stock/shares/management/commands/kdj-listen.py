@@ -32,38 +32,38 @@ class Command(BaseCommand):
         for item in dateList[-15:]:
             self.getkdj10(item.date_as)
 
-        dateList = self.getAllDateListens()
-        for item in dateList:
-            allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date_as=None)
-            print("寻找买入点-----")
-            for codeItem in allCodeIds:
-                codeItemResult = self.findBuyPoint(codeItem)
-                if codeItemResult != None:
-                    sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                    print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
-                    codeItem.buy_date_as = codeItemResult.date_as
-                    codeItem.buy_start = sharesItem.p_end
-                    codeItem.save()
-                pass
+            dateList = self.getAllDateListens()
+            for item in dateList:
+                allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date_as=None)
+                print("寻找买入点-----")
+                for codeItem in allCodeIds:
+                    codeItemResult = self.findBuyPoint(codeItem)
+                    if codeItemResult != None:
+                        sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
+                        print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                        codeItem.buy_date_as = codeItemResult.date_as
+                        codeItem.buy_start = sharesItem.p_end
+                        codeItem.save()
+                    pass
 
-            allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_start__gt=0)
-            print("寻找卖出点-----")
-            for codeItem in allCodeIds:
-                codeItemResult = self.findSellPoint(codeItem)
-                if codeItemResult == None:
-                    continue
-                sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                print("找到卖出点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
-                buys = SharesBuys(
-                    code_id=codeItem.code_id,
-                    buy_date_as=codeItem.buy_date_as,
-                    buy_start=codeItem.buy_start,
-                    sell_date_as=codeItemResult.date_as,
-                    sell_end=sharesItem.p_end,
-                )
-                buys.save()
-                codeItem.delete()
-            # break
+                allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_start__gt=0)
+                print("寻找卖出点-----")
+                for codeItem in allCodeIds:
+                    codeItemResult = self.findSellPoint(codeItem)
+                    if codeItemResult == None:
+                        continue
+                    sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
+                    print("找到卖出点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                    buys = SharesBuys(
+                        code_id=codeItem.code_id,
+                        buy_date_as=codeItem.buy_date_as,
+                        buy_start=codeItem.buy_start,
+                        sell_date_as=codeItemResult.date_as,
+                        sell_end=sharesItem.p_end,
+                    )
+                    buys.save()
+                    codeItem.delete()
+                # break
 
     def findSellPoint(self, codeItem):
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.buy_date_as)
