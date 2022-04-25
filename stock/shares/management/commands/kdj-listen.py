@@ -29,7 +29,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("开始计算-----")
         dateList = self.getAllDates()
-        for item in dateList[-15:]:
+        for item in dateList[-1:]:
             self.getkdj10(item.date_as)
 
         dateList = self.getAllDateListens()
