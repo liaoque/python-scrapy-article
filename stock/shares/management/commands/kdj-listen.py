@@ -108,11 +108,9 @@ class Command(BaseCommand):
                     '-date_as')[:14]
                 shares = shares[::-1]
                 close = [item.p_end / 100 for item in shares]
-                print(close, type(close))
                 close.append(shares[len(shares) -1].p_end / 100 * 0.96)
-                print(close, type(close))
                 emaList = talib.EMA(np.array(close), timeperiod=7)
-                print(emaList, emaList[len(emaList) - 1] , emaList[len(emaList) - 2])
+                print("%s--%s--%s--%s", sharesKdjItem.date_as, codeItem.code_id, emaList[len(emaList) - 1] , emaList[len(emaList) - 2])
                 if emaList[len(emaList) - 1] > emaList[len(emaList) - 2]:
                     item = result[key + 1]
                     break
