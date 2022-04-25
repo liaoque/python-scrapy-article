@@ -99,8 +99,13 @@ class Command(BaseCommand):
         return item
 
     def findBuyPoint(self, codeItem):
+        date_as = codeItem.date_as
+        sharesBuysItem = SharesBuys.objects.filter(code_id=codeItem.code_id).order_by('-sell_date_as')
+        if len(sharesBuysItem) > 0 and sharesBuysItem[0].sell_date_as > codeItem.date_as:
+            date_as = sharesBuysItem[0].sell_date_as
+
         # 计算ema
-        result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.date_as)
+        result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
         item = None
         key = 0
         for value in result:
