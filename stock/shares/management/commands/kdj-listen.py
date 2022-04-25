@@ -93,11 +93,11 @@ class Command(BaseCommand):
 
     def findBuyPoint(self, codeItem):
         #计算ema
-        shares = Shares.objects.filter(date_as__lte=codeItem.date_as, code_id=codeItem.code_id).orderby('-date_as')[:7]
+        shares = Shares.objects.filter(date_as__lte=codeItem.date_as, code_id=codeItem.code_id).order_by('-date_as')[:7]
         close = [item.p_end for item in shares]
         emaList = talib.EMA(np.array(close), timeperiod=13)
         print(emaList)
-
+        return None
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.date_as)
         item = None
         key = 0
