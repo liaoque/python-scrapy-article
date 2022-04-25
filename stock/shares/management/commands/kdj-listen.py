@@ -62,7 +62,7 @@ class Command(BaseCommand):
                         sell_end=sharesItem.p_end,
                     )
                     buys.save()
-                    if codeItem.buy_start > sharesItem.p_end:
+                    if codeItem.buy_start <= sharesItem.p_end:
                         codeItem.delete()
                     else:
                         codeItem.date_as = codeItemResult.date_as
