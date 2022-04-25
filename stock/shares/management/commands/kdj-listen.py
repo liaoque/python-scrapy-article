@@ -95,9 +95,12 @@ class Command(BaseCommand):
         #计算ema
         shares = Shares.objects.filter(date_as__lte=codeItem.date_as, code_id=codeItem.code_id).order_by('-date_as')[:7]
         for item in shares:
-            print("%s--%s" % (item.code_id, str(item.p_end)))
+            print("%s--%s--%s" % (item.code_id, item.date_as, str(item.p_end)))
+        shares = shares[::-1]
+        for item in shares:
+            print("%s--%s--%s" % (item.code_id, item.date_as, str(item.p_end)))
         close = [item.p_end /100 for item in shares]
-        emaList = talib.EMA(np.array(close), timeperiod=13)
+        emaList = talib.EMA(np.array(close), timeperiod=7)
         print(emaList)
         return None
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.date_as)
