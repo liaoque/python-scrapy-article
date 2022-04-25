@@ -123,8 +123,9 @@ class Command(BaseCommand):
                 shares = Shares.objects.filter(date_as__lte=result[key + 1].date_as, code_id=codeItem.code_id).order_by(
                     '-date_as')[:6]
                 sharesSum = sum([item.p_end for item in shares[1:]])
-                # print(sharesKdjItem.date_as, codeItem.code_id, [item.p_end for item in shares[1:]], sharesSum,
-                #       shares[0].p_end)
+                if codeItem.code_id == '001317':
+                    print(sharesKdjItem.date_as, codeItem.code_id, [item.p_end for item in shares[1:]], sharesSum,
+                      shares[0].p_end)
                 if sharesSum / 5 > shares[0].p_end:
                     shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
                     close = [item.p_end / 100 for item in shares]
@@ -134,7 +135,8 @@ class Command(BaseCommand):
                     preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
                     sharesItem = Shares.objects.filter(date_as__lte=result[key + 2].date_as, code_id=codeItem.code_id)[
                         0]
-                    # print(sharesKdjItem.date_as, codeItem.code_id, sharesItem.p_end, preEma, emaList[-1])
+                    if codeItem.code_id == '001317':
+                        print(sharesKdjItem.date_as, codeItem.code_id, sharesItem.p_end, preEma, emaList[-1])
                     if sharesItem and (sharesItem.p_end - sharesItem.p_start) / 2 * sharesItem.p_start > preEma:
                         item = result[key + 1]
                         break
