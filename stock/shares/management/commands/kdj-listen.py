@@ -142,9 +142,9 @@ class Command(BaseCommand):
                 # print(emaList)
                 # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
                 preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
-                sharesItem = Shares.objects.filter(date_as__lte=result[key + 2].date_as, code_id=codeItem.code_id)[
+                sharesItem = Shares.objects.filter(date_as=result[key + 2].date_as, code_id=codeItem.code_id)[
                     0]
-                if sharesItem and ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
+                if ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
                     print(sharesItem.p_end , sharesItem.p_start)
                     print("找到买入点--%s---%s--%s--%s", result[key + 2].date_as, codeItem.code_id,
                           ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100, preEma)
