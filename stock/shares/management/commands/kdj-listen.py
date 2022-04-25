@@ -114,7 +114,7 @@ class Command(BaseCommand):
                 print("%s--%s--%s--%s", sharesKdjItem.date_as, codeItem.code_id, emaList[len(emaList) - 1] , emaList[len(emaList) - 2])
                 if emaList[len(emaList) - 1] > emaList[len(emaList) - 2]:
                     preShares = Shares.objects.filter(date_as__gte=sharesKdjItem.date_as, code_id=codeItem.code_id)
-                    if len(preShares) and preShares[0].p_end > pre_end:
+                    if len(preShares) and (preShares[0].p_end - preShares[0].p_start) /2 + preShares[0].p_start > pre_end:
                         item = result[key + 1]
                         break
             key += 1
