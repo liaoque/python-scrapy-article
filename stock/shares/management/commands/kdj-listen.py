@@ -2,7 +2,7 @@ import numpy as np
 from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count
-import  sys
+import sys
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
 from shares.model.shares_kdj import SharesKdj
@@ -14,7 +14,6 @@ import numpy as np
 import talib
 import math
 import requests
-
 
 
 # 1. 先记录 j < 0 作为参考点
@@ -124,7 +123,8 @@ class Command(BaseCommand):
             date_as = sharesBuysItem[0].sell_date_as
 
         # 计算ema
-        date_as = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[0].date_as
+        date_as = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[
+            0].date_as
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
         item = None
         key = 0
@@ -157,27 +157,27 @@ class Command(BaseCommand):
 
                 # print(emaList)
                 # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
-                if self.getTodayPend(codeItem.code_id) >= preEma:
+                todayPend, today = self.getTodayPend(codeItem.code_id)
+                if todayPend >= preEma and today > result[key + 1].date_as:
                     item = result[key + 1]
                     pre_ema = preEma * 100
                     break
             key += 1
         return item, pre_ema
 
-
     def getTodayPend(self, code_id):
-        sharesNameItem = SharesName.objects.filter(status = 1 , code_type =1, code=code_id)[0]
+        sharesNameItem = SharesName.objects.filter(status=1, code_type=1, code=code_id)[0]
         if sharesNameItem.area_id == 1:
             s_code = "1." + str(code_id)
         else:
             s_code = "0." + str(code_id)
         url = 'https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=' + \
               s_code + '&cb=&klt=101&fqt=0&lmt=' + str(1) + \
-        '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
+              '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
         print(url)
         r = requests.get(url)
         print(r.json()["data"]["klines"][0].split(',')[2])
-        return float(r.json()["data"]["klines"][0].split(',')[2])
+        return float(r.json()["data"]["klines"][0].split(',')[2]), r.json()["data"]["klines"][0].split(',')[0]
         pass
 
     def getkdj10(self, date):
