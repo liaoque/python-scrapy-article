@@ -103,7 +103,7 @@ class Command(BaseCommand):
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=value.date_as)[0]
                 if sharesKdjItem.j > 50:
                     continue
-                shares = Shares.objects.filter(date_as__lte=codeItem.date_as, code_id=codeItem.code_id).order_by(
+                shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id).order_by(
                     '-date_as')[:14]
                 shares = shares[::-1]
                 for item in shares:
