@@ -31,10 +31,12 @@ class Command(BaseCommand):
         print("开始计算-----")
         dateList = self.getAllDates()
         for item in dateList[-16:]:
+            date_as = item.date_as
             self.getkdj10(item.date_as)
 
             dateList = self.getAllDateListens()
             for item in dateList:
+                item.date_as = date_as
                 allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date_as=None)
                 print("寻找买入点-----")
                 for codeItem in allCodeIds:
