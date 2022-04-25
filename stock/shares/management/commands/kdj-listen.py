@@ -66,7 +66,7 @@ class Command(BaseCommand):
                     if codeItem.buy_start >= sharesItem.p_end:
                         listen = SharesDateListen(
                             code_id=codeItem.code_id,
-                            p_start=codeItem.buy_start,
+                            p_start=sharesItem.p_end,
                             date_as=codeItemResult.date_as,
                             type=1,
                         )
