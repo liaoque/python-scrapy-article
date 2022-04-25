@@ -131,6 +131,10 @@ class Command(BaseCommand):
                 # if sharesSum / 5 > shares[0].p_end:
                 shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
                 close = [item.p_end / 100 for item in shares]
+                emaList7 = talib.EMA(np.array(close), timeperiod=7)
+                if emaList7[-1] < emaList7[-2]:
+                    continue
+
                 emaList = talib.EMA(np.array(close), timeperiod=5)
                 # print(emaList)
                 # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
