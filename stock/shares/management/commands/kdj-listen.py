@@ -36,7 +36,7 @@ class Command(BaseCommand):
             dateList = self.getAllDateListens()
             for item in dateList:
                 item.date_as = date_as
-                allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date_as=None)
+                allCodeIds,buy_pre = SharesDateListen.objects.filter(date_as=item.date_as, buy_date_as=None)
                 print("寻找买入点-----")
                 for codeItem in allCodeIds:
                     codeItemResult = self.findBuyPoint(codeItem)
@@ -44,6 +44,7 @@ class Command(BaseCommand):
                         sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
                         print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
                         codeItem.buy_date_as = codeItemResult.date_as
+                        codeItem.buy_pre = buy_pre
                         codeItem.buy_start = sharesItem.p_end
                         codeItem.save()
                     pass
@@ -60,6 +61,7 @@ class Command(BaseCommand):
                         code_id=codeItem.code_id,
                         buy_date_as=codeItem.buy_date_as,
                         buy_start=codeItem.buy_start,
+                        buy_pre=codeItem.buy_pre,
                         sell_date_as=codeItemResult.date_as,
                         sell_end=sharesItem.p_end,
                     )
@@ -113,7 +115,7 @@ class Command(BaseCommand):
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
         item = None
         key = 0
-        preEma = 0
+        pre_ema = 0
         for value in result:
             if key + 2 >= len(result):
                 break
@@ -145,13 +147,11 @@ class Command(BaseCommand):
                 sharesItem = Shares.objects.filter(date_as=result[key + 2].date_as, code_id=codeItem.code_id)[
                     0]
                 if ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
-                    print(sharesItem.p_end , sharesItem.p_start)
-                    print("找到买入点--%s---%s--%s--%s", result[key + 2].date_as, codeItem.code_id,
-                          ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100, preEma)
                     item = result[key + 1]
+                    pre_ema = preEma
                     break
             key += 1
-        return item
+        return item, pre_ema
 
     def getkdj10(self, date):
         sql = '''
