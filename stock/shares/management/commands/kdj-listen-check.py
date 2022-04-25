@@ -2,7 +2,7 @@ import numpy as np
 from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count
-import  sys
+
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
 from shares.model.shares_kdj import SharesKdj
@@ -13,10 +13,9 @@ from shares.model.shares_buys import SharesBuys
 import numpy as np
 import talib
 import math
-import requests
 
 
-
+# 校验的
 # 1. 先记录 j < 0 作为参考点
 # 2. 记录 diff 的上涨走势 且 J < 40  作为买点
 # 3. 判断 j 下调走势作为卖点，或者3天强制卖出
@@ -31,7 +30,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("开始计算-----")
         dateList = self.getAllDates()
-        for item in dateList[-1:]:
+        for item in dateList[-12:]:
             date_as = item.date_as
             self.getkdj10(item.date_as)
 
@@ -134,10 +133,6 @@ class Command(BaseCommand):
                 # if sharesSum / 5 > shares[0].p_end:
                 shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
                 close = [item.p_end / 100 for item in shares]
-                emaList = talib.EMA(np.array(close), timeperiod=5)
-                preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
-                print(self.getTodayPend(codeItem.code_id))
-                sys.exit(0)
                 # # emaList7 = talib.EMA(np.array(close), timeperiod=8)
                 # emaList4 = talib.MA(np.array(close), timeperiod=5)
                 # # print(sharesKdjItem.date_as, codeItem.code_id,emaList4[-2] , emaList7[-2] , emaList4[-1] , emaList7[-1])
@@ -146,8 +141,10 @@ class Command(BaseCommand):
                 # if not (emaList4[-2] < emaList4[-1]):
                 #     continue
 
+                emaList = talib.EMA(np.array(close), timeperiod=5)
                 # print(emaList)
                 # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
+                preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
                 sharesItem = Shares.objects.filter(date_as=result[key + 2].date_as, code_id=codeItem.code_id)[
                     0]
                 if ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
@@ -156,22 +153,6 @@ class Command(BaseCommand):
                     break
             key += 1
         return item, pre_ema
-
-
-    def getTodayPend(self, code_id):
-        sharesNameItem = SharesName.objects.filter(status = 1 , code_type =1, code_id=code_id)[0]
-        if sharesNameItem.area_id == 1:
-            s_code = "1." + str(code_id)
-        else:
-            s_code = "0." + str(code_id)
-        url = 'https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=' + \
-              s_code + '&cb=&klt=101&fqt=0&lmt=' + str(1) + \
-        '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
-        print(url)
-        r = requests.get(url)
-        print(r.json(),r.json()["data"]["klines"][0].split(',')[2])
-        return r.json()["data"]["klines"][0].split(',')[2]
-        pass
 
     def getkdj10(self, date):
         sql = '''
