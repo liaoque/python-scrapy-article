@@ -119,8 +119,6 @@ class Command(BaseCommand):
         key = 0
         pre_ema = 0
         for value in result:
-            print(self.getTodayPend(codeItem.code_id))
-            sys.exit(0)
             if key + 1 >= len(result):
                 break
             if result[key + 1].diff - value.diff > 0.009:
@@ -138,7 +136,6 @@ class Command(BaseCommand):
                 close = [item.p_end / 100 for item in shares]
                 emaList = talib.EMA(np.array(close), timeperiod=5)
                 preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
-
                 # # emaList7 = talib.EMA(np.array(close), timeperiod=8)
                 # emaList4 = talib.MA(np.array(close), timeperiod=5)
                 # # print(sharesKdjItem.date_as, codeItem.code_id,emaList4[-2] , emaList7[-2] , emaList4[-1] , emaList7[-1])
@@ -149,9 +146,7 @@ class Command(BaseCommand):
 
                 # print(emaList)
                 # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
-                sharesItem = Shares.objects.filter(date_as=result[key + 2].date_as, code_id=codeItem.code_id)[
-                    0]
-                if ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
+                if self.getTodayPend(codeItem.code_id) >= preEma:
                     item = result[key + 1]
                     pre_ema = preEma * 100
                     break
@@ -170,7 +165,6 @@ class Command(BaseCommand):
         '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
         print(url)
         r = requests.get(url)
-        print(r.json(),r.json()["data"]["klines"][0].split(',')[2])
         return r.json()["data"]["klines"][0].split(',')[2]
         pass
 
