@@ -109,7 +109,7 @@ class Command(BaseCommand):
             date_as = sharesBuysItem[0].sell_date_as
 
         # 计算ema
-        today = datetime.datetime.strptime(date_as, '%Y-%m-%d').date()
+        today = datetime.strptime(date_as, '%Y-%m-%d').date()
         date_as = (today + timedelta(days=-1)).strftime("%Y-%m-%d")
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
         item = None
