@@ -64,6 +64,7 @@ class Command(BaseCommand):
                     buys.save()
                     codeItem.delete()
                     if codeItem.buy_start >= sharesItem.p_end:
+                        # 亏损的情况下继续监控
                         listen = SharesDateListen(
                             code_id=codeItem.code_id,
                             p_start=sharesItem.p_end,
@@ -134,31 +135,8 @@ class Command(BaseCommand):
                     print(sharesKdjItem.date_as, codeItem.code_id, sharesItem.p_end, preEma, emaList[-1])
                     if sharesItem and (sharesItem.p_end - sharesItem.p_start) / 2 * sharesItem.p_start > preEma:
                         item = result[key + 1]
-                break
-
-                # shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id).order_by(
-                #     '-date_as')[:14]
-                # shares = shares[::-1]
-                # close = [item.p_end / 100 for item in shares]
-                # pre_end =shares[len(shares) -1].p_end / 100
-                # close.append(pre_end)
-                # emaList = talib.EMA(np.array(close), timeperiod=7)
-                # print("%s--%s--%s--%s", sharesKdjItem.date_as, codeItem.code_id, emaList[len(emaList) - 1] , emaList[len(emaList) - 2])
-                # if emaList[len(emaList) - 1] > emaList[len(emaList) - 2]:
-                #     preShares = Shares.objects.filter(date_as__gte=sharesKdjItem.date_as, code_id=codeItem.code_id)
-                #     if len(preShares) and (preShares[0].p_end - preShares[0].p_start) /2 + preShares[0].p_start > pre_end:
-                #         item = result[key + 1]
-                #         break
+                        break
             key += 1
-
-        # if item != None:
-        #     sharesItem = Shares.objects.filter(date_as=item.date_as, code_id=codeItem.code_id)[0]
-        #     sharesCollect = Shares.objects.filter(date_as__gt=item.date_as, code_id=codeItem.code_id)
-        #     #  如果买入价，大于当前收盘价，卖出
-        #     if sharesItem.p_end * 0.994 > sharesCollect[0].p_start:
-        #         print("不符合买入价%s--%s---%s", codeItem.code_id, sharesItem.p_end * 0.994, sharesCollect[0].p_start)
-        #         item = None
-
         return item
 
     def getkdj10(self, date):
