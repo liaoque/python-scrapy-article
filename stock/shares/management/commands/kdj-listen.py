@@ -111,6 +111,7 @@ class Command(BaseCommand):
                     shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
                     close = [item.p_end / 100 for item in shares]
                     emaList = talib.EMA(np.array(close), timeperiod=5)
+                    print(emaList)
                     preEma = (emaList[len(emaList) - 1] +.01) - 4/15*close[-1] + 3/15 *close[-2] + 2/15 * close[-3] + 1 / 15 * close[-4]
                     preEma = preEma/(5/15)
 
