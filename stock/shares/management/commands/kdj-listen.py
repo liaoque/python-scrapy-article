@@ -119,6 +119,8 @@ class Command(BaseCommand):
         key = 0
         pre_ema = 0
         for value in result:
+            print(self.getTodayPend(codeItem.code_id))
+            sys.exit(0)
             if key + 1 >= len(result):
                 break
             if result[key + 1].diff - value.diff > 0.009:
@@ -136,8 +138,7 @@ class Command(BaseCommand):
                 close = [item.p_end / 100 for item in shares]
                 emaList = talib.EMA(np.array(close), timeperiod=5)
                 preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
-                print(self.getTodayPend(codeItem.code_id))
-                sys.exit(0)
+
                 # # emaList7 = talib.EMA(np.array(close), timeperiod=8)
                 # emaList4 = talib.MA(np.array(close), timeperiod=5)
                 # # print(sharesKdjItem.date_as, codeItem.code_id,emaList4[-2] , emaList7[-2] , emaList4[-1] , emaList7[-1])
