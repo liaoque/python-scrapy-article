@@ -29,7 +29,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("开始计算-----")
         dateList = self.getAllDates()
-        for item in dateList[-13:]:
+        for item in dateList[-12:]:
             date_as = item.date_as
             self.getkdj10(item.date_as)
 
@@ -76,7 +76,7 @@ class Command(BaseCommand):
                             type=1,
                         )
                         listen.save()
-            break
+            # break
 
     def findSellPoint(self, codeItem):
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.buy_date_as)
