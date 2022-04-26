@@ -34,49 +34,50 @@ class Command(BaseCommand):
             date_as = item.date_as
             self.getkdj10(item.date_as)
 
-            dateList = self.getAllDateListens()
-            for item in dateList:
-                item.date_as = date_as
-                allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date_as=None)
-                print("寻找买入点-----")
-                for codeItem in allCodeIds:
-                    codeItemResult, buy_pre = self.findBuyPoint(codeItem)
-                    if codeItemResult != None:
-                        sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                        print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
-                        codeItem.buy_date_as = codeItemResult.date_as
-                        codeItem.buy_pre = buy_pre
-                        codeItem.buy_start = sharesItem.p_end
-                        codeItem.save()
-                    pass
-
-                allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_start__gt=0)
-                print("寻找卖出点-----")
-                for codeItem in allCodeIds:
-                    codeItemResult = self.findSellPoint(codeItem)
-                    if codeItemResult == None:
-                        continue
+            # dateList = self.getAllDateListens()
+            # for item in dateList:
+            #     item.date_as = date_as
+            allCodeIds = SharesDateListen.objects.filter(buy_date_as=None)
+            print("寻找买入点-----")
+            for codeItem in allCodeIds:
+                codeItem.date_as = item.date_as
+                codeItemResult, buy_pre = self.findBuyPoint(codeItem)
+                if codeItemResult != None:
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                    print("找到卖出点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
-                    buys = SharesBuys(
+                    print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                    codeItem.buy_date_as = codeItemResult.date_as
+                    codeItem.buy_pre = buy_pre
+                    codeItem.buy_start = sharesItem.p_end
+                    codeItem.save()
+                pass
+
+            allCodeIds = SharesDateListen.objects.filter(buy_start__gt=0)
+            print("寻找卖出点-----")
+            for codeItem in allCodeIds:
+                codeItemResult = self.findSellPoint(codeItem)
+                if codeItemResult == None:
+                    continue
+                sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
+                print("找到卖出点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                buys = SharesBuys(
+                    code_id=codeItem.code_id,
+                    buy_date_as=codeItem.buy_date_as,
+                    buy_start=codeItem.buy_start,
+                    buy_pre=codeItem.buy_pre,
+                    sell_date_as=codeItemResult.date_as,
+                    sell_end=sharesItem.p_end,
+                )
+                buys.save()
+                codeItem.delete()
+                if codeItem.buy_start >= sharesItem.p_end:
+                    # 亏损的情况下继续监控
+                    listen = SharesDateListen(
                         code_id=codeItem.code_id,
-                        buy_date_as=codeItem.buy_date_as,
-                        buy_start=codeItem.buy_start,
-                        buy_pre=codeItem.buy_pre,
-                        sell_date_as=codeItemResult.date_as,
-                        sell_end=sharesItem.p_end,
+                        p_start=sharesItem.p_end,
+                        date_as=codeItemResult.date_as,
+                        type=1,
                     )
-                    buys.save()
-                    codeItem.delete()
-                    if codeItem.buy_start >= sharesItem.p_end:
-                        # 亏损的情况下继续监控
-                        listen = SharesDateListen(
-                            code_id=codeItem.code_id,
-                            p_start=sharesItem.p_end,
-                            date_as=codeItemResult.date_as,
-                            type=1,
-                        )
-                        listen.save()
+                    listen.save()
             # break
 
     def findSellPoint(self, codeItem):
@@ -98,6 +99,11 @@ class Command(BaseCommand):
                       hammerHeader, hammerBody, hammerFooter)
                 item = value
                 break
+            if hammerFooter < hammerBody and hammerBody * 2.5 < hammerHeader:
+                print("锤头%s--%s--%d---%d---%d", sharesCollect[key].date_as, codeItem.code_id,
+                      hammerHeader, hammerBody, hammerFooter)
+                item = value
+                break
 
             if value.j > result[key + 1].j:
                 item = result[key + 1]
@@ -112,13 +118,14 @@ class Command(BaseCommand):
             date_as = sharesBuysItem[0].sell_date_as
 
         # 计算ema
-        date_as = date_as + timedelta(days=-1)
+        date_as = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[
+            0].date_as
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
         item = None
         key = 0
         pre_ema = 0
         for value in result:
-            if key + 2 >= len(result):
+            if key + 1 >= len(result):
                 break
             if result[key + 1].diff - value.diff > 0.009:
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=result[key + 1].date_as)[0]
@@ -133,6 +140,8 @@ class Command(BaseCommand):
                 # if sharesSum / 5 > shares[0].p_end:
                 shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
                 close = [item.p_end / 100 for item in shares]
+                emaList = talib.EMA(np.array(close), timeperiod=5)
+                preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
                 # # emaList7 = talib.EMA(np.array(close), timeperiod=8)
                 # emaList4 = talib.MA(np.array(close), timeperiod=5)
                 # # print(sharesKdjItem.date_as, codeItem.code_id,emaList4[-2] , emaList7[-2] , emaList4[-1] , emaList7[-1])
@@ -141,10 +150,9 @@ class Command(BaseCommand):
                 # if not (emaList4[-2] < emaList4[-1]):
                 #     continue
 
-                emaList = talib.EMA(np.array(close), timeperiod=5)
+
                 # print(emaList)
                 # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
-                preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
                 sharesItem = Shares.objects.filter(date_as=result[key + 2].date_as, code_id=codeItem.code_id)[
                     0]
                 if ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
