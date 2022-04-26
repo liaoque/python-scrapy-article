@@ -158,7 +158,7 @@ class Command(BaseCommand):
                 # print(emaList)
                 # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
                 todayPend, today = self.getTodayPend(codeItem.code_id)
-                if todayPend >= preEma and today > result[key + 1].date_as:
+                if todayPend >= preEma and datetime.strptime(today, '%Y-%m-%d').date() > result[key + 1].date_as:
                     item = result[key + 1]
                     pre_ema = preEma * 100
                     break
