@@ -123,7 +123,7 @@ class Command(BaseCommand):
             date_as = sharesBuysItem[0].sell_date_as
 
         # 计算ema
-        date_as = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[
+        date_as = Shares.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[
             0].date_as
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
         item = None
