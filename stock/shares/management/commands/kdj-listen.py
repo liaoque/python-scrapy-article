@@ -45,7 +45,7 @@ class Command(BaseCommand):
                 codeItemResult, buy_pre = self.findBuyPoint(codeItem)
                 if codeItemResult != None:
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                    print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                    print("找到买入点--%s--%s---%s", codeItemResult.date_as,codeItem.code_id, sharesItem.p_end)
                     if datetime.now().hour < 15:
                         continue
                     codeItem.buy_date_as = codeItemResult.date_as
@@ -174,9 +174,7 @@ class Command(BaseCommand):
         url = 'https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=' + \
               s_code + '&cb=&klt=101&fqt=0&lmt=' + str(1) + \
               '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
-        print(url)
         r = requests.get(url)
-        print(r.json()["data"]["klines"][0].split(',')[2])
         return float(r.json()["data"]["klines"][0].split(',')[2]), r.json()["data"]["klines"][0].split(',')[0]
         pass
 
