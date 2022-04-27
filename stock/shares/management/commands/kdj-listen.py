@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 if codeItemResult == None:
                     continue
                 sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                print("找到卖出点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                print("找到卖出点--%s--%s---%s", codeItemResult.date_as,codeItem.code_id,  sharesItem.p_end)
                 if datetime.now().hour < 15:
                     continue
                 buys = SharesBuys(
