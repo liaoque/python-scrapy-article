@@ -53,7 +53,7 @@ class Command(BaseCommand):
         halfYearSharesStart = SharesIndustry.objects.filter(code_id=code,
                                                             date_as__gte=date_start,
                                                             date_as__lte=date_end
-                                                            )
+                                                            ).order_by('date_as')[0]
         if len(halfYearSharesStart) == 0:
             return
         print(halfYearSharesStart[0], date_start, date_end)
