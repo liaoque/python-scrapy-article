@@ -17,6 +17,7 @@ class SharesIndustry(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.code + ":" + datetime.strftime(self.date_as, '%Y-%m-%d')
+        return self.code + ":" + datetime.strftime(
+            self.date_as, '%Y-%m-%d')+ ":最大-" + self.p_start + ":最小-" + self.p_end
 
 

@@ -56,7 +56,7 @@ class Command(BaseCommand):
                                                             )
         if len(halfYearSharesStart) == 0:
             return
-        print(halfYearSharesStart)
+        print(halfYearSharesStart[0])
 
         halfYearSharesEnd = SharesIndustry.objects.filter(code_id=code,
                                                           date_as__lte=date_end
