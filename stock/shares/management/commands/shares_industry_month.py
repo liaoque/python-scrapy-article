@@ -23,7 +23,7 @@ class Command(BaseCommand):
     help = '统计每月的 行业 最高和最低'
 
     def handle(self, *args, **options):
-        for item in SharesName.objects.filter(status=1, code_type=2, code='BK0482'):
+        for item in SharesName.objects.filter(status=1, code_type=2, ):
             code = item.code
             sharesItem = SharesIndustry.objects.filter(code_id=code).order_by('date_as')[0]
             sharesItemEnd = SharesIndustry.objects.filter(code_id=code).order_by('-date_as')[0]
@@ -56,7 +56,7 @@ class Command(BaseCommand):
                                                             ).order_by('date_as')
         if len(halfYearSharesStart) == 0:
             return
-        print(halfYearSharesStart[0], date_start, date_end)
+        # print(halfYearSharesStart[0], date_start, date_end)
 
         halfYearSharesEnd = SharesIndustry.objects.filter(code_id=code,
                                                           date_as__lte=date_end
