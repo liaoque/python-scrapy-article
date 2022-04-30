@@ -23,7 +23,7 @@ class Command(BaseCommand):
     help = '统计每月的 行业 最高和最低'
 
     def handle(self, *args, **options):
-        for item in SharesName.objects.filter(status=1, code_type=2):
+        for item in SharesName.objects.filter(status=1, code_type=2, code_id='BK0482'):
             code = item.code
             sharesItem = SharesIndustry.objects.filter(code_id=code).order_by('date_as')[0]
             sharesItemEnd = SharesIndustry.objects.filter(code_id=code).order_by('-date_as')[0]
@@ -34,19 +34,6 @@ class Command(BaseCommand):
             while p_year <= p_year_end:
                 p_month = 1
                 while p_month <= 12:
-                    if not ((p_year == 2007 and p_month in [11, 12]) or (
-                            p_year == 2008 and p_month in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) or (
-                                    p_year == 2009 and p_month in [7, 8, 9, 10, 11, 12]) or (p_year == 2010) or (
-                                    p_year == 2011) or (
-                                    p_year == 2012 and p_month in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) or (
-                                    p_year == 2013 and p_month in [3, 4, 5, 6, 9, 10, 11, 12]) or (
-                                    p_year == 2014 and p_month in [1, 2, ]) or (
-                                    p_year == 2015 and p_month in [6, 7, 8, 9, 10, 11, 12]) or (
-                                    p_year == 2016 and p_month in [1]) or (
-                                    p_year == 2018 and p_month in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])):
-                        # 非熊市
-                        continue
-
                     date_start = p_year + "-" + str(p_month) + "-01"
                     if p_month in [1, 3, 5, 7, 8, 10, 12]:
                         p_month_day_end = "31"
@@ -69,6 +56,7 @@ class Command(BaseCommand):
                                                             )
         if len(halfYearSharesStart) == 0:
             return
+        print(halfYearSharesStart)
 
         halfYearSharesEnd = SharesIndustry.objects.filter(code_id=code,
                                                           date_as__lte=date_end
