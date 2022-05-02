@@ -22,8 +22,8 @@ class Command(BaseCommand):
     help = '打印每半年，季度，月都的涨幅概率'
 
     def handle(self, *args, **options):
-        # self.half_year()
-        # self.season()
+        self.half_year()
+        self.season()
         self.month()
 
     def half_year(self):
