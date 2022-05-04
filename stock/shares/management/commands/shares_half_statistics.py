@@ -36,7 +36,8 @@ class Command(BaseCommand):
             on t1.code_id = t2.code_id
             where t1.code_id not in (SELECT code from mc_shares_name where name like "%s"  )
             and t1.code_id not in (SELECT code_id from mc_shares_ban) 
-            HAVING rang > 0.7 and rang < 1 and t1.code_id < '700000') c;
+            and ( t1.code_id < '300000' or (t1.code_id > '600000' and t1.code_id < '700000' ) )
+            HAVING rang > 0.7 and rang < 1 ) c;
                     """
             print(sql)
             slist = SharesHalfYear.objects.raw(sql, params=(half, half, "ST%",))
@@ -58,7 +59,8 @@ class Command(BaseCommand):
             on t1.code_id = t2.code_id
             where t1.code_id not in (SELECT code from mc_shares_name where name like "%s"  )
             and t1.code_id not in (SELECT code_id from mc_shares_ban) 
-            HAVING rang > 0.7 and rang < 1 and t1.code_id < '700000') c;
+            and ( t1.code_id < '300000' or (t1.code_id > '600000' and t1.code_id < '700000' ) )
+            HAVING rang > 0.7 and rang < 1 ) c;
                     """
             print(sql)
             slist = SharesHalfYear.objects.raw(sql, params=(season, season, "ST%"))
