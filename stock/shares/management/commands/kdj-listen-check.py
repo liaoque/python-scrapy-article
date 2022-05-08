@@ -116,7 +116,7 @@ class Command(BaseCommand):
 
             # kdj下跌
             if value.j < result[key + 1].j:
-                item = result[key + 1]
+                item = result[key]
                 break
             key += 1
         return item
