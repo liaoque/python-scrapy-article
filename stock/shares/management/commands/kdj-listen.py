@@ -57,7 +57,7 @@ class Command(BaseCommand):
             allCodeIds = SharesDateListen.objects.filter(buy_start__gt=0)
             print("寻找卖出点-----")
             for codeItem in allCodeIds:
-                codeItemResult = self.findSellPoint(codeItem)
+                codeItemResult = self.findSellPoint(codeItem, item)
                 if codeItemResult == None:
                     continue
                 sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
@@ -85,13 +85,14 @@ class Command(BaseCommand):
                     listen.save()
             # break
 
-    def findSellPoint(self, codeItem):
-        item = None
+    def findSellPoint(self, codeItem, item):
+
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__lte=item.date_as).order_by('-date_as')
         if len(result) < 2:
-            return item
+            return None
         sharesCollect = Shares.objects.filter(code_id=codeItem.code_id, date_as__lte=item.date_as).order_by('-date_as')
         key = 0
+        item = None
         result = result[:2]
         sharesCollect = sharesCollect[:2]
         for value in result:
