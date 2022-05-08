@@ -175,7 +175,7 @@ class Command(BaseCommand):
                     0]
                 # 明天的涨幅超过预计涨幅
                 if ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
-                    item = result[key + 2]
+                    item = result[key + 1]
                     pre_ema = preEma * 100
                     break
             key += 1
