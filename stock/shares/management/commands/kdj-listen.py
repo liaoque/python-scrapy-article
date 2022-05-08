@@ -118,17 +118,20 @@ class Command(BaseCommand):
 
     def findBuyPoint(self, codeItem):
         date_as = codeItem.date_as
-        sharesBuysItem = SharesBuys.objects.filter(code_id=codeItem.code_id).order_by('-sell_date_as')
-        if len(sharesBuysItem) > 0 and sharesBuysItem[0].sell_date_as > codeItem.date_as:
-            date_as = sharesBuysItem[0].sell_date_as
+        # sharesBuysItem = SharesBuys.objects.filter(code_id=codeItem.code_id).order_by('-sell_date_as')
+        # if len(sharesBuysItem) > 0 and sharesBuysItem[0].sell_date_as > codeItem.date_as:
+        #     date_as = sharesBuysItem[0].sell_date_as
 
         # 计算ema
         date_as = Shares.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[
             0].date_as
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
         item = None
-        key = 0
         pre_ema = 0
+        if len(result) < 2:
+            return item, pre_ema
+        result = result[:2]
+        key = 0
         for value in result:
             if key + 1 >= len(result):
                 break

@@ -54,7 +54,6 @@ class Command(BaseCommand):
             allCodeIds = SharesDateListen.objects.filter(buy_start__gt=0)
             print("寻找卖出点-----")
             for codeItem in allCodeIds:
-                codeItem.date_as = item.date_as
                 codeItemResult = self.findSellPoint(codeItem, item)
                 if codeItemResult == None:
                     continue
@@ -81,13 +80,14 @@ class Command(BaseCommand):
                     listen.save()
             # break
 
-    def findSellPoint(self, codeItem,  item):
+    def findSellPoint(self, codeItem, item):
         # 对比今天和昨天
+        item = None
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__lte=item.buy_date_as)
         if len(result) < 2:
-            return
+            return item
         sharesCollect = Shares.objects.filter(code_id=codeItem.code_id, date_as__lte=item.buy_date_as)
-        item = None
+
         key = 0
         result = result[:2][::-1]
         sharesCollect = sharesCollect[:2][::-1]
@@ -111,6 +111,7 @@ class Command(BaseCommand):
                 item = value
                 break
 
+            # kdj下跌
             if value.j < result[key + 1].j:
                 item = result[key + 1]
                 break
@@ -131,15 +132,16 @@ class Command(BaseCommand):
             0].date_as
         # 前天，今天，明天
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
-        if len(result) < 3:
-            return
-        result = result[: 3]
         item = None
-        key = 0
         pre_ema = 0
+        if len(result) < 3:
+            return item, pre_ema
+        result = result[:3]
+        key = 0
         for value in result:
             if key + 2 >= len(result):
                 break
+            # 昨天到今天 macd 往上走
             if result[key + 1].diff - value.diff > 0.009:
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=result[key + 1].date_as)[0]
                 if sharesKdjItem.j > 55:
@@ -167,6 +169,7 @@ class Command(BaseCommand):
                 # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
                 sharesItem = Shares.objects.filter(date_as=result[key + 2].date_as, code_id=codeItem.code_id)[
                     0]
+                # 明天的涨幅超过预计涨幅
                 if ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
                     item = result[key + 1]
                     pre_ema = preEma * 100
