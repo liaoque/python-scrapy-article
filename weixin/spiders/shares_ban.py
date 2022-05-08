@@ -3,7 +3,7 @@ import json
 import sys
 import re
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import copy
 import MySQLdb
 import MySQLdb.cursors
@@ -30,18 +30,13 @@ class Shares_ban(scrapy.Spider):
                              charset='utf8mb4')
         cursor = db.cursor()
         sql = 'delete from mc_shares_ban where date_as < %s ';
-        try:
-            import datetime
-            today = datetime.datetime.today()
-            yesterday = today - datetime.timedelta(days=15)
-            # 执行SQL语句
-            cursor.execute(sql, (
-                yesterday.date().strftime('%Y-%m-%d')
-            ))
-            db.commit()
-        except:
-            print("Error: unable to fecth data")
-            db.rollback()
+        today = datetime.today()
+        yesterday = today - timedelta(days=15)
+        # 执行SQL语句
+        cursor.execute(sql, (
+            yesterday.date().strftime('%Y-%m-%d')
+        ))
+        db.commit()
 
         url="http://ai.10jqka.com.cn/transfer/transfer/get?unique=1&allfields=0&websource=1"
         yield scrapy.Request(url,  callback=self.parse, dont_filter=True)
