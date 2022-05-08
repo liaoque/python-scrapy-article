@@ -86,13 +86,13 @@ class Command(BaseCommand):
             # break
 
     def findSellPoint(self, codeItem, item):
-
+        # 对比今天和昨天
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__lte=item.date_as).order_by('-date_as')
         if len(result) < 2:
             return None
         sharesCollect = Shares.objects.filter(code_id=codeItem.code_id, date_as__lte=item.date_as).order_by('-date_as')
-        key = 0
         item = None
+        key = 0
         result = result[:2]
         sharesCollect = sharesCollect[:2]
         for value in result:
@@ -104,7 +104,7 @@ class Command(BaseCommand):
             hammerBody = math.fabs(sharesCollect[key].p_end - sharesCollect[key].p_start)
             hammerHeader = math.fabs(sharesCollect[key].p_max - hammerMax)
             hammerFooter = math.fabs(sharesCollect[key].p_min - hammerMin)
-            if hammerHeader < hammerBody and hammerBody * 2.5 < hammerFooter:
+            if hammerHeader < hammerBody and hammerBody * 2 < hammerFooter:
                 print("倒锤头%s--%s--%d---%d---%d", sharesCollect[key].date_as, codeItem.code_id,
                       hammerHeader, hammerBody, hammerFooter)
                 item = value
@@ -115,7 +115,8 @@ class Command(BaseCommand):
                 item = value
                 break
 
-            if value.j > result[key + 1].j:
+            # kdj下跌
+            if value.j < result[key + 1].j:
                 item = result[key + 1]
                 break
             key += 1
