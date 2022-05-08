@@ -82,8 +82,8 @@ class Command(BaseCommand):
 
     def findSellPoint(self, codeItem, item):
         date_as = item.date_as
-        if item.date_as < codeItem.buy_date_as:
-            date_as = codeItem.buy_date_as
+        if item.date_as <= codeItem.buy_date_as:
+            return None
 
         # 对比今天和昨天
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__lte=date_as).order_by('-date_as')
