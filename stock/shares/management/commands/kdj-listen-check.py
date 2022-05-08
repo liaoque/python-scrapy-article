@@ -83,14 +83,14 @@ class Command(BaseCommand):
     def findSellPoint(self, codeItem, item):
         # 对比今天和昨天
         item = None
-        result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__lte=item.buy_date_as)
+        result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__lte=item.date_as).order_by('-date_as')
         if len(result) < 2:
             return item
-        sharesCollect = Shares.objects.filter(code_id=codeItem.code_id, date_as__lte=item.buy_date_as)
+        sharesCollect = Shares.objects.filter(code_id=codeItem.code_id, date_as__lte=item.date_as).order_by('-date_as')
 
         key = 0
-        result = result[:2][::-1]
-        sharesCollect = sharesCollect[:2][::-1]
+        result = result[:2]
+        sharesCollect = sharesCollect[:2]
         for value in result:
             if key + 1 >= len(result):
                 break
