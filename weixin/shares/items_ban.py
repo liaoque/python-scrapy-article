@@ -52,7 +52,7 @@ class Items(scrapy.Item):
         sql = "SELECT code_id FROM mc_shares_ban  WHERE code_id = '%s' and date_as='%s'"
         cursor.execute(sql, (
             code,
-            datetime.datetime.strptime('2022-04-30 00:24:40', '%Y-%m-%d %H:%M:%S').date().strptime('%Y-%m-%d')
+            datetime.datetime.strptime('2022-04-30 00:24:40', '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
         ));
         return cursor.rowcount
 
