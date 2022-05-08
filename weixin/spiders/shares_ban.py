@@ -35,7 +35,7 @@ class Shares_ban(scrapy.Spider):
             today = datetime.datetime.today()
             yesterday = today - datetime.timedelta(days=15)
             # 执行SQL语句
-            cursor.execute(sql, yesterday.date().yesterday.date().strftime('%Y-%m-%d'))
+            cursor.execute(sql, (yesterday.date().yesterday.date().strftime('%Y-%m-%d')))
         except:
             print("Error: unable to fecth data")
 
