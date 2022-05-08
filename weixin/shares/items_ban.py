@@ -44,6 +44,7 @@ class Items(scrapy.Item):
             self["avoid_reason"][0],
             date_as
         )
+        print(params)
         cursor.execute(sql, params)
         pass
     pass
