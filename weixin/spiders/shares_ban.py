@@ -36,8 +36,10 @@ class Shares_ban(scrapy.Spider):
             yesterday = today - datetime.timedelta(days=15)
             # 执行SQL语句
             cursor.execute(sql, (yesterday.date().yesterday.date().strftime('%Y-%m-%d')))
+            db.commit()
         except:
             print("Error: unable to fecth data")
+            db.rollback()
 
         url="http://ai.10jqka.com.cn/transfer/transfer/get?unique=1&allfields=0&websource=1"
         yield scrapy.Request(url,  callback=self.parse, dont_filter=True)
