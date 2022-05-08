@@ -29,7 +29,7 @@ class Command(BaseCommand):
         for item in SharesName.objects.filter(status=1, code_type=1, ):
             stockMemberList = self.getStockMember(item)
             for item2 in stockMemberList:
-                date_as = datetime.strptime(item2.date_as, '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
+                date_as = datetime.strptime(item2.END_DATE, '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
                 itemSharesMembers = SharesMembers.objects.filter(code_id=item.code, date_as=date_as)
                 if len(itemSharesMembers) > 0:
                     return
