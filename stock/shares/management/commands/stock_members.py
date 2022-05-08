@@ -11,6 +11,7 @@ from shares.model.shares_industry import SharesIndustry
 from shares.model.shares_industry_month import SharesIndustryMonth
 import time
 import requests
+from shares.model.stock_members import SharesMembers
 
 
 # import numpy as np
@@ -27,17 +28,30 @@ class Command(BaseCommand):
         result = []
         for item in SharesName.objects.filter(status=1, code_type=1, ):
             stockMemberList = self.getStockMember(item)
-            if len(stockMemberList) <= 1:
-                continue
-            if stockMemberList[0]['HOLDER_TOTAL_NUM'] < stockMemberList[1]['HOLDER_TOTAL_NUM'] and stockMemberList[
-                0]['AVG_FREE_SHARES'] < stockMemberList[1]['AVG_FREE_SHARES']:
-                print("%s--%s--%s", item.code, stockMemberList[0]['AVG_FREE_SHARES'], stockMemberList[0]['HOLD_FOCUS'])
-
-                result.append(item)
-                pass
-        print("找到股东人数减少的股票有：")
-        print(",".join(["\"" + item.code + "\"" for item in result]))
-
+            for item2 in stockMemberList:
+                date_as = datetime.strptime(item2.date_as, '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
+                itemSharesMembers = SharesMembers.objects.filter(code_id=item.code, date_as=date_as)
+                if len(itemSharesMembers) > 0:
+                    return
+                itemSharesMembers = SharesMembers(
+                    code_id=item.code, date_as=date_as,
+                    members=item2.HOLDER_TOTAL_NUM, info=item2.HOLD_FOCUS,
+                    price=item2.PRICE,
+                    avg_free_shares=item2.AVG_FREE_SHARES
+                )
+                itemSharesMembers.save()
+        #
+        #
+        #     if len(stockMemberList) <= 1:
+        #         continue
+        #     if stockMemberList[0]['HOLDER_TOTAL_NUM'] < stockMemberList[1]['HOLDER_TOTAL_NUM'] and stockMemberList[
+        #         0]['AVG_FREE_SHARES'] < stockMemberList[1]['AVG_FREE_SHARES']:
+        #         print("%s--%s--%s", item.code, stockMemberList[0]['AVG_FREE_SHARES'], stockMemberList[0]['HOLD_FOCUS'])
+        #
+        #         result.append(item)
+        #         pass
+        # print("找到股东人数减少的股票有：")
+        # print(",".join(["\"" + item.code + "\"" for item in result]))
 
     def getStockMember(self, shareName):
         if shareName.area_id == 1:

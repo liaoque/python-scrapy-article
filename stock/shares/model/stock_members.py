@@ -4,9 +4,10 @@ from django.db import models
 # Create your models here.
 
 
-class SharesMember(models.Model):
+class SharesMembers(models.Model):
     code = models.CharField(max_length=20, primary_key=True)
     members  = models.IntegerField(default=0, help_text="股东人数")
+    avg_free_shares  = models.IntegerField(default=0, help_text="人均流通股(股)")
     date_as = models.DateField()
     info = models.CharField(max_length=255)
     price = models.IntegerField(default=0, help_text="股价")
