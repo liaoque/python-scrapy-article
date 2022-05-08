@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
                     codeItem.buy_date_as = codeItemResult.date_as
                     codeItem.buy_pre = buy_pre
-                    codeItem.buy_start = sharesItem.p_end
+                    codeItem.buy_start = sharesItem.p_start
                     codeItem.save()
                 pass
 
@@ -175,7 +175,7 @@ class Command(BaseCommand):
                     0]
                 # 明天的涨幅超过预计涨幅
                 if ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
-                    item = result[key + 1]
+                    item = result[key + 2]
                     pre_ema = preEma * 100
                     break
             key += 1
