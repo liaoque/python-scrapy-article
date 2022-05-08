@@ -36,7 +36,7 @@ class Command(BaseCommand):
                 itemSharesMembers = SharesMembers(
                     code_id=item.code, date_as=date_as,
                     members=item2.HOLDER_TOTAL_NUM, info=item2.HOLD_FOCUS,
-                    price=item2.PRICE,
+                    price=item2.PRICE *100,
                     avg_free_shares=item2.AVG_FREE_SHARES
                 )
                 itemSharesMembers.save()
