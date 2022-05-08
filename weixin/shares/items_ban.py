@@ -54,6 +54,5 @@ class Items(scrapy.Item):
             code,
             datetime.datetime.strptime('2022-04-30 00:24:40', '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
         ));
-        print(cursor.rowcount)
-        return cursor.rowcount
+        return cursor.rowcount > 0
 
