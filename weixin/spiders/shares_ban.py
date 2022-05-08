@@ -34,7 +34,7 @@ class Shares_ban(scrapy.Spider):
         yesterday = today - timedelta(days=15)
         # 执行SQL语句
         cursor.execute(sql, (
-            yesterday.date().strftime('%Y-%m-%d')
+            yesterday.date().strftime('%Y-%m-%d'),
         ))
         db.commit()
 
