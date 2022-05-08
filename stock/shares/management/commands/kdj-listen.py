@@ -45,7 +45,7 @@ class Command(BaseCommand):
                 codeItemResult, buy_pre = self.findBuyPoint(codeItem)
                 if codeItemResult != None:
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                    print("找到买入点--%s--%s---%s", codeItemResult.date_as,codeItem.code_id, sharesItem.p_end)
+                    print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
                     if datetime.now().hour < 15:
                         continue
                     codeItem.buy_date_as = codeItemResult.date_as
@@ -86,6 +86,8 @@ class Command(BaseCommand):
             # break
 
     def findSellPoint(self, codeItem, item):
+        if item.date_as <= codeItem.buy_date_as:
+            return None
         # 对比今天和昨天
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__lte=item.date_as).order_by('-date_as')
         if len(result) < 2:
@@ -104,7 +106,7 @@ class Command(BaseCommand):
             hammerBody = math.fabs(sharesCollect[key].p_end - sharesCollect[key].p_start)
             hammerHeader = math.fabs(sharesCollect[key].p_max - hammerMax)
             hammerFooter = math.fabs(sharesCollect[key].p_min - hammerMin)
-            if hammerHeader < hammerBody and hammerBody * 2 < hammerFooter:
+            if hammerHeader < hammerBody and hammerBody * 2.5 < hammerFooter:
                 print("倒锤头%s--%s--%d---%d---%d", sharesCollect[key].date_as, codeItem.code_id,
                       hammerHeader, hammerBody, hammerFooter)
                 item = value
@@ -117,7 +119,7 @@ class Command(BaseCommand):
 
             # kdj下跌
             if value.j < result[key + 1].j:
-                item = result[key + 1]
+                item = result[key]
                 break
             key += 1
         return item
@@ -144,6 +146,7 @@ class Command(BaseCommand):
             if result[key + 1].diff - value.diff > 0.009:
                 sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=result[key + 1].date_as)[0]
                 if sharesKdjItem.j > 55:
+                    key += 1
                     continue
                 # shares = Shares.objects.filter(date_as__lte=result[key + 1].date_as, code_id=codeItem.code_id).order_by(
                 #     '-date_as')[:6]

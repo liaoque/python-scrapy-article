@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
                     codeItem.buy_date_as = codeItemResult.date_as
                     codeItem.buy_pre = buy_pre
-                    codeItem.buy_start = sharesItem.p_start
+                    codeItem.buy_start = sharesItem.p_end
                     codeItem.save()
                 pass
 
