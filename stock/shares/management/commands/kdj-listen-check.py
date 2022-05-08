@@ -54,7 +54,8 @@ class Command(BaseCommand):
             allCodeIds = SharesDateListen.objects.filter(buy_start__gt=0)
             print("寻找卖出点-----")
             for codeItem in allCodeIds:
-                codeItemResult = self.findSellPoint(codeItem)
+                codeItem.date_as = item.date_as
+                codeItemResult = self.findSellPoint(codeItem, item)
                 if codeItemResult == None:
                     continue
                 sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
@@ -80,11 +81,16 @@ class Command(BaseCommand):
                     listen.save()
             # break
 
-    def findSellPoint(self, codeItem):
-        result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.buy_date_as)
-        sharesCollect = Shares.objects.filter(code_id=codeItem.code_id, date_as__gte=codeItem.buy_date_as)
+    def findSellPoint(self, codeItem,  item):
+        # 对比今天和昨天
+        result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__lte=item.buy_date_as)
+        if len(result) < 2:
+            return
+        sharesCollect = Shares.objects.filter(code_id=codeItem.code_id, date_as__lte=item.buy_date_as)
         item = None
         key = 0
+        result = result[:2][::-1]
+        sharesCollect = sharesCollect[:2][::-1]
         for value in result:
             if key + 1 >= len(result):
                 break
@@ -105,7 +111,7 @@ class Command(BaseCommand):
                 item = value
                 break
 
-            if value.j > result[key + 1].j:
+            if value.j < result[key + 1].j:
                 item = result[key + 1]
                 break
             key += 1
@@ -113,14 +119,21 @@ class Command(BaseCommand):
 
     def findBuyPoint(self, codeItem):
         date_as = codeItem.date_as
-        sharesBuysItem = SharesBuys.objects.filter(code_id=codeItem.code_id).order_by('-sell_date_as')
-        if len(sharesBuysItem) > 0 and sharesBuysItem[0].sell_date_as > codeItem.date_as:
-            date_as = sharesBuysItem[0].sell_date_as
+
+        # 矫正购买时间
+        # sharesBuysItem = SharesBuys.objects.filter(code_id=codeItem.code_id).order_by('-sell_date_as')
+        # if len(sharesBuysItem) > 0 and sharesBuysItem[0].sell_date_as > codeItem.date_as:
+        #     date_as = sharesBuysItem[0].sell_date_as
 
         # 计算ema
+        # 前一天
         date_as = Shares.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[
             0].date_as
+        # 前天，今天，明天
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
+        if len(result) < 3:
+            return
+        result = result[: 3]
         item = None
         key = 0
         pre_ema = 0
