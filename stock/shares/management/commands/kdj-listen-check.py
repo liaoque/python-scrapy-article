@@ -44,7 +44,7 @@ class Command(BaseCommand):
                 codeItemResult, buy_pre = self.findBuyPoint(codeItem)
                 if codeItemResult != None:
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                    print("找到买入点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                    print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
                     codeItem.buy_date_as = codeItemResult.date_as
                     codeItem.buy_pre = buy_pre
                     codeItem.buy_start = sharesItem.p_end
@@ -58,7 +58,7 @@ class Command(BaseCommand):
                 if codeItemResult == None:
                     continue
                 sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                print("找到卖出点--%s---%s", codeItemResult.date_as, sharesItem.p_end)
+                print("找到卖出点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
                 buys = SharesBuys(
                     code_id=codeItem.code_id,
                     buy_date_as=codeItem.buy_date_as,
@@ -149,7 +149,6 @@ class Command(BaseCommand):
                 # #     continue
                 # if not (emaList4[-2] < emaList4[-1]):
                 #     continue
-
 
                 # print(emaList)
                 # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
