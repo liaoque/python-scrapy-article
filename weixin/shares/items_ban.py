@@ -44,7 +44,6 @@ class Items(scrapy.Item):
             self["avoid_reason"][0],
             date_as
         )
-        print(params)
         cursor.execute(sql, params)
         pass
     pass
@@ -53,7 +52,7 @@ class Items(scrapy.Item):
         sql = "SELECT code_id FROM mc_shares_ban  WHERE code_id = %s and date_as=%s"
         cursor.execute(sql, (
             code,
-            datetime.datetime.strptime('2022-04-30 00:24:40', '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
+            datetime.datetime.strptime(date_as, '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
         ));
         return cursor.rowcount > 0
 
