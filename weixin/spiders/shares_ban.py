@@ -23,6 +23,22 @@ class Shares_ban(scrapy.Spider):
     cursor = None
 
     def start_requests(self):
+        db = MySQLdb.connect(host=self.settings.get('MYSQL_HOST'),
+                             user=self.settings.get('MYSQL_USER'),
+                             password=self.settings.get('MYSQL_PASSWORD'),
+                             database=self.settings.get('MYSQL_DBNAME'),
+                             charset='utf8mb4')
+        cursor = db.cursor()
+        sql = 'delete from mc_shares_ban where date_as < %s ';
+        try:
+            import datetime
+            today = datetime.datetime.today()
+            yesterday = today - datetime.timedelta(days=15)
+            # 执行SQL语句
+            cursor.execute(sql, yesterday.date().yesterday.date().strftime('%Y-%m-%d'))
+        except:
+            print("Error: unable to fecth data")
+
         url="http://ai.10jqka.com.cn/transfer/transfer/get?unique=1&allfields=0&websource=1"
         yield scrapy.Request(url,  callback=self.parse, dont_filter=True)
 
