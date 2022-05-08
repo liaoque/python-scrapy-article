@@ -1,11 +1,11 @@
 from django.db import models
 
-
+from .shares_name import SharesName
 # Create your models here.
 
 
 class SharesMembers(models.Model):
-    code = models.CharField(max_length=20, primary_key=True)
+    code = models.ForeignKey(SharesName, name='code', on_delete=models.CASCADE)
     members  = models.IntegerField(default=0, help_text="股东人数")
     avg_free_shares  = models.IntegerField(default=0, help_text="人均流通股(股)")
     date_as = models.DateField()
