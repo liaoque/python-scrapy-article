@@ -69,4 +69,8 @@ class Command(BaseCommand):
         else:
             url = 'http://emweb.securities.eastmoney.com/PC_HSF10/ShareholderResearch/PageAjax?code=BJ' + shareName.code
         r = requests.get(url)
-        return r.json()["gdrs"]
+
+        json2 = r.json()
+        if "gdrs" in json2:
+            return json2["gdrs"]
+        return []
