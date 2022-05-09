@@ -60,6 +60,7 @@ class Shares_name(scrapy.Spider):
         self.total = result["data"]["total"] / 200 + 1
         area = response.request.headers.getlist('area')[0].decode("UTF-8")
         for item in result["data"]["diff"]:
+            print(item)
             name = item["f14"] + ""
             code = item["f12"] + ""
             status = 1
