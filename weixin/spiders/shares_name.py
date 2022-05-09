@@ -73,6 +73,6 @@ class Shares_name(scrapy.Spider):
             item_loader.add_value("code_type", '1')
             item_loader.add_value("area_id", area)
             item_loader.add_value("status", status)
-            item_loader.add_value("pb", item["9"] * 100)
+            item_loader.add_value("pb", item["f9"] * 100)
             item_loader.add_value("pe", item["f23"] * 100)
             yield item_loader.load_item()
