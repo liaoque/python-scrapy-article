@@ -35,6 +35,8 @@ class Command(BaseCommand):
                     continue
                 if item2['PRICE'] is None:
                     item2['PRICE'] = 0
+                if item2['AVG_FREE_SHARES'] is None:
+                    item2['AVG_FREE_SHARES'] = 0
                 itemSharesMembers = SharesMembers(
                     code_id=item.code, date_as=date_as,
                     members=item2['HOLDER_TOTAL_NUM'], info=item2['HOLD_FOCUS'],
