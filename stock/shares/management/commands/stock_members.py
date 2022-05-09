@@ -32,7 +32,7 @@ class Command(BaseCommand):
                 date_as = datetime.strptime(item2['END_DATE'], '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
                 itemSharesMembers = SharesMembers.objects.filter(code_id=item.code, date_as=date_as)
                 if len(itemSharesMembers) > 0:
-                    return
+                    continue
                 if item2['PRICE'] is None:
                     item2['PRICE'] = 0
                 itemSharesMembers = SharesMembers(
