@@ -28,6 +28,8 @@ class Items(scrapy.Item):
     temper_dongfangcaifu = scrapy.Field()
     status = scrapy.Field()
     code_type = scrapy.Field()
+    pe = scrapy.Field()
+    pb = scrapy.Field()
     area_map = {
         "SH": 1,
         "SZ": 2,
@@ -66,18 +68,26 @@ class Items(scrapy.Item):
                 sql = "update mc_shares_name set code_type = '%s'  WHERE code = '%s'" % (code_type, code)
                 cursor.execute(sql);
             if data[0]['name'] != self["name"][0]:
-                sql = "update mc_shares_name set name = '%s'  WHERE code = '%s'" % (code_type, self["name"][0])
+                sql = "update mc_shares_name set name = '%s'  WHERE code = '%s'" % (self["name"][0].code)
+                cursor.execute(sql);
+            if data[0]['pe'] != self["pe"][0]:
+                sql = "update mc_shares_name set pe = '%s'  WHERE code = '%s'" % (self["pe"][0], code)
+                cursor.execute(sql);
+            if data[0]['pb'] != self["pb"][0]:
+                sql = "update mc_shares_name set pb = '%s'  WHERE code = '%s'" % (self["pb"][0].code)
                 cursor.execute(sql);
             return
         sql = """
-                    INSERT INTO mc_shares_name (name, code, area_id, code_type)
-                    VALUES (%s, %s, %s, %s)
+                    INSERT INTO mc_shares_name (name, code, area_id, code_type, pb, pe)
+                    VALUES (%s, %s, %s, %s, %s, %s)
                     """;
         params = (
             self["name"][0],
             code,
             area_id,
             code_type,
+            self["pb"][0],
+            self["pe"][0],
         )
         cursor.execute(sql, params)
 
@@ -95,6 +105,6 @@ class Items(scrapy.Item):
         cursor.execute(sql);
 
     def findByCode(self, cursor, code):
-        sql = "SELECT area_id,status,code_type FROM mc_shares_name  WHERE code = '%s'" % code
+        sql = "SELECT * FROM mc_shares_name  WHERE code = '%s'" % code
         cursor.execute(sql);
         return cursor

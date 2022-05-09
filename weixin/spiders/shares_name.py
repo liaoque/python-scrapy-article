@@ -29,7 +29,7 @@ class Shares_name(scrapy.Spider):
         # "http://87.push2.eastmoney.com/api/qt/clist/get?cb=&pn=3&pz=20&po=0&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f12&fs=m:0+t:81+s:2048&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152&_=1639825644581"
         # "http://75.push2.eastmoney.com/api/qt/clist/get?cb=&pn=1&pz=20&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f12&fs=m:1%20t:2,m:1%20t:23&fields=f12,f13,f14&_=1639813284425"
         return "https://75.push2.eastmoney.com/api/qt/clist/get?cb=&pn=" + str(n) + "&pz=200&po=0&np=1&" \
-                                                                                    "ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f12&fs=" + area + "&fields=f9,f12,f13,f14,f23&_=1639813284425"
+                "ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f12&fs=" + area + "&fields=f9,f12,f13,f14,f23&_=1639813284425"
 
     # http://11.push2.eastmoney.com/api/qt/clist/get?cb=&pn=1&pz=20&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152&_=1584074266443"
     def start_requests(self):
@@ -65,10 +65,14 @@ class Shares_name(scrapy.Spider):
             status = 1
             if str(item["f9"]) == '-' and str(item["f23"]) =='-' :
                 status = 0
+                item["f9"] = 0
+                item["f23"] = 0
             item_loader = ItemLoader(item=SharesItems.Items())
             item_loader.add_value("code", code)
             item_loader.add_value("name", name)
             item_loader.add_value("code_type", '1')
             item_loader.add_value("area_id", area)
             item_loader.add_value("status", status)
+            item_loader.add_value("pb", item["9"] * 100)
+            item_loader.add_value("pe", item["f23"] * 100)
             yield item_loader.load_item()
