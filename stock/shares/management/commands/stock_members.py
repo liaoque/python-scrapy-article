@@ -33,6 +33,10 @@ class Command(BaseCommand):
                 itemSharesMembers = SharesMembers.objects.filter(code_id=item.code, date_as=date_as)
                 if len(itemSharesMembers) > 0:
                     continue
+                if item2['HOLDER_TOTAL_NUM'] is None:
+                    item2['HOLDER_TOTAL_NUM'] = 0
+                if item2['HOLD_FOCUS'] is None:
+                    item2['HOLD_FOCUS'] = ''
                 if item2['PRICE'] is None:
                     item2['PRICE'] = 0
                 if item2['AVG_FREE_SHARES'] is None:
