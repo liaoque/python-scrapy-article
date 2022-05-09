@@ -89,6 +89,7 @@ class Items(scrapy.Item):
             self["pb"][0],
             self["pe"][0],
         )
+        print(params)
         cursor.execute(sql, params)
 
     def save_temper_tonghuashun(self, cursor):
