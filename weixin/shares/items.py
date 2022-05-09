@@ -74,7 +74,7 @@ class Items(scrapy.Item):
                 sql = "update mc_shares_name set pe = '%s'  WHERE code = '%s'" % (self["pe"][0], code)
                 cursor.execute(sql);
             if data[0]['pb'] != self["pb"][0]:
-                sql = "update mc_shares_name set pb = '%s'  WHERE code = '%s'" % (self["pb"][0].code)
+                sql = "update mc_shares_name set pb = '%s'  WHERE code = '%s'" % (self["pb"][0], code)
                 cursor.execute(sql);
             return
         sql = """
