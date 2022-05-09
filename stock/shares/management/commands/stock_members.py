@@ -33,6 +33,8 @@ class Command(BaseCommand):
                 itemSharesMembers = SharesMembers.objects.filter(code_id=item.code, date_as=date_as)
                 if len(itemSharesMembers) > 0:
                     return
+                if item2['PRICE'] is None:
+                    item2['PRICE'] = 0
                 itemSharesMembers = SharesMembers(
                     code_id=item.code, date_as=date_as,
                     members=item2['HOLDER_TOTAL_NUM'], info=item2['HOLD_FOCUS'],
