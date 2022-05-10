@@ -45,7 +45,7 @@ class Command(BaseCommand):
         for industry_code_id in result:
             if industry_code_id is None:
                 continue
-            if result1[industry_code_id] is None:
+            if industry_code_id not  in result1:
                 industry_name = (result2[industry_code_id] and result2[industry_code_id].industry_name) or (
                         result3[industry_code_id] and result3[industry_code_id].industry_name)
                 result1[industry_code_id] = {
@@ -53,14 +53,14 @@ class Command(BaseCommand):
                     "industry_name": industry_name,
                     "c": .1,
                 }
-            if result2[industry_code_id] is None:
+            if industry_code_id not  in result2:
                 result2[industry_code_id] = {
                     "industry_code_id": result1[industry_code_id].industry_code_id,
                     "industry_name": result1[industry_code_id].industry_name,
                     "c": 0,
                 }
 
-            if result3[industry_code_id] is None:
+            if industry_code_id not  in result3:
                 result3[industry_code_id] = {
                     "industry_code_id": result1[industry_code_id].industry_code_id,
                     "industry_name": result1[industry_code_id].industry_name,
@@ -68,8 +68,8 @@ class Command(BaseCommand):
                 }
 
             item = result1[industry_code_id]
-            print("30", item["industry_name"], item["c"],
-                  "60", result2[industry_code_id]["c"], item["c"] / result2[industry_code_id]["c"],
+            print("30", item["industry_name"], item["c"], "------",
+                  "60", result2[industry_code_id]["c"], item["c"] / result2[industry_code_id]["c"], "------",
                   "90", result3[industry_code_id]["c"], item["c"] / result3[industry_code_id]["c"])
 
             # sql = """
