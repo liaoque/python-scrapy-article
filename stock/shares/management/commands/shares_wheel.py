@@ -51,7 +51,7 @@ class Command(BaseCommand):
                 result1[industry_code_id] = {
                     "industry_code_id": industry_code_id,
                     "industry_name": industry_name,
-                    "c": .1,
+                    "c": 0,
                 }
             if industry_code_id not in result2:
                 result2[industry_code_id] = {
@@ -70,12 +70,11 @@ class Command(BaseCommand):
 
             item = result1[industry_code_id]
 
-            print("%s 30涨停：%s --- 60涨停：%s 比例：%s--- 90涨停：%s 比例：%s "%(
+            print("%s 30涨停：%s --- 60涨停：%s 比例：%s--- 90涨停：%s 比例：%s " % (
                 item["industry_name"], item["c"],
-                result2[industry_code_id]["c"], item["c"] / result2[industry_code_id]["c"],
-                result3[industry_code_id]["c"], item["c"] / result3[industry_code_id]["c"]
+                result2[industry_code_id]["c"], (item["c"] or 1) / (result2[industry_code_id]["c"] or 1),
+                result3[industry_code_id]["c"], (item["c"] or 1) / (result3[industry_code_id]["c"] or 1)
             ))
-
 
             # sql = """
             #         select 1 as id, count(1) as c from mc_shares
