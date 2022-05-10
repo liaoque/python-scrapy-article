@@ -39,6 +39,7 @@ class Command(BaseCommand):
                            having p_range2 >= 0.08
                    ) t
                    group by industry_code_id
+                   order by c desc
                """
         result = Shares.objects.raw(sql, params=(start, end,))
         print("当前轮动", result)
