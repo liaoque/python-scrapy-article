@@ -50,7 +50,7 @@ class Command(BaseCommand):
             where date_as >= %s and date_as <= %s   and  industry_code_id = %s
                """
             result2 = Shares.objects.raw(sql, params=(start, end, item.industry_code_id))
-
+            print(result2)
             print(item.industry_name, item.industry_code_id, item.c, result2[0].c, item.c / result2[0].c)
 
     def getAllDates(self):
