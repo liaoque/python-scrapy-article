@@ -31,11 +31,12 @@ class Command(BaseCommand):
     def wheel(self, start, end):
         sql = """
                    select industry_code_id, industry_name, count(1) as c from (
-                       select code_id, (p_end - p_start) / p_start as p_range2, industry_code_id, mc_shares_name.name as industry_name 
+                       select mc_shares.code_id, (p_end - p_start) / p_start as p_range2, industry_code_id, mc_shares_name.name as industry_name 
                            from mc_shares 
-                           left join mc_shares_join_industry on mc_shares_join_industry.code_id = t.code_id
+                           left join mc_shares_join_industry on mc_shares_join_industry.code_id = mc_shares.code_id
                            left join mc_shares_name on mc_shares_join_industry.industry_code_id = mc_shares_name.code
-                           where date_as >= %s and date_as <= %s having p_range2 >= 0.08
+                           where date_as >= %s and date_as <= %s and p_start < p_end
+                           having p_range2 >= 0.08
                    ) t
                    group by industry_code_id
                """
