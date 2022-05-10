@@ -24,8 +24,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # 过去30个工作日， 涨停股票所属行业
         dates = self.getAllDates()[-30:]
-        start = dates[0];
-        end = dates[len(dates) - 1];
+        start = dates[0].date_as;
+        end = dates[len(dates) - 1].date_as;
         self.wheel(start, end)
 
     def wheel(self, start, end):
