@@ -52,7 +52,7 @@ class Command(BaseCommand):
         result = list(set(
             list(result1.keys()) + list(result2.keys()) + list(result3.keys())
             + list(result4.keys()) + list(result5.keys())
-        ))
+        )).remove(None)
         result.sort()
         print("当前轮动", result)
         for industry_code_id in result:
