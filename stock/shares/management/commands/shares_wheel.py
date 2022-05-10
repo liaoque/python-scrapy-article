@@ -87,7 +87,7 @@ class Command(BaseCommand):
                     "c": 0,
                 }
 
-            if industry_code_id not in result4:
+            if industry_code_id not in result5:
                 result5[industry_code_id] = {
                     "industry_code_id": industry_code_id,
                     "industry_name": result1[industry_code_id]["industry_name"],
