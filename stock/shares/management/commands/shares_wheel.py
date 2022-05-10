@@ -23,10 +23,38 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # 过去30个工作日， 涨停股票所属行业
-        dates = self.getAllDates()[-30:]
+        datesOld = self.getAllDates()
+        dates = datesOld[-30:]
         start = dates[0].date_as;
         end = dates[len(dates) - 1].date_as;
-        self.wheel(start, end)
+        result1 = self.convert(self.wheel(start, end))
+
+        dates = datesOld[-60:-30]
+        start = dates[0].date_as;
+        end = dates[len(dates) - 1].date_as;
+        result2 = self.convert(self.wheel(start, end))
+
+        dates = datesOld[-90:-60]
+        start = dates[0].date_as;
+        end = dates[len(dates) - 1].date_as;
+        result3 = self.convert(self.wheel(start, end))
+
+        print("当前轮动", result1)
+        for item in result1:
+            if item.industry_code_id is None:
+                continue
+            print("30", item.industry_name, item.c,
+                  "60", result2[item.industry_code_id].c, item.c / result2[item.industry_code_id].c,
+                  "90", result3[item.industry_code_id].c, item.c / result3[item.industry_code_id].c)
+
+            # sql = """
+            #         select 1 as id, count(1) as c from mc_shares
+            #         left join mc_shares_join_industry on mc_shares_join_industry.code_id = mc_shares.code_id
+            #         where date_as >= %s and date_as <= %s  and  industry_code_id = %s
+            #            """
+            # result2 = Shares.objects.raw(sql, params=(start, end, item.industry_code_id,))
+            # item.sc = result2[0].c
+            # print(item.industry_name, item.industry_code_id, item.c, result2[0].c, item.c / result2[0].c)
 
     def wheel(self, start, end):
         sql = """
@@ -42,21 +70,16 @@ class Command(BaseCommand):
                    order by c desc
                """
         result = Shares.objects.raw(sql, params=(start, end,))
-        print("当前轮动", result)
-        for item in result:
-            if item.industry_code_id is None:
-                continue
-            sql = """
-            select 1 as id, count(1) as c from mc_shares 
-            left join mc_shares_join_industry on mc_shares_join_industry.code_id = mc_shares.code_id
-            where date_as >= %s and date_as <= %s  and  industry_code_id = %s
-               """
-            result2 = Shares.objects.raw(sql, params=(start, end, item.industry_code_id,))
-            item.sc = result2[0].c
-            print(item.industry_name, item.industry_code_id, item.c, result2[0].c, item.c / result2[0].c)
+        return result
 
     def getAllDates(self):
         sql = '''
                 select 1 as id, date_as from mc_shares_date where date_as >= '2021-12-01';
                 '''
         return Shares.objects.raw(sql)
+
+    def convert(self, list):
+        result1 = {}
+        for item in list:
+            result1[item.industry_code_id] = item
+        return result1
