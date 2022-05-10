@@ -39,14 +39,13 @@ class Command(BaseCommand):
         end3 = dates[len(dates) - 1].date_as;
         result3 = self.convert(self.wheel(start3, end3))
 
-        result = list(set(result1.keys() + result2.keys() + result3.keys()))
-
+        result = list(set(list(result1.keys()) + list(result2.keys()) + list(result3.keys())))
 
         print("当前轮动", result1)
         for industry_code_id in result:
             if industry_code_id is None:
                 continue
-            item =  result1[industry_code_id]
+            item = result1[industry_code_id]
             print("30", item.industry_name, item.c,
                   "60", result2[industry_code_id].c, item.c / result2[industry_code_id].c,
                   "90", result3[industry_code_id].c, item.c / result3[industry_code_id].c)
