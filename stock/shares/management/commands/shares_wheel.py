@@ -44,6 +44,8 @@ class Command(BaseCommand):
         result = Shares.objects.raw(sql, params=(start, end,))
         print("当前轮动", result)
         for item in result:
+            if item.industry_code_id is None:
+                continue
             """
             select 1 as id, count(1) as c from mc_shares 
             left join mc_shares_join_industry on mc_shares_join_industry.code_id = mc_shares.code_id
