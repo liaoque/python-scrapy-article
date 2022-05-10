@@ -40,7 +40,7 @@ class Command(BaseCommand):
                    group by industry_code_id
                """
         result = Shares.objects.raw(sql, params=(start, end,))
-        print("当前轮动")
+        print("当前轮动", result)
         for item in result:
             print("%s--%s--%s", item.industry_name, item.industry_code_id, item.c, )
 
