@@ -51,7 +51,7 @@ class Command(BaseCommand):
                """
             result2 = Shares.objects.raw(sql, params=(start, end, item.industry_code_id))
 
-            print(item.industry_name, item.industry_code_id, item.c, result2[0].c)
+            print(item.industry_name, item.industry_code_id, item.c, result2[0].c, item.c / result2[0].c)
 
     def getAllDates(self):
         sql = '''
