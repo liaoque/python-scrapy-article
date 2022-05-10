@@ -24,22 +24,30 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # 过去30个工作日， 涨停股票所属行业
         datesOld = self.getAllDates()
-        dates = datesOld[-30:]
+        dates = datesOld[-20:]
         start = dates[0].date_as;
         end = dates[len(dates) - 1].date_as;
         result1 = self.convert(self.wheel(start, end))
 
-        dates = datesOld[-60:-30]
+        dates = datesOld[-40:-20]
         start1 = dates[0].date_as;
         end2 = dates[len(dates) - 1].date_as;
         result2 = self.convert(self.wheel(start1, end2))
 
-        dates = datesOld[-90:-60]
+        dates = datesOld[-60:-40]
         start3 = dates[0].date_as;
         end3 = dates[len(dates) - 1].date_as;
         result3 = self.convert(self.wheel(start3, end3))
 
-        result = list(set(list(result1.keys()) + list(result2.keys()) + list(result3.keys())))
+        dates = datesOld[-60:-40]
+        start4 = dates[0].date_as;
+        end4 = dates[len(dates) - 1].date_as;
+        result4 = self.convert(self.wheel(start4, end4))
+
+        result = list(set(
+            list(result1.keys()) + list(result2.keys()) + list(result3.keys())
+            + list(result4.keys())
+        ))
 
         print("当前轮动", result)
         for industry_code_id in result:
@@ -67,15 +75,26 @@ class Command(BaseCommand):
                     "c": 0,
                 }
 
+            if industry_code_id not in result4:
+                result4[industry_code_id] = {
+                    "industry_code_id": industry_code_id,
+                    "industry_name": result1[industry_code_id]["industry_name"],
+                    "c": 0,
+                }
+
             item = result1[industry_code_id]
 
-            print("%s 30涨停：%s --- 60涨停：%s 比例：%s --- 90涨停：%s 比例：%s " % (
+            print("%s 20涨停：%s --- 40涨停：%s 比例：%s --- 60涨停：%s 比例：%s --- 80涨停：%s 比例：%s " % (
                 item["industry_name"], item["c"],
                 result2[industry_code_id]["c"],
                 round((item["c"] or 1) / (result2[industry_code_id]["c"] + item["c"]), 2),
                 result3[industry_code_id]["c"],
                 round((item["c"] or 1) / (result3[industry_code_id]["c"] + result2[industry_code_id]["c"] + item["c"]),
                       2),
+                result4[industry_code_id]["c"],
+                round((item["c"] or 1) / (
+                            result4[industry_code_id]["c"] + result3[industry_code_id]["c"] + result2[industry_code_id][
+                        "c"] + item["c"]), 2),
             ))
 
             # sql = """
