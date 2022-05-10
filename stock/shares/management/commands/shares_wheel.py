@@ -55,15 +55,16 @@ class Command(BaseCommand):
                 }
             if industry_code_id not in result2:
                 result2[industry_code_id] = {
-                    "industry_code_id": result1[industry_code_id].industry_code_id,
-                    "industry_name": result1[industry_code_id].industry_name,
+                    "industry_code_id": industry_code_id,
+                    "industry_name": result1[industry_code_id]["industry_name"],
                     "c": 0,
                 }
 
             if industry_code_id not in result3:
+                print(result1[industry_code_id])
                 result3[industry_code_id] = {
-                    "industry_code_id": result1[industry_code_id].industry_code_id,
-                    "industry_name": result1[industry_code_id].industry_name,
+                    "industry_code_id": industry_code_id,
+                    "industry_name": result1[industry_code_id]["industry_name"],
                     "c": 0,
                 }
 
