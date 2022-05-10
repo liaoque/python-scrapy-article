@@ -87,13 +87,13 @@ class Command(BaseCommand):
                    result2[industry_code_id]["c"] + item["c"])
             print("%s 20涨停：%s 比例：%s --- 40涨停：%s 比例：%s --- 60涨停：%s 比例：%s --- 80涨停：%s 比例：%s " % (
                 item["industry_name"], item["c"],
-                round((item["c"] or 1) / all, 2),
+                round(item["c"] / all, 2),
                 result2[industry_code_id]["c"],
-                round((result2[industry_code_id]["c"] or 1) / all, 2),
+                round(result2[industry_code_id]["c"] / all, 2),
                 result3[industry_code_id]["c"],
-                round((result3[industry_code_id]["c"] or 1) / all, 2),
+                round(result3[industry_code_id]["c"] / all, 2),
                 result4[industry_code_id]["c"],
-                round((result4[industry_code_id]["c"] or 1) / all, 2),
+                round(result4[industry_code_id]["c"] / all, 2),
             ))
 
             # sql = """
