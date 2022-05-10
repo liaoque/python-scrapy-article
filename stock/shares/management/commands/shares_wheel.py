@@ -69,9 +69,13 @@ class Command(BaseCommand):
                 }
 
             item = result1[industry_code_id]
-            print("30", item["industry_name"], item["c"], "------",
-                  "60", result2[industry_code_id]["c"], item["c"] / result2[industry_code_id]["c"], "------",
-                  "90", result3[industry_code_id]["c"], item["c"] / result3[industry_code_id]["c"])
+
+            print("%s 30涨停：%s --- 60涨停：%s 比例：%s--- 90涨停：%s 比例：%s "%(
+                item["industry_name"], item["c"],
+                result2[industry_code_id]["c"], item["c"] / result2[industry_code_id]["c"],
+                result3[industry_code_id]["c"], item["c"] / result3[industry_code_id]["c"]
+            ))
+
 
             # sql = """
             #         select 1 as id, count(1) as c from mc_shares
