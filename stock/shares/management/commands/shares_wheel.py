@@ -39,7 +39,7 @@ class Command(BaseCommand):
                    ) t
                    group by industry_code_id
                """
-        result = Shares.objects.SharesKdjCompute.objects.raw(sql, params=(start, end,))
+        result = Shares.objects.raw(sql, params=(start, end,))
         print("当前轮动")
         for item in result:
             print("%s--%s--%s", item.industry_name, item.industry_code_id, item.c, )
