@@ -44,7 +44,14 @@ class Command(BaseCommand):
         result = Shares.objects.raw(sql, params=(start, end,))
         print("当前轮动", result)
         for item in result:
-            print("%s--%s--%s", item.industry_name, item.industry_code_id, item.c, )
+            """
+            select 1 as id, count(1) as c from mc_shares 
+            left join mc_shares_join_industry on mc_shares_join_industry.code_id = mc_shares.code_id
+            where date_as >= %s and date_as <= %s   and  industry_code_id = %s
+               """
+            result2 = Shares.objects.raw(sql, params=(start, end, item.industry_code_id))
+
+            print(item.industry_name, item.industry_code_id, item.c, result2[0].c)
 
     def getAllDates(self):
         sql = '''
