@@ -49,6 +49,8 @@ class Command(BaseCommand):
             left join mc_shares_join_industry on mc_shares_join_industry.code_id = mc_shares.code_id
             where date_as >= %s and date_as <= %s   and  industry_code_id = %d
                """
+
+            print(item.industry_code_id)
             result2 = Shares.objects.raw(sql, params=(start, end, item.industry_code_id))
             print(result2)
             print(item.industry_name, item.industry_code_id, item.c, result2[0].c, item.c / result2[0].c)
