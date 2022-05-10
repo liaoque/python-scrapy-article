@@ -30,14 +30,14 @@ class Command(BaseCommand):
         result1 = self.convert(self.wheel(start, end))
 
         dates = datesOld[-60:-30]
-        start = dates[0].date_as;
-        end = dates[len(dates) - 1].date_as;
-        result2 = self.convert(self.wheel(start, end))
+        start1 = dates[0].date_as;
+        end2 = dates[len(dates) - 1].date_as;
+        result2 = self.convert(self.wheel(start1, end2))
 
         dates = datesOld[-90:-60]
-        start = dates[0].date_as;
-        end = dates[len(dates) - 1].date_as;
-        result3 = self.convert(self.wheel(start, end))
+        start3 = dates[0].date_as;
+        end3 = dates[len(dates) - 1].date_as;
+        result3 = self.convert(self.wheel(start3, end3))
 
         print("当前轮动", result1)
         for item in result1:
@@ -81,5 +81,9 @@ class Command(BaseCommand):
     def convert(self, list):
         result1 = {}
         for item in list:
-            result1[item.industry_code_id] = item
+            result1[item.industry_code_id] = {
+                "industry_code_id": item.industry_code_id,
+                "industry_name": item.industry_name,
+                "c": item.c,
+            }
         return result1
