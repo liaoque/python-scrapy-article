@@ -30,7 +30,7 @@ class Command(BaseCommand):
 
     def wheel(self, start, end):
         sql = """
-                   select industry_code_id, industry_name, count(1) as c from (
+                   select 1 as id, industry_code_id, industry_name, count(1) as c from (
                        select mc_shares.code_id, (p_end - p_start) / p_start as p_range2, industry_code_id, mc_shares_name.name as industry_name 
                            from mc_shares 
                            left join mc_shares_join_industry on mc_shares_join_industry.code_id = mc_shares.code_id
