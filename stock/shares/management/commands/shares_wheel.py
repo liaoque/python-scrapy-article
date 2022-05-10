@@ -41,10 +41,32 @@ class Command(BaseCommand):
 
         result = list(set(list(result1.keys()) + list(result2.keys()) + list(result3.keys())))
 
-        print("当前轮动", result1)
+        print("当前轮动", result)
         for industry_code_id in result:
             if industry_code_id is None:
                 continue
+            if result1[industry_code_id] is None:
+                industry_name = (result2[industry_code_id] and result2[industry_code_id].industry_name) or (
+                        result3[industry_code_id] and result3[industry_code_id].industry_name)
+                result1[industry_code_id] = {
+                    "industry_code_id": industry_code_id,
+                    "industry_name": industry_name,
+                    "c": .1,
+                }
+            if result2[industry_code_id] is None:
+                result2[industry_code_id] = {
+                    "industry_code_id": result1[industry_code_id].industry_code_id,
+                    "industry_name": result1[industry_code_id].industry_name,
+                    "c": 0,
+                }
+
+            if result3[industry_code_id] is None:
+                result3[industry_code_id] = {
+                    "industry_code_id": result1[industry_code_id].industry_code_id,
+                    "industry_name": result1[industry_code_id].industry_name,
+                    "c": 0,
+                }
+
             item = result1[industry_code_id]
             print("30", item.industry_name, item.c,
                   "60", result2[industry_code_id].c, item.c / result2[industry_code_id].c,
