@@ -44,9 +44,14 @@ class Command(BaseCommand):
         end4 = dates[len(dates) - 1].date_as;
         result4 = self.convert(self.wheel(start4, end4))
 
+        dates = datesOld[-80:-60]
+        start4 = dates[0].date_as;
+        end4 = dates[len(dates) - 1].date_as;
+        result5 = self.convert(self.wheel(start4, end4))
+
         result = list(set(
             list(result1.keys()) + list(result2.keys()) + list(result3.keys())
-            + list(result4.keys())
+            + list(result4.keys()) + list(result5.keys())
         ))
 
         print("当前轮动", result)
@@ -82,10 +87,18 @@ class Command(BaseCommand):
                     "c": 0,
                 }
 
+            if industry_code_id not in result4:
+                result5[industry_code_id] = {
+                    "industry_code_id": industry_code_id,
+                    "industry_name": result1[industry_code_id]["industry_name"],
+                    "c": 0,
+                }
+
             item = result1[industry_code_id]
             all = (result4[industry_code_id]["c"] + result3[industry_code_id]["c"] +
-                   result2[industry_code_id]["c"] + item["c"])
-            print("%s 20涨停：%s 比例：%s --- 40涨停：%s 比例：%s --- 60涨停：%s 比例：%s --- 80涨停：%s 比例：%s " % (
+                   result5[industry_code_id]["c"] + result2[industry_code_id]["c"] + item["c"]
+                   )
+            print("%s 20涨停：%s 比例：%s --- 40涨停：%s 比例：%s --- 60涨停：%s 比例：%s --- 80涨停：%s 比例：%s --- 100涨停：%s 比例：%s " % (
                 item["industry_name"], item["c"],
                 round(item["c"] / all, 2),
                 result2[industry_code_id]["c"],
@@ -94,6 +107,8 @@ class Command(BaseCommand):
                 round(result3[industry_code_id]["c"] / all, 2),
                 result4[industry_code_id]["c"],
                 round(result4[industry_code_id]["c"] / all, 2),
+                result5[industry_code_id]["c"],
+                round(result5[industry_code_id]["c"] / all, 2),
             ))
 
             # sql = """
