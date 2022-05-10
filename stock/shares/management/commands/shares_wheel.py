@@ -45,7 +45,7 @@ class Command(BaseCommand):
         for industry_code_id in result:
             if industry_code_id is None:
                 continue
-            if industry_code_id not  in result1:
+            if industry_code_id not in result1:
                 industry_name = (result2[industry_code_id] and result2[industry_code_id].industry_name) or (
                         result3[industry_code_id] and result3[industry_code_id].industry_name)
                 result1[industry_code_id] = {
@@ -53,14 +53,14 @@ class Command(BaseCommand):
                     "industry_name": industry_name,
                     "c": .1,
                 }
-            if industry_code_id not  in result2:
+            if industry_code_id not in result2:
                 result2[industry_code_id] = {
                     "industry_code_id": result1[industry_code_id].industry_code_id,
                     "industry_name": result1[industry_code_id].industry_name,
                     "c": 0,
                 }
 
-            if industry_code_id not  in result3:
+            if industry_code_id not in result3:
                 result3[industry_code_id] = {
                     "industry_code_id": result1[industry_code_id].industry_code_id,
                     "industry_name": result1[industry_code_id].industry_name,
