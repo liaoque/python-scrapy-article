@@ -55,14 +55,14 @@ class Command(BaseCommand):
                            from mc_shares 
                            left join mc_shares_join_industry on mc_shares_join_industry.code_id = mc_shares.code_id
                            left join mc_shares_name on mc_shares_join_industry.industry_code_id = mc_shares_name.code
-                           where date_as >= %s and date_as <= %s and p_start < p_end and mc_shares.code_id = %s
+                           where date_as >= %s and date_as <= %s and p_start < p_end and mc_shares_join_industry.industry_code_id = %s
                            having p_range2 >= 0.08
                    ) t
                    group by industry_code_id
                    order by c desc
                """
         result = Shares.objects.raw(sql, params=(start, end, code_id))
-        print(result)
+        # print(result)
         return result
 
     def getAllDates(self):
