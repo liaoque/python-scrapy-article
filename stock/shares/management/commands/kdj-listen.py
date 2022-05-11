@@ -10,8 +10,10 @@ from shares.model.shares import Shares
 from shares.model.shares_date_listen import SharesDateListen
 from shares.model.shares_macd import SharesMacd
 from shares.model.shares_buys import SharesBuys
+from shares.model.shares_join_industry import SharesJoinIndustry
+from shares.model.shares_ban import SharesBan
 import numpy as np
-import talib
+from django.core.mail import send_mail
 import math
 import requests
 
@@ -30,22 +32,31 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("开始计算-----")
         dateList = self.getAllDates()
-        for item in dateList[-1:]:
-            date_as = item.date_as
-            self.getkdj10(item.date_as)
+        send_data = {
+            'buy': [],
+            'sell': [],
+        }
 
-            # dateList = self.getAllDateListens()
-            # for item in dateList:
-            #     item.date_as = date_as
-            #     allCodeIds = SharesDateListen.objects.filter(date_as=item.date_as, buy_date_as=None)
+        bans = self.getBans()
+        industryCodeList = self.getIndustryCodeList()
+        print(bans)
+        print(industryCodeList)
+        return
+
+        for item in dateList[-1:]:
+            self.getkdj10(item.date_as)
             allCodeIds = SharesDateListen.objects.filter(buy_date_as=None)
             print("寻找买入点-----")
             for codeItem in allCodeIds:
+                if codeItem.code_id in bans:
+                    continue
                 codeItem.date_as = item.date_as
                 codeItemResult, buy_pre = self.findBuyPoint(codeItem)
                 if codeItemResult != None:
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
                     print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
+                    if codeItem.code_id in industryCodeList:
+                        send_data['buy'].append(codeItem.code_id)
                     if datetime.now().hour < 15:
                         continue
                     codeItem.buy_date_as = codeItemResult.date_as
@@ -61,7 +72,9 @@ class Command(BaseCommand):
                 if codeItemResult == None:
                     continue
                 sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                print("找到卖出点--%s--%s---%s", codeItemResult.date_as,codeItem.code_id,  sharesItem.p_end)
+                print("找到卖出点--%s--%s---%s", codeItemResult.date_as, codeItem.code_id, sharesItem.p_end)
+                if codeItem.code_id in industryCodeList:
+                    send_data['sell'].append(codeItem.code_id)
                 if datetime.now().hour < 15:
                     continue
                 buys = SharesBuys(
@@ -126,9 +139,10 @@ class Command(BaseCommand):
 
     def findBuyPoint(self, codeItem):
         date_as = codeItem.date_as
-        # sharesBuysItem = SharesBuys.objects.filter(code_id=codeItem.code_id).order_by('-sell_date_as')
-        # if len(sharesBuysItem) > 0 and sharesBuysItem[0].sell_date_as > codeItem.date_as:
-        #     date_as = sharesBuysItem[0].sell_date_as
+        #     需要避险
+        ban = SharesBan.objects.filter(code_id=codeItem.code_id)
+        if len(ban):
+            return None, 0
 
         # 计算ema
         date_as = Shares.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[
@@ -148,27 +162,11 @@ class Command(BaseCommand):
                 if sharesKdjItem.j > 55:
                     key += 1
                     continue
-                # shares = Shares.objects.filter(date_as__lte=result[key + 1].date_as, code_id=codeItem.code_id).order_by(
-                #     '-date_as')[:6]
-                # sharesSum = sum([item.p_end for item in shares[1:]])
-                # if codeItem.code_id == '001317':
-                #     print(sharesKdjItem.date_as, codeItem.code_id, [item.p_end for item in shares[1:]], sharesSum,
-                #       shares[0].p_end)
-                # if sharesSum / 5 > shares[0].p_end:
                 shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
                 close = [item.p_end / 100 for item in shares]
                 emaList = talib.EMA(np.array(close), timeperiod=5)
                 preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
-                # # emaList7 = talib.EMA(np.array(close), timeperiod=8)
-                # emaList4 = talib.MA(np.array(close), timeperiod=5)
-                # # print(sharesKdjItem.date_as, codeItem.code_id,emaList4[-2] , emaList7[-2] , emaList4[-1] , emaList7[-1])
-                # # if not (emaList4[-2] < emaList7[-2] and emaList4[-1] > emaList7[-1]):
-                # #     continue
-                # if not (emaList4[-2] < emaList4[-1]):
-                #     continue
 
-                # print(emaList)
-                # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
                 todayPend, today = self.getTodayPend(codeItem.code_id)
                 if todayPend >= preEma and datetime.strptime(today, '%Y-%m-%d').date() > result[key + 1].date_as:
                     item = result[key + 1]
@@ -229,3 +227,46 @@ class Command(BaseCommand):
             select 1 as id, date_as from mc_shares_date where date_as >= '2021-12-01' ;
             '''
         return SharesDateListen.objects.raw(sql)
+
+    def getIndustryCodeList(self):
+        industry = ["BK0422",
+                    "BK0424",
+                    "BK0428",
+                    "BK0429",
+                    "BK0433",
+                    "BK0437",
+                    "BK0438",
+                    "BK0450",
+                    "BK0451",
+                    "BK0476",
+                    "BK0477",
+                    "BK0479",
+                    "BK0482",
+                    "BK0484",
+                    "BK0725",
+                    "BK0727",
+                    "BK0731",
+                    "BK0739",
+                    "BK1029",
+                    "BK1040",
+                    "BK1041",
+                    "BK1042",
+                    "BK1045",
+                    "BK1046", ]
+        industryList = SharesJoinIndustry.objects.filter(industry_code_id=industry)
+        return [item.code_id for item in industryList]
+
+    def getBans(self):
+        industryList = SharesBan.objects.all()
+        return [item.code_id for item in industryList]
+
+    def sendMessage(self, send_data):
+        str = "找到买入点：%s\n,找到卖出点：%s\n" % (
+            ",".join(send_data['buy']), ",".join(send_data['sell']))
+        send_mail(
+            '特别提醒%s' % (datetime.now()),
+            str,
+            '844',
+            ['844596330@qq.com'],
+            fail_silently=False,
+        )
