@@ -35,7 +35,7 @@ class Command(BaseCommand):
             result1 = self.convert(self.wheel(start, end, 'BK1036'))
             all.append(result1)
             for industry_code_id in ['BK1036']:
-                if result1[industry_code_id] is None:
+                if industry_code_id not in result1:
                     result1[industry_code_id] = {
                         "industry_code_id": industry_code_id,
                         "c": 0,
