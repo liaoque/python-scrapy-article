@@ -99,8 +99,8 @@ class Command(BaseCommand):
             all = (result4[industry_code_id]["c"] + result3[industry_code_id]["c"] +
                    result5[industry_code_id]["c"] + result2[industry_code_id]["c"] + item["c"]
                    )
-            print("%s 20涨停：%s 比例：%s --- 40涨停：%s 比例：%s --- 60涨停：%s 比例：%s --- 80涨停：%s 比例：%s --- 100涨停：%s 比例：%s " % (
-                item["industry_name"], item["c"],
+            print("%s %s 20涨停：%s 比例：%s --- 40涨停：%s 比例：%s --- 60涨停：%s 比例：%s --- 80涨停：%s 比例：%s --- 100涨停：%s 比例：%s " % (
+                item["industry_code_id"], item["industry_name"], item["c"],
                 round(item["c"] / all, 2),
                 result2[industry_code_id]["c"],
                 round(result2[industry_code_id]["c"] / all, 2),
