@@ -35,10 +35,16 @@ class Command(BaseCommand):
             result1 = self.convert(self.wheel(start, end, 'BK1036'))
             all.append(result1)
             for industry_code_id in ['BK1036']:
+                if result1[industry_code_id] is None:
+                    result1[industry_code_id] = {
+                        "industry_code_id": item.industry_code_id,
+                        "c": item.c,
+                    }
+
                 item = result1[industry_code_id]
                 print("%s %s %s %s 20涨停：%s " % (
                     start, end,
-                    item["industry_code_id"], item["industry_name"], item["c"],
+                    item["industry_code_id"],  item["c"],
                 ))
             i + 15
 
