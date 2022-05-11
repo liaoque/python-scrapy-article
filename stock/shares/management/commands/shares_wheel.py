@@ -58,10 +58,10 @@ class Command(BaseCommand):
         print("当前轮动", result)
         for industry_code_id in result:
             if industry_code_id not in result1:
-                industry_name = (result2[industry_code_id] and result2[industry_code_id]["industry_name"]) or (
-                        result3[industry_code_id] and result3[industry_code_id]["industry_name"]) or (
-                                        result4[industry_code_id] and result4[industry_code_id]["industry_name"]) or (
-                                        result5[industry_code_id] and result5[industry_code_id]["industry_name"])
+                industry_name = (industry_code_id in result2 and result2[industry_code_id]["industry_name"]) or (
+                        industry_code_id in result3 and result3[industry_code_id]["industry_name"]) or (
+                        industry_code_id in result4 and result4[industry_code_id]["industry_name"]) or (
+                        industry_code_id in result5 and result5[industry_code_id]["industry_name"])
                 result1[industry_code_id] = {
                     "industry_code_id": industry_code_id,
                     "industry_name": industry_name,
