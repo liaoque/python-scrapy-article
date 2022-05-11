@@ -33,7 +33,9 @@ class Command(BaseCommand):
             start = dates[0].date_as;
             end = dates[len(dates) - 1].date_as;
             result1 = self.convert(self.wheel(start, end, 'BK1036'))
-            all.append(result1)
+            # all.append(result1)
+
+            result2 = self.wheelCode(start, end, 'BK1036')
             for industry_code_id in ['BK1036']:
                 if industry_code_id not in result1:
                     result1[industry_code_id] = {
@@ -42,11 +44,27 @@ class Command(BaseCommand):
                     }
 
                 item = result1[industry_code_id]
-                print("%s %s %s  20涨停：%s " % (
+                print("%s %s %s  20涨停：%s %s " % (
                     start, end,
                     item["industry_code_id"],  item["c"],
+                    ",".join(["\"" + item.code_id + "\"" for item in result2])
                 ))
+
             i = i + 10
+
+    def wheelCode(self, start, end, code_id):
+        sql = """
+                   select mc_shares.code_id, (p_end - p_start) / p_start as p_range2, industry_code_id, mc_shares_name.name as industry_name 
+                           from mc_shares 
+                           left join mc_shares_join_industry on mc_shares_join_industry.code_id = mc_shares.code_id
+                           left join mc_shares_name on mc_shares_join_industry.industry_code_id = mc_shares_name.code
+                           where date_as >= %s and date_as <= %s and p_start < p_end 
+                                and mc_shares_join_industry.industry_code_id = %s
+                           having p_range2 >= 0.08
+               """
+        result = Shares.objects.raw(sql, params=(start, end, code_id))
+        # print(result)
+        return result
 
     def wheel(self, start, end, code_id):
         sql = """
