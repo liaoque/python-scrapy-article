@@ -39,7 +39,6 @@ class Command(BaseCommand):
 
         bans = self.getBans()
         industryCodeList = self.getIndustryCodeList()
-        print(bans)
         print(industryCodeList)
         return
 
@@ -253,7 +252,7 @@ class Command(BaseCommand):
                     "BK1042",
                     "BK1045",
                     "BK1046", ]
-        industryList = SharesJoinIndustry.objects.filter(industry_code_id=industry)
+        industryList = SharesJoinIndustry.objects.filter(industry_code_id__in=industry)
         return [item.code_id for item in industryList]
 
     def getBans(self):
