@@ -42,7 +42,7 @@ class Command(BaseCommand):
                     }
 
                 item = result1[industry_code_id]
-                print("%s %s %s %s 20涨停：%s " % (
+                print("%s %s %s  20涨停：%s " % (
                     start, end,
                     item["industry_code_id"],  item["c"],
                 ))
