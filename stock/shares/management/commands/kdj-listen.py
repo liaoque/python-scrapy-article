@@ -268,7 +268,7 @@ class Command(BaseCommand):
         send_mail(
             '特别提醒%s' % (datetime.now()),
             str,
-            '844',
+            'lovemeand1314@163.com',
             ['844596330@qq.com'],
             fail_silently=False,
         )
