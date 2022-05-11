@@ -139,7 +139,7 @@ class Command(BaseCommand):
 
     def getAllDates(self):
         sql = '''
-                select 1 as id, date_as from mc_shares_date where date_as >= '2021-12-01';
+                select 1 as id, date_as from mc_shares_date where date_as >= '2021-01-01';
                 '''
         return Shares.objects.raw(sql)
 
