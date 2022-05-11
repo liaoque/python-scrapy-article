@@ -48,6 +48,7 @@ class Command(BaseCommand):
                     LEFT JOIN (SELECT code_id, date_as, avg_free_shares,price  FROM `mc_stock_members` where avg_free_shares > 100000  GROUP by code_id ORDER BY date_as desc) t 
                     ON t.code_id = mc_stock_members.code_id 
                     where t.date_as > mc_stock_members.date_as
+                    and t.avg_free_shares > mc_stock_members.avg_free_shares
                     and t.price < mc_stock_members.price
                     and mc_stock_members.avg_free_shares != 0
                     and ( mc_stock_members.code_id < '300000' or (mc_stock_members.code_id > '600000' and mc_stock_members.code_id < '700000' ) )
