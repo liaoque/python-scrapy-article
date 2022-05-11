@@ -26,6 +26,41 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         result = []
+        # 股东数持续减少的
+        sql = """
+        SELECT mc_stock_members.code_id from mc_stock_members 
+            LEFT JOIN (SELECT code_id, date_as, avg_free_shares  FROM `mc_stock_members` where avg_free_shares > 100000  GROUP by code_id ORDER BY date_as desc) t 
+            ON t.code_id = mc_stock_members.code_id 
+            where t.date_as > mc_stock_members.date_as
+            and t.avg_free_shares > mc_stock_members.avg_free_shares
+            and mc_stock_members.avg_free_shares != 0
+            and ( mc_stock_members.code_id < '300000' or (mc_stock_members.code_id > '600000' and mc_stock_members.code_id < '700000' ) )
+            GROUP by mc_stock_members.code_id ORDER BY mc_stock_members.date_as desc;
+        """
+        result = Shares.objects.raw(sql)
+        print(
+            "股东数持续减少的",
+            ",".join(["\"" + item.code_id + "\"" for item in result])
+        )
+
+        sql = """
+                SELECT mc_stock_members.code_id from mc_stock_members 
+                    LEFT JOIN (SELECT code_id, date_as, avg_free_shares，price  FROM `mc_stock_members` where avg_free_shares > 100000  GROUP by code_id ORDER BY date_as desc) t 
+                    ON t.code_id = mc_stock_members.code_id 
+                    where t.date_as > mc_stock_members.date_as
+                    and t.price < mc_stock_members.price
+                    and mc_stock_members.avg_free_shares != 0
+                    and ( mc_stock_members.code_id < '300000' or (mc_stock_members.code_id > '600000' and mc_stock_members.code_id < '700000' ) )
+                    GROUP by mc_stock_members.code_id ORDER BY mc_stock_members.date_as desc;
+                """
+        result = Shares.objects.raw(sql)
+        print(
+            "股东人数增加，股价基本没涨的股票, 还在调整",
+            ",".join(["\"" + item.code_id + "\"" for item in result])
+        )
+
+
+
         for item in SharesName.objects.filter(status=1, code_type=1, ):
             stockMemberList = self.getStockMember(item)
             for item2 in stockMemberList:
