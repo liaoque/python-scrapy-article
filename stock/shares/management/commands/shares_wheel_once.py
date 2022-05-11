@@ -28,7 +28,7 @@ class Command(BaseCommand):
         datesOld = datesOld[-350:]
         i = 0
         all = []
-        while i < 350:
+        while i < len(datesOld):
             dates = datesOld[i:i + 15]
             start = dates[0].date_as;
             end = dates[len(dates) - 1].date_as;
