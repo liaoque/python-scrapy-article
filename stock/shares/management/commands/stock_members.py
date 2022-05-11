@@ -28,7 +28,7 @@ class Command(BaseCommand):
         result = []
         # 股东数持续减少的
         sql = """
-        SELECT 1 as id mc_stock_members.code_id from mc_stock_members 
+        SELECT 1 as id, mc_stock_members.code_id from mc_stock_members 
             LEFT JOIN (SELECT code_id, date_as, avg_free_shares  FROM `mc_stock_members` where avg_free_shares > 100000  GROUP by code_id ORDER BY date_as desc) t 
             ON t.code_id = mc_stock_members.code_id 
             where t.date_as > mc_stock_members.date_as
@@ -44,7 +44,7 @@ class Command(BaseCommand):
         )
 
         sql = """
-                SELECT  1 as id mc_stock_members.code_id from mc_stock_members 
+                SELECT  1 as id, mc_stock_members.code_id from mc_stock_members 
                     LEFT JOIN (SELECT code_id, date_as, avg_free_shares，price  FROM `mc_stock_members` where avg_free_shares > 100000  GROUP by code_id ORDER BY date_as desc) t 
                     ON t.code_id = mc_stock_members.code_id 
                     where t.date_as > mc_stock_members.date_as
