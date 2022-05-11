@@ -26,16 +26,23 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         result = []
-        # 股东数持续减少的
+        # 股东数持续减少的, 并排出了 银行，证券，保险
         sql = """
-        SELECT 1 as id, mc_stock_members.code_id from mc_stock_members 
-            LEFT JOIN (SELECT code_id, date_as, avg_free_shares  FROM `mc_stock_members` where avg_free_shares > 100000  GROUP by code_id ORDER BY date_as desc) t 
-            ON t.code_id = mc_stock_members.code_id 
-            where t.date_as > mc_stock_members.date_as
-            and t.avg_free_shares > mc_stock_members.avg_free_shares
-            and mc_stock_members.avg_free_shares > 100000
-            and ( mc_stock_members.code_id < '300000' or (mc_stock_members.code_id > '600000' and mc_stock_members.code_id < '700000' ) )
-            GROUP by mc_stock_members.code_id ORDER BY mc_stock_members.date_as desc;
+        select * from (
+        SELECT mc_stock_members.* from mc_stock_members 
+                LEFT JOIN (SELECT code_id, date_as, avg_free_shares FROM `mc_stock_members` GROUP by code_id ORDER BY date_as desc) t 
+                ON t.code_id = mc_stock_members.code_id 
+                where t.date_as > mc_stock_members.date_as 
+                and ( mc_stock_members.code_id < '300000' or (mc_stock_members.code_id > '600000' and mc_stock_members.code_id < '700000' ) )
+                GROUP by mc_stock_members.code_id 
+                ORDER BY mc_stock_members.date_as desc
+        ) as s
+        LEFT JOIN (SELECT code_id, date_as, avg_free_shares  FROM `mc_stock_members`  GROUP by code_id ORDER BY date_as desc) t 
+            ON t.code_id = s.code_id 
+        where t.avg_free_shares > 50000
+            and t.avg_free_shares > s.avg_free_shares
+            and ( s.code_id < '300000' or (s.code_id > '600000' and s.code_id < '700000' ) )
+            and s.code_id  not in (select code_id from mc_shares_join_industry where industry_code_id in ('BK0475', 'BK0474', 'BK0473'));
         """
         result = Shares.objects.raw(sql)
         print(
@@ -43,16 +50,24 @@ class Command(BaseCommand):
             ",".join(["\"" + item.code_id + "\"" for item in result])
         )
 
+#        并排出了 银行，证券，保险
         sql = """
-                SELECT  1 as id, mc_stock_members.code_id from mc_stock_members 
-                    LEFT JOIN (SELECT code_id, date_as, avg_free_shares,price  FROM `mc_stock_members` where avg_free_shares > 100000  GROUP by code_id ORDER BY date_as desc) t 
+            select * from (
+            SELECT mc_stock_members.* from mc_stock_members 
+                    LEFT JOIN (SELECT code_id, date_as, avg_free_shares FROM `mc_stock_members` GROUP by code_id ORDER BY date_as desc) t 
                     ON t.code_id = mc_stock_members.code_id 
-                    where t.date_as > mc_stock_members.date_as
-                    and t.avg_free_shares > mc_stock_members.avg_free_shares
-                    and t.price < mc_stock_members.price
-                    and mc_stock_members.avg_free_shares  > 100000
+                    where t.date_as > mc_stock_members.date_as 
                     and ( mc_stock_members.code_id < '300000' or (mc_stock_members.code_id > '600000' and mc_stock_members.code_id < '700000' ) )
-                    GROUP by mc_stock_members.code_id ORDER BY mc_stock_members.date_as desc;
+                    GROUP by mc_stock_members.code_id 
+                    ORDER BY mc_stock_members.date_as desc
+            ) as s
+            LEFT JOIN (SELECT code_id, date_as, avg_free_shares,price  FROM `mc_stock_members`  GROUP by code_id ORDER BY date_as desc) t 
+                ON t.code_id = s.code_id 
+            where t.avg_free_shares > 50000
+                and t.avg_free_shares < s.avg_free_shares
+                and t.price < s.price
+                and ( s.code_id < '300000' or (s.code_id > '600000' and s.code_id < '700000' ) )
+                and s.code_id  not in (select code_id from mc_shares_join_industry where industry_code_id in ('BK0475', 'BK0474', 'BK0473'));
                 """
         result = Shares.objects.raw(sql)
         print(
