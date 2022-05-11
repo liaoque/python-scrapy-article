@@ -26,10 +26,10 @@ class Command(BaseCommand):
         # BK1036
         datesOld = self.getAllDates()
         datesOld = datesOld[-350:]
-        i = datesOld[0]
+        i = 0
         all = []
         while i < 350:
-            dates = datesOld[i:15]
+            dates = datesOld[i:i + 15]
             start = dates[0].date_as;
             end = dates[len(dates) - 1].date_as;
             result1 = self.convert(self.wheel(start, end, 'BK1036'))
@@ -40,7 +40,7 @@ class Command(BaseCommand):
                     start, end,
                     item["industry_code_id"], item["industry_name"], item["c"],
                 ))
-            i+15
+            i + 15
 
     def wheel(self, start, end, code_id):
         sql = """
