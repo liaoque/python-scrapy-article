@@ -37,12 +37,9 @@ class Command(BaseCommand):
             'buy': [],
             'sell': [],
         }
-        self.sendMessage(send_data)
-        return
 
         bans = self.getBans()
         industryCodeList = self.getIndustryCodeList()
-
 
         for item in dateList[-1:]:
             self.getkdj10(item.date_as)
@@ -263,7 +260,7 @@ class Command(BaseCommand):
         return [item.code_id for item in industryList]
 
     def sendMessage(self, send_data):
-        str = "找到买入点：%s\n,找到卖出点：%s\n" % (
+        str = "找到买入点：%s\n 找到卖出点：%s\n" % (
             ",".join(send_data['buy']), ",".join(send_data['sell']))
         send_mail(
             '特别提醒%s' % (datetime.now()),
