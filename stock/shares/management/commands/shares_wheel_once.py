@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 print("%s %s %s  20涨停：%s %s " % (
                     start, end,
                     item["industry_code_id"],  item["c"],
-                    ",".join(["\"" + item.code_id + "\"" for item in result2])
+                    ",".join( list(set(["\"" + item.code_id + "\"" for item in result2])))
                 ))
 
             i = i + 10
