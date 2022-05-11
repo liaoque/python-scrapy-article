@@ -37,8 +37,8 @@ class Command(BaseCommand):
             for industry_code_id in ['BK1036']:
                 if result1[industry_code_id] is None:
                     result1[industry_code_id] = {
-                        "industry_code_id": item.industry_code_id,
-                        "c": item.c,
+                        "industry_code_id": industry_code_id,
+                        "c": 0,
                     }
 
                 item = result1[industry_code_id]
