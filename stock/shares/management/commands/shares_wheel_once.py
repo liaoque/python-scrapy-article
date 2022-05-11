@@ -62,6 +62,7 @@ class Command(BaseCommand):
                    order by c desc
                """
         result = Shares.objects.raw(sql, params=(start, end, code_id))
+        print(result)
         return result
 
     def getAllDates(self):
