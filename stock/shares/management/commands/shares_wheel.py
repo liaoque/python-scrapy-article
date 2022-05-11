@@ -24,27 +24,27 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # 过去30个工作日， 涨停股票所属行业
         datesOld = self.getAllDates()
-        dates = datesOld[-30:]
+        dates = datesOld[-10:]
         start = dates[0].date_as;
         end = dates[len(dates) - 1].date_as;
         result1 = self.convert(self.wheel(start, end))
 
-        dates = datesOld[-60:-30]
+        dates = datesOld[-20:-10]
         start1 = dates[0].date_as;
         end2 = dates[len(dates) - 1].date_as;
         result2 = self.convert(self.wheel(start1, end2))
 
-        dates = datesOld[-90:-60]
+        dates = datesOld[-30:-20]
         start3 = dates[0].date_as;
         end3 = dates[len(dates) - 1].date_as;
         result3 = self.convert(self.wheel(start3, end3))
 
-        dates = datesOld[-120:-90]
+        dates = datesOld[-40:-30]
         start4 = dates[0].date_as;
         end4 = dates[len(dates) - 1].date_as;
         result4 = self.convert(self.wheel(start4, end4))
 
-        dates = datesOld[-150:-120]
+        dates = datesOld[-50:-40]
         start4 = dates[0].date_as;
         end4 = dates[len(dates) - 1].date_as;
         result5 = self.convert(self.wheel(start4, end4))
