@@ -13,6 +13,7 @@ from shares.model.shares_buys import SharesBuys
 from shares.model.shares_join_industry import SharesJoinIndustry
 from shares.model.shares_ban import SharesBan
 import numpy as np
+import talib
 from django.core.mail import send_mail
 import math
 import requests
@@ -36,11 +37,12 @@ class Command(BaseCommand):
             'buy': [],
             'sell': [],
         }
+        self.sendMessage(send_data)
+        return
 
         bans = self.getBans()
         industryCodeList = self.getIndustryCodeList()
-        print(industryCodeList)
-        return
+
 
         for item in dateList[-1:]:
             self.getkdj10(item.date_as)
@@ -96,6 +98,7 @@ class Command(BaseCommand):
                     )
                     listen.save()
             # break
+        self.sendMessage(send_data)
 
     def findSellPoint(self, codeItem, item):
         if item.date_as <= codeItem.buy_date_as:
