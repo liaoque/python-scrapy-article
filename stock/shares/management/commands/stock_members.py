@@ -45,7 +45,7 @@ class Command(BaseCommand):
 
         sql = """
                 SELECT  1 as id, mc_stock_members.code_id from mc_stock_members 
-                    LEFT JOIN (SELECT code_id, date_as, avg_free_shares，price  FROM `mc_stock_members` where avg_free_shares > 100000  GROUP by code_id ORDER BY date_as desc) t 
+                    LEFT JOIN (SELECT code_id, date_as, avg_free_shares,price  FROM `mc_stock_members` where avg_free_shares > 100000  GROUP by code_id ORDER BY date_as desc) t 
                     ON t.code_id = mc_stock_members.code_id 
                     where t.date_as > mc_stock_members.date_as
                     and t.price < mc_stock_members.price
