@@ -46,7 +46,7 @@ class Command(BaseCommand):
                     start, end,
                     item["industry_code_id"],  item["c"],
                 ))
-            i + 15
+            i = i + 15
 
     def wheel(self, start, end, code_id):
         sql = """
