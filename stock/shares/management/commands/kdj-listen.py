@@ -31,6 +31,9 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
+        if datetime.today().weekday() >= 5:
+            return
+
         print("开始计算-----")
         dateList = self.getAllDates()
         send_data = {
