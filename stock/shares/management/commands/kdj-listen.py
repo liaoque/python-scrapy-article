@@ -274,7 +274,7 @@ class Command(BaseCommand):
 
     def sendMessage(self, send_data):
         str = "找到买入点：%s\n 找到卖出点：%s\n" % (
-            ",".join(send_data['buy']), ",".join(send_data['sell']))
+            "\",\"".join(send_data['buy']), "\",\"".join(send_data['sell']))
         send_mail(
             '特别提醒%s' % (datetime.now()),
             str,
