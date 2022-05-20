@@ -58,7 +58,7 @@ class Command(BaseCommand):
                     print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
                     if codeItem.code_id in industryCodeList:
                         send_data['buy'].append(codeItem.code_id)
-                    if datetime.now().hour < 15:
+                    if datetime.now().hour < 14:
                         continue
                     codeItem.buy_date_as = codeItemResult.date_as
                     codeItem.buy_pre = buy_pre
