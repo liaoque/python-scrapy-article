@@ -45,13 +45,13 @@ class Command(BaseCommand):
         SELECT code_id, sum(p_start) as p_start, sum(p_end) as p_end,date_as  from (
             SELECT code_id, p_start, 0 as p_end,date_as
             FROM `mc_shares_industry`
-            where date_as in (SELECT min(date_as) FROM  `mc_shares_industry`  GROUP BY  cast(UNIX_TIMESTAMP(date_as) / (%d*86400) as signed ))
+            where date_as in (SELECT min(date_as) FROM  `mc_shares_industry`  GROUP BY  cast(UNIX_TIMESTAMP(date_as) / (%s*86400) as signed ))
             UNION ALL
             SELECT code_id, 0 as p_start, p_end,date_as
             FROM `mc_shares_industry`
-            where date_as in (SELECT max(date_as) FROM  `mc_shares_industry`  GROUP BY  cast(UNIX_TIMESTAMP(date_as) / (%d*86400) as signed ))
+            where date_as in (SELECT max(date_as) FROM  `mc_shares_industry`  GROUP BY  cast(UNIX_TIMESTAMP(date_as) / (%s*86400) as signed ))
         ) c
-        GROUP BY code_id,cast(UNIX_TIMESTAMP(date_as) / (%d*86400) as signed );
+        GROUP BY code_id,cast(UNIX_TIMESTAMP(date_as) / (%s*86400) as signed );
         '''
         result = SharesName.objects.raw(sql, params=(d, d, d))
         df = pd.DataFrame(result)
