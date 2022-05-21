@@ -25,8 +25,8 @@ class Command(BaseCommand):
         for code in ['BK0425', 'BK0437', 'BK0451', 'BK0482', 'BK0726']:
             result = self.listCode(code, start, end)
             print(result)
-            # for code_id in result[code]:
-            #     print(code_id, result[code])
+            for code_id in result[code]:
+                print(code_id, result[code][code_id])
             print("----------")
 
     def listCode(self, code, start, end):
