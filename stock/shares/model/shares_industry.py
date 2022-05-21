@@ -18,6 +18,6 @@ class SharesIndustry(models.Model):
 
     def __str__(self):
         return self.code_id + ":" + datetime.strftime(
-            self.date_as, '%Y-%m-%d')+ ":最大-" + str(self.p_start) + ":最小-" + str(self.p_end)
+            self.date_as, '%Y-%m-%d')+ ":开始-" + str(self.p_start) + ":结束-" + str(self.p_end)
 
 
