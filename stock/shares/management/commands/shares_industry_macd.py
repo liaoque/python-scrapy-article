@@ -54,13 +54,18 @@ class Command(BaseCommand):
         GROUP BY code_id,cast(UNIX_TIMESTAMP(date_as) / (%s*86400) as signed );
         '''
         result = SharesName.objects.raw(sql, params=(d, d, d))
+        result = [{'code_id': x.code_id,
+                   'p_start': x.p_start,
+                   'p_end': x.p_end,
+                   'date_as': x.date_as
+                   } for x in result]
         df = pd.DataFrame(result)
         grouped = df.groupby('code_id')
         l = []
         for code_id, item in grouped:
             l.append({
                 'code_id': code_id,
-                'data': [{'code_id': x[1], 'p_start': x[2], 'p_end': x[3], 'date_as': x[4]} for x in
+                'data': [{'code_id': x[0], 'p_start': x[1], 'p_end': x[2], 'date_as': x[3]} for x in
                          item.sort_values(by='date_as').values]
             })
         return l
