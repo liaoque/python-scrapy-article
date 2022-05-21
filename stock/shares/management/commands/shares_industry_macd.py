@@ -20,12 +20,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         #
-        # print(self.getData(7))
+        print(self.getData(7))
 
-        print(self.getData(15))
+        print(self.getData(14))
 
         #
-        print(self.getData(20))
+        print(self.getData(21))
 
         #
         # print(self.getData(30))
