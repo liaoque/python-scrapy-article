@@ -28,7 +28,6 @@ class Command(BaseCommand):
         #
         print(self.getData(30))
 
-
     def getData(self, n_day):
         result = self.industry_half_month(n_day)
         l = []
@@ -37,7 +36,7 @@ class Command(BaseCommand):
             macdDIFF = macdDIFF1[-2:]
             macdDEA = macdDEA1[-2:]
             if item['code_id'] == 'BK1046':
-                print(item,macdDIFF1)
+                print(item, macdDIFF1)
 
             if macdDIFF[0] > macdDIFF[1] or macdDEA[0] > macdDEA[1] or macdDIFF[1] < macdDEA[1]:
                 continue
@@ -78,6 +77,9 @@ class Command(BaseCommand):
     def talib_Macd(self, data):
         # 计算kd指标
         close_prices = np.array([int(v['p_end']) / 100 for v in data])
+        if len(close_prices) < 26:
+            close_prices = [0] * (26 - len(close_prices)) + close_prices
+
         macdDIFF, macdDEA, macd = talib.MACDEXT(close_prices, fastperiod=12, fastmatype=1, slowperiod=26, slowmatype=1,
                                                 signalperiod=9, signalmatype=1)
         macd = macd * 2
