@@ -22,10 +22,44 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         start = date.today() - timedelta(days=60)
         end = date.today()
-        for code in ['BK0425', 'BK0437', 'BK0451', 'BK0482', 'BK0726']:
+        # for code in ['BK0425', 'BK0437', 'BK0451', 'BK0482', 'BK0726']:
+        for code in ["BK0420",
+                    "BK0422",
+                    "BK0424",
+                    "BK0427",
+                    "BK0428",
+                    "BK0429",
+                    "BK0433",
+                    "BK0436",
+                    "BK0437",
+                    "BK0438",
+                    "BK0450",
+                    "BK0451",
+                    "BK0454",
+                    "BK0456",
+                    "BK0465",
+                    "BK0476",
+                    "BK0477",
+                    "BK0479",
+                    "BK0480",
+                    "BK0481",
+                    "BK0482",
+                    "BK0484",
+                    "BK0725",
+                    "BK0727",
+                    "BK0729",
+                    "BK0731",
+                    "BK0739",
+                    "BK1015",
+                    "BK1016",
+                    "BK1029",
+                    "BK1040",
+                    "BK1041",
+                    "BK1042",
+                    "BK1045", ]:
             result = self.listCode(code, start, end)
             for code_id in result[code]:
-                if result[code][code_id] / result[code][code] > 0.6:
+                if result[code][code_id] / result[code][code] > 0.7:
                     print(code_id, result[code][code_id])
             print("----------")
 
