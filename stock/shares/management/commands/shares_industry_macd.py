@@ -36,10 +36,11 @@ class Command(BaseCommand):
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(item['data'])
             macdDIFF = macdDIFF1[-2:]
             macdDEA = macdDEA1[-2:]
+            if item['code_id'] == 'BK1046':
+                print(item,macdDIFF1)
 
             if macdDIFF[0] > macdDIFF[1] or macdDEA[0] > macdDEA[1] or macdDIFF[1] < macdDEA[1]:
                 continue
-            print(item['code_id'], macdDIFF, macdDEA )
             l.append(item['code_id'])
         return l
 
