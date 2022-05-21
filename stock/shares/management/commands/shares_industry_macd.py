@@ -39,6 +39,7 @@ class Command(BaseCommand):
 
             if macdDIFF[0] > macdDIFF[1] or macdDEA[0] > macdDEA[1] or macdDIFF[1] < macdDEA[1]:
                 continue
+            print(item['code_id'], macdDIFF, macdDEA )
             l.append(item['code_id'])
         return l
 
