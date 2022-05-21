@@ -44,13 +44,12 @@ class Command(BaseCommand):
         l[code][code] = len(SharesIndustryDates)
         for shareItem in shares:
             sql = """
-                    select * from `mc_shares_industry` 
+                    select * from `mc_shares` 
                     where code_id=%s 
                         and date_as >= %s 
                         and date_as <= %s
                     """
             sharesDates = SharesIndustry.objects.raw(sql, params=(shareItem.code_id, start, end))
-            print(sharesDates)
             for SharesIndustryDateItem in SharesIndustryDates:
                 for sharesDateItem in sharesDates:
                     if sharesDateItem.code_id not in l[code]:
@@ -60,11 +59,6 @@ class Command(BaseCommand):
                     # 对比回撤幅度
                     # 板块下跌，股票上涨
                     # 板块下跌，股票跌幅 小于
-                    print(sharesDateItem.p_start <= sharesDateItem.p_end)
-                    print(
-                        (sharesDateItem.p_start - sharesDateItem.p_end) / sharesDateItem.p_end <= (
-                                SharesIndustryDateItem.p_start - SharesIndustryDateItem.p_end) / SharesIndustryDateItem.p_end
-                    )
                     if (sharesDateItem.p_start <= sharesDateItem.p_end) or (
                             (sharesDateItem.p_start - sharesDateItem.p_end) / sharesDateItem.p_end <= (
                             SharesIndustryDateItem.p_start - SharesIndustryDateItem.p_end) / SharesIndustryDateItem.p_end
