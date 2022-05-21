@@ -39,7 +39,7 @@ class Command(BaseCommand):
                     """
         SharesIndustryDates = SharesIndustry.objects.raw(sql, params=(code, start, end))
         shares = SharesJoinIndustry.objects.filter(industry_code_id=code)
-        if l[code] is None:
+        if code not in l:
             l[code] = {}
         l[code][code] = len(SharesIndustryDates)
         for shareItem in shares:
@@ -52,7 +52,7 @@ class Command(BaseCommand):
             sharesDates = SharesIndustry.objects.raw(sql, params=(shareItem.code_id, start, end))
             for SharesIndustryDateItem in SharesIndustryDates:
                 for sharesDateItem in sharesDates:
-                    if l[code][sharesDateItem.code_id] is None:
+                    if sharesDateItem.code_id not in l[code]:
                         l[code][sharesDateItem.code_id] = 0
                     if SharesIndustryDateItem.date_as != sharesDateItem.date_as:
                         continue
