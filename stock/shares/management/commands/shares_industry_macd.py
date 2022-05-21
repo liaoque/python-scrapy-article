@@ -23,7 +23,7 @@ class Command(BaseCommand):
         print(self.getData(15))
 
         #
-        # print(self.getData(20))
+        print(self.getData(20))
 
 
     def getData(self, n_day):
