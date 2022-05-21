@@ -27,4 +27,5 @@ from .model.shares_kdj_hours import SharesKdjHours
 from .model.shares_date_listen import SharesDateListen
 from .model.shares_buys import SharesBuys
 from .model.stock_members import SharesMembers
+from .model.shares_cache import SharesCache
 
