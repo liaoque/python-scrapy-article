@@ -24,7 +24,6 @@ class Command(BaseCommand):
         end = date.today()
         for code in ['BK0425', 'BK0437', 'BK0451', 'BK0482', 'BK0726']:
             result = self.listCode(code, start, end)
-            print(result)
             for code_id in result[code]:
                 print(code_id, result[code][code_id])
             print("----------")
