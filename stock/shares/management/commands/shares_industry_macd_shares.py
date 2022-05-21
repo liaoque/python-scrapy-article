@@ -44,11 +44,11 @@ class Command(BaseCommand):
         l[code][code] = len(SharesIndustryDates)
         for shareItem in shares:
             sql = """
-                                    select * from `mc_shares_industry` 
-                                    where code_id=%s 
-                                        and date_as >= %s 
-                                        and date_as <= %s
-                                    """
+                    select * from `mc_shares_industry` 
+                    where code_id=%s 
+                        and date_as >= %s 
+                        and date_as <= %s
+                    """
             sharesDates = SharesIndustry.objects.raw(sql, params=(shareItem.code_id, start, end))
             for SharesIndustryDateItem in SharesIndustryDates:
                 for sharesDateItem in sharesDates:
