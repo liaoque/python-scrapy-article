@@ -30,8 +30,6 @@ class Command(BaseCommand):
         result = self.industry_half_month(n_day)
         l = []
         for item in result:
-            print(item)
-
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(item['data'])
             macdDIFF = macdDIFF1[-2:]
             macdDEA = macdDEA1[-2:]
@@ -39,7 +37,6 @@ class Command(BaseCommand):
             if macdDIFF[0] > macdDIFF[1] or macdDEA[0] > macdDEA[1] or macdDIFF[1] < macdDEA[1]:
                 continue
             l.append(item['code_id'])
-            return
         return l
 
     def industry_half_month(self, n_day):
