@@ -59,6 +59,11 @@ class Command(BaseCommand):
                     # 对比回撤幅度
                     # 板块下跌，股票上涨
                     # 板块下跌，股票跌幅 小于
+                    print(sharesDateItem.p_start <= sharesDateItem.p_end)
+                    print(
+                        (sharesDateItem.p_start - sharesDateItem.p_end) / sharesDateItem.p_end <= (
+                                SharesIndustryDateItem.p_start - SharesIndustryDateItem.p_end) / SharesIndustryDateItem.p_end
+                    )
                     if (sharesDateItem.p_start <= sharesDateItem.p_end) or (
                             (sharesDateItem.p_start - sharesDateItem.p_end) / sharesDateItem.p_end <= (
                             SharesIndustryDateItem.p_start - SharesIndustryDateItem.p_end) / SharesIndustryDateItem.p_end
