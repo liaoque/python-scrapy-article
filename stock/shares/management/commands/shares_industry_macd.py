@@ -25,6 +25,9 @@ class Command(BaseCommand):
         #
         print(self.getData(20))
 
+        #
+        print(self.getData(30))
+
 
     def getData(self, n_day):
         result = self.industry_half_month(n_day)
