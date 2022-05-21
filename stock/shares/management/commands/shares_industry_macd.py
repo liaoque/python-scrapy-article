@@ -40,7 +40,7 @@ class Command(BaseCommand):
         return l
 
     def industry_half_month(self, n_day):
-        d = n_day * 86400
+        d = n_day
         sql = '''
         SELECT code_id, sum(p_start) as p_start, sum(p_end) as p_end,date_as  from (
             SELECT code_id, p_start, 0 as p_end,date_as
