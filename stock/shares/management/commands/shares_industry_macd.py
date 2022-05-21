@@ -16,7 +16,7 @@ import talib
 
 
 class Command(BaseCommand):
-    help = '看macd周期'
+    help = '看macd周期趋势'
 
     def handle(self, *args, **options):
         #
