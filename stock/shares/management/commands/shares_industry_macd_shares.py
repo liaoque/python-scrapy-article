@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count, Max, Min
 from django.db import connection
@@ -20,7 +20,7 @@ class Command(BaseCommand):
     help = '找板块周期回调比较小的股票'
 
     def handle(self, *args, **options):
-        start = date.today() - datetime.timedelta(days=60)
+        start = date.today() - timedelta(days=60)
         end = date.today()
         for code in ['BK0425', 'BK0437', 'BK0451', 'BK0482', 'BK0726']:
             result = self.listCode(code, start, end)
