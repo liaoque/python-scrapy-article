@@ -59,7 +59,7 @@ class Command(BaseCommand):
                     "BK1045", ]:
             result = self.listCode(code, start, end)
             for code_id in result[code]:
-                if result[code][code_id] / result[code][code] > 0.7:
+                if result[code][code_id] / result[code][code] > 0.8:
                     print(code_id, result[code][code_id])
             print("----------")
 
