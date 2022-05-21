@@ -21,7 +21,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         start = date.today() - timedelta(days=60)
-        end = date.today()
+        end = date.today()- timedelta(days=10)
         # for code in ['BK0425', 'BK0437', 'BK0451', 'BK0482', 'BK0726']:
         for code in ["BK0420",
                     "BK0422",
