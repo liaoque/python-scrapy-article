@@ -65,5 +65,4 @@ class Command(BaseCommand):
                     ):
                         l[code][sharesDateItem.code_id] += 1
                     break
-        print(l)
         return l
