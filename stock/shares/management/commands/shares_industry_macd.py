@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         #
-        print(self.getData(7))
+        # print(self.getData(7))
 
         print(self.getData(15))
 
@@ -28,7 +28,7 @@ class Command(BaseCommand):
         print(self.getData(20))
 
         #
-        print(self.getData(30))
+        # print(self.getData(30))
 
     def getData(self, n_day):
         result = self.industry_half_month(n_day)
@@ -37,8 +37,6 @@ class Command(BaseCommand):
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(item['data'])
             macdDIFF = macdDIFF1[-2:]
             macdDEA = macdDEA1[-2:]
-            if item['code_id'] == 'BK1046':
-                print(item, macdDIFF1)
 
             if macdDIFF[0] > macdDIFF[1] or macdDEA[0] > macdDEA[1] or macdDIFF[1] < macdDEA[1]:
                 continue
