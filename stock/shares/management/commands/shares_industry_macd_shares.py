@@ -25,7 +25,7 @@ class Command(BaseCommand):
         for code in ['BK0425', 'BK0437', 'BK0451', 'BK0482', 'BK0726']:
             result = self.listCode(code, start, end)
             for code_id in result[code]:
-                if result[code][code_id] / result[code][code] > 0.7:
+                if result[code][code_id] / result[code][code] > 0.6:
                     print(code_id, result[code][code_id])
             print("----------")
 
