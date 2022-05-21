@@ -77,8 +77,8 @@ class Command(BaseCommand):
     def talib_Macd(self, data):
         # 计算kd指标
         close_prices = [int(v['p_end']) / 100 for v in data]
-        if len(close_prices) < 26:
-            close_prices = [0] * (26 - len(close_prices)) + close_prices
+        if len(close_prices) < 33:
+            close_prices = [0] * (33 - len(close_prices)) + close_prices
         close_prices = np.array(close_prices)
         macdDIFF, macdDEA, macd = talib.MACDEXT(close_prices, fastperiod=12, fastmatype=1, slowperiod=26, slowmatype=1,
                                                 signalperiod=9, signalmatype=1)
