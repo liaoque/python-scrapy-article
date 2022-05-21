@@ -84,3 +84,12 @@ class Command(BaseCommand):
                                                 signalperiod=9, signalmatype=1)
         macd = macd * 2
         return (macdDIFF, macdDEA, macd)
+
+    def talib_Trix(self, data):
+        # 计算kd指标
+        close_prices = [int(v['p_end']) / 100 for v in data]
+        if len(close_prices) < 33:
+            close_prices = [0] * (33 - len(close_prices)) + close_prices
+        close_prices = np.array(close_prices)
+        output = talib.TRIX(close_prices, timeperiod=30)
+        return output
