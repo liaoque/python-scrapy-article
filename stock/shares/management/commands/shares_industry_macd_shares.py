@@ -50,6 +50,7 @@ class Command(BaseCommand):
                         and date_as <= %s
                     """
             sharesDates = SharesIndustry.objects.raw(sql, params=(shareItem.code_id, start, end))
+            print(sharesDates)
             for SharesIndustryDateItem in SharesIndustryDates:
                 for sharesDateItem in sharesDates:
                     if sharesDateItem.code_id not in l[code]:
