@@ -53,7 +53,7 @@ class Command(BaseCommand):
         ) c
         GROUP BY code_id,cast(UNIX_TIMESTAMP(date_as) / (%s*86400) as signed );
         '''
-        result = SharesName.objects.raw(sql, params=(d, d, d))
+        result = SharesIndustry.objects.raw(sql, params=(d, d, d))
         result = [{'code_id': x.code_id,
                    'p_start': x.p_start,
                    'p_end': x.p_end,
