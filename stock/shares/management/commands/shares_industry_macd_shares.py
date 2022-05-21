@@ -64,5 +64,6 @@ class Command(BaseCommand):
                             SharesIndustryDateItem.p_start - SharesIndustryDateItem.p_end) / SharesIndustryDateItem.p_end
                     ):
                         l[code][sharesDateItem.code_id] += 1
+                    break
 
         return l
