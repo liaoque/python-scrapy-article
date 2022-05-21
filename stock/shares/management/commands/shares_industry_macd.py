@@ -42,7 +42,7 @@ class Command(BaseCommand):
     def industry_half_month(self, n_day):
         d = n_day
         sql = '''
-        SELECT code_id, sum(p_start) as p_start, sum(p_end) as p_end,date_as  from (
+        SELECT 1 as id, code_id, sum(p_start) as p_start, sum(p_end) as p_end,date_as  from (
             SELECT code_id, p_start, 0 as p_end,date_as
             FROM `mc_shares_industry`
             where date_as in (SELECT min(date_as) FROM  `mc_shares_industry`  GROUP BY  cast(UNIX_TIMESTAMP(date_as) / (%s*86400) as signed ))
@@ -60,7 +60,7 @@ class Command(BaseCommand):
         for code_id, item in grouped:
             l.append({
                 'code_id': code_id,
-                'data': [{'code_id': x[0], 'p_start': x[1], 'p_end': x[2], 'date_as': x[3]} for x in
+                'data': [{'code_id': x[1], 'p_start': x[2], 'p_end': x[3], 'date_as': x[4]} for x in
                          item.sort_values(by='date_as').values]
             })
         return l
