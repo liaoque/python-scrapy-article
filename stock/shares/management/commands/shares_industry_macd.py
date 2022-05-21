@@ -79,6 +79,7 @@ class Command(BaseCommand):
         close_prices = [int(v['p_end']) / 100 for v in data]
         if len(close_prices) < 33:
             close_prices = [0] * (33 - len(close_prices)) + close_prices
+            print(close_prices)
         close_prices = np.array(close_prices)
         macdDIFF, macdDEA, macd = talib.MACDEXT(close_prices, fastperiod=12, fastmatype=1, slowperiod=26, slowmatype=1,
                                                 signalperiod=9, signalmatype=1)
