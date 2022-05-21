@@ -28,8 +28,7 @@ class Command(BaseCommand):
                 print(code, item)
             print("----------")
 
-
-    def listCode(code, start, end):
+    def listCode(self, code, start, end):
         l = {}
         sql = """
                     select * from `mc_shares_industry` 
