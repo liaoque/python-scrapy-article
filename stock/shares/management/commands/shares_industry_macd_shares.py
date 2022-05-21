@@ -51,7 +51,6 @@ class Command(BaseCommand):
                     """
             sharesDates = SharesIndustry.objects.raw(sql, params=(shareItem.code_id, start, end))
             for SharesIndustryDateItem in SharesIndustryDates:
-                print(SharesIndustryDateItem)
                 for sharesDateItem in sharesDates:
                     if sharesDateItem.code_id not in l[code]:
                         l[code][sharesDateItem.code_id] = 0
@@ -66,5 +65,5 @@ class Command(BaseCommand):
                     ):
                         l[code][sharesDateItem.code_id] += 1
                     break
-
+        print(l)
         return l
