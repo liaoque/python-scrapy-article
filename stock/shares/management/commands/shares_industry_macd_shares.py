@@ -20,7 +20,7 @@ class Command(BaseCommand):
     help = '找板块周期回调比较小的股票'
 
     def handle(self, *args, **options):
-        start = date.today() - timedelta(days=60)
+        start = date.today() - timedelta(days=40)
         end = date.today()- timedelta(days=10)
         # for code in ['BK0425', 'BK0437', 'BK0451', 'BK0482', 'BK0726']:
         for code in ["BK0420",
