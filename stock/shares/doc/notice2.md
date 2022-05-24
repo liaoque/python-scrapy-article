@@ -258,3 +258,16 @@ https://data.eastmoney.com/cjsj/cpi.html
 
 重要机构（中央汇金、中国证券金融、中证资管等）
 https://data.eastmoney.com/gjdcg/mx.html
+
+
+华储网
+http://www.mrm.com.cn/about_us.html
+承担国家储备糖、储备肉管理
+- 关于2022年第九批第1次中央储备冻猪肉收储竞价交易有关事项的通知
+- 关于2022年第九批第2次中央储备冻猪肉收储竞价交易有关事项的通知
+- 第一次 0.5顿， 第二次 3.5顿
+    - 第一次少收是因为 试探价格
+    - 第二次是定价
+    
+
+
