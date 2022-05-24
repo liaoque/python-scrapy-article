@@ -1,5 +1,5 @@
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count
 import sys
@@ -31,7 +31,8 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        if datetime.today().weekday() >= 5:
+        tz = timezone(timedelta(hours=+8))
+        if datetime.today().astimezone(tz).weekday() >= 5:
             return
 
         print("开始计算-----")
@@ -58,7 +59,7 @@ class Command(BaseCommand):
                     print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
                     if codeItem.code_id in industryCodeList:
                         send_data['buy'].append(codeItem.code_id)
-                    if datetime.now().hour < 14:
+                    if datetime.now(tz).hour < 14:
                         continue
                     codeItem.buy_date_as = codeItemResult.date_as
                     codeItem.buy_pre = buy_pre
@@ -76,7 +77,7 @@ class Command(BaseCommand):
                 print("找到卖出点--%s--%s---%s", codeItemResult.date_as, codeItem.code_id, sharesItem.p_end)
                 if codeItem.code_id in industryCodeList:
                     send_data['sell'].append(codeItem.code_id)
-                if datetime.now().hour < 15:
+                if datetime.now(tz).hour < 15:
                     continue
                 buys = SharesBuys(
                     code_id=codeItem.code_id,
@@ -273,10 +274,11 @@ class Command(BaseCommand):
         return [item.code_id for item in industryList]
 
     def sendMessage(self, send_data):
+        tz = timezone(timedelta(hours=+8))
         str = "找到买入点：%s\n 找到卖出点：%s\n" % (
             "\",\"".join(send_data['buy']), "\",\"".join(send_data['sell']))
         send_mail(
-            '特别提醒%s' % (datetime.now()),
+            '特别提醒%s' % (datetime.now(tz)),
             str,
             'lovemeand1314@163.com',
             ['844596330@qq.com'],
