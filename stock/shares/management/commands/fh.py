@@ -39,17 +39,13 @@ class Command(BaseCommand):
                 "low": 0,
             }
         }
-        area_map = {
-            1: "SH",
-            2: "SZ",
-            3: "BJ",
-        }
+
         for item in SharesName.objects.filter(status=1, code_type=1):
             # 写过了
             code = item.code
             # https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=SH603662
 
-            url = "https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=%s%s" % (area_map[item.area_id], code)
+            url = self.getUrl(item)
             print(url)
             r = requests.get(url)
             json2 = r.json()
@@ -80,6 +76,15 @@ class Command(BaseCommand):
 
         print(all)
         pass
+
+    def getUrl(self, item):
+        area_map = {
+            1: "SH",
+            2: "SZ",
+            3: "BJ",
+        }
+        return "https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=%s%s" % (
+            area_map[item.area_id], item.code)
 
     def calculate(self, today):
         for item in SharesName.objects.filter(status=1, code_type=1):
