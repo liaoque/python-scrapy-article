@@ -59,9 +59,9 @@ class Command(BaseCommand):
                     time1 = datetime.strptime(item["NOTICE_DATE"], '%Y-%m-%d 00:00:00').date()
                     itemAll = Shares.objects.filter(date_as=time1, code_id=code)
                     if len(itemAll) > 0:
-                        for item in itemAll:
+                        for item3 in itemAll:
                             print(item)
-                            if item.p_start < item.p_end:
+                            if item3.p_start < item3.p_end:
                                 all["notice"]["low"] += 1
                             else:
                                 all["notice"]["low"] += 0
@@ -70,8 +70,8 @@ class Command(BaseCommand):
                     time1 = datetime.strptime(item["EQUITY_RECORD_DATE"], '%Y-%m-%d 00:00:00').date()
                     itemAll = Shares.objects.filter(date_as=time1, code_id=code)
                     if len(itemAll) > 0:
-                        for item in itemAll:
-                            if item.p_start < item.p_end:
+                        for item3 in itemAll:
+                            if item3.p_start < item3.p_end:
                                 all["equity"]["low"] += 1
                             else:
                                 all["equity"]["low"] += 0
@@ -81,8 +81,8 @@ class Command(BaseCommand):
                     time1 = datetime.strptime(item["EX_DIVIDEND_DATE"], '%Y-%m-%d 00:00:00').date()
                     itemAll = Shares.objects.filter(date_as=time1, code_id=code)
                     if len(itemAll) > 0:
-                        for item in itemAll:
-                            if item.p_start < item.p_end:
+                        for item3 in itemAll:
+                            if item3.p_start < item3.p_end:
                                 all["ex"]["low"] += 1
                             else:
                                 all["ex"]["low"] += 0
