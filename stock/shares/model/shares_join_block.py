@@ -5,7 +5,7 @@ from .shares_name import SharesName
 
 
 class SharesJoinBlock(models.Model):
-    block_code_id = models.ForeignKey(SharesName, related_name='block_code_id', on_delete=models.CASCADE)
+    block_code = models.ForeignKey(SharesName, related_name='block_code_id', on_delete=models.CASCADE)
     code = models.ForeignKey(SharesName, on_delete=models.CASCADE)
 
     class Meta:
@@ -13,6 +13,6 @@ class SharesJoinBlock(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.block_code_id + "----" + self.code
+        return self.block_code + "----" + self.code
 
 
