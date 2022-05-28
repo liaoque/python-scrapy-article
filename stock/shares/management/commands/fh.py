@@ -86,7 +86,7 @@ class Command(BaseCommand):
                             else:
                                 all["ex"]["low"] += 0
                         pass
-                pass
+                break
 
         print(all)
         pass
