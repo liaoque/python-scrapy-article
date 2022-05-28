@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count
 
 from shares.model.shares_name import SharesName
-from shares.model.shares_date import SharesDate
+from shares.model.shares import SharesDate
 import requests
 
 
