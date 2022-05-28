@@ -110,15 +110,27 @@ class Command(BaseCommand):
             r = requests.get(url)
             json2 = r.json()
             # 公告日期
-            if len(json2["fhyx"]) > 0 and json2["fhyx"][0]["NOTICE_DATE"] == today:
-                pass
+            all = {
+                "notice": [],
+                "equity": [],
+                "ex": []
+            }
+            if len(json2["fhyx"]) > 0:
+                # 公告日
+                time1 = datetime.strptime(item["NOTICE_DATE"], '%Y-%m-%d 00:00:00').date()
+                if time1 == today:
+                    all["notice"].append(code)
 
-            # 登记日期
-            if len(json2["fhyx"]) > 0 and json2["fhyx"][0]["EQUITY_RECORD_DATE"] == today:
-                pass
+                # 登记日期
+                time1 = datetime.strptime(item["EQUITY_RECORD_DATE"], '%Y-%m-%d 00:00:00').date()
+                if time1 == today:
+                    all["equity"].append(code)
 
-            # 除权日
-            if len(json2["fhyx"]) > 0 and json2["fhyx"][0]["EX_DIVIDEND_DATE"] == today:
-                pass
+                # 除权日
+                time1 = datetime.strptime(item["EX_DIVIDEND_DATE"], '%Y-%m-%d 00:00:00').date()
+                if time1 == today:
+                    all["ex"].append(code)
 
+
+        print(all)
         pass
