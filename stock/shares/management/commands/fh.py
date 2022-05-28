@@ -145,7 +145,7 @@ class Command(BaseCommand):
             "\",\"".join(send_data['equity']),
             "\",\"".join(send_data['ex']))
         send_mail(
-            '特别提醒%s' % (datetime.now(tz)),
+            '分红%s' % (datetime.now(tz)),
             str,
             'lovemeand1314@163.com',
             ['844596330@qq.com'],
