@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count
 
 from shares.model.shares_name import SharesName
-from shares.model.shares import SharesDate
+from shares.model.shares import Shares
 import requests
 
 
@@ -52,21 +52,21 @@ class Command(BaseCommand):
             # 公告日期
             if len(json2["fhyx"]) > 0:
                 if json2["fhyx"][0]["NOTICE_DATE"] is not None:
-                    for item in SharesDate.objects.filter(date_as=json2["fhyx"][0]["NOTICE_DATE"], code_id=code):
+                    for item in Shares.objects.filter(date_as=json2["fhyx"][0]["NOTICE_DATE"], code_id=code):
                         if item.p_start < item.p_end:
                             all["notice"]["low"] += 1
                         else:
                             all["notice"]["low"] += 0
                     pass
                 if json2["fhyx"][0]["EQUITY_RECORD_DATE"] is not None:
-                    for item in SharesDate.objects.filter(date_as=json2["fhyx"][0]["EQUITY_RECORD_DATE"], code_id=code):
+                    for item in Shares.objects.filter(date_as=json2["fhyx"][0]["EQUITY_RECORD_DATE"], code_id=code):
                         if item.p_start < item.p_end:
                             all["equity"]["low"] += 1
                         else:
                             all["equity"]["low"] += 0
                     pass
                 if json2["fhyx"][0]["EQUITY_RECORD_DATE"] is not None:
-                    for item in SharesDate.objects.filter(date_as=json2["fhyx"][0]["EQUITY_RECORD_DATE"], code_id=code):
+                    for item in Shares.objects.filter(date_as=json2["fhyx"][0]["EQUITY_RECORD_DATE"], code_id=code):
                         if item.p_start < item.p_end:
                             all["ex"]["low"] += 1
                         else:
