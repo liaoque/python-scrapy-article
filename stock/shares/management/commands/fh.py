@@ -3,7 +3,6 @@ from datetime import datetime, timedelta, timezone
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count
 
-
 from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
 import requests
@@ -133,12 +132,13 @@ class Command(BaseCommand):
                 if time1 == today:
                     all["ex"].append(code)
 
-
         print(all)
         pass
 
-
     def sendMessage(self, send_data):
+        if len(send_data['notice']) == 0 and len(send_data['notice']) and len(send_data['notice']):
+            return
+
         tz = timezone(timedelta(hours=+8))
         str = "今天公告日股票：%s\n 今天登记日股票：%s\n 今天除权日股票：%s\n" % (
             "\",\"".join(send_data['notice']),
