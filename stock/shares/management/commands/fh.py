@@ -1,0 +1,105 @@
+import numpy as np
+from datetime import datetime
+from django.core.management.base import BaseCommand, CommandError
+from django.db.models import Count
+
+from shares.model.shares_name import SharesName
+from shares.model.shares_date import SharesDate
+import requests
+
+
+# " /bin/cp /alidata/python/python-scrapy-article/stock/* /alidata/python/python-scrapy-article-master/stock -rf"
+
+
+class Command(BaseCommand):
+    help = '分红检测'
+
+    def add_arguments(self, parser):
+        # parser.add_argument('poll_ids', nargs='+', type=int)
+        pass
+
+    def handle(self, *args, **options):
+
+        today = datetime.now().date().strftime('%Y-%m-%d')
+        self.calculateCheck(today)
+        pass
+
+    def calculateCheck(self, today):
+        all = {
+            "notice": {
+                "up": 0,
+                "low": 0,
+            },
+            "equity": {
+                "up": 0,
+                "low": 0,
+            },
+            "ex": {
+                "up": 0,
+                "low": 0,
+            }
+        }
+        area_map = {
+            1: "SH",
+            2: "SZ",
+            3: "BJ",
+        }
+        for item in SharesName.objects.filter(status=1, code_type=1):
+            # 写过了
+            code = item.code
+            # https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=SH603662
+
+            url = "https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=%s%s" % (area_map[item.area_id], code)
+            print(url)
+            r = requests.get(url)
+            json2 = r.json()
+            # 公告日期
+            if len(json2["fhyx"]) > 0:
+                if json2["fhyx"][0]["NOTICE_DATE"] is not None:
+                    for item in SharesDate.objects.filter(date_as=json2["fhyx"][0]["NOTICE_DATE"], code_id=code):
+                        if item.p_start > item.p_end:
+                            all["notice"]["low"] += 1
+                        else:
+                            all["notice"]["low"] += 0
+                    pass
+                if json2["fhyx"][0]["EQUITY_RECORD_DATE"] is not None:
+                    for item in SharesDate.objects.filter(date_as=json2["fhyx"][0]["EQUITY_RECORD_DATE"], code_id=code):
+                        if item.p_start > item.p_end:
+                            all["equity"]["low"] += 1
+                        else:
+                            all["equity"]["low"] += 0
+                    pass
+                if json2["fhyx"][0]["EQUITY_RECORD_DATE"] is not None:
+                    for item in SharesDate.objects.filter(date_as=json2["fhyx"][0]["EQUITY_RECORD_DATE"], code_id=code):
+                        if item.p_start > item.p_end:
+                            all["ex"]["low"] += 1
+                        else:
+                            all["ex"]["low"] += 0
+                    pass
+                pass
+
+        print(all)
+        pass
+
+    def calculate(self, today):
+        for item in SharesName.objects.filter(status=1, code_type=1):
+            # 写过了
+            code = item.code
+            # https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=SH603662
+
+            url = "https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=SH603662"
+            r = requests.get(url)
+            json2 = r.json()
+            # 公告日期
+            if len(json2["fhyx"]) > 0 and json2["fhyx"][0]["NOTICE_DATE"] == today:
+                pass
+
+            # 登记日期
+            if len(json2["fhyx"]) > 0 and json2["fhyx"][0]["EQUITY_RECORD_DATE"] == today:
+                pass
+
+            # 除权日
+            if len(json2["fhyx"]) > 0 and json2["fhyx"][0]["EX_DIVIDEND_DATE"] == today:
+                pass
+
+        pass
