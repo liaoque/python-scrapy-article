@@ -136,7 +136,7 @@ class Command(BaseCommand):
         pass
 
     def sendMessage(self, send_data):
-        if len(send_data['notice']) == 0 and len(send_data['notice']) and len(send_data['notice']):
+        if len(send_data['notice']) == 0 and len(send_data['equity']) and len(send_data['ex']):
             return
 
         tz = timezone(timedelta(hours=+8))
