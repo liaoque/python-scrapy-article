@@ -59,7 +59,7 @@ class Command(BaseCommand):
                     itemAll = Shares.objects.filter(date_as=time1, code_id=code)
                     if len(itemAll) > 0:
                         for item3 in itemAll:
-                            print(item)
+                            print(item3)
                             if item3.p_start < item3.p_end:
                                 all["notice"]["low"] += 1
                             else:
