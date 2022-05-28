@@ -42,7 +42,7 @@ class Shares_industry(scrapy.Spider):
               "fs=m:90+t:2+f:!50&fields=f12,f13,f14&_=1641007970988"
         yield scrapy.Request(url, callback=self.parse_each, dont_filter=True)
 
-        url = "https://35.push2.eastmoney.com/api/qt/clist/get?cb=&pn=2&pz=1000&po=1&np=1" \
+        url = "https://35.push2.eastmoney.com/api/qt/clist/get?cb=&pn=1&pz=1000&po=1&np=1" \
               "&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&wbp2u=5204545223982760|0|1|0|web" \
               "&fid=f3&fs=m:90+t:3+f:!50&fields=f12,f13,f14&_=1653722690074"
         yield scrapy.Request(url, callback=self.parse_each_block, dont_filter=True)
