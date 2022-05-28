@@ -46,7 +46,7 @@ class Command(BaseCommand):
             # https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=SH603662
 
             url = self.getUrl(item)
-            print(url)
+            # print(url)
             r = requests.get(url)
             json2 = r.json()
             # 公告日期
