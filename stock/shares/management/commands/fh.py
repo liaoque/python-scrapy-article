@@ -54,7 +54,6 @@ class Command(BaseCommand):
                 pass
 
             for item in json2["fhyx"]:
-                print(item)
                 if item["NOTICE_DATE"] is not None:
                     time1 = datetime.strptime(item["NOTICE_DATE"], '%Y-%m-%d 00:00:00').date()
                     itemAll = Shares.objects.filter(date_as=time1, code_id=code)
