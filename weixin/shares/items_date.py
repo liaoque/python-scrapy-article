@@ -44,7 +44,8 @@ class Items(scrapy.Item):
             name, code_id, p_min, p_max, p_start, p_end, p_range,
              buy_count, buy_sum, master_buy_sum, master_buy_sell, date_as
             )
-            VALUES (%s, %s, %s,  %s,  %s, %s, %s, %s,  %s,  %s)
+            VALUES (%s, %s, %s,  %s,  %s, %s, %s,
+             %s,  %s, %s,  %s,   %s)
             """;
         params = (
             self["name"][0],
@@ -62,6 +63,7 @@ class Items(scrapy.Item):
         )
         cursor.execute(sql, params)
         pass
+
     pass
 
     def findByCode(self, cursor, code, date_as):
