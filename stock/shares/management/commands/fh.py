@@ -61,7 +61,7 @@ class Command(BaseCommand):
                         for item3 in itemAll:
                             print(item3)
                             if item3.p_start < item3.p_end:
-                                all["notice"]["low"] += 1
+                                all["notice"]["up"] += 1
                             else:
                                 all["notice"]["low"] += 0
 
@@ -71,7 +71,7 @@ class Command(BaseCommand):
                     if len(itemAll) > 0:
                         for item3 in itemAll:
                             if item3.p_start < item3.p_end:
-                                all["equity"]["low"] += 1
+                                all["equity"]["up"] += 1
                             else:
                                 all["equity"]["low"] += 0
                         pass
@@ -82,7 +82,7 @@ class Command(BaseCommand):
                     if len(itemAll) > 0:
                         for item3 in itemAll:
                             if item3.p_start < item3.p_end:
-                                all["ex"]["low"] += 1
+                                all["ex"]["up"] += 1
                             else:
                                 all["ex"]["low"] += 0
                         pass
