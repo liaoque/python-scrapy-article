@@ -71,8 +71,8 @@ class Command(BaseCommand):
                         else:
                             all["equity"]["low"] += 0
                     pass
-                if item["EQUITY_RECORD_DATE"] is not None:
-                    time1 = datetime.strptime(item["EQUITY_RECORD_DATE"], '%Y-%m-%d 00:00:00').date()
+                if item["EX_DIVIDEND_DATE"] is not None:
+                    time1 = datetime.strptime(item["EX_DIVIDEND_DATE"], '%Y-%m-%d 00:00:00').date()
                     for item in Shares.objects.filter(date_as=time1, code_id=code):
                         if item.p_start < item.p_end:
                             all["ex"]["low"] += 1
