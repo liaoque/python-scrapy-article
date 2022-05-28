@@ -15,6 +15,8 @@ class Shares(models.Model):
     p_range = models.IntegerField(default=0)
     buy_count = models.IntegerField(default=0)
     buy_sum = models.IntegerField(default=0)
+    master_buy_sum = models.IntegerField(default=0, help_text="主力流如")
+    master_buy_sell = models.IntegerField(default=0, help_text="主力流出")
     date_as = models.DateField()
 
     class Meta:
