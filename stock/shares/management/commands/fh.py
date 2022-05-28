@@ -57,6 +57,7 @@ class Command(BaseCommand):
                 if item["NOTICE_DATE"] is not None:
                     time1 = datetime.strptime(item["NOTICE_DATE"], '%Y-%m-%d 00:00:00').date()
                     for item in Shares.objects.filter(date_as=time1, code_id=code):
+                        print(item)
                         if item.p_start < item.p_end:
                             all["notice"]["low"] += 1
                         else:

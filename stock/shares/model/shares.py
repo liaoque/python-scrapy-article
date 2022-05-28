@@ -2,6 +2,7 @@ from django.db import models
 from .shares_name import SharesName
 from datetime import datetime
 
+
 # Create your models here.
 
 
@@ -24,4 +25,4 @@ class Shares(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.name + ":" + datetime.strftime(self.date_as,'%Y-%m-%d')
+        return self.name + ":" + self.p_start + ":" + self.p_end + ":" + datetime.strftime(self.date_as, '%Y-%m-%d')
