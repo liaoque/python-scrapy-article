@@ -90,7 +90,7 @@ class Shares_industry(scrapy.Spider):
         result = json.loads(response.text)
         # total = int(result["data"]["total"])
         for item in result["data"]["diff"]:
-            url = self.get_url_block(item["f12"])
+            url = self.get_url(item["f12"])
             headers = copy.deepcopy(self.headers)
             headers['block_code'] = item["f12"]
             headers['block_type'] = item["f13"]
