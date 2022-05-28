@@ -25,4 +25,4 @@ class Shares(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.name + ":" + self.p_start + ":" + self.p_end + ":" + datetime.strftime(self.date_as, '%Y-%m-%d')
+        return self.name + ":" + str(self.p_start) + ":" + str(self.p_end) + ":" + datetime.strftime(self.date_as, '%Y-%m-%d')
