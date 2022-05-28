@@ -26,6 +26,8 @@ class Items(scrapy.Item):
     temper_tonghuashun = scrapy.Field()
     area_id = scrapy.Field()
     temper_dongfangcaifu = scrapy.Field()
+    master_buy_sell = scrapy.Field()
+    master_buy_sum = scrapy.Field()
     area_map = {
         "SH": 1,
         "SZ": 2,
@@ -38,7 +40,10 @@ class Items(scrapy.Item):
         if self.exitsByCode(cursor, code, date_as):
             return
         sql = """
-            INSERT INTO mc_shares (name, code_id, p_min, p_max, p_start, p_end, p_range, buy_count, buy_sum, date_as)
+            INSERT INTO mc_shares (
+            name, code_id, p_min, p_max, p_start, p_end, p_range,
+             buy_count, buy_sum, master_buy_sum, master_buy_sell, date_as
+            )
             VALUES (%s, %s, %s,  %s,  %s, %s, %s, %s,  %s,  %s)
             """;
         params = (
@@ -51,6 +56,8 @@ class Items(scrapy.Item):
             int(float(self["p_range"][0]) * 100),
             self["buy_count"][0],
             float(self["buy_sum"][0]) * 100,
+            float(self["master_buy_sum"][0]) * 100,
+            float(self["master_buy_sell"][0]) * 100,
             self["date_as"][0]
         )
         cursor.execute(sql, params)
