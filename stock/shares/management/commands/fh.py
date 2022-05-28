@@ -1,11 +1,13 @@
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count
+
 
 from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
 import requests
+from django.core.mail import send_mail
 
 
 # " /bin/cp /alidata/python/python-scrapy-article/stock/* /alidata/python/python-scrapy-article-master/stock -rf"
@@ -134,3 +136,18 @@ class Command(BaseCommand):
 
         print(all)
         pass
+
+
+    def sendMessage(self, send_data):
+        tz = timezone(timedelta(hours=+8))
+        str = "今天公告日股票：%s\n 今天登记日股票：%s\n 今天除权日股票：%s\n" % (
+            "\",\"".join(send_data['notice']),
+            "\",\"".join(send_data['equity']),
+            "\",\"".join(send_data['ex']))
+        send_mail(
+            '特别提醒%s' % (datetime.now(tz)),
+            str,
+            'lovemeand1314@163.com',
+            ['844596330@qq.com'],
+            fail_silently=False,
+        )

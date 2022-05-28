@@ -345,3 +345,10 @@ https://author.baidu.com/home?type=profile&action=profile&context=%7B%22uk%22%3A
 3。 股东大会预案公告日期， 实施公告日 这些股票，当天和第二天的涨和跌
 4。 k线图监控
 
+
+5。 建立风控体系
+    - 大盘风控， 月和周时间的kdj，macd
+    - 行业和板块风控， 月和周时间的kdj，macd
+    - 
+
+
