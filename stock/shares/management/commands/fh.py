@@ -52,7 +52,7 @@ class Command(BaseCommand):
             # 公告日期
             if len(json2["fhyx"]) > 0:
                 if json2["fhyx"][0]["NOTICE_DATE"] is not None:
-                    time1 = datetime.strptime(json2["fhyx"][0]["NOTICE_DATE"], '%Y-%m-%d 00：00:00').date()
+                    time1 = datetime.strptime(json2["fhyx"][0]["NOTICE_DATE"], '%Y-%m-%d 00:00:00').date()
                     for item in Shares.objects.filter(date_as=time1, code_id=code):
                         if item.p_start < item.p_end:
                             all["notice"]["low"] += 1
@@ -60,7 +60,7 @@ class Command(BaseCommand):
                             all["notice"]["low"] += 0
                     pass
                 if json2["fhyx"][0]["EQUITY_RECORD_DATE"] is not None:
-                    time1 = datetime.strptime(json2["fhyx"][0]["EQUITY_RECORD_DATE"], '%Y-%m-%d 00：00:00').date()
+                    time1 = datetime.strptime(json2["fhyx"][0]["EQUITY_RECORD_DATE"], '%Y-%m-%d 00:00:00').date()
                     for item in Shares.objects.filter(date_as=time1, code_id=code):
                         if item.p_start < item.p_end:
                             all["equity"]["low"] += 1
@@ -68,7 +68,7 @@ class Command(BaseCommand):
                             all["equity"]["low"] += 0
                     pass
                 if json2["fhyx"][0]["EQUITY_RECORD_DATE"] is not None:
-                    time1 = datetime.strptime(json2["fhyx"][0]["EQUITY_RECORD_DATE"], '%Y-%m-%d 00：00:00').date()
+                    time1 = datetime.strptime(json2["fhyx"][0]["EQUITY_RECORD_DATE"], '%Y-%m-%d 00:00:00').date()
                     for item in Shares.objects.filter(date_as=time1, code_id=code):
                         if item.p_start < item.p_end:
                             all["ex"]["low"] += 1
