@@ -112,8 +112,8 @@ class Shares(scrapy.Spider):
         item_loader.add_value("master_buy_sum", res["f135"])
         item_loader.add_value("master_buy_sell", res["f136"])
         item_loader.add_value("date_as", t.strftime("%Y-%m-%d"))
-        print(item_loader.load_item())
-        # yield item_loader.load_item()
+        # print(item_loader.load_item())
+        yield item_loader.load_item()
         pass
 
     def findStoks(self):
