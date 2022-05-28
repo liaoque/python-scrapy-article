@@ -64,7 +64,7 @@ class Command(BaseCommand):
                             if item3.p_start < item3.p_end:
                                 all["notice"]["up"] += 1
                             else:
-                                all["notice"]["low"] += 0
+                                all["notice"]["low"] += 1
 
                 if item["EQUITY_RECORD_DATE"] is not None:
                     time1 = datetime.strptime(item["EQUITY_RECORD_DATE"], '%Y-%m-%d 00:00:00').date()
@@ -74,8 +74,7 @@ class Command(BaseCommand):
                             if item3.p_start < item3.p_end:
                                 all["equity"]["up"] += 1
                             else:
-                                all["equity"]["low"] += 0
-                        pass
+                                all["equity"]["low"] += 1
 
                 if item["EX_DIVIDEND_DATE"] is not None:
                     time1 = datetime.strptime(item["EX_DIVIDEND_DATE"], '%Y-%m-%d 00:00:00').date()
@@ -85,8 +84,7 @@ class Command(BaseCommand):
                             if item3.p_start < item3.p_end:
                                 all["ex"]["up"] += 1
                             else:
-                                all["ex"]["low"] += 0
-                        pass
+                                all["ex"]["low"] += 1
                 break
 
         print(all)
