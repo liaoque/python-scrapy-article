@@ -71,6 +71,8 @@ class Shares_industry(scrapy.Spider):
         item_loader.add_value("area_id", '90')
         item_loader.add_value("status", '1')
         item_loader.add_value("code_type", '2')
+        item_loader.add_value("pe", '0')
+        item_loader.add_value("pb", '0')
         yield item_loader.load_item()
 
         result = json.loads(response.text)
@@ -106,6 +108,8 @@ class Shares_industry(scrapy.Spider):
         item_loader.add_value("area_id", '90')
         item_loader.add_value("status", '1')
         item_loader.add_value("code_type", '3')
+        item_loader.add_value("pe", '0')
+        item_loader.add_value("pb", '0')
         yield item_loader.load_item()
 
         result = json.loads(response.text)
