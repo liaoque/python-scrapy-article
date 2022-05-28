@@ -7,6 +7,8 @@ from .shares_name import SharesName
 
 class SharesDate(models.Model):
     date_as = models.DateField()
+    master_buy_sum = models.IntegerField(default=0,help_text="主力流如")
+    master_buy_sell = models.IntegerField(default=0,help_text="主力流出")
 
     class Meta:
         db_table = "mc_shares_date"
