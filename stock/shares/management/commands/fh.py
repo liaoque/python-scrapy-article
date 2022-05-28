@@ -132,7 +132,7 @@ class Command(BaseCommand):
                 if time1 == today:
                     all["ex"].append(code)
 
-        print(all)
+        self.sendMessage(all)
         pass
 
     def sendMessage(self, send_data):
