@@ -74,6 +74,7 @@ class Command(BaseCommand):
         if len(itemAll) == 0:
             return
         for item3 in itemAll:
+            print(item3)
             if item3.p_start < item3.p_end:
                 self.all[date_as]["up"] += 1
             else:
