@@ -70,7 +70,7 @@ class SharesFh(scrapy.Spider):
 
         for i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
             if item[i] == '--':
-                item[i] = 'NULL'
+                item[i] = None
 
         item_loader.add_value("code", code)
         item_loader.add_value("title", item[0])

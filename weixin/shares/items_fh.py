@@ -27,6 +27,23 @@ class Items(scrapy.Item):
     def save(self, cursor):
         code = self['code'][0]
         title = self['title'][0]
+        if len(self["info"]) == 0:
+            self["info"][0] = None
+        if len(self["amount"]) == 0:
+            self["amount"][0] = None
+        if len(self["range"]) == 0:
+            self["range"][0] = None
+        if len(self["directors_date_as"]) == 0:
+            self["directors_date_as"][0] = None
+        if len(self["shareholder_date_as"]) == 0:
+            self["shareholder_date_as"][0] = None
+        if len(self["implement_date_as"]) == 0:
+            self["implement_date_as"][0] = None
+        if len(self["register_date_as"]) == 0:
+            self["register_date_as"][0] = None
+        if len(self["ex_date_as"]) == 0:
+            self["ex_date_as"][0] = None
+
         if self.exitsByCode(cursor, code, title):
             sql = """
             update mc_shares_fh 
