@@ -56,7 +56,7 @@ class Command(BaseCommand):
 
             json2 = SharesFH.objects.filter(code_id=code)
             if len(json2) == 0:
-                pass
+                continue
 
             for item in json2:
                 if item["directors_date_as"] is not None:
