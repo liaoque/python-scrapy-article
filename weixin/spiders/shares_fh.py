@@ -52,12 +52,11 @@ class SharesFh(scrapy.Spider):
 
     def parse(self, response):
         itemList = response.css("#bonus_table tr");
-        print(itemList)
         for item in itemList:
-            thumbnail = item.css("td").extract()
+            thumbnail = item.css("td").getall()
             print(thumbnail)
             break
-        #     desc = item.css(".j-r-list-c .j-r-list-c-desc a::text").extract_first();
+            # desc = item.css(".j-r-list-c .j-r-list-c-desc a::text").extract_first();
         #     title = item.css(".j-r-list-tool::attr(data-title)").extract_first();
         #     if desc:
         #         desc = '<p>' + desc + '</p>'
