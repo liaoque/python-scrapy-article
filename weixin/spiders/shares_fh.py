@@ -26,7 +26,7 @@ class SharesFh(scrapy.Spider):
     db = None
     cursor = None
 
-    def get_url(self, code, days):
+    def get_url(self, code):
         return 'http://basic.10jqka.com.cn/' + str(code) + '/bonus.html#stockpage'
 
     def connect(self):
