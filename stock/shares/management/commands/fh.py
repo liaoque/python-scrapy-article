@@ -59,6 +59,7 @@ class Command(BaseCommand):
                 continue
 
             for item in json2:
+                print(item)
                 if item["directors_date_as"] is not None:
                     itemAll = Shares.objects.filter(date_as=item["directors_date_as"], code_id=code)
                     if len(itemAll) > 0:
