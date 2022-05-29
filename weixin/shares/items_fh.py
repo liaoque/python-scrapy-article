@@ -28,21 +28,21 @@ class Items(scrapy.Item):
         code = self['code'][0]
         title = self['title'][0]
         if "info" not in self:
-            self["info"][0] = None
+            self["info"] = [None]
         if "amount" not in self:
-            self["amount"][0] = None
+            self["amount"] = [None]
         if "range" not in self:
-            self["range"][0] = None
+            self["range"] = [None]
         if "directors_date_as" not in self:
-            self["directors_date_as"][0] = None
+            self["directors_date_as"] = [None]
         if "shareholder_date_as" not in self:
-            self["shareholder_date_as"][0] = None
+            self["shareholder_date_as"] = [None]
         if "implement_date_as" not in self:
-            self["implement_date_as"][0] = None
+            self["implement_date_as"] = [None]
         if "register_date_as" not in self:
-            self["register_date_as"][0] = None
+            self["register_date_as"] = [None]
         if "ex_date_as" not in self:
-            self["ex_date_as"][0] = None
+            self["ex_date_as"] = [None]
 
         if self.exitsByCode(cursor, code, title):
             sql = """
