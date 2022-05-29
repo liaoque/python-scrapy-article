@@ -126,6 +126,7 @@ class Command(BaseCommand):
             area_map[item.area_id], item.code)
 
     def calculate(self, today):
+        self.all["directors_date_as"] = []
         shareholder_date_as = SharesFH.objects.filter(shareholder_date_as=today)
         self.appendCode(shareholder_date_as, "shareholder_date_as")
 
