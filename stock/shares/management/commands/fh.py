@@ -28,8 +28,8 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-
-        today = datetime.now().date().strftime('%Y-%m-%d')
+        tz = timezone(timedelta(hours=+8))
+        today = datetime.now().astimezone(tz).date().strftime('%Y-%m-%d')
         self.calculate(today)
         # self.calculate("2022-05-30")
         pass
@@ -171,7 +171,7 @@ class Command(BaseCommand):
         #     if item.ex_date_as is not None and item.ex_date_as == today:
         #         all['ex_date_as'].append(code)
 
-        self.sendMessage(self.all)
+        # self.sendMessage(self.all)
         pass
 
     def appendCode(self, implement_date_as, column):
