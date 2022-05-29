@@ -112,33 +112,20 @@ class Command(BaseCommand):
             area_map[item.area_id], item.code)
 
     def calculate(self, today):
-
-        all = {
-            "directors_date_as": [],
-            "shareholder_date_as": [],
-            "implement_date_as": [],
-            "register_date_as": [],
-            "ex_date_as": []
-        }
-
         shareholder_date_as = SharesFH.objects.filter(shareholder_date_as=today)
-        if len(shareholder_date_as) > 0:
-            for item in shareholder_date_as:
-                code = item.code_id
-                if not (code < '300000' and (code > '300000' or code < '600000') and (
-                        code > '600000' or code < '700000')):
-                    continue
-                all["shareholder_date_as"].append(code)
+        self.appendCode(shareholder_date_as, "shareholder_date_as")
 
         implement_date_as = SharesFH.objects.filter(implement_date_as=today)
-        if len(implement_date_as) > 0:
-            for item in implement_date_as:
-                code = item.code_id
-                if not (code < '300000' and (code > '300000' or code < '600000') and (
-                        code > '600000' or code < '700000')):
-                    continue
-                all["implement_date_as"].append(code)
+        self.appendCode(implement_date_as, "implement_date_as")
 
+
+        # all = {
+        #     "directors_date_as": [],
+        #     "shareholder_date_as": [],
+        #     "implement_date_as": [],
+        #     "register_date_as": [],
+        #     "ex_date_as": []
+        # }
         # for item in SharesName.objects.filter(status=1, code_type=1):
         #     # 写过了
         #     code = item.code
@@ -161,8 +148,20 @@ class Command(BaseCommand):
         #     if item.ex_date_as is not None and item.ex_date_as == today:
         #         all['ex_date_as'].append(code)
 
-        self.sendMessage(all)
+        self.sendMessage(self.all)
         pass
+
+    def appendCode(self, implement_date_as, column):
+        if column not in self.all:
+            self.all[column] = []
+        if len(implement_date_as) == 0:
+            return
+        for item in implement_date_as:
+            code = item.code_id
+            if not (code < '300000' and (code > '300000' or code < '600000') and (
+                    code > '600000' or code < '700000')):
+                continue
+            self.all[column].append(code)
 
     def sendMessage(self, send_data):
         if len(send_data['notice']) == 0 and len(send_data['equity']) and len(send_data['ex']):
