@@ -5,7 +5,7 @@ from django.db.models import Count
 
 from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
-from shares.model.shares_fh import SharesFh
+from shares.model.shares_fh import SharesFH
 import requests
 from django.core.mail import send_mail
 
