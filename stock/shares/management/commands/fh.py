@@ -136,7 +136,7 @@ class Command(BaseCommand):
 
         today2 = datetime.strptime(today, '%Y-%m-%d').date() + timedelta(1)
         register_date_as = SharesFH.objects.filter(register_date_as=today2)
-        print(register_date_as, datetime.strptime(today, '%Y-%m-%d').date(), today2)
+        # print(register_date_as, datetime.strptime(today, '%Y-%m-%d').date(), today2)
         self.appendCode(register_date_as, "register_date_as")
 
         ex_date_as = SharesFH.objects.filter(ex_date_as=today)
@@ -171,7 +171,7 @@ class Command(BaseCommand):
         #     if item.ex_date_as is not None and item.ex_date_as == today:
         #         all['ex_date_as'].append(code)
 
-        # self.sendMessage(self.all)
+        self.sendMessage(self.all)
         pass
 
     def appendCode(self, implement_date_as, column):
