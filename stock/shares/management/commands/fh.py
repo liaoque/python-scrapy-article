@@ -6,6 +6,8 @@ from django.db.models import Count
 from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
 from shares.model.shares_fh import SharesFH
+from shares.model.shares_macd import SharesMacd
+
 import requests
 from django.core.mail import send_mail
 
@@ -15,6 +17,10 @@ from django.core.mail import send_mail
 
 class Command(BaseCommand):
     help = '分红检测'
+
+    all = {
+
+    }
 
     def add_arguments(self, parser):
         # parser.add_argument('poll_ids', nargs='+', type=int)
@@ -27,28 +33,6 @@ class Command(BaseCommand):
         pass
 
     def calculateCheck(self, today):
-        all = {
-            "directors_date_as": {
-                "up": 0,
-                "low": 0,
-            },
-            "shareholder_date_as": {
-                "up": 0,
-                "low": 0,
-            },
-            "implement_date_as": {
-                "up": 0,
-                "low": 0,
-            },
-            "register_date_as": {
-                "up": 0,
-                "low": 0,
-            },
-            "ex_date_as": {
-                "up": 0,
-                "low": 0,
-            }
-        }
 
         for item in SharesName.objects.filter(status=1, code_type=1):
             # 写过了
@@ -62,53 +46,53 @@ class Command(BaseCommand):
                 if datetime.strftime(item.directors_date_as, '%Y-%m-%d') < '2022-01-01':
                     continue
                 if item.directors_date_as is not None:
-                    itemAll = Shares.objects.filter(date_as=item.directors_date_as, code_id=code)
-                    if len(itemAll) > 0:
-                        for item3 in itemAll:
-                            if item3.p_start < item3.p_end:
-                                all["directors_date_as"]["up"] += 1
-                            else:
-                                all["directors_date_as"]["low"] += 1
+                    self.checkShares(item.directors_date_as, code, "directors_date_as")
 
                 if item.shareholder_date_as is not None:
-                    itemAll = Shares.objects.filter(date_as=item.shareholder_date_as, code_id=code)
-                    if len(itemAll) > 0:
-                        for item3 in itemAll:
-                            if item3.p_start < item3.p_end:
-                                all["shareholder_date_as"]["up"] += 1
-                            else:
-                                all["shareholder_date_as"]["low"] += 1
+                    self.checkShares(item.shareholder_date_as, code, "shareholder_date_as")
 
                 if item.implement_date_as is not None:
-                    itemAll = Shares.objects.filter(date_as=item.implement_date_as, code_id=code)
-                    if len(itemAll) > 0:
-                        for item3 in itemAll:
-                            if item3.p_start < item3.p_end:
-                                all["implement_date_as"]["up"] += 1
-                            else:
-                                all["implement_date_as"]["low"] += 1
+                    self.checkShares(item.implement_date_as, code, "implement_date_as")
 
                 if item.register_date_as is not None:
-                    itemAll = Shares.objects.filter(date_as=item.register_date_as, code_id=code)
-                    if len(itemAll) > 0:
-                        for item3 in itemAll:
-                            if item3.p_start < item3.p_end:
-                                all["register_date_as"]["up"] += 1
-                            else:
-                                all["register_date_as"]["low"] += 1
+                    self.checkShares(item.register_date_as, code, "register_date_as")
 
                 if item.ex_date_as is not None:
-                    itemAll = Shares.objects.filter(date_as=item.ex_date_as, code_id=code)
-                    if len(itemAll) > 0:
-                        for item3 in itemAll:
-                            if item3.p_start < item3.p_end:
-                                all["ex_date_as"]["up"] += 1
-                            else:
-                                all["ex_date_as"]["low"] += 1
+                    self.checkShares(item.ex_date_as, code, "ex_date_as")
                 break
 
-        print(all)
+        print(self.all)
         pass
+
+    def checkShares(self, item, code, date_as):
+        if date_as not in self.all:
+            self.all[date_as] = {
+                "up": 0,
+                "low": 0,
+            }
+        itemAll = Shares.objects.filter(date_as=item, code_id=code)
+        if len(itemAll) > 0:
+            for item3 in itemAll:
+                if item3.p_start < item3.p_end:
+                    self.all[date_as]["up"] += 1
+                else:
+                    self.all[date_as]["low"] += 1
+        return None
+
+    def checkSharesMacd(self, item, code, date_as):
+        if date_as not in self.all:
+            self.all[date_as] = {
+                "up": 0,
+                "low": 0,
+            }
+        itemAll = SharesMacd.objects.filter(date_as__lte=item.register_date_as, code_id=code).order_by('-date_as')
+        if len(itemAll) > 0:
+            itemAll = itemAll[:2]
+            if itemAll[0].p_start > itemAll[1].p_end:
+                self.all[date_as]["up"] += 1
+            else:
+                self.all[date_as]["low"] += 1
+        return None
 
     def getUrl(self, item):
         area_map = {
