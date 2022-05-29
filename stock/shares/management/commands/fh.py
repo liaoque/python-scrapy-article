@@ -60,8 +60,8 @@ class Command(BaseCommand):
 
             for item in json2:
                 print(item)
-                if item["directors_date_as"] is not None:
-                    itemAll = Shares.objects.filter(date_as=item["directors_date_as"], code_id=code)
+                if item.directors_date_as is not None:
+                    itemAll = Shares.objects.filter(date_as=item.directors_date_as, code_id=code)
                     if len(itemAll) > 0:
                         for item3 in itemAll:
                             if item3.p_start < item3.p_end:
@@ -133,7 +133,7 @@ class Command(BaseCommand):
             if len(json2) == 0:
                 continue
             item = json2[0]
-            if item["directors_date_as"] is not None and item["directors_date_as"] == today:
+            if item.directors_date_as is not None and item.directors_date_as == today:
                 all['directors_date_as'].append(code)
 
             if item["shareholder_date_as"] is not None and item["shareholder_date_as"] == today:
