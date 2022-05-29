@@ -5,6 +5,7 @@ from django.db.models import Count
 
 from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
+from shares.model.shares_fh import SharesFh
 import requests
 from django.core.mail import send_mail
 
@@ -27,15 +28,23 @@ class Command(BaseCommand):
 
     def calculateCheck(self, today):
         all = {
-            "notice": {
+            "directors_date_as": {
                 "up": 0,
                 "low": 0,
             },
-            "equity": {
+            "shareholder_date_as": {
                 "up": 0,
                 "low": 0,
             },
-            "ex": {
+            "implement_date_as": {
+                "up": 0,
+                "low": 0,
+            },
+            "register_date_as": {
+                "up": 0,
+                "low": 0,
+            },
+            "ex_date_as": {
                 "up": 0,
                 "low": 0,
             }
@@ -44,50 +53,56 @@ class Command(BaseCommand):
         for item in SharesName.objects.filter(status=1, code_type=1):
             # 写过了
             code = item.code
-            # https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=SH603662
 
-            url = self.getUrl(item)
-            # print(url)
-            r = requests.get(url)
-            json2 = r.json()
-            # 公告日期
-            if len(json2["fhyx"]) == 0:
+            json2 = SharesFh.objects.filter(code_id=code)
+            if len(json2) == 0:
                 pass
 
-            for item in json2["fhyx"]:
-                if item['IMPL_PLAN_PROFILE'] == "不分配不转增":
-                    continue
-
-                if item["NOTICE_DATE"] is not None:
-                    time1 = datetime.strptime(item["NOTICE_DATE"], '%Y-%m-%d 00:00:00').date()
-                    itemAll = Shares.objects.filter(date_as=time1, code_id=code)
-                    if len(itemAll) > 0:
-                        for item3 in itemAll:
-                            print(item3)
-                            if item3.p_start < item3.p_end:
-                                all["notice"]["up"] += 1
-                            else:
-                                all["notice"]["low"] += 1
-
-                if item["EQUITY_RECORD_DATE"] is not None:
-                    time1 = datetime.strptime(item["EQUITY_RECORD_DATE"], '%Y-%m-%d 00:00:00').date()
-                    itemAll = Shares.objects.filter(date_as=time1, code_id=code)
+            for item in json2:
+                if item["directors_date_as"] is not None:
+                    itemAll = Shares.objects.filter(date_as=item["directors_date_as"], code_id=code)
                     if len(itemAll) > 0:
                         for item3 in itemAll:
                             if item3.p_start < item3.p_end:
-                                all["equity"]["up"] += 1
+                                all["directors_date_as"]["up"] += 1
                             else:
-                                all["equity"]["low"] += 1
+                                all["directors_date_as"]["low"] += 1
 
-                if item["EX_DIVIDEND_DATE"] is not None:
-                    time1 = datetime.strptime(item["EX_DIVIDEND_DATE"], '%Y-%m-%d 00:00:00').date()
-                    itemAll = Shares.objects.filter(date_as=time1, code_id=code)
+                if item["shareholder_date_as"] is not None:
+                    itemAll = Shares.objects.filter(date_as=item["shareholder_date_as"], code_id=code)
                     if len(itemAll) > 0:
                         for item3 in itemAll:
                             if item3.p_start < item3.p_end:
-                                all["ex"]["up"] += 1
+                                all["shareholder_date_as"]["up"] += 1
                             else:
-                                all["ex"]["low"] += 1
+                                all["shareholder_date_as"]["low"] += 1
+
+                if item["implement_date_as"] is not None:
+                    itemAll = Shares.objects.filter(date_as=item["implement_date_as"], code_id=code)
+                    if len(itemAll) > 0:
+                        for item3 in itemAll:
+                            if item3.p_start < item3.p_end:
+                                all["implement_date_as"]["up"] += 1
+                            else:
+                                all["implement_date_as"]["low"] += 1
+
+                if item["register_date_as"] is not None:
+                    itemAll = Shares.objects.filter(date_as=item["register_date_as"], code_id=code)
+                    if len(itemAll) > 0:
+                        for item3 in itemAll:
+                            if item3.p_start < item3.p_end:
+                                all["register_date_as"]["up"] += 1
+                            else:
+                                all["register_date_as"]["low"] += 1
+
+                if item["ex_date_as"] is not None:
+                    itemAll = Shares.objects.filter(date_as=item["ex_date_as"], code_id=code)
+                    if len(itemAll) > 0:
+                        for item3 in itemAll:
+                            if item3.p_start < item3.p_end:
+                                all["ex_date_as"]["up"] += 1
+                            else:
+                                all["ex_date_as"]["low"] += 1
                 break
 
         print(all)
