@@ -55,6 +55,7 @@ class SharesFh(scrapy.Spider):
         for item in itemList:
             thumbnail = item.css("td").extract()
             print(thumbnail)
+            break
         #     desc = item.css(".j-r-list-c .j-r-list-c-desc a::text").extract_first();
         #     title = item.css(".j-r-list-tool::attr(data-title)").extract_first();
         #     if desc:
@@ -98,3 +99,15 @@ class SharesFh(scrapy.Spider):
         # item_loader.add_value("type", article.get("type", ''))
         # return item_loader.load_item()
         pass
+
+    def findStoks(self):
+        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1';
+        results = []
+        try:
+            # 执行SQL语句
+            self.cursor.execute(sql)
+            # 获取所有记录列表
+            results = self.cursor.fetchall()
+        except:
+            print("Error: unable to fecth data")
+        return results
