@@ -51,7 +51,7 @@ class SharesFh(scrapy.Spider):
                                  callback=self.parse)
 
     def parse(self, response):
-        itemList = response.css("#bonus_table tr");
+        itemList = response.css("#bonus_table tbody tr");
         for item in itemList:
             thumbnail = item.css("td").getall()
             print(thumbnail)
