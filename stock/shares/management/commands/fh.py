@@ -64,7 +64,7 @@ class Command(BaseCommand):
         print(self.all)
         pass
 
-    def checkShares(self, date_as, code, column):
+    def checkShares(self, column, code, date_as):
         if date_as not in self.all:
             self.all[date_as] = {
                 "up": 0,
@@ -79,13 +79,13 @@ class Command(BaseCommand):
                     self.all[date_as]["low"] += 1
         return None
 
-    def checkSharesMacd(self, date_as, code, column):
+    def checkSharesMacd(self, column, code, date_as):
         if date_as not in self.all:
             self.all[date_as] = {
                 "up": 0,
                 "low": 0,
             }
-        itemAll = SharesMacd.objects.filter(date_as__lte=column.register_date_as, code_id=code).order_by('-date_as')
+        itemAll = SharesMacd.objects.filter(date_as__lt=column, code_id=code).order_by('-date_as')
         if len(itemAll) > 0:
             itemAll = itemAll[:2]
             if itemAll[0].macd > itemAll[1].macd:
