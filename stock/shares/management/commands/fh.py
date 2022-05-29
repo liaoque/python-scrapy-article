@@ -39,8 +39,8 @@ class Command(BaseCommand):
             # 写过了
             code = item.code
 
-            if (code < '300000' and (code > '300000' or code < '600000') and (
-                    code > '600000' or code < '700000')) == False:
+            if not (code < '300000' and (code > '300000' or code < '600000') and (
+                    code > '600000' or code < '700000')):
                 continue
 
             json2 = SharesFH.objects.filter(code_id=code)
@@ -122,11 +122,21 @@ class Command(BaseCommand):
 
         shareholder_date_as = SharesFH.objects.filter(shareholder_date_as=today)
         if len(shareholder_date_as) > 0:
-            all["shareholder_date_as"] = [item.code_id for item in shareholder_date_as]
+            for item in shareholder_date_as:
+                code = item.code_id
+                if not (code < '300000' and (code > '300000' or code < '600000') and (
+                        code > '600000' or code < '700000')):
+                    continue
+                all["shareholder_date_as"].append(code)
 
         implement_date_as = SharesFH.objects.filter(implement_date_as=today)
         if len(implement_date_as) > 0:
-            all["implement_date_as"] = [item.code_id for item in implement_date_as]
+            for item in implement_date_as:
+                code = item.code_id
+                if not (code < '300000' and (code > '300000' or code < '600000') and (
+                        code > '600000' or code < '700000')):
+                    continue
+                all["implement_date_as"].append(code)
 
         # for item in SharesName.objects.filter(status=1, code_type=1):
         #     # 写过了
