@@ -59,9 +59,9 @@ class Command(BaseCommand):
                 # if item.implement_date_as is not None:
                 #     self.checkShares(item.implement_date_as, code, "implement_date_as")
 
-                if item.register_date_as is not None:
-                    date_as = item.register_date_as - timedelta(1)
-                    self.checkSharesMacd(date_as, code, "register_date_as")
+                # if item.register_date_as is not None:
+                #     date_as = item.register_date_as - timedelta(1)
+                #     self.checkShares(date_as, code, "register_date_as")
 
                 # if item.ex_date_as is not None:
                 #     self.checkShares(item.ex_date_as, code, "ex_date_as")
