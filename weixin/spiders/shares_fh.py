@@ -15,7 +15,7 @@ import MySQLdb.cursors
 # from scrapy.linkextractors import LinkExtractor
 
 class SharesFh(scrapy.Spider):
-    name = 'shares_add'
+    name = 'shares_fh'
 
     allowed_domains = ['.eastmoney.com']
     start_urls = []
