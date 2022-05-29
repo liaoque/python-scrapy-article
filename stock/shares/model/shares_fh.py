@@ -23,4 +23,5 @@ class SharesFH(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.code_id + ":" + str(self.title) + ":" + str(self.info) + ":" + self.directors_date_as
+        return self.code_id + ":" + str(self.title) + ":" + str(self.info) + ":" + \
+               datetime.strftime(self.directors_date_as, '%Y-%m-%d')
