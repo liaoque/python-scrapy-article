@@ -71,13 +71,13 @@ class Command(BaseCommand):
                 "low": 0,
             }
         itemAll = Shares.objects.filter(date_as=column, code_id=code)
-        if len(itemAll) > 0:
-            for item3 in itemAll:
-                if item3.p_start < item3.p_end:
-                    self.all[date_as]["up"] += 1
-                else:
-                    self.all[date_as]["low"] += 1
-        return None
+        if len(itemAll) == 0:
+            return
+        for item3 in itemAll:
+            if item3.p_start < item3.p_end:
+                self.all[date_as]["up"] += 1
+            else:
+                self.all[date_as]["low"] += 1
 
     def checkSharesMacd(self, column, code, date_as):
         if date_as not in self.all:
@@ -86,13 +86,12 @@ class Command(BaseCommand):
                 "low": 0,
             }
         itemAll = SharesMacd.objects.filter(date_as__lt=column, code_id=code).order_by('-date_as')
-        if len(itemAll) > 0:
-            itemAll = itemAll[:2]
-            if itemAll[0].macd > itemAll[1].macd:
-                self.all[date_as]["up"] += 1
-            else:
-                self.all[date_as]["low"] += 1
-        return None
+        if len(itemAll) == 0:
+            return
+        itemAll = itemAll[:2]
+        if itemAll[0].macd < itemAll[1].macd:
+            return
+        self.checkShares(self, column, code, date_as)
 
     def getUrl(self, item):
         area_map = {
