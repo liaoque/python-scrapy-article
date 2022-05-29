@@ -84,6 +84,7 @@ class Items(scrapy.Item):
             self["register_date_as"][0],
             self["ex_date_as"][0],
         )
+        print(params)
         cursor.execute(sql, params)
         pass
 
