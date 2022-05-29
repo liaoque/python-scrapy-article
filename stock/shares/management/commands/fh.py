@@ -118,40 +118,34 @@ class Command(BaseCommand):
             area_map[item.area_id], item.code)
 
     def calculate(self, today):
+        all = {
+            "directors_date_as": [],
+            "shareholder_date_as": [],
+            "implement_date_as": [],
+            "register_date_as": [],
+            "ex_date_as": []
+        }
         for item in SharesName.objects.filter(status=1, code_type=1):
             # 写过了
             code = item.code
-            # https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=SH603662
+            json2 = SharesFh.objects.filter(code_id=code).order_by('-directors_date_as')
+            if len(json2) == 0:
+                return
+            item = json2[0]
+            if item["directors_date_as"] is not None and item["directors_date_as"] == today:
+                all['directors_date_as'].append(code)
 
-            url = self.getUrl(item)
-            # print(url)
-            r = requests.get(url)
-            json2 = r.json()
-            # 公告日期
-            all = {
-                "notice": [],
-                "equity": [],
-                "ex": []
-            }
-            if len(json2["fhyx"]) > 0:
-                item = json2["fhyx"]
-                if item['IMPL_PLAN_PROFILE'] == "不分配不转增":
-                    continue
+            if item["shareholder_date_as"] is not None and item["shareholder_date_as"] == today:
+                all['shareholder_date_as'].append(code)
 
-                # 公告日
-                time1 = datetime.strptime(item["NOTICE_DATE"], '%Y-%m-%d 00:00:00').date()
-                if time1 == today:
-                    all["notice"].append(code)
+            if item["implement_date_as"] is not None and item["implement_date_as"] == today:
+                all['implement_date_as'].append(code)
 
-                # 登记日期
-                time1 = datetime.strptime(item["EQUITY_RECORD_DATE"], '%Y-%m-%d 00:00:00').date()
-                if time1 == today:
-                    all["equity"].append(code)
+            if item["register_date_as"] is not None and item["register_date_as"] == today:
+                all['register_date_as'].append(code)
 
-                # 除权日
-                time1 = datetime.strptime(item["EX_DIVIDEND_DATE"], '%Y-%m-%d 00:00:00').date()
-                if time1 == today:
-                    all["ex"].append(code)
+            if item["ex_date_as"] is not None and item["ex_date_as"] == today:
+                all['ex_date_as'].append(code)
 
         self.sendMessage(all)
         pass
@@ -162,9 +156,9 @@ class Command(BaseCommand):
 
         tz = timezone(timedelta(hours=+8))
         str = "今天公告日股票：%s\n 今天登记日股票：%s\n 今天除权日股票：%s\n" % (
-            "\",\"".join(send_data['notice']),
-            "\",\"".join(send_data['equity']),
-            "\",\"".join(send_data['ex']))
+            "\",\"".join(send_data['implement_date_as']),
+            "\",\"".join(send_data['register_date_as']),
+            "\",\"".join(send_data['ex_date_as']))
         send_mail(
             '分红%s' % (datetime.now(tz)),
             str,
