@@ -91,7 +91,7 @@ class Command(BaseCommand):
         itemAll = itemAll[:2]
         if itemAll[0].macd < itemAll[1].macd:
             return
-        self.checkShares(self, column, code, date_as)
+        self.checkShares(column, code, date_as)
 
     def getUrl(self, item):
         area_map = {
