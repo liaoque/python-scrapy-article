@@ -97,7 +97,8 @@ class Command(BaseCommand):
         if len(itemAll) <= 1:
             return
         itemAll = itemAll[:2]
-        if itemAll[0].macd < itemAll[1].macd:
+        # if itemAll[0].macd < itemAll[1].macd:
+        if itemAll[0].j < itemAll[1].j:
             return
         self.checkShares(column, code, date_as)
 
