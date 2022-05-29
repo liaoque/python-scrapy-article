@@ -111,3 +111,8 @@ class SharesFh(scrapy.Spider):
         except:
             print("Error: unable to fecth data")
         return results
+
+    def __del__(self):
+        if self.db != None:
+            self.cursor.close()
+            self.db.close()
