@@ -82,7 +82,7 @@ class SharesFh(scrapy.Spider):
         item_loader.add_value("implement_date_as", item[3])
         item_loader.add_value("register_date_as", item[5])
         item_loader.add_value("ex_date_as", item[6])
-
+        print(item_loader.load_item())
         return item_loader.load_item()
         pass
 
