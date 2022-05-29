@@ -86,7 +86,7 @@ class Command(BaseCommand):
                 "low": 0,
             }
         itemAll = SharesMacd.objects.filter(date_as__lt=column, code_id=code).order_by('-date_as')
-        if len(itemAll) == 0:
+        if len(itemAll) <= 1:
             return
         itemAll = itemAll[:2]
         if itemAll[0].macd < itemAll[1].macd:
