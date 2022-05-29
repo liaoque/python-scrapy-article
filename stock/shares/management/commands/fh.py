@@ -7,6 +7,7 @@ from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
 from shares.model.shares_fh import SharesFH
 from shares.model.shares_macd import SharesMacd
+from shares.model.shares_kdj import SharesKdj
 
 import requests
 from django.core.mail import send_mail
@@ -37,6 +38,10 @@ class Command(BaseCommand):
         for item in SharesName.objects.filter(status=1, code_type=1):
             # 写过了
             code = item.code
+
+            if (code < '300000' and (code > '300000' or code < '600000') and (
+                    code > '600000' or code < '700000')) == False:
+                continue
 
             json2 = SharesFH.objects.filter(code_id=code)
             if len(json2) == 0:
@@ -87,7 +92,8 @@ class Command(BaseCommand):
                 "up": 0,
                 "low": 0,
             }
-        itemAll = SharesMacd.objects.filter(date_as__lt=column, code_id=code).order_by('-date_as')
+        # itemAll = SharesMacd.objects.filter(date_as__lt=column, code_id=code).order_by('-date_as')
+        itemAll = SharesKdj.objects.filter(date_as__lt=column, code_id=code).order_by('-date_as')
         if len(itemAll) <= 1:
             return
         itemAll = itemAll[:2]
