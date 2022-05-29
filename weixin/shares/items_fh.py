@@ -27,21 +27,21 @@ class Items(scrapy.Item):
     def save(self, cursor):
         code = self['code'][0]
         title = self['title'][0]
-        if len(self["info"]) == 0:
+        if "info" not in self:
             self["info"][0] = None
-        if len(self["amount"]) == 0:
+        if "amount" not in self:
             self["amount"][0] = None
-        if len(self["range"]) == 0:
+        if "range" not in self:
             self["range"][0] = None
-        if len(self["directors_date_as"]) == 0:
+        if "directors_date_as" not in self:
             self["directors_date_as"][0] = None
-        if len(self["shareholder_date_as"]) == 0:
+        if "shareholder_date_as" not in self:
             self["shareholder_date_as"][0] = None
-        if len(self["implement_date_as"]) == 0:
+        if "implement_date_as" not in self:
             self["implement_date_as"][0] = None
-        if len(self["register_date_as"]) == 0:
+        if "register_date_as" not in self:
             self["register_date_as"][0] = None
-        if len(self["ex_date_as"]) == 0:
+        if "ex_date_as" not in self:
             self["ex_date_as"][0] = None
 
         if self.exitsByCode(cursor, code, title):
