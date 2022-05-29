@@ -30,7 +30,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         today = datetime.now().date().strftime('%Y-%m-%d')
-        self.calculateCheck(today)
+        self.calculate(today)
         pass
 
     def calculateCheck(self, today):
@@ -49,36 +49,36 @@ class Command(BaseCommand):
 
             for item in json2:
                 if item.directors_date_as is not None:
-                    # self.checkShares(item.directors_date_as, code, "directors_date_as")
-                    if datetime.strftime(item.directors_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                            item.directors_date_as, '%Y-%m-%d') < '2022-04-27':
-                        self.checkShares(item.directors_date_as, code, "directors_date_as")
+                    self.checkShares(item.directors_date_as, code, "directors_date_as")
+                    # if datetime.strftime(item.directors_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
+                    #         item.directors_date_as, '%Y-%m-%d') < '2022-04-27':
+                    #     self.checkShares(item.directors_date_as, code, "directors_date_as")
 
                 if item.shareholder_date_as is not None:
-                    # self.checkShares(item.shareholder_date_as, code, "directors_date_as")
-                    if datetime.strftime(item.shareholder_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                            item.shareholder_date_as, '%Y-%m-%d') < '2022-04-27':
-                        self.checkShares(item.shareholder_date_as, code, "shareholder_date_as")
+                    self.checkShares(item.shareholder_date_as, code, "directors_date_as")
+                    # if datetime.strftime(item.shareholder_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
+                    #         item.shareholder_date_as, '%Y-%m-%d') < '2022-04-27':
+                    #     self.checkShares(item.shareholder_date_as, code, "shareholder_date_as")
 
                 if item.implement_date_as is not None:
-                    # self.checkShares(item.implement_date_as, code, "implement_date_as")
-                    if datetime.strftime(item.implement_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                            item.implement_date_as, '%Y-%m-%d') < '2022-04-27':
-                        self.checkShares(item.implement_date_as, code, "implement_date_as")
+                    self.checkShares(item.implement_date_as, code, "implement_date_as")
+                    # if datetime.strftime(item.implement_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
+                    #         item.implement_date_as, '%Y-%m-%d') < '2022-04-27':
+                    #     self.checkShares(item.implement_date_as, code, "implement_date_as")
 
                 if item.register_date_as is not None:
-                    # date_as = item.register_date_as - timedelta(1)
-                    # self.checkShares(date_as, code, "register_date_as")
-                    if datetime.strftime(item.register_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                            item.register_date_as, '%Y-%m-%d') < '2022-04-27':
-                        date_as = item.register_date_as - timedelta(1)
-                        self.checkShares(date_as, code, "register_date_as")
+                    date_as = item.register_date_as - timedelta(1)
+                    self.checkShares(date_as, code, "register_date_as")
+                    # if datetime.strftime(item.register_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
+                    #         item.register_date_as, '%Y-%m-%d') < '2022-04-27':
+                    #     date_as = item.register_date_as - timedelta(1)
+                    #     self.checkShares(date_as, code, "register_date_as")
 
                 if item.ex_date_as is not None:
-                    # self.checkShares(item.ex_date_as, code, "ex_date_as")
-                    if datetime.strftime(item.ex_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                            item.ex_date_as, '%Y-%m-%d') < '2022-04-27':
-                        self.checkShares(item.ex_date_as, code, "ex_date_as")
+                    self.checkShares(item.ex_date_as, code, "ex_date_as")
+                    # if datetime.strftime(item.ex_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
+                    #         item.ex_date_as, '%Y-%m-%d') < '2022-04-27':
+                    #     self.checkShares(item.ex_date_as, code, "ex_date_as")
                 break
 
         print(self.all)
@@ -132,6 +132,12 @@ class Command(BaseCommand):
         implement_date_as = SharesFH.objects.filter(implement_date_as=today)
         self.appendCode(implement_date_as, "implement_date_as")
 
+        register_date_as = SharesFH.objects.filter(register_date_as=today)
+        self.appendCode(register_date_as, "register_date_as")
+
+        ex_date_as = SharesFH.objects.filter(ex_date_as=today)
+        self.appendCode(ex_date_as, "ex_date_as")
+
         # all = {
         #     "directors_date_as": [],
         #     "shareholder_date_as": [],
@@ -177,9 +183,6 @@ class Command(BaseCommand):
             self.all[column].append(code)
 
     def sendMessage(self, send_data):
-        if len(send_data['notice']) == 0 and len(send_data['equity']) and len(send_data['ex']):
-            return
-
         tz = timezone(timedelta(hours=+8))
         str = "董事会日期：%s\n 股东大会预案公告日期：%s\n 实施公告日：%s\n A股股权登记日：%s\n A股除权除息日：%s\n" % (
             "\",\"".join(send_data['directors_date_as']),
