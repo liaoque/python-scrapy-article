@@ -30,8 +30,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         today = datetime.now().date().strftime('%Y-%m-%d')
-        # self.calculate(today)
-        self.calculate("2022-05-30")
+        self.calculate(today)
+        # self.calculate("2022-05-30")
         pass
 
     def calculateCheck(self, today):
