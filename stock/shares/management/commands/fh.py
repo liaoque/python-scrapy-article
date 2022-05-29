@@ -88,7 +88,7 @@ class Command(BaseCommand):
         itemAll = SharesMacd.objects.filter(date_as__lte=item.register_date_as, code_id=code).order_by('-date_as')
         if len(itemAll) > 0:
             itemAll = itemAll[:2]
-            if itemAll[0].p_start > itemAll[1].p_end:
+            if itemAll[0].macd > itemAll[1].macd:
                 self.all[date_as]["up"] += 1
             else:
                 self.all[date_as]["low"] += 1
