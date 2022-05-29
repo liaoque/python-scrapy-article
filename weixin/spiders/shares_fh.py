@@ -7,6 +7,8 @@ import sys
 import time
 import MySQLdb
 import MySQLdb.cursors
+import weixin.shares.items_fh as SharesFhItems
+import copy
 
 
 # import baozouribao.items
@@ -45,59 +47,43 @@ class SharesFh(scrapy.Spider):
             code = item[0]
 
             url = self.get_url(code)
+            headers = copy.deepcopy(self.headers)
+            headers['code'] = code
             yield scrapy.Request(url,
-                                 headers=self.headers,
+                                 headers=headers,
                                  dont_filter=True,
                                  callback=self.parse)
 
     def parse(self, response):
+        code = response.request.headers.getlist('code')[0].decode("UTF-8")
         itemList = response.css("#bonus_table tbody tr");
         for item in itemList:
             thumbnail = item.css("td::text")
-            print(thumbnail.getall())
-            break
-            # desc = item.css(".j-r-list-c .j-r-list-c-desc a::text").extract_first();
-        #     title = item.css(".j-r-list-tool::attr(data-title)").extract_first();
-        #     if desc:
-        #         desc = '<p>' + desc + '</p>'
-        #     if thumbnail:
-        #         src = '<p><img src=' + thumbnail + ' /></p>'
-        #         yield self.parse_content({
-        #             'body': '<div class="content">' + desc + src + '</div>',
-        #             'src': thumbnail,
-        #             'type': type,
-        #             'thumbnail': thumbnail,
-        #             'title': title,
-        #         });
-        #
-        #
-        #
-        #
-        # for key, item in enumerate(items):
-        #     yield self.parse_content({
-        #         'body': item,
-        #         'src': item,
-        #         'type': type,
-        #         'thumbnail': itemsThumbnail[key],
-        #         'title': itemTitles[key],
-        #     })
-
+            yield self.parse_content(thumbnail.getall(), code)
         pass
 
-    def parse_content(self, item):
-        # article = item;
-        # item_loader = ItemLoader(item=BaiSiBuDeJieItem.Items())
-        # # 缩略图
-        # item_loader.add_value("thumbnail", article.get("thumbnail", 0))
-        # item_loader.add_value("src", article.get("src", 0))
-        # # 文档标题
-        # item_loader.add_value("title", article.get("title", 0))
-        # item_loader.add_value("title", article.get("title", 0))
-        # # content
-        # item_loader.add_value("body", article.get("body", ''))
-        # # 文档URL
-        # item_loader.add_value("type", article.get("type", ''))
-        # return item_loader.load_item()
+    def parse_content(self, item, code):
+        item_loader = ItemLoader(item=SharesFhItems.Items())
+        # 缩略图
+        if item[4] == '不分配不转增':
+            return
+
+        for i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
+            if item[i] == '--':
+                item[i] = None
+
+        item_loader.add_value("code", code)
+        item_loader.add_value("title", item[0])
+        item_loader.add_value("info", item[4])
+        item_loader.add_value("amount", item[7])
+        item_loader.add_value("range", item[9])
+        item_loader.add_value("directors_date_as", item[1])
+        item_loader.add_value("shareholder_date_as", item[2])
+        item_loader.add_value("implement_date_as", item[3])
+        item_loader.add_value("register_date_as", item[5])
+        item_loader.add_value("ex_date_as", item[6])
+
+        return item_loader.load_item()
         pass
 
     def findStoks(self):
