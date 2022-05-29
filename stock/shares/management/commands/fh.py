@@ -57,27 +57,27 @@ class Command(BaseCommand):
                 if item.shareholder_date_as is not None:
                     # self.checkShares(item.shareholder_date_as, code, "directors_date_as")
                     if datetime.strftime(item.shareholder_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                            item.directors_date_as, '%Y-%m-%d') < '2022-04-27':
+                            item.shareholder_date_as, '%Y-%m-%d') < '2022-04-27':
                         self.checkShares(item.shareholder_date_as, code, "shareholder_date_as")
 
                 if item.implement_date_as is not None:
                     # self.checkShares(item.implement_date_as, code, "implement_date_as")
                     if datetime.strftime(item.implement_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                            item.directors_date_as, '%Y-%m-%d') < '2022-04-27':
+                            item.implement_date_as, '%Y-%m-%d') < '2022-04-27':
                         self.checkShares(item.implement_date_as, code, "implement_date_as")
 
                 if item.register_date_as is not None:
                     # date_as = item.register_date_as - timedelta(1)
                     # self.checkShares(date_as, code, "register_date_as")
                     if datetime.strftime(item.register_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                            item.directors_date_as, '%Y-%m-%d') < '2022-04-27':
+                            item.register_date_as, '%Y-%m-%d') < '2022-04-27':
                         date_as = item.register_date_as - timedelta(1)
                         self.checkShares(date_as, code, "register_date_as")
 
                 if item.ex_date_as is not None:
                     # self.checkShares(item.ex_date_as, code, "ex_date_as")
                     if datetime.strftime(item.ex_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                            item.directors_date_as, '%Y-%m-%d') < '2022-04-27':
+                            item.ex_date_as, '%Y-%m-%d') < '2022-04-27':
                         self.checkShares(item.ex_date_as, code, "ex_date_as")
                 break
 
