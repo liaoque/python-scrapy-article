@@ -54,7 +54,7 @@ class Command(BaseCommand):
             # 写过了
             code = item.code
 
-            json2 = SharesFh.objects.filter(code_id=code)
+            json2 = SharesFH.objects.filter(code_id=code)
             if len(json2) == 0:
                 pass
 
@@ -128,7 +128,7 @@ class Command(BaseCommand):
         for item in SharesName.objects.filter(status=1, code_type=1):
             # 写过了
             code = item.code
-            json2 = SharesFh.objects.filter(code_id=code).order_by('-directors_date_as')
+            json2 = SharesFH.objects.filter(code_id=code).order_by('-directors_date_as')
             if len(json2) == 0:
                 return
             item = json2[0]
