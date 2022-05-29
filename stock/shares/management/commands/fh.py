@@ -69,8 +69,8 @@ class Command(BaseCommand):
                             else:
                                 all["directors_date_as"]["low"] += 1
 
-                if item["shareholder_date_as"] is not None:
-                    itemAll = Shares.objects.filter(date_as=item["shareholder_date_as"], code_id=code)
+                if item.shareholder_date_as is not None:
+                    itemAll = Shares.objects.filter(date_as=item.shareholder_date_as, code_id=code)
                     if len(itemAll) > 0:
                         for item3 in itemAll:
                             if item3.p_start < item3.p_end:
@@ -78,8 +78,8 @@ class Command(BaseCommand):
                             else:
                                 all["shareholder_date_as"]["low"] += 1
 
-                if item["implement_date_as"] is not None:
-                    itemAll = Shares.objects.filter(date_as=item["implement_date_as"], code_id=code)
+                if item.implement_date_as is not None:
+                    itemAll = Shares.objects.filter(date_as=item.implement_date_as, code_id=code)
                     if len(itemAll) > 0:
                         for item3 in itemAll:
                             if item3.p_start < item3.p_end:
@@ -87,8 +87,8 @@ class Command(BaseCommand):
                             else:
                                 all["implement_date_as"]["low"] += 1
 
-                if item["register_date_as"] is not None:
-                    itemAll = Shares.objects.filter(date_as=item["register_date_as"], code_id=code)
+                if item.register_date_as is not None:
+                    itemAll = Shares.objects.filter(date_as=item.register_date_as, code_id=code)
                     if len(itemAll) > 0:
                         for item3 in itemAll:
                             if item3.p_start < item3.p_end:
@@ -96,8 +96,8 @@ class Command(BaseCommand):
                             else:
                                 all["register_date_as"]["low"] += 1
 
-                if item["ex_date_as"] is not None:
-                    itemAll = Shares.objects.filter(date_as=item["ex_date_as"], code_id=code)
+                if item.ex_date_as is not None:
+                    itemAll = Shares.objects.filter(date_as=item.ex_date_as, code_id=code)
                     if len(itemAll) > 0:
                         for item3 in itemAll:
                             if item3.p_start < item3.p_end:
@@ -136,16 +136,16 @@ class Command(BaseCommand):
             if item.directors_date_as is not None and item.directors_date_as == today:
                 all['directors_date_as'].append(code)
 
-            if item["shareholder_date_as"] is not None and item["shareholder_date_as"] == today:
+            if item.shareholder_date_as is not None and item.shareholder_date_as == today:
                 all['shareholder_date_as'].append(code)
 
-            if item["implement_date_as"] is not None and item["implement_date_as"] == today:
+            if item.implement_date_as is not None and item.implement_date_as == today:
                 all['implement_date_as'].append(code)
 
-            if item["register_date_as"] is not None and item["register_date_as"] == today:
+            if item.register_date_as is not None and item.register_date_as == today:
                 all['register_date_as'].append(code)
 
-            if item["ex_date_as"] is not None and item["ex_date_as"] == today:
+            if item.ex_date_as is not None and item.ex_date_as == today:
                 all['ex_date_as'].append(code)
 
         self.sendMessage(all)
