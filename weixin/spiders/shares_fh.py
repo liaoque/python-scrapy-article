@@ -62,7 +62,7 @@ class SharesFh(scrapy.Spider):
             all = thumbnail.getall()
             if all[4] == '不分配不转增':
                 continue
-            if item[1] == '--':
+            if item[1] == '--' or item[1] < '2010-01-01':
                 continue
             yield self.parse_content(all, code)
         pass
