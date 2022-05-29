@@ -48,7 +48,7 @@ class Items(scrapy.Item):
             sql = """
             update mc_shares_fh 
                     set info = %s, amount = %s,
-                        `range` = %s, directors_date_as = %s, shareholder_date_as = %s 
+                        `range` = %s, directors_date_as = %s, shareholder_date_as = %s, 
                         `implement_date_as` = %s, register_date_as = %s, ex_date_as = %s 
                     where code_id = %s and title=%s
             """
