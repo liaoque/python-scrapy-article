@@ -132,7 +132,7 @@ class Command(BaseCommand):
         implement_date_as = SharesFH.objects.filter(implement_date_as=today)
         self.appendCode(implement_date_as, "implement_date_as")
 
-        today2 = datetime.strftime(today, '%Y-%m-%d') + timedelta(1)
+        today2 = datetime.strptime(today, '%Y-%m-%d').date() + timedelta(1)
         register_date_as = SharesFH.objects.filter(register_date_as=today2)
         self.appendCode(register_date_as, "register_date_as")
 
