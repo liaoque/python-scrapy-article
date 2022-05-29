@@ -56,7 +56,7 @@ class Command(BaseCommand):
 
                 if item.register_date_as is not None:
                     date_as = item.register_date_as - timedelta(1)
-                    self.checkShares(date_as, code, "register_date_as")
+                    self.checkSharesMacd(date_as, code, "register_date_as")
 
                 # if item.ex_date_as is not None:
                 #     self.checkShares(item.ex_date_as, code, "ex_date_as")
@@ -116,7 +116,7 @@ class Command(BaseCommand):
 
         shareholder_date_as = SharesFH.objects.filter(shareholder_date_as=today)
         if len(shareholder_date_as) > 0:
-            all["shareholder_date_as"] = [ item.code_id  for item in shareholder_date_as]
+            all["shareholder_date_as"] = [item.code_id for item in shareholder_date_as]
 
         implement_date_as = SharesFH.objects.filter(implement_date_as=today)
         if len(implement_date_as) > 0:
