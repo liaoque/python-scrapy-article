@@ -59,7 +59,7 @@ class Command(BaseCommand):
                 continue
 
             for item in json2:
-                print(item)
+
                 if item.directors_date_as is not None:
                     itemAll = Shares.objects.filter(date_as=item.directors_date_as, code_id=code)
                     if len(itemAll) > 0:
@@ -67,6 +67,7 @@ class Command(BaseCommand):
                             if item3.p_start < item3.p_end:
                                 all["directors_date_as"]["up"] += 1
                             else:
+                                print(item)
                                 all["directors_date_as"]["low"] += 1
 
                 if item.shareholder_date_as is not None:
@@ -76,6 +77,7 @@ class Command(BaseCommand):
                             if item3.p_start < item3.p_end:
                                 all["shareholder_date_as"]["up"] += 1
                             else:
+                                print(item)
                                 all["shareholder_date_as"]["low"] += 1
 
                 if item.implement_date_as is not None:
