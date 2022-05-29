@@ -105,6 +105,7 @@ class Command(BaseCommand):
             area_map[item.area_id], item.code)
 
     def calculate(self, today):
+
         all = {
             "directors_date_as": [],
             "shareholder_date_as": [],
@@ -112,27 +113,36 @@ class Command(BaseCommand):
             "register_date_as": [],
             "ex_date_as": []
         }
-        for item in SharesName.objects.filter(status=1, code_type=1):
-            # 写过了
-            code = item.code
-            json2 = SharesFH.objects.filter(code_id=code).order_by('-directors_date_as')
-            if len(json2) == 0:
-                continue
-            item = json2[0]
-            if item.directors_date_as is not None and item.directors_date_as == today:
-                all['directors_date_as'].append(code)
 
-            if item.shareholder_date_as is not None and item.shareholder_date_as == today:
-                all['shareholder_date_as'].append(code)
+        shareholder_date_as = SharesFH.objects.filter(shareholder_date_as=today)
+        if len(shareholder_date_as) > 0:
+            all["shareholder_date_as"] = [ item.code_id  for item in shareholder_date_as]
 
-            if item.implement_date_as is not None and item.implement_date_as == today:
-                all['implement_date_as'].append(code)
+        implement_date_as = SharesFH.objects.filter(implement_date_as=today)
+        if len(implement_date_as) > 0:
+            all["implement_date_as"] = [item.code_id for item in implement_date_as]
 
-            if item.register_date_as is not None and item.register_date_as == today:
-                all['register_date_as'].append(code)
-
-            if item.ex_date_as is not None and item.ex_date_as == today:
-                all['ex_date_as'].append(code)
+        # for item in SharesName.objects.filter(status=1, code_type=1):
+        #     # 写过了
+        #     code = item.code
+        #     json2 = SharesFH.objects.filter(code_id=code).order_by('-directors_date_as')
+        #     if len(json2) == 0:
+        #         continue
+        #     item = json2[0]
+        #     if item.directors_date_as is not None and item.directors_date_as == today:
+        #         all['directors_date_as'].append(code)
+        #
+        #     if item.shareholder_date_as is not None and item.shareholder_date_as == today:
+        #         all['shareholder_date_as'].append(code)
+        #
+        #     if item.implement_date_as is not None and item.implement_date_as == today:
+        #         all['implement_date_as'].append(code)
+        #
+        #     if item.register_date_as is not None and item.register_date_as == today:
+        #         all['register_date_as'].append(code)
+        #
+        #     if item.ex_date_as is not None and item.ex_date_as == today:
+        #         all['ex_date_as'].append(code)
 
         self.sendMessage(all)
         pass
