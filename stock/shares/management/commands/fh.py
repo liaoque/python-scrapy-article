@@ -130,7 +130,7 @@ class Command(BaseCommand):
             code = item.code
             json2 = SharesFH.objects.filter(code_id=code).order_by('-directors_date_as')
             if len(json2) == 0:
-                return
+                continue
             item = json2[0]
             if item["directors_date_as"] is not None and item["directors_date_as"] == today:
                 all['directors_date_as'].append(code)
