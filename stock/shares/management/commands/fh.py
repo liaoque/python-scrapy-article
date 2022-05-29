@@ -45,20 +45,21 @@ class Command(BaseCommand):
             for item in json2:
                 if datetime.strftime(item.directors_date_as, '%Y-%m-%d') < '2022-01-01':
                     continue
-                if item.directors_date_as is not None:
-                    self.checkSharesMacd(item.directors_date_as, code, "directors_date_as")
-
-                if item.shareholder_date_as is not None:
-                    self.checkSharesMacd(item.shareholder_date_as, code, "shareholder_date_as")
-
-                if item.implement_date_as is not None:
-                    self.checkSharesMacd(item.implement_date_as, code, "implement_date_as")
+                # if item.directors_date_as is not None:
+                #     self.checkShares(item.directors_date_as, code, "directors_date_as")
+                #
+                # if item.shareholder_date_as is not None:
+                #     self.checkShares(item.shareholder_date_as, code, "shareholder_date_as")
+                #
+                # if item.implement_date_as is not None:
+                #     self.checkShares(item.implement_date_as, code, "implement_date_as")
 
                 if item.register_date_as is not None:
-                    self.checkSharesMacd(item.register_date_as, code, "register_date_as")
+                    date_as = item.register_date_as - timedelta(1)
+                    self.checkShares(date_as, code, "register_date_as")
 
-                if item.ex_date_as is not None:
-                    self.checkSharesMacd(item.ex_date_as, code, "ex_date_as")
+                # if item.ex_date_as is not None:
+                #     self.checkShares(item.ex_date_as, code, "ex_date_as")
                 break
 
         print(self.all)
