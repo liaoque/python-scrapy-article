@@ -155,7 +155,9 @@ class Command(BaseCommand):
             return
 
         tz = timezone(timedelta(hours=+8))
-        str = "今天公告日股票：%s\n 今天登记日股票：%s\n 今天除权日股票：%s\n" % (
+        str = "董事会日期：%s\n 股东大会预案公告日期：%s\n 实施公告日：%s\n A股股权登记日：%s\n A股除权除息日：%s\n" % (
+            "\",\"".join(send_data['directors_date_as']),
+            "\",\"".join(send_data['shareholder_date_as']),
             "\",\"".join(send_data['implement_date_as']),
             "\",\"".join(send_data['register_date_as']),
             "\",\"".join(send_data['ex_date_as']))
