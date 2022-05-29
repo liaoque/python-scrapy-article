@@ -55,6 +55,9 @@ class Command(BaseCommand):
                 pass
 
             for item in json2["fhyx"]:
+                if item['IMPL_PLAN_PROFILE'] == "不分配不转增":
+                    continue
+
                 if item["NOTICE_DATE"] is not None:
                     time1 = datetime.strptime(item["NOTICE_DATE"], '%Y-%m-%d 00:00:00').date()
                     itemAll = Shares.objects.filter(date_as=time1, code_id=code)
@@ -105,7 +108,8 @@ class Command(BaseCommand):
             code = item.code
             # https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=SH603662
 
-            url = "https://emweb.securities.eastmoney.com/BonusFinancing/PageAjax?code=SH603662"
+            url = self.getUrl(item)
+            # print(url)
             r = requests.get(url)
             json2 = r.json()
             # 公告日期
@@ -115,6 +119,10 @@ class Command(BaseCommand):
                 "ex": []
             }
             if len(json2["fhyx"]) > 0:
+                item = json2["fhyx"]
+                if item['IMPL_PLAN_PROFILE'] == "不分配不转增":
+                    continue
+
                 # 公告日
                 time1 = datetime.strptime(item["NOTICE_DATE"], '%Y-%m-%d 00:00:00').date()
                 if time1 == today:
