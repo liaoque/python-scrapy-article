@@ -59,19 +59,19 @@ class SharesFh(scrapy.Spider):
         itemList = response.css("#bonus_table tbody tr");
         for item in itemList:
             thumbnail = item.css("td::text")
-            yield self.parse_content(thumbnail.getall(), code)
+            all = thumbnail.getall()
+            if all[4] == '不分配不转增':
+                continue
+            if item[1] == '--':
+                continue
+            yield self.parse_content(all, code)
         pass
 
     def parse_content(self, item, code):
         item_loader = ItemLoader(item=SharesFhItems.Items())
-        # 缩略图
-        if item[4] == '不分配不转增':
-            return
-
         for i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
             if item[i] == '--':
                 item[i] = None
-
         item_loader.add_value("code", code)
         item_loader.add_value("title", item[0])
         item_loader.add_value("info", item[4])
