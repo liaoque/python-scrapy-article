@@ -245,6 +245,7 @@ class Command(BaseCommand):
                     "BK0438",
                     "BK0450",
                     "BK0451",
+                    "BK0454",
                     "BK0456",
                     "BK0465",
                     "BK0476",
@@ -255,11 +256,16 @@ class Command(BaseCommand):
                     "BK0482",
                     "BK0484",
                     "BK0725",
+                    "BK0727",
+                    "BK0729",
                     "BK0731",
                     "BK0739",
                     "BK1015",
                     "BK1016",
                     "BK1029",
+                    "BK1040",
+                    "BK1041",
+                    "BK1042",
                     "BK1045", ]
         industryList = SharesJoinIndustry.objects.filter(industry_code_id__in=industry)
         codeList = SharesJoinBlock.objects.filter(block_code_id__in=[
