@@ -12,7 +12,7 @@ from shares.model.shares_macd import SharesMacd
 from shares.model.shares_buys import SharesBuys
 from shares.model.shares_join_industry import SharesJoinIndustry
 from shares.model.shares_ban import SharesBan
-from .model.shares_join_block import SharesJoinBlock
+from shares.model.shares_join_block import SharesJoinBlock
 import numpy as np
 import talib
 from django.core.mail import send_mail
