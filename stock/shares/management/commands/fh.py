@@ -63,7 +63,7 @@ class Command(BaseCommand):
 
                 if item.implement_date_as is not None:
                     date_as = item.implement_date_as + timedelta(1)
-                    self.checkShares(date_as, code, "implement_date_as")
+                    self.checkSharesMacd(date_as, code, "implement_date_as")
                     # if datetime.strftime(item.implement_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
                     #         item.implement_date_as, '%Y-%m-%d') < '2022-04-27':
                     #     self.checkShares(item.implement_date_as, code, "implement_date_as")
