@@ -30,7 +30,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         tz = timezone(timedelta(hours=+8))
         today = datetime.now().astimezone(tz).date().strftime('%Y-%m-%d')
-        self.calculateCheck(today)
+        self.calculate(today)
         # self.calculate("2022-05-30")
         pass
 
