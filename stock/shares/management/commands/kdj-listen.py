@@ -12,6 +12,7 @@ from shares.model.shares_macd import SharesMacd
 from shares.model.shares_buys import SharesBuys
 from shares.model.shares_join_industry import SharesJoinIndustry
 from shares.model.shares_ban import SharesBan
+from .model.shares_join_block import SharesJoinBlock
 import numpy as np
 import talib
 from django.core.mail import send_mail
@@ -244,7 +245,6 @@ class Command(BaseCommand):
                     "BK0438",
                     "BK0450",
                     "BK0451",
-                    "BK0454",
                     "BK0456",
                     "BK0465",
                     "BK0476",
@@ -255,19 +255,20 @@ class Command(BaseCommand):
                     "BK0482",
                     "BK0484",
                     "BK0725",
-                    "BK0727",
-                    "BK0729",
                     "BK0731",
                     "BK0739",
                     "BK1015",
                     "BK1016",
                     "BK1029",
-                    "BK1040",
-                    "BK1041",
-                    "BK1042",
                     "BK1045", ]
         industryList = SharesJoinIndustry.objects.filter(industry_code_id__in=industry)
-        return [item.code_id for item in industryList]
+        codeList = SharesJoinBlock.objects.filter(block_code_id__in=[
+            "BK0683",
+            "BK0520",
+            "BK0823",
+        ], code_id=[item.code_id for item in industryList])
+
+        return [item.code_id for item in codeList]
 
     def getBans(self):
         industryList = SharesBan.objects.all()
