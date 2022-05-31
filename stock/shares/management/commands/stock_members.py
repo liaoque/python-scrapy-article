@@ -108,12 +108,13 @@ class Command(BaseCommand):
         """
         result = Shares.objects.raw(sql)
         for item in result:
-            shareName = SharesName.objects.filter(code=item.code_id)
-            if len(shareName) > 0:
+            shareName2 = SharesName.objects.filter(code=item.code_id)
+            if len(shareName2) > 0:
                 if item.members >= item.tmembers:
-                    shareName(code=item.code_id, member_up=2)
+                    shareName2 = SharesName(code=item.code_id, member_up=2)
                 else:
-                    shareName(code=item.code_id, member_up=1)
+                    shareName2 = SharesName(code=item.code_id, member_up=1)
+                shareName2.save()
 
 
         #
