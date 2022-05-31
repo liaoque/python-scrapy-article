@@ -212,27 +212,27 @@ class Command(BaseCommand):
                 joinBlock = SharesJoinBlock.objects.filter(block_code_id=item.code)
                 if len(joinBlock) == 0:
                     continue
-                sharesList = Shares.objects.filter(code_id=[item.code_id for item in joinBlock], date_as=today)
+                sharesList = Shares.objects.filter(code_id=[item.code for item in joinBlock], date_as=today)
                 if len(sharesList) == 0:
                     continue
                 for shareItem in sharesList:
                     if (shareItem.p_end - shareItem.p_start) / shareItem.p_start > 0.05:
-                        if item.code not in self.all["l1"]:
-                            self.all["l1"][item.code] = 0
-                        self.all["l1"][item.code] += 1
+                        if item.name not in self.all["l1"]:
+                            self.all["l1"][item.name] = 0
+                        self.all["l1"][item.name] += 1
 
             for item in SharesName.objects.filter(status=1, code_type=3):
                 joinBlock = SharesJoinIndustry.objects.filter(industry_code_id=item.code)
                 if len(joinBlock) == 0:
                     continue
-                sharesList = Shares.objects.filter(code_id=[item.code_id for item in joinBlock], date_as=today)
+                sharesList = Shares.objects.filter(code_id=[item.code for item in joinBlock], date_as=today)
                 if len(sharesList) == 0:
                     continue
                 for shareItem in sharesList:
                     if (shareItem.p_end - shareItem.p_start) / shareItem.p_start > 0.05:
-                        if item.code not in self.all["l2"]:
-                            self.all["l2"][item.code] = 0
-                        self.all["l2"][item.code] += 1
+                        if item.name not in self.all["l2"]:
+                            self.all["l2"][item.name] = 0
+                        self.all["l2"][item.name] += 1
 
             self.all["l1"] = sorted(self.all["l1"].items(), key=lambda x: x[1], reverse=True)[:20]
             self.all["l2"] = sorted(self.all["l2"].items(), key=lambda x: x[1], reverse=True)[:20]
@@ -282,11 +282,11 @@ class Command(BaseCommand):
 
         str += "\n板块\n"
         for item in self.all["l1"]:
-            str += "\n%s:%s\n" % (item, self.all["l1"][item])
+            str += "\n%s:%s\n" % (item, self.all["l1"][item].name)
 
         str += "\n行业\n"
         for item in self.all["l2"]:
-            str += "\n%s:%s\n" % (item, self.all["l2"][item])
+            str += "\n%s:%s\n" % (item, self.all["l2"][item].name)
 
         send_mail(
             '分红%s' % (datetime.now(tz)),
