@@ -39,6 +39,7 @@ class Command(BaseCommand):
                     ON t.code_id = m.code_id 
                 """
         result = Shares.objects.raw(sql, params=(today, yesterday,))
+        print(result)
         for item in result:
             shareName2 = SharesName.objects.filter(code=item.code_id)
             if len(shareName2) > 0:
