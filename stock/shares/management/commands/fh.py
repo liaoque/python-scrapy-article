@@ -220,6 +220,13 @@ class Command(BaseCommand):
             "\",\"".join(send_data['implement_date_as']),
             "\",\"".join(send_data['register_date_as']),
             "\",\"".join(send_data['ex_date_as']))
+
+        str += "\n分红：：董事会日期：%s\n 股东大会预案公告日期：%s\n 实施公告日：%s\n A股股权登记日：%s\n A股除权除息日：%s\n" % (
+            "\",\"".join(send_data['fh_directors_date_as']),
+            "\",\"".join(send_data['fh_shareholder_date_as']),
+            "\",\"".join(send_data['fh_implement_date_as']),
+            "\",\"".join(send_data['fh_register_date_as']),
+            "\",\"".join(send_data['fh_ex_date_as']))
         send_mail(
             '分红%s' % (datetime.now(tz)),
             str,
