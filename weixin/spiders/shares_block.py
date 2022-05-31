@@ -55,7 +55,7 @@ class SharesBlock(scrapy.Spider):
                                  headers=headers,
                                  dont_filter=True,
                                  callback=self.parse)
-            # break
+            break
 
     def parse(self, response):
         code = response.request.headers.getlist('code')[0].decode("UTF-8")
@@ -64,14 +64,14 @@ class SharesBlock(scrapy.Spider):
         for item in itemList:
             block_name = re.sub(r"\s+", "", item.css("::text").get())
             block_code = re.sub(r"\s+", "", item.css("::attr(clid)").get())
-            yield self.parse_content(block_name, block_code)
+            # yield self.parse_content(block_name, block_code)
             yield self.parse_content2(block_code, code)
 
         itemList = response.css(".gnContent tbody tr .gnStockList");
         for item in itemList:
             block_name = re.sub(r"\s+", "", item.css("::text").get())
             block_code = re.sub(r"\s+", "", item.css("::attr(cid)").get())
-            yield self.parse_content(block_name, block_code)
+            # yield self.parse_content(block_name, block_code)
             yield self.parse_content2(block_code, code)
         pass
 
