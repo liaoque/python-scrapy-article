@@ -30,6 +30,7 @@ class SharesBlock(scrapy.Spider):
     db = None
     cursor = None
 
+    # http://basic.10jqka.com.cn/000615/position.html
     def get_url(self, code):
         return 'http://basic.10jqka.com.cn/' + str(code) + '/concept.html'
 
