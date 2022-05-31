@@ -3,6 +3,7 @@ import scrapy
 import json
 from scrapy.loader import ItemLoader
 import sys
+import re
 
 import time
 import MySQLdb
@@ -61,15 +62,15 @@ class SharesBlock(scrapy.Spider):
         itemList = response.css(".gnContent tbody tr .gnName")
         # print(itemList)
         for item in itemList:
-            block_name = item.css("::text").get()
-            block_code = item.css("::attr(clid)").get()
+            block_name = re.sub(r"\s+", "", item.css("::text").get())
+            block_code = re.sub(r"\s+", "", item.css("::attr(clid)").get())
             yield self.parse_content(block_name, block_code)
             yield self.parse_content2(block_code, code)
 
         itemList = response.css(".gnContent tbody tr .gnStockList");
         for item in itemList:
-            block_code = item.css("::text").get()
-            block_name = item.css("::attr(cid)").get()
+            block_code = re.sub(r"\s+", "", item.css("::text").get())
+            block_name = re.sub(r"\s+", "", item.css("::attr(cid)").get())
             yield self.parse_content(block_name, block_code)
             yield self.parse_content2(block_code, code)
 
