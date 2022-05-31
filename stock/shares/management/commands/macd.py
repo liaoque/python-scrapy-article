@@ -38,6 +38,7 @@ class Command(BaseCommand):
                 from (select * from mc_shares_macd where date_as = %s) m
                 LEFT JOIN (select * from mc_shares_macd where date_as = %s) t 
                     ON t.code_id = m.code_id 
+                where t.diff is not null  and m.diff is not null  
                 """
         result = Shares.objects.raw(sql, params=(today, yesterday,))
         print(result)
