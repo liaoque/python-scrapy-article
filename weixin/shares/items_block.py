@@ -24,7 +24,7 @@ class Items(scrapy.Item):
         if self.exitsByCode(cursor, code_id, block_code_id):
             return
         sql = """
-            INSERT INTO mc_shares_join_block (code_id, block_code_id，code_type)
+            INSERT INTO mc_shares_join_block (code_id, block_code_id,code_type)
             VALUES (%s, %s, %s)
             """;
         params = (
