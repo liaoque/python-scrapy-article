@@ -32,6 +32,7 @@ class Items(scrapy.Item):
             block_code_id,
             code_type,
         )
+        print(sql, params )
         cursor.execute(sql, params)
         pass
 
@@ -41,5 +42,4 @@ class Items(scrapy.Item):
         sql = "SELECT code_id FROM mc_shares_join_block  WHERE code_id = '%s' and block_code_id='%s'" % (
         code_id, block_code_id)
         cursor.execute(sql)
-        print(cursor.rowcount )
         return cursor.rowcount > 0
