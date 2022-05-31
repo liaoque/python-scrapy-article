@@ -121,4 +121,5 @@ class Shares_industry(scrapy.Spider):
                 item_loader2 = ItemLoader(item=SharesItemsBlock.Items())
                 item_loader2.add_value("code_id", code_id)
                 item_loader2.add_value("block_code_id", block_code)
+                item_loader2.add_value("code_type", 1)
                 yield item_loader2.load_item()

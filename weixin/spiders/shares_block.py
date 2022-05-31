@@ -7,7 +7,8 @@ import sys
 import time
 import MySQLdb
 import MySQLdb.cursors
-import weixin.shares.items_fh as SharesFhItems
+import weixin.shares.items as SharesItems
+import weixin.shares.items_block as SharesItemsBlock
 import copy
 
 
@@ -60,16 +61,17 @@ class SharesBlock(scrapy.Spider):
         itemList = response.css(".gnContent tbody tr .gnName")
         # print(itemList)
         for item in itemList:
-            name = item.css("::text").get()
-            code = item.css("::attr(clid)").get()
-            print(name,code)
-
+            block_name = item.css("::text").get()
+            block_code = item.css("::attr(clid)").get()
+            yield self.parse_content(block_name, block_code)
+            yield self.parse_content2(block_code, code)
 
         itemList = response.css(".gnContent tbody tr .gnStockList");
         for item in itemList:
-            name = item.css("::text").get()
-            code = item.css("::attr(cid)").get()
-            print(name, code)
+            block_code = item.css("::text").get()
+            block_name = item.css("::attr(cid)").get()
+            yield self.parse_content(block_name, block_code)
+            yield self.parse_content2(block_code, code)
 
         # all = item.css(".gnName::text")
         # if len(all) > 0:
@@ -79,23 +81,24 @@ class SharesBlock(scrapy.Spider):
         #     yield self.parse_content(all, code)
         pass
 
-    def parse_content(self, item, code):
-        item_loader = ItemLoader(item=SharesFhItems.Items())
-        for i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
-            if item[i] == '--':
-                item[i] = None
-        item_loader.add_value("code", code)
-        item_loader.add_value("title", item[0])
-        item_loader.add_value("info", item[4])
-        item_loader.add_value("amount", item[7])
-        item_loader.add_value("range", item[9])
-        item_loader.add_value("directors_date_as", item[1])
-        item_loader.add_value("shareholder_date_as", item[2])
-        item_loader.add_value("implement_date_as", item[3])
-        item_loader.add_value("register_date_as", item[5])
-        item_loader.add_value("ex_date_as", item[6])
+    def parse_content(self, block_name, block_code):
+        print("加入板块：%s" % (block_name))
+        item_loader = ItemLoader(item=SharesItems.Items())
+        item_loader.add_value("code", block_code)
+        item_loader.add_value("name", block_name)
+        item_loader.add_value("area_id", '90')
+        item_loader.add_value("status", '1')
+        item_loader.add_value("code_type", '4')
+        item_loader.add_value("pe", '0')
+        item_loader.add_value("pb", '0')
         return item_loader.load_item()
-        pass
+
+    def parse_content2(self, block_code, code_id):
+        item_loader2 = ItemLoader(item=SharesItemsBlock.Items())
+        item_loader2.add_value("code_id", code_id)
+        item_loader2.add_value("block_code_id", block_code)
+        item_loader2.add_value("code_type", 2)
+        return item_loader2.load_item()
 
     def findStoks(self):
         sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1';
