@@ -99,7 +99,7 @@ class Command(BaseCommand):
         if len(itemAll2) == 0:
             return
         #在公式日买入，然后在登记日卖出
-        if itemAll[0].p_end < itemAll2[0].p_end:
+        if itemAll[0].p_start < itemAll2[0].p_end:
             self.all[date_as]["up"] += 1
         else:
             self.all[date_as]["low"] += 1
