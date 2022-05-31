@@ -152,6 +152,7 @@ class Command(BaseCommand):
         hour = datetime.now().astimezone(tz).hour
 
         self.all["directors_date_as"] = []
+        self.all["fh_directors_date_as"] = []
         shareholder_date_as = SharesFH.objects.filter(shareholder_date_as=today)
         self.appendCode(shareholder_date_as, "shareholder_date_as")
         self.appendFhCode(shareholder_date_as, "shareholder_date_as")
