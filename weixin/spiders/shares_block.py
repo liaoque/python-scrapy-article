@@ -61,7 +61,7 @@ class SharesBlock(scrapy.Spider):
         # print(itemList)
         for item in itemList:
             name = item.get()
-            code = item.css("attr(cid)")
+            code = item.css("::attr(cid)")
             print(name,code)
 
 
