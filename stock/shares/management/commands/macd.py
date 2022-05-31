@@ -33,7 +33,7 @@ class Command(BaseCommand):
         dateList = self.getAllDates()
         yesterday = dateList[-2].date_as
         sql = """
-                SELECT 1 as id, m.code_id, m.diff,m.dea, t.diff as diff2,t.dea as dea
+                SELECT 1 as id, m.code_id, m.diff,m.dea, t.diff as diff2,t.dea as dea2
                 from (select * from mc_shares_macd where date_as = %s) m
                 LEFT JOIN (select * from mc_shares_macd where date_as = %s) t 
                     ON t.code_id = m.code_id 
