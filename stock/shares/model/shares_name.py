@@ -14,7 +14,7 @@ class SharesName(models.Model):
     pb = models.IntegerField(default=0)
     pe = models.IntegerField(default=0)
     code_type = models.IntegerField(default=0, help_text="1股票，2行业板块")
-    member_down = models.IntegerField(default=2, help_text="股东人数，1 下降，2 上升")
+    member_up = models.IntegerField(default=2, help_text="股东人数，1 下降，2 上升")
     macd_up = models.IntegerField(default=1, help_text="macd，1 下降，2 上升")
     finance_up = models.IntegerField(default=1, help_text="macd，1 下降，2 上升")
 
