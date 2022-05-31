@@ -51,19 +51,19 @@ class Command(BaseCommand):
             for item in json2:
                 # if item.directors_date_as is not None:
                 #     self.checkShares(item.directors_date_as, code, "directors_date_as")
-                    # if datetime.strftime(item.directors_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                    #         item.directors_date_as, '%Y-%m-%d') < '2022-04-27':
-                    #     self.checkShares(item.directors_date_as, code, "directors_date_as")
+                # if datetime.strftime(item.directors_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
+                #         item.directors_date_as, '%Y-%m-%d') < '2022-04-27':
+                #     self.checkShares(item.directors_date_as, code, "directors_date_as")
 
                 # if item.shareholder_date_as is not None:
                 #     self.checkShares(item.shareholder_date_as, code, "shareholder_date_as")
-                    # if datetime.strftime(item.shareholder_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                    #         item.shareholder_date_as, '%Y-%m-%d') < '2022-04-27':
-                    #     self.checkShares(item.shareholder_date_as, code, "shareholder_date_as")
+                # if datetime.strftime(item.shareholder_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
+                #         item.shareholder_date_as, '%Y-%m-%d') < '2022-04-27':
+                #     self.checkShares(item.shareholder_date_as, code, "shareholder_date_as")
 
-                if item.implement_date_as is not None:
+                if item.implement_date_as is not None and item.register_date_as is not None:
                     date_as = item.implement_date_as + timedelta(1)
-                    self.checkSharesMacd(date_as, code, "implement_date_as")
+                    self.checkSharesBetween(date_as, item.register_date_as, code, "implement_date_as")
                     # if datetime.strftime(item.implement_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
                     #         item.implement_date_as, '%Y-%m-%d') < '2022-04-27':
                     #     self.checkShares(item.implement_date_as, code, "implement_date_as")
@@ -71,20 +71,37 @@ class Command(BaseCommand):
                 # if item.register_date_as is not None:
                 #     date_as = item.register_date_as - timedelta(1)
                 #     self.checkShares(date_as, code, "register_date_as")
-                    # if datetime.strftime(item.register_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                    #         item.register_date_as, '%Y-%m-%d') < '2022-04-27':
-                    #     date_as = item.register_date_as - timedelta(1)
-                    #     self.checkShares(date_as, code, "register_date_as")
+                # if datetime.strftime(item.register_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
+                #         item.register_date_as, '%Y-%m-%d') < '2022-04-27':
+                #     date_as = item.register_date_as - timedelta(1)
+                #     self.checkShares(date_as, code, "register_date_as")
 
                 # if item.ex_date_as is not None:
                 #     self.checkShares(item.ex_date_as, code, "ex_date_as")
-                    # if datetime.strftime(item.ex_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
-                    #         item.ex_date_as, '%Y-%m-%d') < '2022-04-27':
-                    #     self.checkShares(item.ex_date_as, code, "ex_date_as")
+                # if datetime.strftime(item.ex_date_as, '%Y-%m-%d') > '2022-04-19' and datetime.strftime(
+                #         item.ex_date_as, '%Y-%m-%d') < '2022-04-27':
+                #     self.checkShares(item.ex_date_as, code, "ex_date_as")
                 break
 
         print(self.all)
         pass
+
+    def checkSharesBetween(self, column, column2, code, date_as):
+        if date_as not in self.all:
+            self.all[date_as] = {
+                "up": 0,
+                "low": 0,
+            }
+        itemAll = Shares.objects.filter(date_as=column, code_id=code)
+        if len(itemAll) == 0:
+            return
+        itemAll2 = Shares.objects.filter(date_as=column2, code_id=code)
+        if len(itemAll2) == 0:
+            return
+        if itemAll[0].p_end < itemAll2[0].p_end:
+            self.all[date_as]["up"] += 1
+        else:
+            self.all[date_as]["low"] += 1
 
     def checkShares(self, column, code, date_as):
         if date_as not in self.all:
