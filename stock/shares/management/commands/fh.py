@@ -31,7 +31,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         tz = timezone(timedelta(hours=+8))
         today = datetime.now().astimezone(tz).date().strftime('%Y-%m-%d')
-        self.calculateCheck(today)
+        self.calculate(today)
         # self.calculate("2022-05-30")
         pass
 
@@ -100,9 +100,6 @@ class Command(BaseCommand):
         if len(itemAll2) == 0:
             return
 
-        kdj = SharesKdj.objects.filter(date_as=column, code_id=code)
-        if kdj[0].j > 55:
-            return
         #在公式日买入，然后在登记日卖出
         if itemAll[0].p_start < itemAll2[0].p_end:
             self.all[date_as]["up"] += 1
