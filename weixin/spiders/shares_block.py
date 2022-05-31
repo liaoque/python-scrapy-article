@@ -67,7 +67,9 @@ class SharesBlock(scrapy.Spider):
 
         itemList = response.css(".gnContent tbody tr .gnStockList");
         for item in itemList:
-            print(item)
+            name = item.css("::text").get()
+            code = item.css("::attr(cid)").get()
+            print(name, code)
 
         # all = item.css(".gnName::text")
         # if len(all) > 0:
