@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         today = datetime.now().date().strftime('%Y-%m-%d')
-        self.calculateKdj(today)
+        # self.calculateKdj(today)
         # print("开始计算kdj-----")
         # today = datetime.now().date().strftime('%Y-%m-%d')
         # self.KdjCompute(today)
@@ -45,6 +45,7 @@ class Command(BaseCommand):
         for item in result:
             shareName2 = SharesName.objects.filter(code=item.code_id)
             if len(shareName2) > 0:
+                print(shareName2)
                 if item.diff > item.diff2 and item.dea > item.dea2:
                     shareName2.macd_up = 1
                 else:
