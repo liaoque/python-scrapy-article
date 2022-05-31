@@ -31,6 +31,7 @@ class Command(BaseCommand):
         # today = datetime.now().date().strftime('%Y-%m-%d')
         # self.KdjCompute(today)
         dateList = self.getAllDates()
+        today = dateList[-1].date_as
         yesterday = dateList[-2].date_as
         sql = """
                 SELECT 1 as id, m.code_id, m.diff,m.dea, t.diff as diff2,t.dea as dea2
