@@ -45,7 +45,6 @@ class SharesFh(scrapy.Spider):
         results = self.findStoks()
         for item in results:
             code = item[0]
-
             url = self.get_url(code)
             headers = copy.deepcopy(self.headers)
             headers['code'] = code
@@ -53,6 +52,7 @@ class SharesFh(scrapy.Spider):
                                  headers=headers,
                                  dont_filter=True,
                                  callback=self.parse)
+            time.sleep(1)
 
     def parse(self, response):
         code = response.request.headers.getlist('code')[0].decode("UTF-8")
