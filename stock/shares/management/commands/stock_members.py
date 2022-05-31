@@ -99,7 +99,7 @@ class Command(BaseCommand):
         #         itemSharesMembers.save()
 
         sql = """
-        SELECT mc_stock_members.code_id,mc_stock_members.members,t.members as tmembers from mc_stock_members 
+        SELECT 1 as id, mc_stock_members.code_id,mc_stock_members.members,t.members as tmembers from mc_stock_members 
                 LEFT JOIN (SELECT code_id, date_as, avg_free_shares,members FROM `mc_stock_members` GROUP by code_id ORDER BY date_as desc) t 
                 ON t.code_id = mc_stock_members.code_id 
                 where t.date_as > mc_stock_members.date_as
