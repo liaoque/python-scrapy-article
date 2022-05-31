@@ -40,5 +40,6 @@ class Items(scrapy.Item):
     def exitsByCode(self, cursor, code_id, block_code_id):
         sql = "SELECT code_id FROM mc_shares_join_block  WHERE code_id = '%s' and block_code_id='%s'" % (
         code_id, block_code_id)
-        cursor.execute(sql);
+        cursor.execute(sql)
+        print(cursor.rowcount )
         return cursor.rowcount > 0
