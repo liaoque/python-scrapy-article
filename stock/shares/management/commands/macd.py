@@ -43,7 +43,7 @@ class Command(BaseCommand):
         for item in result:
             shareName2 = SharesName.objects.filter(code=item.code_id)
             if len(shareName2) > 0:
-                if item.diff >= item.dea2 and item.dea >= item.dea2:
+                if item.diff > item.dea2 and item.dea > item.dea2:
                     shareName2.macd_up = 1
                 else:
                     shareName2.macd_up = 2
