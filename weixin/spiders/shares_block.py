@@ -69,17 +69,10 @@ class SharesBlock(scrapy.Spider):
 
         itemList = response.css(".gnContent tbody tr .gnStockList");
         for item in itemList:
-            block_code = re.sub(r"\s+", "", item.css("::text").get())
-            block_name = re.sub(r"\s+", "", item.css("::attr(cid)").get())
+            block_name = re.sub(r"\s+", "", item.css("::text").get())
+            block_code = re.sub(r"\s+", "", item.css("::attr(cid)").get())
             yield self.parse_content(block_name, block_code)
             yield self.parse_content2(block_code, code)
-
-        # all = item.css(".gnName::text")
-        # if len(all) > 0:
-        #     yield self.parse_content(all, code)
-        # all = item.css(".gnStockList::text").getall()
-        # if len(all) > 0:
-        #     yield self.parse_content(all, code)
         pass
 
     def parse_content(self, block_name, block_code):
