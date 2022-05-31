@@ -47,10 +47,10 @@ class Command(BaseCommand):
             if len(shareName2) > 0:
                 print(item.diff , item.diff2 , item.dea , item.dea2)
                 if item.diff > item.diff2 and item.dea > item.dea2:
-                    shareName2.macd_up = 1
+                    shareName2.update(macd_up=1)
                 else:
-                    shareName2.macd_up = 2
-                shareName2.update()
+                    shareName2.update(macd_up=2)
+
         pass
 
     def calculateKdj(self, today):
