@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         today = datetime.now().date().strftime('%Y-%m-%d')
-        # self.calculateKdj(today)
+        self.calculateKdj(today)
         # print("开始计算kdj-----")
         # today = datetime.now().date().strftime('%Y-%m-%d')
         # self.KdjCompute(today)
@@ -41,7 +41,7 @@ class Command(BaseCommand):
                 where t.diff is not null  and m.diff is not null  
                 """
         result = Shares.objects.raw(sql, params=(today, yesterday,))
-        print(result)
+        # print(result)
         for item in result:
             shareName2 = SharesName.objects.filter(code=item.code_id)
             if len(shareName2) > 0:
