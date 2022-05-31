@@ -9,6 +9,7 @@ from shares.model.shares_fh import SharesFH
 from shares.model.shares_macd import SharesMacd
 from shares.model.shares_kdj import SharesKdj
 from shares.model.shares_join_block import SharesJoinBlock
+from shares.model.shares_join_industry import SharesJoinIndustry
 
 import requests
 from django.core.mail import send_mail
@@ -45,7 +46,7 @@ class Command(BaseCommand):
                     '600000' < code < '700000')):
                 continue
 
-            json2 = SharesFH.objects.filter(code_id=code,directors_date_as__gte='2022-01-01')
+            json2 = SharesFH.objects.filter(code_id=code, directors_date_as__gte='2022-01-01')
             if len(json2) == 0:
                 continue
 
@@ -100,7 +101,7 @@ class Command(BaseCommand):
         if len(itemAll2) == 0:
             return
 
-        #在公式日买入，然后在登记日卖出
+        # 在公式日买入，然后在登记日卖出
         if itemAll[0].p_start < itemAll2[0].p_end:
             self.all[date_as]["up"] += 1
         else:
@@ -204,6 +205,37 @@ class Command(BaseCommand):
         #
         #     if item.ex_date_as is not None and item.ex_date_as == today:
         #         all['ex_date_as'].append(code)
+        self.all["l1"] = {}
+        self.all["l2"] = {}
+        if hour > 21:
+            for item in SharesName.objects.filter(status=1, code_type=2):
+                joinBlock = SharesJoinBlock.objects.filter(block_code_id=item.code)
+                if len(joinBlock) == 0:
+                    continue
+                sharesList = Shares.objects.filter(code_id=[item.code_id for item in joinBlock], date_as=today)
+                if len(sharesList) == 0:
+                    continue
+                for shareItem in sharesList:
+                    if (shareItem.p_end - shareItem.p_start) / shareItem.p_start > 0.05:
+                        if item.code not in self.all["l1"]:
+                            self.all["l1"][item.code] = 0
+                        self.all["l1"][item.code] += 1
+
+            for item in SharesName.objects.filter(status=1, code_type=3):
+                joinBlock = SharesJoinIndustry.objects.filter(industry_code_id=item.code)
+                if len(joinBlock) == 0:
+                    continue
+                sharesList = Shares.objects.filter(code_id=[item.code_id for item in joinBlock], date_as=today)
+                if len(sharesList) == 0:
+                    continue
+                for shareItem in sharesList:
+                    if (shareItem.p_end - shareItem.p_start) / shareItem.p_start > 0.05:
+                        if item.code not in self.all["l2"]:
+                            self.all["l2"][item.code] = 0
+                        self.all["l2"][item.code] += 1
+
+            self.all["l1"] = sorted(self.all["l1"].items(), key=lambda x: x[1], reverse=True)[:20]
+            self.all["l2"] = sorted(self.all["l2"].items(), key=lambda x: x[1], reverse=True)[:20]
 
         self.sendMessage(self.all)
         pass
@@ -220,7 +252,6 @@ class Command(BaseCommand):
             "BK0823",
         ], code_id=[item.code_id for item in implement_date_as])
         self.appendCode(codeList, column2)
-
 
     def appendCode(self, implement_date_as, column):
         if column not in self.all:
@@ -248,6 +279,15 @@ class Command(BaseCommand):
             "\",\"".join(send_data['fh_implement_date_as']),
             "\",\"".join(send_data['fh_register_date_as']),
             "\",\"".join(send_data['fh_ex_date_as']))
+
+        str += "\n板块\n"
+        for item in self.all["l1"]:
+            str += "\n%s:%s\n" % (item, self.all["l1"][item])
+
+        str += "\n行业\n"
+        for item in self.all["l2"]:
+            str += "\n%s:%s\n" % (item, self.all["l2"][item])
+
         send_mail(
             '分红%s' % (datetime.now(tz)),
             str,
