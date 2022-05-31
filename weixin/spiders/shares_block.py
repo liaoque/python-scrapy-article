@@ -55,7 +55,8 @@ class SharesBlock(scrapy.Spider):
                                  headers=headers,
                                  dont_filter=True,
                                  callback=self.parse)
-        time.sleep(1)
+            time.sleep(1)
+
 
     def parse(self, response):
         code = response.request.headers.getlist('code')[0].decode("UTF-8")
