@@ -45,7 +45,7 @@ class Command(BaseCommand):
                     '600000' < code < '700000')):
                 continue
 
-            json2 = SharesFH.objects.filter(code_id=code)
+            json2 = SharesFH.objects.filter(code_id=code,directors_date_as__gte='2022-01-01')
             if len(json2) == 0:
                 continue
 
