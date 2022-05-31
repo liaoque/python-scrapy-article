@@ -282,11 +282,11 @@ class Command(BaseCommand):
 
         str += "\n板块\n"
         for item in self.all["l1"]:
-            str += "\n%s:%s\n" % (item, self.all["l1"][item].name)
+            str += "\n%s:%s\n" % (item, self.all["l1"][item])
 
         str += "\n行业\n"
         for item in self.all["l2"]:
-            str += "\n%s:%s\n" % (item, self.all["l2"][item].name)
+            str += "\n%s:%s\n" % (item, self.all["l2"][item])
 
         send_mail(
             '分红%s' % (datetime.now(tz)),
