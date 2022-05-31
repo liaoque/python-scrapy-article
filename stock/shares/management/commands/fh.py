@@ -128,6 +128,9 @@ class Command(BaseCommand):
             area_map[item.area_id], item.code)
 
     def calculate(self, today):
+        tz = timezone(timedelta(hours=+8))
+        hour = datetime.now().astimezone(tz).hour
+
         self.all["directors_date_as"] = []
         shareholder_date_as = SharesFH.objects.filter(shareholder_date_as=today)
         self.appendCode(shareholder_date_as, "shareholder_date_as")
@@ -136,11 +139,16 @@ class Command(BaseCommand):
         self.appendCode(implement_date_as, "implement_date_as")
 
         today2 = datetime.strptime(today, '%Y-%m-%d').date() + timedelta(1)
+        if hour > 15:
+            today2 = datetime.strptime(today, '%Y-%m-%d').date() + timedelta(2)
         register_date_as = SharesFH.objects.filter(register_date_as=today2)
         # print(register_date_as, datetime.strptime(today, '%Y-%m-%d').date(), today2)
         self.appendCode(register_date_as, "register_date_as")
 
-        ex_date_as = SharesFH.objects.filter(ex_date_as=today)
+        today2 = today
+        if hour > 15:
+            today2 = datetime.strptime(today, '%Y-%m-%d').date() + timedelta(1)
+        ex_date_as = SharesFH.objects.filter(ex_date_as=today2)
         self.appendCode(ex_date_as, "ex_date_as")
 
         # all = {
