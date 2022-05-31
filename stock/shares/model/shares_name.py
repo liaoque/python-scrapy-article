@@ -14,6 +14,9 @@ class SharesName(models.Model):
     pb = models.IntegerField(default=0)
     pe = models.IntegerField(default=0)
     code_type = models.IntegerField(default=0, help_text="1股票，2行业板块")
+    member_down = models.IntegerField(default=0, help_text="股东人数，1 下降，0 上升")
+    macd_down = models.IntegerField(default=0, help_text="macd，1 下降，0 上升")
+    finance_down = models.IntegerField(default=0, help_text="macd，1 下降，0 上升")
 
     class Meta:
         db_table = "mc_shares_name"
