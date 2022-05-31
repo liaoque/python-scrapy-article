@@ -99,6 +99,10 @@ class Command(BaseCommand):
         itemAll2 = Shares.objects.filter(date_as=column2, code_id=code)
         if len(itemAll2) == 0:
             return
+
+        kdj = SharesKdj.objects.filter(date_as=column, code_id=code)
+        if kdj[0].j > 55:
+            return
         #在公式日买入，然后在登记日卖出
         if itemAll[0].p_start < itemAll2[0].p_end:
             self.all[date_as]["up"] += 1
