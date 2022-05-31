@@ -49,7 +49,6 @@ class Command(BaseCommand):
                     shareName2.macd_up = 1
                 else:
                     shareName2.macd_up = 2
-                    print(shareName2.macd_up)
                 shareName2.update()
         pass
 
