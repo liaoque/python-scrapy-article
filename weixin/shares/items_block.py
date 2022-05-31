@@ -32,8 +32,8 @@ class Items(scrapy.Item):
             block_code_id,
             code_type,
         )
-        print(sql, params )
         cursor.execute(sql, params)
+        
         pass
 
     pass
