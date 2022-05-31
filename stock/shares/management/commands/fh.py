@@ -8,6 +8,7 @@ from shares.model.shares import Shares
 from shares.model.shares_fh import SharesFH
 from shares.model.shares_macd import SharesMacd
 from shares.model.shares_kdj import SharesKdj
+from shares.model.shares_join_block import SharesJoinBlock
 
 import requests
 from django.core.mail import send_mail
@@ -152,9 +153,11 @@ class Command(BaseCommand):
         self.all["directors_date_as"] = []
         shareholder_date_as = SharesFH.objects.filter(shareholder_date_as=today)
         self.appendCode(shareholder_date_as, "shareholder_date_as")
+        self.appendFhCode(shareholder_date_as, "shareholder_date_as")
 
         implement_date_as = SharesFH.objects.filter(implement_date_as=today)
         self.appendCode(implement_date_as, "implement_date_as")
+        self.appendFhCode(implement_date_as, "implement_date_as")
 
         today2 = datetime.strptime(today, '%Y-%m-%d').date() + timedelta(1)
         if hour > 15:
@@ -162,12 +165,14 @@ class Command(BaseCommand):
         register_date_as = SharesFH.objects.filter(register_date_as=today2)
         # print(register_date_as, datetime.strptime(today, '%Y-%m-%d').date(), today2)
         self.appendCode(register_date_as, "register_date_as")
+        self.appendFhCode(register_date_as, "register_date_as")
 
         today2 = today
         if hour > 15:
             today2 = datetime.strptime(today, '%Y-%m-%d').date() + timedelta(1)
         ex_date_as = SharesFH.objects.filter(ex_date_as=today2)
         self.appendCode(ex_date_as, "ex_date_as")
+        self.appendFhCode(ex_date_as, "ex_date_as")
 
         # all = {
         #     "directors_date_as": [],
@@ -200,6 +205,20 @@ class Command(BaseCommand):
 
         self.sendMessage(self.all)
         pass
+
+    def appendFhCode(self, implement_date_as, column2):
+        column = "fh_" + column2
+        if column not in self.all:
+            self.all[column] = []
+        if len(implement_date_as) == 0:
+            return
+        codeList = SharesJoinBlock.objects.filter(block_code_id__in=[
+            "BK0683",
+            "BK0520",
+            "BK0823",
+        ], code_id=[item.code_id for item in implement_date_as])
+        self.appendCode(codeList, column2)
+
 
     def appendCode(self, implement_date_as, column):
         if column not in self.all:
