@@ -114,7 +114,7 @@ class Command(BaseCommand):
                     shareName2.member_up = 2
                 else:
                     shareName2.member_up = 1
-                shareName2.save()
+                shareName2.update()
 
 
         #
