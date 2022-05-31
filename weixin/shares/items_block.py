@@ -25,7 +25,7 @@ class Items(scrapy.Item):
             return
         sql = """
             INSERT INTO mc_shares_join_block (code_id, block_code_id，code_type)
-            VALUES (%s, %s, %s)
+            VALUES (%s, %s, %d)
             """;
         params = (
             code_id,
@@ -33,7 +33,7 @@ class Items(scrapy.Item):
             code_type,
         )
         cursor.execute(sql, params)
-        
+
         pass
 
     pass
