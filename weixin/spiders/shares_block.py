@@ -60,8 +60,8 @@ class SharesBlock(scrapy.Spider):
         itemList = response.css(".gnContent tbody tr .gnName")
         # print(itemList)
         for item in itemList:
-            name = item.text()
-            code = item.attr("cid::text")
+            name = item.get()
+            code = item.attrib()
             print(name,code)
 
 
