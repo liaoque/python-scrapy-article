@@ -48,8 +48,8 @@ class Command(BaseCommand):
                 if item.diff > item.diff2 and item.dea > item.dea2:
                     shareName2.macd_up = 1
                 else:
-                    print(shareName2)
                     shareName2.macd_up = 2
+                    print(shareName2.macd_up)
                 shareName2.update()
         pass
 
