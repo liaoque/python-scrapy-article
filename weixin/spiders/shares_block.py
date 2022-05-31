@@ -57,12 +57,13 @@ class SharesBlock(scrapy.Spider):
 
     def parse(self, response):
         code = response.request.headers.getlist('code')[0].decode("UTF-8")
-        itemList = response.css("#gnContent tbody tr .gnName");
+        itemList = response.css(".gnContent tbody tr .gnName")
+        print(itemList)
         for item in itemList:
             print(item)
 
 
-        itemList = response.css("#gnContent tbody tr .gnStockList");
+        itemList = response.css(".gnContent tbody tr .gnStockList");
         for item in itemList:
             print(item)
 
