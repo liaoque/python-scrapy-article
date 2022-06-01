@@ -57,19 +57,19 @@ class Shares(scrapy.Spider):
     def start_requests(self):
         self.connect()
         results = self.findStoks()
-        for item in results:
-            code = item[0]
-            area_id = item[2]
-            if area_id == 1:
-                s_code = "1." + code
-            else:
-                s_code = "0." + code
-            url = self.get_url(s_code)
-            yield scrapy.Request(url,
-                                 headers=self.headers,
-                                 dont_filter=True,
-                                 callback=self.parse_content)
-            break
+        # for item in results:
+        #     code = item[0]
+        #     area_id = item[2]
+        #     if area_id == 1:
+        #         s_code = "1." + code
+        #     else:
+        #         s_code = "0." + code
+        #     url = self.get_url(s_code)
+        #     yield scrapy.Request(url,
+        #                          headers=self.headers,
+        #                          dont_filter=True,
+        #                          callback=self.parse_content)
+        #     break
 
         for item in results:
             self.request_info(item)
