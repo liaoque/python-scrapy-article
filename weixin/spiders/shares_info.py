@@ -14,7 +14,7 @@ import time
 
 class Shares(scrapy.Spider):
     name = 'shares_info'
-    allowed_domains = ['.eastmoney.com']
+    allowed_domains = ['.eastmoney.com', '.10jqka.com.cn']
     start_urls = []
     headers = {
         "HOST": "push2his.eastmoney.com",
@@ -79,6 +79,7 @@ class Shares(scrapy.Spider):
         code = item[0]
         industry_code = item[3]
         headers = copy.deepcopy(self.headers)
+        headers['HOST'] = "doctor.10jqka.com.cn"
         headers['code'] = code
         headers['industry_code'] = industry_code
         url = "http://doctor.10jqka.com.cn/" + str(code) + "/#nav_basic"

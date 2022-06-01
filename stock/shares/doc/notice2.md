@@ -345,7 +345,7 @@ https://author.baidu.com/home?type=profile&action=profile&context=%7B%22uk%22%3A
 3。 股东大会预案公告日期， 实施公告日 这些股票，当天和第二天的涨和跌
 4。 k线图监控---改成；行业，股票 5日最低， 20日， 60日最低， 120日最低
 6。 行业，股票 市盈率(动)	市净率	毛利率	净利率	ROE
-7。 macd 上行判断
+7。 财务 上行判断
 
 5。 建立风控体系
     - 大盘风控， 月和周时间的kdj，macd
