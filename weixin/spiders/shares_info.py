@@ -96,9 +96,8 @@ class Shares(scrapy.Spider):
 
         yysrzzl = response.css("#yysrzzl  tr")
         jlrzzl = response.css("#jlrzzl  tr")
-        print(yysrzzl, jlrzzl)
-        gpm_ex = yysrzzl[1].css("td")[1].get()
-        npmos_ex = jlrzzl[1].css("td")[1].get()
+        gpm_ex = yysrzzl[1].css("td")[1].css("::text").get()
+        npmos_ex = jlrzzl[1].css("td")[1].css("::text").get()
         item_loader2 = ItemLoader(item=SharesInfoItems.Items())
         item_loader2.add_value("code", code)
         item_loader2.add_value("gpm_ex", gpm_ex * 100)
@@ -106,8 +105,8 @@ class Shares(scrapy.Spider):
         print(item_loader2.load_item())
         yield item_loader2.load_item()
 
-        gpm_ex = yysrzzl[2].css("td")[1].get()
-        npmos_ex = jlrzzl[2].css("td")[1].get()
+        gpm_ex = yysrzzl[2].css("td")[1].css("::text").get()
+        npmos_ex = jlrzzl[2].css("td")[1].css("::text").get()
         item_loader3 = ItemLoader(item=SharesInfoItems.Items())
         item_loader3.add_value("code", industry_code)
         item_loader3.add_value("gpm_ex", gpm_ex * 100)
