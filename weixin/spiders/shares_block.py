@@ -56,7 +56,7 @@ class SharesBlock(scrapy.Spider):
                                  headers=headers,
                                  dont_filter=True,
                                  callback=self.parse)
-            time.sleep(1)
+            time.sleep(3)
 
 
     def parse(self, response):
