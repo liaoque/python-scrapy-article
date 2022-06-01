@@ -14,7 +14,8 @@ import time
 
 class Shares(scrapy.Spider):
     name = 'shares_info'
-    allowed_domains = ['.eastmoney.com', '.10jqka.com.cn']
+    allowed_domains = [ '.10jqka.com.cn']
+    # allowed_domains = ['.eastmoney.com', '.10jqka.com.cn']
     start_urls = []
     headers = {
         "HOST": "push2his.eastmoney.com",
@@ -72,7 +73,7 @@ class Shares(scrapy.Spider):
 
         for item in results:
             self.request_info(item)
-            yield time.sleep(5)
+            # yield time.sleep(5)
             break
 
     def request_info(self, item):
