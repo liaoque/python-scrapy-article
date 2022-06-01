@@ -91,6 +91,7 @@ class Shares(scrapy.Spider):
                               callback=self.parse_content_info)
 
     def parse_content_info(self, response):
+        print("111111111111111111111111111111")
         code = response.request.headers.getlist('code')[0].decode("UTF-8")
         industry_code = response.request.headers.getlist('industry_code')[0].decode("UTF-8")
         print(response.css("#yysrzzl"))
