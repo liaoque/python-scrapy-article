@@ -73,7 +73,7 @@ class Shares(scrapy.Spider):
 
         for item in results:
             yield self.request_info(item)
-            # yield time.sleep(5)
+            yield time.sleep(5)
             break
 
     def request_info(self, item):
@@ -136,23 +136,23 @@ class Shares(scrapy.Spider):
         yield item_loader2.load_item()
 
         # 行业 1
-        # f9 市盈率(动)
+        # f2009 市盈率(动)
         # f12 股票代码
-        # f23 市净率
-        # f37 ROE
-        # f49 毛利率
-        # f129 净利率
+        # f2023 市净率
+        # f2037 ROE
+        # f2049 毛利率
+        # f2129 净利率
         res = result["data"]["diff"][1]
         item_loader3 = ItemLoader(item=SharesInfoItems.Items())
         item_loader3.add_value("code", res["f12"])
-        item_loader3.add_value("pb", float(res["f23"]) * 100)
+        item_loader3.add_value("pb", float(res["f2023"]) * 100)
         # item_loader2.add_value("pe", res["f9"])
-        item_loader3.add_value("pe_d", float(res["f9"]) * 100)
+        item_loader3.add_value("pe_d", float(res["f2009"]) * 100)
         # item_loader2.add_value("pe_ttm", res["f164"])
 
-        item_loader3.add_value("gpm", float(res["f49"]) * 100)
-        item_loader3.add_value("npmos", float(res["f129"]) * 100)
-        item_loader3.add_value("roe", float(res["f37"]) * 100)
+        item_loader3.add_value("gpm", float(res["f2049"]) * 100)
+        item_loader3.add_value("npmos", float(res["f2129"]) * 100)
+        item_loader3.add_value("roe", float(res["f2037"]) * 100)
         yield item_loader3.load_item()
 
         pass
