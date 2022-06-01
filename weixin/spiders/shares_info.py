@@ -14,8 +14,8 @@ import time
 
 class Shares(scrapy.Spider):
     name = 'shares_info'
-    allowed_domains = [ '.10jqka.com.cn']
-    # allowed_domains = ['.eastmoney.com', '.10jqka.com.cn']
+    # allowed_domains = [ '.10jqka.com.cn']
+    allowed_domains = ['.eastmoney.com', '.10jqka.com.cn']
     start_urls = []
     headers = {
         "HOST": "push2his.eastmoney.com",
