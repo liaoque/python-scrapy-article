@@ -16,7 +16,7 @@ class Shares(scrapy.Spider):
     name = 'shares_info'
     # allowed_domains = ['.10jqka.com.cn']
     allowed_domains = ['.eastmoney.com', '.10jqka.com.cn']
-    start_urls = []
+    # start_urls = []
     headers = {
         "HOST": "push2his.eastmoney.com",
         'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
