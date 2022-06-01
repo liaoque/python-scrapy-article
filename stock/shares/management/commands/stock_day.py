@@ -37,6 +37,7 @@ class Command(BaseCommand):
         one_hundred_start = shareDate[:120][119].date_as
 
         for item in SharesName.objects.filter(status=1, code_type=1, ):
+            print(five_start, twenty_start, sixty_start, one_hundred_start)
             five_day = Shares.objects.filter(date_as__gte=five_start).aggregate(Min('p_end'))
 
             twenty_day = Shares.objects.filter(date_as__gte=twenty_start).aggregate(Min('p_end'))
@@ -44,7 +45,6 @@ class Command(BaseCommand):
             sixty_day = Shares.objects.filter(date_as__gte=sixty_start).aggregate(Min('p_end'))
 
             one_hundred_day = Shares.objects.filter(date_as__gte=one_hundred_start).aggregate(Min('p_end'))
-
 
             SharesName.objects.filter(code=item.code).update(
                 five_day=five_day["p_end__min"],
