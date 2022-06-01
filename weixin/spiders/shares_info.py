@@ -83,6 +83,7 @@ class Shares(scrapy.Spider):
         headers['code'] = code
         headers['industry_code'] = industry_code
         url = "http://doctor.10jqka.com.cn/" + str(code) + "/#nav_basic"
+        print(url)
         return scrapy.Request(url,
                               headers=self.headers,
                               dont_filter=True,
