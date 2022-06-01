@@ -53,5 +53,5 @@ class Command(BaseCommand):
                 sixty_day=sixty_day["p_end__min"],
                 one_hundred_day=one_hundred_day["p_end__min"],
             )
-            break
+            # break
             pass
