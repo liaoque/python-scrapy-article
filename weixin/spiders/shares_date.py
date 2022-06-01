@@ -1,3 +1,4 @@
+import copy
 from datetime import datetime
 
 import scrapy
@@ -8,6 +9,7 @@ import MySQLdb
 import MySQLdb.cursors
 
 import weixin.shares.items_date as SharesDateItems
+import weixin.shares.items_info as SharesInfoItems
 import time
 
 
@@ -63,6 +65,11 @@ class Shares(scrapy.Spider):
         # f169  股价波动
         # f170  股价波动比例
         # f173  ROE
+        # f186  毛利率
+        # f187  净利率
+        # f188  负债率
+        # f198  行业编码
+        # f188  负债率
         return "https://push2.eastmoney.com/api/qt/stock/get?" \
                "ut=fa5fd1943c7b386f172d6893dbfba10b&fltt=2&invt=2&" \
                "fields=f120,f121,f122,f174,f175,f59,f163,f43,f57,f58,f169,f170,f46,f44,f51,f168,f47,f164,f116,f60,f45,f52,f50,f48,f167,f117,f71,f161,f49,f530,f135,f136,f137,f138,f139,f141,f142,f144,f145,f147,f148,f140,f143,f146,f149,f55,f62,f162,f92,f173,f104,f105,f84,f85,f183,f184,f185,f186,f187,f188,f189,f190,f191,f192,f107,f111,f86,f177,f78,f110,f262,f263,f264,f267,f268,f255,f256,f257,f258,f127,f199,f128,f198,f259,f260,f261,f171,f277,f278,f279,f288,f152,f250,f251,f252,f253,f254,f269,f270,f271,f272,f273,f274,f275,f276,f265,f266,f289,f290,f286,f285,f292,f293,f294,f295" \
@@ -114,10 +121,27 @@ class Shares(scrapy.Spider):
         item_loader.add_value("date_as", t.strftime("%Y-%m-%d"))
         # print(item_loader.load_item())
         yield item_loader.load_item()
+
+        # item_loader2 = ItemLoader(item=SharesInfoItems.Items())
+        # item_loader2.add_value("code", res["f57"])
+        # item_loader2.add_value("pb", res["f167"])
+        # item_loader2.add_value("pe", res["f163"])
+        # item_loader2.add_value("pe_d", res["f162"])
+        # item_loader2.add_value("pe_ttm", res["f164"])
+        #
+        # item_loader2.add_value("gpm", res["f186"])
+        # item_loader2.add_value("npmos", res["f187"])
+        # item_loader2.add_value("roe", res["f173"])
+        # yield item_loader2.load_item()
+        #
+
         pass
 
     def findStoks(self):
-        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1';
+        sql = 'select mc_shares_name.code,mc_shares_name.name,mc_shares_name.area_id, industry_code_id ' \
+              'from mc_shares_name ' \
+              'left join mc_shares_join_industry on mc_shares_name.code = mc_shares_join_industry.code_id ' \
+              'where status = 1 and code_type =1';
         results = []
         try:
             # 执行SQL语句
