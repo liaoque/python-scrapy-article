@@ -1,3 +1,4 @@
+import copy
 from datetime import datetime
 
 import scrapy
@@ -7,7 +8,6 @@ import sys
 import MySQLdb
 import MySQLdb.cursors
 
-import weixin.shares.items_date as SharesDateItems
 import weixin.shares.items_info as SharesInfoItems
 import time
 
@@ -69,6 +69,46 @@ class Shares(scrapy.Spider):
                                  dont_filter=True,
                                  callback=self.parse_content)
 
+        for item in results:
+            self.request_info(item)
+
+    def request_info(self, item):
+        code = item[0]
+        industry_code = item[3]
+        headers = copy.deepcopy(self.headers)
+        headers['code'] = code
+        headers['industry_code'] = industry_code
+        url = "http://doctor.10jqka.com.cn/" + str(code) + "/#nav_basic"
+        yield scrapy.Request(url,
+                             headers=self.headers,
+                             dont_filter=True,
+                             callback=self.parse_content_info)
+        time.sleep(5)
+
+    def parse_content_info(self, response):
+
+        code = response.request.headers.getlist('code')[0].decode("UTF-8")
+        industry_code = response.request.headers.getlist('industry_code')[0].decode("UTF-8")
+        yysrzzl = response.css("#yysrzzl tbody tr")
+        jlrzzl = response.css("#jlrzzl tbody tr")
+        gpm_ex = yysrzzl[1].css("td")[1]
+        npmos_ex = jlrzzl[1].css("td")[1]
+        item_loader2 = ItemLoader(item=SharesInfoItems.Items())
+        item_loader2.add_value("code", code)
+        item_loader2.add_value("gpm_ex", gpm_ex)
+        item_loader2.add_value("npmos_ex", npmos_ex)
+        yield item_loader2.load_item()
+
+        gpm_ex = yysrzzl[2].css("td")[1]
+        npmos_ex = jlrzzl[2].css("td")[1]
+        item_loader3 = ItemLoader(item=SharesInfoItems.Items())
+        item_loader3.add_value("code", industry_code)
+        item_loader3.add_value("gpm_ex", gpm_ex)
+        item_loader3.add_value("npmos_ex", npmos_ex)
+        yield item_loader3.load_item()
+
+        pass
+
     def parse_content(self, response):
         result = json.loads(response.text)
         if "data" not in result:
@@ -112,7 +152,10 @@ class Shares(scrapy.Spider):
         pass
 
     def findStoks(self):
-        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1';
+        sql = 'select mc_shares_name.code,mc_shares_name.name,mc_shares_name.area_id, industry_code_id ' \
+              'from mc_shares_name ' \
+              'left join mc_shares_join_industry on mc_shares_name.code = mc_shares_join_industry.code_id ' \
+              'where status = 1 and code_type =1';
         results = []
         try:
             # 执行SQL语句
