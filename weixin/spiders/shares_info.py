@@ -86,7 +86,7 @@ class Shares(scrapy.Spider):
         url = "http://doctor.10jqka.com.cn/" + str(code) + "/#nav_basic"
         print(url)
         return scrapy.Request(url,
-                              headers=self.headers,
+                              headers=headers,
                               dont_filter=True,
                               callback=self.parse_content_info)
 
