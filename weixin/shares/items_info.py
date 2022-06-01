@@ -42,7 +42,7 @@ class Items(scrapy.Item):
         npmos = self['npmos'][0]
         roe = self['roe'][0]
         sql = "update mc_shares_name set pb = '%s', pe_d = '%s', " \
-              " gpm = '%s', npmos = '%s', roe = '%s',  WHERE code = '%s'" % (
+              " gpm = '%s', npmos = '%s', roe = '%s'  WHERE code = '%s'" % (
                   pb, pe_d, gpm, npmos, roe, code)
         cursor.execute(sql)
 
