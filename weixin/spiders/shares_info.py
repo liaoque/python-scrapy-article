@@ -128,14 +128,14 @@ class Shares(scrapy.Spider):
         res = result["data"]["diff"][0]
         item_loader2 = ItemLoader(item=SharesInfoItems.Items())
         item_loader2.add_value("code", res["f12"])
-        item_loader2.add_value("pb", res["f23"] * 100)
+        item_loader2.add_value("pb", float(res["f23"] )* 100)
         # item_loader2.add_value("pe", res["f9"])
-        item_loader2.add_value("pe_d", res["f9"] * 100)
+        item_loader2.add_value("pe_d", float(res["f9"] )* 100)
         # item_loader2.add_value("pe_ttm", res["f164"])
 
-        item_loader2.add_value("gpm", res["f49"] * 100)
-        item_loader2.add_value("npmos", res["f129"] * 100)
-        item_loader2.add_value("roe", res["f37"] * 100)
+        item_loader2.add_value("gpm", float(res["f49"] )* 100)
+        item_loader2.add_value("npmos", float(res["f129"]) * 100)
+        item_loader2.add_value("roe", float(res["f37"]) * 100)
         yield item_loader2.load_item()
 
         # 行业 1
@@ -148,14 +148,14 @@ class Shares(scrapy.Spider):
         res = result["data"]["diff"][1]
         item_loader3 = ItemLoader(item=SharesInfoItems.Items())
         item_loader3.add_value("code", res["f12"])
-        item_loader3.add_value("pb", res["f23"] * 100)
+        item_loader3.add_value("pb", float(res["f23"]) * 100)
         # item_loader2.add_value("pe", res["f9"])
-        item_loader3.add_value("pe_d", res["f9"] * 100)
+        item_loader3.add_value("pe_d", float(res["f9"]) * 100)
         # item_loader2.add_value("pe_ttm", res["f164"])
 
-        item_loader3.add_value("gpm", res["f49"] * 100)
-        item_loader3.add_value("npmos", res["f129"] * 100)
-        item_loader3.add_value("roe", res["f37"] * 100)
+        item_loader3.add_value("gpm", float(res["f49"]) * 100)
+        item_loader3.add_value("npmos", float(res["f129"]) * 100)
+        item_loader3.add_value("roe",float( res["f37"]) * 100)
         yield item_loader3.load_item()
 
         pass
