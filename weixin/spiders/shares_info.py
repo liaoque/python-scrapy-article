@@ -14,7 +14,7 @@ import time
 
 class Shares(scrapy.Spider):
     name = 'shares_info'
-    allowed_domains = [ '.10jqka.com.cn']
+    allowed_domains = ['.10jqka.com.cn']
     # allowed_domains = ['.eastmoney.com', '.10jqka.com.cn']
     start_urls = []
     headers = {
@@ -57,19 +57,19 @@ class Shares(scrapy.Spider):
     def start_requests(self):
         self.connect()
         results = self.findStoks()
-        # for item in results:
-        #     code = item[0]
-        #     area_id = item[2]
-        #     if area_id == 1:
-        #         s_code = "1." + code
-        #     else:
-        #         s_code = "0." + code
-        #     url = self.get_url(s_code)
-        #     yield scrapy.Request(url,
-        #                          headers=self.headers,
-        #                          dont_filter=True,
-        #                          callback=self.parse_content)
-        #     break
+        for item in results:
+            code = item[0]
+            area_id = item[2]
+            if area_id == 1:
+                s_code = "1." + code
+            else:
+                s_code = "0." + code
+            url = self.get_url(s_code)
+            yield scrapy.Request(url,
+                                 headers=self.headers,
+                                 dont_filter=True,
+                                 callback=self.parse_content)
+            break
 
         for item in results:
             yield self.request_info(item)
@@ -84,7 +84,6 @@ class Shares(scrapy.Spider):
         headers['code'] = code
         headers['industry_code'] = industry_code
         url = "http://doctor.10jqka.com.cn/" + str(code) + "/#nav_basic"
-        print(url)
         return scrapy.Request(url,
                               headers=headers,
                               dont_filter=True,
@@ -96,7 +95,6 @@ class Shares(scrapy.Spider):
 
         yysrzzl = response.css("#yysrzzl  tr")
         jlrzzl = response.css("#jlrzzl  tr")
-
 
         gpm_ex = yysrzzl[1].css("td")[1].css("::text").get()
         npmos_ex = jlrzzl[1].css("td")[1].css("::text").get()
@@ -113,7 +111,6 @@ class Shares(scrapy.Spider):
         item_loader3.add_value("code", industry_code)
         item_loader3.add_value("gpm_ex", float(gpm_ex) * 100)
         item_loader3.add_value("npmos_ex", float(npmos_ex) * 100)
-        print(item_loader3.load_item())
         yield item_loader3.load_item()
 
         pass
@@ -128,12 +125,12 @@ class Shares(scrapy.Spider):
         res = result["data"]["diff"][0]
         item_loader2 = ItemLoader(item=SharesInfoItems.Items())
         item_loader2.add_value("code", res["f12"])
-        item_loader2.add_value("pb", float(res["f23"] )* 100)
+        item_loader2.add_value("pb", float(res["f23"]) * 100)
         # item_loader2.add_value("pe", res["f9"])
-        item_loader2.add_value("pe_d", float(res["f9"] )* 100)
+        item_loader2.add_value("pe_d", float(res["f9"]) * 100)
         # item_loader2.add_value("pe_ttm", res["f164"])
 
-        item_loader2.add_value("gpm", float(res["f49"] )* 100)
+        item_loader2.add_value("gpm", float(res["f49"]) * 100)
         item_loader2.add_value("npmos", float(res["f129"]) * 100)
         item_loader2.add_value("roe", float(res["f37"]) * 100)
         yield item_loader2.load_item()
@@ -155,7 +152,7 @@ class Shares(scrapy.Spider):
 
         item_loader3.add_value("gpm", float(res["f49"]) * 100)
         item_loader3.add_value("npmos", float(res["f129"]) * 100)
-        item_loader3.add_value("roe",float( res["f37"]) * 100)
+        item_loader3.add_value("roe", float(res["f37"]) * 100)
         yield item_loader3.load_item()
 
         pass
