@@ -70,12 +70,12 @@ class Shares(scrapy.Spider):
                                  headers=headers,
                                  dont_filter=True,
                                  callback=self.parse_content)
-            break
+
 
         for item in results:
             yield self.request_info(item)
-            yield time.sleep(5)
-            break
+            time.sleep(5)
+
 
     def request_info(self, item):
         code = item[0]
