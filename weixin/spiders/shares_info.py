@@ -90,11 +90,11 @@ class Shares(scrapy.Spider):
                               callback=self.parse_content_info)
 
     def parse_content_info(self, response):
-
         code = response.request.headers.getlist('code')[0].decode("UTF-8")
         industry_code = response.request.headers.getlist('industry_code')[0].decode("UTF-8")
         yysrzzl = response.css("#yysrzzl tbody tr")
         jlrzzl = response.css("#jlrzzl tbody tr")
+        print(yysrzzl, jlrzzl)
         gpm_ex = yysrzzl[1].css("td")[1]
         npmos_ex = jlrzzl[1].css("td")[1]
         item_loader2 = ItemLoader(item=SharesInfoItems.Items())
