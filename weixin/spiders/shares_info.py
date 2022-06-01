@@ -72,7 +72,7 @@ class Shares(scrapy.Spider):
         #     break
 
         for item in results:
-            self.request_info(item)
+            yield self.request_info(item)
             # yield time.sleep(5)
             break
 
