@@ -65,15 +65,16 @@ class Shares(scrapy.Spider):
             else:
                 s_code = "0." + code
             url = self.get_url(s_code)
+            headers = copy.deepcopy(self.headers)
             yield scrapy.Request(url,
-                                 headers=self.headers,
+                                 headers=headers,
                                  dont_filter=True,
                                  callback=self.parse_content)
             break
 
         for item in results:
             yield self.request_info(item)
-            # yield time.sleep(5)
+            yield time.sleep(5)
             break
 
     def request_info(self, item):
@@ -143,7 +144,7 @@ class Shares(scrapy.Spider):
         # f2049 毛利率
         # f2129 净利率
         res = result["data"]["diff"][1]
-        print(res)
+        # print(res)
         item_loader3 = ItemLoader(item=SharesInfoItems.Items())
         item_loader3.add_value("code", res["f12"])
         item_loader3.add_value("pb", float(res["f2023"]) * 100)
@@ -155,7 +156,7 @@ class Shares(scrapy.Spider):
         item_loader3.add_value("npmos", float(res["f2129"]) * 100)
         item_loader3.add_value("roe", float(res["f2037"]) * 100)
 
-        print(item_loader3.load_item())
+        # print(item_loader3.load_item())
         yield item_loader3.load_item()
 
         pass
