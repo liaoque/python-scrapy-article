@@ -103,6 +103,7 @@ class Shares(scrapy.Spider):
         item_loader2.add_value("code", code)
         item_loader2.add_value("gpm_ex", float(gpm_ex) * 100)
         item_loader2.add_value("npmos_ex", float(npmos_ex) * 100)
+        item_loader2.add_value("type", 'gpm_ex')
         # print(item_loader2.load_item())
         yield item_loader2.load_item()
 
@@ -112,6 +113,7 @@ class Shares(scrapy.Spider):
         item_loader3.add_value("code", industry_code)
         item_loader3.add_value("gpm_ex", float(gpm_ex) * 100)
         item_loader3.add_value("npmos_ex", float(npmos_ex) * 100)
+        item_loader3.add_value("type", 'gpm_ex')
         yield item_loader3.load_item()
 
         pass
@@ -134,7 +136,7 @@ class Shares(scrapy.Spider):
         item_loader2.add_value("gpm", float(res["f49"]) * 100)
         item_loader2.add_value("npmos", float(res["f129"]) * 100)
         item_loader2.add_value("roe", float(res["f37"]) * 100)
-        item_loader2.add_value("type", 'stock')
+        item_loader2.add_value("type", 'gpm')
         yield item_loader2.load_item()
 
         # 行业 1
@@ -156,7 +158,7 @@ class Shares(scrapy.Spider):
         item_loader3.add_value("gpm", float(res["f2049"]) * 100)
         item_loader3.add_value("npmos", float(res["f2129"]) * 100)
         item_loader3.add_value("roe", float(res["f2037"]) * 100)
-        item_loader3.add_value("type", 'industry')
+        item_loader3.add_value("type", 'gpm')
         # print(item_loader3.load_item())
         yield item_loader3.load_item()
 

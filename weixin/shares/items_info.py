@@ -26,7 +26,7 @@ class Items(scrapy.Item):
     type = scrapy.Field()
 
     def save(self, cursor):
-        if self['type'][0] == 'stock':
+        if self['type'][0] == 'gpm':
             self.save_pb(cursor)
         else:
             self.save_gpm_ex(cursor)
