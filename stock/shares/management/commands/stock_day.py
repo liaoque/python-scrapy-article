@@ -26,7 +26,7 @@ class Command(BaseCommand):
     help = '计算公司最低均价'
 
     def handle(self, *args, **options):
-        shareDate = SharesDate.objects.orderby('-date_as')
+        shareDate = SharesDate.objects.all().orderby('-date_as')
 
         five_start = shareDate[:5][4]
 
@@ -52,5 +52,5 @@ class Command(BaseCommand):
                 sixty_day=sixty_day,
                 one_hundred_day=one_hundred_day,
             )
-
+            break
             pass
