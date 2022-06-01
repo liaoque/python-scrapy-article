@@ -103,6 +103,7 @@ class Shares(scrapy.Spider):
         item_loader2.add_value("code", code)
         item_loader2.add_value("gpm_ex", gpm_ex * 100)
         item_loader2.add_value("npmos_ex", npmos_ex * 100)
+        print(item_loader2.load_item())
         yield item_loader2.load_item()
 
         gpm_ex = yysrzzl[2].css("td")[1].get()
@@ -111,6 +112,7 @@ class Shares(scrapy.Spider):
         item_loader3.add_value("code", industry_code)
         item_loader3.add_value("gpm_ex", gpm_ex * 100)
         item_loader3.add_value("npmos_ex", npmos_ex * 100)
+        print(item_loader3.load_item())
         yield item_loader3.load_item()
 
         pass
