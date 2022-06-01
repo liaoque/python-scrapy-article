@@ -93,6 +93,8 @@ class Shares(scrapy.Spider):
     def parse_content_info(self, response):
         code = response.request.headers.getlist('code')[0].decode("UTF-8")
         industry_code = response.request.headers.getlist('industry_code')[0].decode("UTF-8")
+        print(response.css("#yysrzzl"))
+
         yysrzzl = response.css("#yysrzzl tbody tr")
         jlrzzl = response.css("#jlrzzl tbody tr")
         print(yysrzzl, jlrzzl)
