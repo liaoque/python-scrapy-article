@@ -97,7 +97,8 @@ class Shares(scrapy.Spider):
         yysrzzl = response.css("#yysrzzl  tr")
         jlrzzl = response.css("#jlrzzl  tr")
 
-        print(yysrzzl[1].css("td"))
+        print(yysrzzl[1].css("td")[1])
+        print(yysrzzl[1].css("td")[1].css("::text"))
         gpm_ex = yysrzzl[1].css("td")[1].css("::text").get()
         npmos_ex = jlrzzl[1].css("td")[1].css("::text").get()
         item_loader2 = ItemLoader(item=SharesInfoItems.Items())
