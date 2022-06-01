@@ -27,6 +27,13 @@ class SharesName(models.Model):
     macd_up = models.IntegerField(default=1, help_text="macd，1 下降，2 上升")
     finance_up = models.IntegerField(default=1, help_text="财务，1 下降，2 上升")
 
+    five_day = models.IntegerField(default=0, help_text="5天最低")
+    twenty_day = models.IntegerField(default=0, help_text="20天最低")
+    sixty_day = models.IntegerField(default=0, help_text="60天最低")
+    one_hundred_day = models.IntegerField(default=0, help_text="120天最低")
+
+
+
     class Meta:
         db_table = "mc_shares_name"
         # abstract = True

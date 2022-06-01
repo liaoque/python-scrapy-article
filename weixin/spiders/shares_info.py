@@ -102,16 +102,16 @@ class Shares(scrapy.Spider):
         npmos_ex = jlrzzl[1].css("td")[1].get()
         item_loader2 = ItemLoader(item=SharesInfoItems.Items())
         item_loader2.add_value("code", code)
-        item_loader2.add_value("gpm_ex", gpm_ex)
-        item_loader2.add_value("npmos_ex", npmos_ex)
+        item_loader2.add_value("gpm_ex", gpm_ex * 100)
+        item_loader2.add_value("npmos_ex", npmos_ex * 100)
         yield item_loader2.load_item()
 
         gpm_ex = yysrzzl[2].css("td")[1].get()
         npmos_ex = jlrzzl[2].css("td")[1].get()
         item_loader3 = ItemLoader(item=SharesInfoItems.Items())
         item_loader3.add_value("code", industry_code)
-        item_loader3.add_value("gpm_ex", gpm_ex)
-        item_loader3.add_value("npmos_ex", npmos_ex)
+        item_loader3.add_value("gpm_ex", gpm_ex * 100)
+        item_loader3.add_value("npmos_ex", npmos_ex * 100)
         yield item_loader3.load_item()
 
         pass
@@ -126,14 +126,14 @@ class Shares(scrapy.Spider):
         res = result["data"]["diff"][0]
         item_loader2 = ItemLoader(item=SharesInfoItems.Items())
         item_loader2.add_value("code", res["f12"])
-        item_loader2.add_value("pb", res["f23"])
+        item_loader2.add_value("pb", res["f23"] * 100)
         # item_loader2.add_value("pe", res["f9"])
-        item_loader2.add_value("pe_d", res["f9"])
+        item_loader2.add_value("pe_d", res["f9"] * 100)
         # item_loader2.add_value("pe_ttm", res["f164"])
 
-        item_loader2.add_value("gpm", res["f49"])
-        item_loader2.add_value("npmos", res["f129"])
-        item_loader2.add_value("roe", res["f37"])
+        item_loader2.add_value("gpm", res["f49"] * 100)
+        item_loader2.add_value("npmos", res["f129"] * 100)
+        item_loader2.add_value("roe", res["f37"] * 100)
         yield item_loader2.load_item()
 
         # 行业 1
@@ -146,14 +146,14 @@ class Shares(scrapy.Spider):
         res = result["data"]["diff"][1]
         item_loader3 = ItemLoader(item=SharesInfoItems.Items())
         item_loader3.add_value("code", res["f12"])
-        item_loader3.add_value("pb", res["f23"])
+        item_loader3.add_value("pb", res["f23"] * 100)
         # item_loader2.add_value("pe", res["f9"])
-        item_loader3.add_value("pe_d", res["f9"])
+        item_loader3.add_value("pe_d", res["f9"] * 100)
         # item_loader2.add_value("pe_ttm", res["f164"])
 
-        item_loader3.add_value("gpm", res["f49"])
-        item_loader3.add_value("npmos", res["f129"])
-        item_loader3.add_value("roe", res["f37"])
+        item_loader3.add_value("gpm", res["f49"] * 100)
+        item_loader3.add_value("npmos", res["f129"] * 100)
+        item_loader3.add_value("roe", res["f37"] * 100)
         yield item_loader3.load_item()
 
         pass
