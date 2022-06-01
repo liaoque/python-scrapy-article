@@ -23,11 +23,12 @@ class Items(scrapy.Item):
     roe = scrapy.Field()
     gpm_ex = scrapy.Field()
     npmos_ex = scrapy.Field()
+    type = scrapy.Field()
 
     def save(self, cursor):
-        if 'pb' in self:
+        if self['type'][0] == 'stock':
             self.save_pb(cursor)
-        if 'gpm_ex' in self:
+        else:
             self.save_gpm_ex(cursor)
 
     pass
