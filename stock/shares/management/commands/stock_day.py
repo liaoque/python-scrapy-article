@@ -28,16 +28,15 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         shareDate = SharesDate.objects.order_by('-date_as')
 
-        five_start = shareDate[:5][4]
+        five_start = shareDate[:5][4].date_as
 
-        twenty_start = shareDate[:20][19]
+        twenty_start = shareDate[:20][19].date_as
 
-        sixty_start = shareDate[:60][59]
+        sixty_start = shareDate[:60][59].date_as
 
-        one_hundred_start = shareDate[:120][119]
+        one_hundred_start = shareDate[:120][119].date_as
 
         for item in SharesName.objects.filter(status=1, code_type=1, ):
-            print(five_start)
             five_day = Shares.objects.filter(date_as__gte=five_start).aggregate(Min('p_end'))
 
             twenty_day = Shares.objects.filter(date_as__gte=twenty_start).aggregate(Min('p_end'))
