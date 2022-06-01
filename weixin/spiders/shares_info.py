@@ -73,7 +73,7 @@ class Shares(scrapy.Spider):
 
         for item in results:
             yield self.request_info(item)
-            yield time.sleep(5)
+            # yield time.sleep(5)
             break
 
     def request_info(self, item):
@@ -153,6 +153,8 @@ class Shares(scrapy.Spider):
         item_loader3.add_value("gpm", float(res["f2049"]) * 100)
         item_loader3.add_value("npmos", float(res["f2129"]) * 100)
         item_loader3.add_value("roe", float(res["f2037"]) * 100)
+
+        print(item_loader3)
         yield item_loader3.load_item()
 
         pass
