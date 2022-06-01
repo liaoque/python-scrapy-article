@@ -68,9 +68,12 @@ class Shares(scrapy.Spider):
                                  headers=self.headers,
                                  dont_filter=True,
                                  callback=self.parse_content)
+            break
 
         for item in results:
             self.request_info(item)
+            yield time.sleep(5)
+            break
 
     def request_info(self, item):
         code = item[0]
@@ -79,11 +82,10 @@ class Shares(scrapy.Spider):
         headers['code'] = code
         headers['industry_code'] = industry_code
         url = "http://doctor.10jqka.com.cn/" + str(code) + "/#nav_basic"
-        yield scrapy.Request(url,
-                             headers=self.headers,
-                             dont_filter=True,
-                             callback=self.parse_content_info)
-        time.sleep(5)
+        return scrapy.Request(url,
+                              headers=self.headers,
+                              dont_filter=True,
+                              callback=self.parse_content_info)
 
     def parse_content_info(self, response):
 
