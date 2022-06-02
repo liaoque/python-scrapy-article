@@ -27,6 +27,8 @@ import requests
 class Command(BaseCommand):
     help = '记录每天-10以下的kdj股票'
 
+    codeList = []
+
     def add_arguments(self, parser):
         # parser.add_argument('poll_ids', nargs='+', type=int)
         pass
@@ -42,11 +44,13 @@ class Command(BaseCommand):
             'buy': [],
             'sell': [],
         }
+        self.codeList = self.getCodeList()
 
         bans = self.getBans()
         industryCodeList = self.getIndustryCodeList()
 
         for item in dateList[-1:]:
+            # 获取基本面向好的股票
             self.getkdj10(item.date_as)
             allCodeIds = SharesDateListen.objects.filter(buy_date_as=None)
             print("寻找买入点-----")
@@ -148,14 +152,20 @@ class Command(BaseCommand):
         if len(ban):
             return None, 0
 
+        # 没有到支撑位
+        lastItem = Shares.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[0]
+        codeNameItem = SharesName.objects.filter(code=codeItem.code_id)[0]
+        if not self.checkPrice(lastItem, codeNameItem):
+            return None, 0
+        return codeNameItem, codeNameItem.p_end
+
         # 计算ema
-        date_as = Shares.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[
-            0].date_as
+        date_as = lastItem.date_as
         result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
         item = None
         pre_ema = 0
         if len(result) < 2:
-            return item, pre_ema
+            return None, 0
         result = result[:2]
         key = 0
         for value in result:
@@ -179,6 +189,14 @@ class Command(BaseCommand):
             key += 1
         return item, pre_ema
 
+    def checkPrice(self, item, codeNameItem):
+        return abs(item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
+            item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
+            item.p_end - codeNameItem.twenty_day) / codeNameItem.twenty_day < 0.01 or abs(
+            item.p_end - codeNameItem.sixty_day) / codeNameItem.sixty_day < 0.01 or abs(
+            item.p_end - codeNameItem.one_hundred_day) / codeNameItem.one_hundred_day < 0.01 or abs(
+            item.p_end - codeNameItem.four_year_day) / codeNameItem.four_year_day < 0.01
+
     def getTodayPend(self, code_id):
         sharesNameItem = SharesName.objects.filter(status=1, code_type=1, code=code_id)[0]
         if sharesNameItem.area_id == 1:
@@ -198,7 +216,7 @@ class Command(BaseCommand):
             left join ( select code_id,p_end from mc_shares where date_as = %s ) c  on a.code_id = c.code_id
             where a.date_as = %s  
                and a.code_id not in ( select code_id from mc_shares_date_listen )
-               and a.j < -10
+               and a.j < 0
                and (a.code_id < 300000 or a.code_id > 600000)
                and a.code_id < 680000
                and a.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
@@ -206,6 +224,7 @@ class Command(BaseCommand):
             '''
 
         result = SharesKdj.objects.raw(sql, params=(date, date, '%ST%',))
+        result = filter(lambda n: n.code_id in self.codeList, result)
         print(result)
         print("%s-挑选出-10的股票：%s个" % (date, len(result)))
         print(",".join(["\"" + item.code_id + "\"" for item in result]))
@@ -232,14 +251,23 @@ class Command(BaseCommand):
             '''
         return SharesDateListen.objects.raw(sql)
 
+    # 高景气行业
     def getIndustryCodeList(self):
+        sql = """
+        SELECT * FROM `mc_shares_name` WHERE `code_type` != 1 AND `gpm_ex` > 3000 and npmos_ex > 3000;
+        """
+        codeList = SharesName.objects.raw(sql)
+        return [item.code_id for item in codeList]
+
+    # 基本面向好的公司
+    def getCodeList(self):
 
         # 找公司 行业成长性，或者收入成长 比较靠谱的公司
         sql = """
-        SELECT n.code_id,n.gpm,t.gpm as tgpm FROM (SELECT * FROM `mc_shares_name` where code_type =  1 and gpm_ex > 1000)  n
+        SELECT n.code,n.gpm,t.gpm as tgpm FROM (SELECT * FROM `mc_shares_name` where code_type =  1 and (gpm_ex > 1000 or npmos_ex > 1000))  n
 left join mc_shares_join_industry as i on n.code = i.code_id
 left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2 and gpm_ex > 1000) t on t.code = i.industry_code_id
-where n.gpm_ex > t.gpm_ex and n.gpm > t.gpm and n.name not like "%ST%"  and n.npmos > 0 and n.member_up =1 
+where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like "%ST%"  and n.npmos > 0 and n.member_up =1 
         """
         codeList = SharesName.objects.raw(sql)
 
@@ -255,8 +283,8 @@ where n.gpm_ex > t.gpm_ex and n.gpm > t.gpm and n.name not like "%ST%"  and n.np
         #     "BK0520",
         #     "BK0823",
         # ], code_id=[item.code_id for item in industryList])
-
-        return [item.code_id for item in codeList]
+        self.codeList = [item.code_id for item in codeList]
+        return self.codeList
 
 
 def getBans(self):
