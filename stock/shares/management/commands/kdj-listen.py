@@ -62,8 +62,9 @@ class Command(BaseCommand):
                 if codeItemResult != None:
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
                     print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
-                    if codeItem.code_id in industryCodeList:
-                        send_data['buy'].append(codeItem.code_id)
+                    # if codeItem.code_id in industryCodeList:
+                    #     send_data['buy'].append(codeItem.code_id)
+                    send_data['buy'].append(codeItem.code_id)
                     if datetime.now(tz).hour < 14:
                         continue
                     codeItem.buy_date_as = codeItemResult.date_as
@@ -80,8 +81,9 @@ class Command(BaseCommand):
                     continue
                 sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
                 print("找到卖出点--%s--%s---%s", codeItemResult.date_as, codeItem.code_id, sharesItem.p_end)
-                if codeItem.code_id in industryCodeList:
-                    send_data['sell'].append(codeItem.code_id)
+                # if codeItem.code_id in industryCodeList:
+                #     send_data['sell'].append(codeItem.code_id)
+                send_data['sell'].append(codeItem.code_id)
                 if datetime.now(tz).hour < 15:
                     continue
                 buys = SharesBuys(
