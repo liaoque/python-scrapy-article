@@ -271,9 +271,9 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
         """
         codeList = SharesName.objects.raw(sql, params=('%ST%',))
         # codeList = [item for item in codeList]
-        print(codeList)
         #  公司毛利率不能低于行业毛利率的 30%
         codeList = filter(lambda n: (n.gpm >= n.tgpm or (n.gpm / n.tgpm > 0.3)), codeList)
+        print(codeList)
 
         # if len(industry) <= 0:
         #     return []
