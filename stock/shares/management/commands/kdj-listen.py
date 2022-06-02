@@ -261,7 +261,8 @@ class Command(BaseCommand):
         SELECT * FROM `mc_shares_name` WHERE `code_type` != 1 AND `gpm_ex` > 3000 and npmos_ex > 3000;
         """
         codeList = SharesName.objects.raw(sql)
-        return [item.code for item in codeList]
+        codeList = SharesJoinIndustry.objects.filter(industry_code_id=[item.code for item in codeList])
+        return [item.code_id for item in codeList]
 
     # 基本面向好的公司
     def getCodeList(self):
