@@ -80,6 +80,8 @@ class Shares(scrapy.Spider):
     def request_info(self, item):
         code = item[0]
         industry_code = item[3]
+        if code > '700000':
+            return
         headers = copy.deepcopy(self.headers)
         headers['HOST'] = "doctor.10jqka.com.cn"
         headers['code'] = code
