@@ -148,49 +148,42 @@ class Command(BaseCommand):
         return item
 
     def findBuyPoint(self, codeItem):
-        date_as = codeItem.date_as
         #     需要避险
         ban = SharesBan.objects.filter(code_id=codeItem.code_id)
         if len(ban):
             return None, 0
 
-        # 没有到支撑位
-        lastItem = Shares.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[0]
+        result = Shares.objects.filter(code_id=codeItem.code_id).order_by('-date_as')
+        if len(result) < 5:
+            return None, 0
+
+        # 最后一天股价
+        lastItem = result[0]
         codeNameItem = SharesName.objects.filter(code=codeItem.code_id)[0]
+        # 有没有到支撑位
         if not self.checkPrice(lastItem, codeNameItem):
             return None, 0
-        # print(codeNameItem, lastItem.p_end)
-        return lastItem, lastItem.p_end
 
-        # 计算ema
-        date_as = lastItem.date_as
-        result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
-        item = None
-        pre_ema = 0
-        if len(result) < 2:
+        # 先计算一个最低的拐点的股价， 然后对比今天的股价
+        todayPend, today = self.getTodayPend(codeItem.code_id)
+        if datetime.strptime(today, '%Y-%m-%d').date() > lastItem.date_as:
             return None, 0
-        result = result[:2]
-        key = 0
-        for value in result:
-            if key + 1 >= len(result):
-                break
-            if result[key + 1].diff - value.diff > 0.009:
-                sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=result[key + 1].date_as)[0]
-                if sharesKdjItem.j > 55:
-                    key += 1
-                    continue
-                shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
-                close = [item.p_end / 100 for item in shares]
-                emaList = talib.EMA(np.array(close), timeperiod=5)
-                preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
 
-                todayPend, today = self.getTodayPend(codeItem.code_id)
-                if todayPend >= preEma and datetime.strptime(today, '%Y-%m-%d').date() > result[key + 1].date_as:
-                    item = result[key + 1]
-                    pre_ema = preEma * 100
-                    break
-            key += 1
-        return item, pre_ema
+        # 判断上升标准
+        # 计算ema
+        # 按 date_as 从小到大 排序
+        shares = result[::-1]
+        close = [item.p_end / 100 for item in shares]
+        emaList = talib.EMA(np.array(close), timeperiod=5)
+        # emaList[-1] + .01 表示上升的 ema 最小值
+        preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
+
+        # 今天股价> 预测股价，则判断上升，且今天必须大于监控时间
+        if todayPend >= preEma:
+            item = lastItem
+            pre_ema = preEma * 100
+            return item, pre_ema
+        return None, 0
 
     def checkPrice(self, item, codeNameItem):
         print(item.__dict__, codeNameItem.__dict__)
@@ -213,7 +206,9 @@ class Command(BaseCommand):
               s_code + '&cb=&klt=101&fqt=0&lmt=' + str(1) + \
               '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
         r = requests.get(url)
-        return float(r.json()["data"]["klines"][0].split(',')[2]), r.json()["data"]["klines"][0].split(',')[0]
+        klines = r.json()["data"]["klines"][-1]
+        print(float(klines.split(',')[2]), klines.split(',')[0])
+        return float(klines.split(',')[2]), klines.split(',')[0]
         pass
 
     def getkdj10(self, date):
