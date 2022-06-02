@@ -36,6 +36,8 @@ class Command(BaseCommand):
 
         one_hundred_start = shareDate[:120][119].date_as
 
+        four_year_start = shareDate[:1200][1119].date_as
+
         for item in SharesName.objects.filter(status=1, code_type=1, ):
             five_day = Shares.objects.filter(date_as__gte=five_start, code_id=item.code).aggregate(Min('p_end'))
             # print(five_day)
@@ -48,11 +50,15 @@ class Command(BaseCommand):
             one_hundred_day = Shares.objects.filter(date_as__gte=one_hundred_start, code_id=item.code).aggregate(
                 Min('p_end'))
 
+            one_hundred_day = Shares.objects.filter(date_as__gte=four_year_start, code_id=item.code).aggregate(
+                Min('p_end'))
+
             SharesName.objects.filter(code=item.code).update(
                 five_day=five_day["p_end__min"],
                 twenty_day=twenty_day["p_end__min"],
                 sixty_day=sixty_day["p_end__min"],
                 one_hundred_day=one_hundred_day["p_end__min"],
+                four_year_day=one_hundred_day["p_end__min"],
             )
             # break
             pass

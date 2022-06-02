@@ -31,6 +31,7 @@ class SharesName(models.Model):
     twenty_day = models.IntegerField(default=0, help_text="20天最低")
     sixty_day = models.IntegerField(default=0, help_text="60天最低")
     one_hundred_day = models.IntegerField(default=0, help_text="120天最低")
+    four_year_day = models.IntegerField(default=0, help_text="4年最低")
 
 
 
