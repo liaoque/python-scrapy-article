@@ -224,7 +224,7 @@ class Command(BaseCommand):
             '''
 
         result = SharesKdj.objects.raw(sql, params=(date, date, '%ST%',))
-        result = filter(lambda n: n.code_id in self.codeList, result)
+        result = list(filter(lambda n: n.code_id in self.codeList, result))
         print(result)
         print("%s-挑选出-10的股票：%s个" % (date, len(result)))
         print(",".join(["\"" + item.code_id + "\"" for item in result]))
@@ -272,7 +272,7 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
         codeList = SharesName.objects.raw(sql, params=('%ST%',))
         # codeList = [item for item in codeList]
         #  公司毛利率不能低于行业毛利率的 30%
-        codeList = filter(lambda n: (n.gpm >= n.tgpm or (n.gpm / n.tgpm > 0.3)), codeList)
+        codeList = list(filter(lambda n: (n.gpm >= n.tgpm or (n.gpm / n.tgpm > 0.3)), codeList))
         print(codeList)
 
         # if len(industry) <= 0:
