@@ -18,4 +18,4 @@ class SharesKdj(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.name
+        return self.code + "j:" + str(self.j)

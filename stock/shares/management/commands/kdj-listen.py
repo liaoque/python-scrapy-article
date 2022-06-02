@@ -216,7 +216,7 @@ class Command(BaseCommand):
             left join ( select code_id,p_end from mc_shares where date_as = %s ) c  on a.code_id = c.code_id
             where a.date_as = %s  
                and a.code_id not in ( select code_id from mc_shares_date_listen )
-               and a.j < 0
+               and a.j < 55
                and (a.code_id < 300000 or a.code_id > 600000)
                and a.code_id < 680000
                and a.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
@@ -273,7 +273,7 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
         # codeList = [item for item in codeList]
         #  公司毛利率不能低于行业毛利率的 30%
         codeList = list(filter(lambda n: (n.gpm >= n.tgpm or (n.gpm / n.tgpm > 0.3)), codeList))
-        print(codeList)
+        # print(codeList)
 
         # if len(industry) <= 0:
         #     return []
