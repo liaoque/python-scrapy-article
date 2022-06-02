@@ -111,9 +111,9 @@ class Command(BaseCommand):
             shareName2 = SharesName.objects.filter(code=item.code_id)
             if len(shareName2) > 0:
                 if item.members >= item.tmembers:
-                    shareName2.update(member_up = 2)
+                    shareName2.update(member_up = 1)
                 else:
-                    shareName2.update(member_up=1)
+                    shareName2.update(member_up=2)
 
 
 
