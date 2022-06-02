@@ -190,7 +190,7 @@ class Command(BaseCommand):
         return item, pre_ema
 
     def checkPrice(self, item, codeNameItem):
-        print(item, codeNameItem)
+        print(item.__dict__, codeNameItem.__dict__)
         return abs(item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
             item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
             item.p_end - codeNameItem.twenty_day) / codeNameItem.twenty_day < 0.01 or abs(
