@@ -233,61 +233,45 @@ class Command(BaseCommand):
         return SharesDateListen.objects.raw(sql)
 
     def getIndustryCodeList(self):
-        industry = ["BK0420",
-                    "BK0422",
-                    "BK0424",
-                    "BK0427",
-                    "BK0428",
-                    "BK0429",
-                    "BK0433",
-                    "BK0436",
-                    "BK0437",
-                    "BK0438",
-                    "BK0450",
-                    "BK0451",
-                    "BK0454",
-                    "BK0456",
-                    "BK0465",
-                    "BK0476",
-                    "BK0477",
-                    "BK0479",
-                    "BK0480",
-                    "BK0481",
-                    "BK0482",
-                    "BK0484",
-                    "BK0725",
-                    "BK0727",
-                    "BK0729",
-                    "BK0731",
-                    "BK0739",
-                    "BK1015",
-                    "BK1016",
-                    "BK1029",
-                    "BK1040",
-                    "BK1041",
-                    "BK1042",
-                    "BK1045", ]
-        industryList = SharesJoinIndustry.objects.filter(industry_code_id__in=industry)
-        codeList = SharesJoinBlock.objects.filter(block_code_id__in=[
-            "BK0683",
-            "BK0520",
-            "BK0823",
-        ], code_id=[item.code_id for item in industryList])
+
+        # 找公司 行业成长性，或者收入成长 比较靠谱的公司
+        sql = """
+        SELECT n.code_id,n.gpm,t.gpm as tgpm FROM (SELECT * FROM `mc_shares_name` where code_type =  1 and gpm_ex > 1000)  n
+left join mc_shares_join_industry as i on n.code = i.code_id
+left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2 and gpm_ex > 1000) t on t.code = i.industry_code_id
+where n.gpm_ex > t.gpm_ex and n.gpm > t.gpm and n.name not like "%ST%"  and n.npmos > 0 and n.member_up =1 and n.macd_up =2
+        """
+        codeList = SharesName.objects.raw(sql)
+
+        #  公司毛利率不能低于行业毛利率的 30%
+        codeList = filter(lambda n: (n.gpm >= n.tgpm or (n.gpm / n.tgpm > 0.3)), codeList)
+
+        # if len(industry) <= 0:
+        #     return []
+        # industry = [item.code for item in industry]
+        # codeList = SharesJoinIndustry.objects.filter(industry_code_id__in=industry)
+        # codeList = SharesJoinBlock.objects.filter(block_code_id__in=[
+        #     "BK0683",
+        #     "BK0520",
+        #     "BK0823",
+        # ], code_id=[item.code_id for item in industryList])
 
         return [item.code_id for item in codeList]
 
-    def getBans(self):
-        industryList = SharesBan.objects.all()
-        return [item.code_id for item in industryList]
 
-    def sendMessage(self, send_data):
-        tz = timezone(timedelta(hours=+8))
-        str = "找到买入点：%s\n 找到卖出点：%s\n" % (
-            "\",\"".join(send_data['buy']), "\",\"".join(send_data['sell']))
-        send_mail(
-            '特别提醒%s' % (datetime.now(tz)),
-            str,
-            'lovemeand1314@163.com',
-            ['844596330@qq.com'],
-            fail_silently=False,
-        )
+def getBans(self):
+    industryList = SharesBan.objects.all()
+    return [item.code_id for item in industryList]
+
+
+def sendMessage(self, send_data):
+    tz = timezone(timedelta(hours=+8))
+    str = "找到买入点：%s\n 找到卖出点：%s\n" % (
+        "\",\"".join(send_data['buy']), "\",\"".join(send_data['sell']))
+    send_mail(
+        '特别提醒%s' % (datetime.now(tz)),
+        str,
+        'lovemeand1314@163.com',
+        ['844596330@qq.com'],
+        fail_silently=False,
+    )
