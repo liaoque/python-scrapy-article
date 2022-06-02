@@ -158,7 +158,7 @@ class Command(BaseCommand):
         if not self.checkPrice(lastItem, codeNameItem):
             return None, 0
         print(codeNameItem, lastItem.p_end)
-        return codeNameItem, lastItem.p_end
+        return lastItem, lastItem.p_end
 
         # 计算ema
         date_as = lastItem.date_as
