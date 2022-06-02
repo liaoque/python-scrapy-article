@@ -50,7 +50,7 @@ class Command(BaseCommand):
             one_hundred_day = Shares.objects.filter(date_as__gte=one_hundred_start, code_id=item.code).aggregate(
                 Min('p_end'))
 
-            one_hundred_day = Shares.objects.filter(date_as__gte=four_year_start, code_id=item.code).aggregate(
+            four_year_day = Shares.objects.filter(date_as__gte=four_year_start, code_id=item.code).aggregate(
                 Min('p_end'))
 
             SharesName.objects.filter(code=item.code).update(
@@ -58,7 +58,7 @@ class Command(BaseCommand):
                 twenty_day=twenty_day["p_end__min"],
                 sixty_day=sixty_day["p_end__min"],
                 one_hundred_day=one_hundred_day["p_end__min"],
-                four_year_day=one_hundred_day["p_end__min"],
+                four_year_day=four_year_day["p_end__min"],
             )
             # break
             pass
