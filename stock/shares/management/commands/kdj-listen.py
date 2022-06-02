@@ -159,7 +159,7 @@ class Command(BaseCommand):
         codeNameItem = SharesName.objects.filter(code=codeItem.code_id)[0]
         if not self.checkPrice(lastItem, codeNameItem):
             return None, 0
-        print(codeNameItem, lastItem.p_end)
+        # print(codeNameItem, lastItem.p_end)
         return lastItem, lastItem.p_end
 
         # 计算ema
