@@ -287,20 +287,18 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
         self.codeList = [item.code for item in codeList]
         return self.codeList
 
+    def getBans(self):
+        industryList = SharesBan.objects.all()
+        return [item.code_id for item in industryList]
 
-def getBans(self):
-    industryList = SharesBan.objects.all()
-    return [item.code_id for item in industryList]
-
-
-def sendMessage(self, send_data):
-    tz = timezone(timedelta(hours=+8))
-    str = "找到买入点：%s\n 找到卖出点：%s\n" % (
-        "\",\"".join(send_data['buy']), "\",\"".join(send_data['sell']))
-    send_mail(
-        '特别提醒%s' % (datetime.now(tz)),
-        str,
-        'lovemeand1314@163.com',
-        ['844596330@qq.com'],
-        fail_silently=False,
-    )
+    def sendMessage(self, send_data):
+        tz = timezone(timedelta(hours=+8))
+        str = "找到买入点：%s\n 找到卖出点：%s\n" % (
+            "\",\"".join(send_data['buy']), "\",\"".join(send_data['sell']))
+        send_mail(
+            '特别提醒%s' % (datetime.now(tz)),
+            str,
+            'lovemeand1314@163.com',
+            ['844596330@qq.com'],
+            fail_silently=False,
+        )
