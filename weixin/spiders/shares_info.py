@@ -159,7 +159,7 @@ class Shares(scrapy.Spider):
         item_loader3.add_value("npmos", float(res["f2129"]) * 100)
         item_loader3.add_value("roe", float(res["f2037"]) * 100)
         item_loader3.add_value("type", 'gpm')
-        # print(item_loader3.load_item())
+        print(item_loader3.load_item())
         yield item_loader3.load_item()
 
         pass
