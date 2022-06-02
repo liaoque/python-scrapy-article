@@ -270,7 +270,7 @@ left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2 and gpm_ex > 1000
 where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like "%ST%"  and n.npmos > 0 and n.member_up =1 
         """
         codeList = SharesName.objects.raw(sql)
-        print(codeList)
+        codeList = [item for item in codeList]
         #  公司毛利率不能低于行业毛利率的 30%
         codeList = filter(lambda n: (n.gpm >= n.tgpm or (n.gpm / n.tgpm > 0.3)), codeList)
 
