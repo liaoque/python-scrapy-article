@@ -185,6 +185,7 @@ class Command(BaseCommand):
         sixty_start = dateList[:60][59].date_as
         one_hundred_start = dateList[:120][119].date_as
         four_year_start = dateList[:1200][1119].date_as
+        print(five_start, item.date_as)
         codeNameItem.five_day = Shares.objects.filter(date_as__gte=five_start,
                                                       date_as__lte=item.date_as,
                                                       code_id=item.code).aggregate(Min('p_end'))[0].p_end
