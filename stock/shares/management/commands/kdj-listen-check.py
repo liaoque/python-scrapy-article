@@ -23,6 +23,8 @@ import math
 class Command(BaseCommand):
     help = '记录每天-10以下的kdj股票'
 
+    codeList = []
+
     def add_arguments(self, parser):
         # parser.add_argument('poll_ids', nargs='+', type=int)
         pass
@@ -122,64 +124,68 @@ class Command(BaseCommand):
         return item
 
     def findBuyPoint(self, codeItem):
-        date_as = codeItem.date_as
+        #     需要避险
+        # ban = SharesBan.objects.filter(code_id=codeItem.code_id)
+        # if len(ban):
+        #     return None, 0
 
-        # 矫正购买时间
-        # sharesBuysItem = SharesBuys.objects.filter(code_id=codeItem.code_id).order_by('-sell_date_as')
-        # if len(sharesBuysItem) > 0 and sharesBuysItem[0].sell_date_as > codeItem.date_as:
-        #     date_as = sharesBuysItem[0].sell_date_as
+        result = Shares.objects.filter(code_id=codeItem.code_id).order_by('-date_as')
+        if len(result) < 5:
+            return None, 0
 
+        # 最后一天股价
+        lastItem = result[0]
+        codeNameItem = SharesName.objects.filter(code=codeItem.code_id)[0]
+        # 有没有到支撑位
+        if not self.checkPrice(lastItem, codeNameItem):
+            return None, 0
+
+        # 先计算一个最低的拐点的股价， 然后对比今天的股价
+        todayPend, today = self.getTodayPend(codeItem.code_id)
+        if datetime.strptime(today, '%Y-%m-%d').date() > lastItem.date_as:
+            return None, 0
+
+        # 判断上升标准
         # 计算ema
-        # 前一天
-        date_as = Shares.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[
-            0].date_as
-        # 前天，今天，明天
-        result = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__gte=date_as)
-        item = None
-        pre_ema = 0
-        if len(result) < 3:
-            return item, pre_ema
-        result = result[:3]
-        key = 0
-        for value in result:
-            if key + 2 >= len(result):
-                break
-            # 昨天到今天 macd 往上走
-            if result[key + 1].diff - value.diff > 0.009:
-                sharesKdjItem = SharesKdj.objects.filter(code_id=value.code_id, date_as=result[key + 1].date_as)[0]
-                if sharesKdjItem.j > 55:
-                    key += 1
-                    continue
-                # shares = Shares.objects.filter(date_as__lte=result[key + 1].date_as, code_id=codeItem.code_id).order_by(
-                #     '-date_as')[:6]
-                # sharesSum = sum([item.p_end for item in shares[1:]])
-                # if codeItem.code_id == '001317':
-                #     print(sharesKdjItem.date_as, codeItem.code_id, [item.p_end for item in shares[1:]], sharesSum,
-                #       shares[0].p_end)
-                # if sharesSum / 5 > shares[0].p_end:
-                shares = Shares.objects.filter(date_as__lte=sharesKdjItem.date_as, code_id=codeItem.code_id)
-                close = [item.p_end / 100 for item in shares]
-                emaList = talib.EMA(np.array(close), timeperiod=5)
-                preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
-                # # emaList7 = talib.EMA(np.array(close), timeperiod=8)
-                # emaList4 = talib.MA(np.array(close), timeperiod=5)
-                # # print(sharesKdjItem.date_as, codeItem.code_id,emaList4[-2] , emaList7[-2] , emaList4[-1] , emaList7[-1])
-                # # if not (emaList4[-2] < emaList7[-2] and emaList4[-1] > emaList7[-1]):
-                # #     continue
-                # if not (emaList4[-2] < emaList4[-1]):
-                #     continue
+        # 按 date_as 从小到大 排序
+        shares = result[::-1]
+        close = [item.p_end / 100 for item in shares]
+        emaList = talib.EMA(np.array(close), timeperiod=5)
+        # emaList[-1] + .01 表示上升的 ema 最小值
+        preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
 
-                # print(emaList)
-                # preEma = (2 * x + (5 - 1) * emaList[-1]) / (5 + 1)
-                sharesItem = Shares.objects.filter(date_as=result[key + 2].date_as, code_id=codeItem.code_id)[
-                    0]
-                # 明天的涨幅超过预计涨幅
-                if ((sharesItem.p_end - sharesItem.p_start) / 2 + sharesItem.p_start) / 100 > preEma:
-                    item = result[key + 2]
-                    pre_ema = preEma * 100
-                    break
-            key += 1
-        return item, pre_ema
+        # 今天股价> 预测股价，则判断上升，且今天必须大于监控时间
+        if todayPend >= preEma:
+            item = lastItem
+            pre_ema = preEma * 100
+            return item, pre_ema
+        return None, 0
+
+    def checkPrice(self, item, codeNameItem):
+        print(item.__dict__, codeNameItem.__dict__)
+        if codeNameItem.five_day == 0:
+            return False
+        return abs(item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
+            item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
+            item.p_end - codeNameItem.twenty_day) / codeNameItem.twenty_day < 0.01 or abs(
+            item.p_end - codeNameItem.sixty_day) / codeNameItem.sixty_day < 0.01 or abs(
+            item.p_end - codeNameItem.one_hundred_day) / codeNameItem.one_hundred_day < 0.01 or abs(
+            item.p_end - codeNameItem.four_year_day) / codeNameItem.four_year_day < 0.01
+
+    def getTodayPend(self, code_id):
+        # sharesNameItem = SharesName.objects.filter(status=1, code_type=1, code=code_id)[0]
+        # if sharesNameItem.area_id == 1:
+        #     s_code = "1." + str(code_id)
+        # else:
+        #     s_code = "0." + str(code_id)
+        # url = 'https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=' + \
+        #       s_code + '&cb=&klt=101&fqt=0&lmt=' + str(1) + \
+        #       '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
+        # r = requests.get(url)
+        # klines = r.json()["data"]["klines"][0]
+        # # print(float(klines.split(',')[2]), klines.split(',')[0])
+        # return float(klines.split(',')[2]), klines.split(',')[0]
+        pass
 
     def getkdj10(self, date):
         sql = '''
@@ -187,7 +193,7 @@ class Command(BaseCommand):
             left join ( select code_id,p_end from mc_shares where date_as = %s ) c  on a.code_id = c.code_id
             where a.date_as = %s  
                and a.code_id not in ( select code_id from mc_shares_date_listen )
-               and a.j < -10
+               and a.j < 55
                and (a.code_id < 300000 or a.code_id > 600000)
                and a.code_id < 680000
                and a.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
@@ -195,6 +201,7 @@ class Command(BaseCommand):
             '''
 
         result = SharesKdj.objects.raw(sql, params=(date, date, '%ST%',))
+        result = list(filter(lambda n: n.code_id in self.codeList, result))
         print(result)
         print("%s-挑选出-10的股票：%s个" % (date, len(result)))
         print(",".join(["\"" + item.code_id + "\"" for item in result]))
