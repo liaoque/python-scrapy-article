@@ -53,10 +53,6 @@ class Command(BaseCommand):
                 continue
 
             self.getkdj10(item.date_as)
-
-            # dateList = self.getAllDateListens()
-            # for item in dateList:
-            #     item.date_as = date_as
             allCodeIds = SharesDateListen.objects.filter(buy_date_as=None)
             print("寻找买入点-----")
             for codeItem in allCodeIds:
@@ -101,15 +97,14 @@ class Command(BaseCommand):
             # break
 
     def findSellPoint(self, codeItem, item):
-        date_as = item.date_as
         if item.date_as <= codeItem.buy_date_as:
             return None
 
         # 对比今天和昨天
-        result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__lte=date_as).order_by('-date_as')
+        result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__lte=item.date_as).order_by('-date_as')
         if len(result) < 2:
             return None
-        sharesCollect = Shares.objects.filter(code_id=codeItem.code_id, date_as__lte=date_as).order_by('-date_as')
+        sharesCollect = Shares.objects.filter(code_id=codeItem.code_id, date_as__lte=item.date_as).order_by('-date_as')
         item = None
         key = 0
         result = result[:2]
