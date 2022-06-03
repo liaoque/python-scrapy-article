@@ -170,7 +170,7 @@ class Command(BaseCommand):
         emaList = talib.EMA(np.array(close), timeperiod=5)
         # emaList[-1] + .01 表示上升的 ema 最小值
         preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
-        print(shares, emaList[-1], preEma)
+        print(shares[-1], emaList[-1], preEma)
         # 今天股价> 预测股价，则判断上升，且今天必须大于监控时间
         if todayPend >= preEma:
             item = lastItem
