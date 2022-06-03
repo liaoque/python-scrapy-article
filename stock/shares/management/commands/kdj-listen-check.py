@@ -46,7 +46,7 @@ class Command(BaseCommand):
         # 获取基本的监控股票
         self.codeList = self.getCodeList()
 
-        for item in self.dateList[-100:]:
+        for item in self.dateList[-60:]:
             print(item.date_as.strftime("%Y-%m-%d") )
             if item.date_as.strftime("%Y-%m-%d") <= '2022-03-31':
                 continue
