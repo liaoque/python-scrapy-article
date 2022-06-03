@@ -231,6 +231,7 @@ class Command(BaseCommand):
         pass
 
     def getkdj10(self, date):
+        date = SharesDate.objects.filter(date_as__lt=date).order_by('-date_as')[0].date_as
         sql = '''
             select 1 as id, a.code_id,c.p_end,a.date_as,a.j  from mc_shares_kdj  a
             left join ( select code_id,p_end from mc_shares where date_as = %s ) c  on a.code_id = c.code_id
