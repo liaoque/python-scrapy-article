@@ -46,6 +46,8 @@ class Shares(scrapy.Spider):
         for item in results:
             code = item[0]
             days = 0
+            if ('300000' < code < '600000') or code > '680000':
+                continue
 
             # stock_info = self.findStokByCode(code)
             # if stock_info:
