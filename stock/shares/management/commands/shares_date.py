@@ -19,7 +19,7 @@ import time
 
 
 class Command(BaseCommand):
-    help = '统计上班年和下班的 最高和最低'
+    help = '补充当前的日期'
 
     def handle(self, *args, **options):
         dateList = self.getAllDates()
