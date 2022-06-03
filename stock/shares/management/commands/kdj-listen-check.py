@@ -47,6 +47,7 @@ class Command(BaseCommand):
         self.codeList = self.getCodeList()
 
         for item in self.dateList[-100:]:
+            print(item.date_as )
             if item.date_as <= '2022-03-31':
                 return
 
