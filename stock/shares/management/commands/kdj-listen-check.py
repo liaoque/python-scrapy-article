@@ -184,7 +184,7 @@ class Command(BaseCommand):
         if n == 0:
             n = 5
         preEma = ((emaList[-1] + .01) * (n + 1) - (n - 1) * emaList[-1]) / 2
-        print(shares[0], shares[-1], emaList[-1], preEma)
+        print(shares[0], shares[-1], emaList[-1], todayPend, preEma)
         # 今天股价> 预测股价，则判断上升，且今天必须大于监控时间
         if todayPend >= preEma:
             item = Shares.objects.filter(code_id=codeItem.code_id, date_as=date_as)[0]
