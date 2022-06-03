@@ -215,7 +215,7 @@ class Command(BaseCommand):
         item = Shares.objects.filter(code_id=code_id, date_as__gt=date_as).order_by('date_as')
         if len(item) == 0:
             return False, False
-        return item.p_end, item.date_as
+        return item[0].p_end, item[0].date_as
         # sharesNameItem = SharesName.objects.filter(status=1, code_type=1, code=code_id)[0]
         # if sharesNameItem.area_id == 1:
         #     s_code = "1." + str(code_id)
