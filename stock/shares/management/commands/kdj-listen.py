@@ -58,7 +58,7 @@ class Command(BaseCommand):
                 if codeItem.code_id in bans:
                     continue
                 # codeItem.date_as = item.date_as
-                codeItemResult, buy_pre = self.findBuyPoint(codeItem)
+                codeItemResult, buy_pre = self.findBuyPoint(codeItem, item.date_as)
                 if codeItemResult != None:
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
                     print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
@@ -147,14 +147,14 @@ class Command(BaseCommand):
             key += 1
         return item
 
-    def findBuyPoint(self, codeItem):
+    def findBuyPoint(self, codeItem, date_as):
         #     需要避险
         ban = SharesBan.objects.filter(code_id=codeItem.code_id)
         if len(ban):
             return None, 0
 
-        result = Shares.objects.filter(code_id=codeItem.code_id).order_by('-date_as')
-        if len(result) < 5:
+        result = Shares.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')
+        if len(result) < 30:
             return None, 0
 
         # 最后一天股价
@@ -164,7 +164,7 @@ class Command(BaseCommand):
         if not self.checkPrice(lastItem, codeNameItem):
             return None, 0
 
-        # 先计算一个最低的拐点的股价， 然后对比今天的股价
+        # 预计今天的股价最低的涨幅的估计
         todayPend, today = self.getTodayPend(codeItem.code_id)
         if datetime.strptime(today, '%Y-%m-%d').date() > lastItem.date_as:
             return None, 0
@@ -176,11 +176,28 @@ class Command(BaseCommand):
         close = [item.p_end / 100 for item in shares]
         emaList = talib.EMA(np.array(close), timeperiod=5)
         # emaList[-1] + .01 表示上升的 ema 最小值
+
+        # """
+        # 假如N=1，则EMA(X，1)=［2*X1+(1-1)*Y’］/(1+1)=X1
+        # 假如N=2，则EMA(X，2)=［2*X2+(2-1)*Y’］/(2+1)=(2/3)*X2+(1/3)X1
+        # 假如N=3，则EMA(X，3)=［2*X3+(3-1)*Y’］/(3+1)=［2*X3+2*((2/3)*X2+(1/3)*X1)］/4=(1/2)*X3+(1/3)*X2+(1/6)*X1=3/6*X3+2/6*X2+1/6*X1
+        # """
+
+        # Y =［2*X3+(3-1)*Y’］/(3+1)
+        # Y * (3+1) = 2*X3+(3-1)*Y’
+        # Y * (3+1) - (3-1)*Y’ = 2*X3
+        # (Y * (3+1) - (3-1)*Y’) /2 = X3
+        n = len(close) % 5
+        if n == 0:
+            n = 5
         preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
 
         # 今天股价> 预测股价，则判断上升，且今天必须大于监控时间
         if todayPend >= preEma:
-            item = lastItem
+            item = Shares(
+                code_id=codeItem.code_id,
+                date_as=today
+            )
             pre_ema = preEma * 100
             return item, pre_ema
         return None, 0
@@ -217,7 +234,7 @@ class Command(BaseCommand):
             left join ( select code_id,p_end from mc_shares where date_as = %s ) c  on a.code_id = c.code_id
             where a.date_as = %s  
                and a.code_id not in ( select code_id from mc_shares_date_listen )
-               and a.j < 55
+               and a.j < 16
                and (a.code_id < 300000 or a.code_id > 600000)
                and a.code_id < 680000
                and a.code_id not in (SELECT code FROM `mc_shares_name` where name like %s )
