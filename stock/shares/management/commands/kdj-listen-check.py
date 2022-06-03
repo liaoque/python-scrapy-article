@@ -151,14 +151,13 @@ class Command(BaseCommand):
             return None, 0
 
         # 最后一天股价
-        # 昨天股价
+        # 昨天股价有没有到支撑位
         lastItem = result[0]
         codeNameItem = SharesName.objects.filter(code=codeItem.code_id)[0]
-        # 当天有没有到支撑位
         if not self.checkPrice(lastItem, codeNameItem):
             return None, 0
 
-        # 预计一个明天最低的涨幅的估计
+        # 预计今天的股价最低的涨幅的估计
         todayPend, today = self.getTodayPend(codeItem.code_id, date_as)
         # if datetime.strptime(today, '%Y-%m-%d').date() > lastItem.date_as:
         #     return None, 0
@@ -227,7 +226,7 @@ class Command(BaseCommand):
 
     def getTodayPend(self, code_id, date_as):
         #  第二天的股价
-        item = Shares.objects.filter(code_id=code_id, date_as_gt=date_as).order_by('date_as')
+        item = Shares.objects.filter(code_id=code_id, date_as=date_as)
         if len(item) == 0:
             return False, False
         return item[0].p_end / 100, item[0].date_as
