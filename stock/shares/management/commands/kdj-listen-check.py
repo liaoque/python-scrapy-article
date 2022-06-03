@@ -47,7 +47,7 @@ class Command(BaseCommand):
         self.codeList = self.getCodeList()
 
         for item in self.dateList[-60:]:
-            print(item.date_as.strftime("%Y-%m-%d") )
+            print(item.date_as.strftime("%Y-%m-%d"))
             if item.date_as.strftime("%Y-%m-%d") <= '2022-03-31':
                 continue
 
@@ -169,8 +169,22 @@ class Command(BaseCommand):
         close = [item.p_end / 100 for item in shares]
         emaList = talib.EMA(np.array(close), timeperiod=5)
         # emaList[-1] + .01 表示上升的 ema 最小值
-        preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
-        print(shares[0],shares[-1], emaList[-1], preEma)
+
+        # """
+        # 假如N=1，则EMA(X，1)=［2*X1+(1-1)*Y’］/(1+1)=X1
+        # 假如N=2，则EMA(X，2)=［2*X2+(2-1)*Y’］/(2+1)=(2/3)*X2+(1/3)X1
+        # 假如N=3，则EMA(X，3)=［2*X3+(3-1)*Y’］/(3+1)=［2*X3+2*((2/3)*X2+(1/3)*X1)］/4=(1/2)*X3+(1/3)*X2+(1/6)*X1=3/6*X3+2/6*X2+1/6*X1
+        # """
+
+        # Y =［2*X3+(3-1)*Y’］/(3+1)
+        # Y * (3+1) = 2*X3+(3-1)*Y’
+        # Y * (3+1) - (3-1)*Y’ = 2*X3
+        # (Y * (3+1) - (3-1)*Y’) /2 = X3
+        n = len(close) % 5
+        if n == 0:
+            n = 5
+        preEma = ((emaList[-1] + .01) * (n + 1) - (n - 1) * emaList[-1]) / 2
+        print(shares[0], shares[-1], emaList[-1], preEma)
         # 今天股价> 预测股价，则判断上升，且今天必须大于监控时间
         if todayPend >= preEma:
             item = Shares.objects.filter(code_id=codeItem.code_id, date_as=date_as)[0]
@@ -246,7 +260,7 @@ class Command(BaseCommand):
 
         result = SharesKdj.objects.raw(sql, params=(date, date, '%ST%',))
         result = list(filter(lambda n: n.code_id in self.codeList, result))
-        print(result)
+        # print(result)
         print("%s-挑选出-10的股票：%s个" % (date, len(result)))
         print(",".join(["\"" + item.code_id + "\"" for item in result]))
         for item in result:
