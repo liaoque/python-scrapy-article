@@ -149,7 +149,7 @@ class Shares(scrapy.Spider):
         # f2049 毛利率
         # f2129 净利率
         res = result["data"]["diff"][1]
-        # print(res)
+        print(res)
         item_loader3 = ItemLoader(item=SharesInfoItems.Items())
         item_loader3.add_value("code", res["f12"])
         item_loader3.add_value("pb", float(res["f2023"]) * 100)
