@@ -33,10 +33,10 @@ class Command(BaseCommand):
     def getAllDates(self):
         url = "https://37.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid=1.000001&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=1&end=20500101&lmt=1&_=1654277588142"
         r = requests.get(url)
-        print(r.json())
+        # print(r.json())
         klines = r.json()["data"]["klines"][0]
         klines = klines.split(",")[0]
-        print(klines)
+        # print(klines)
         return [
             SharesDate(date_as=klines)
         ]
