@@ -33,6 +33,7 @@ class Command(BaseCommand):
     def getAllDates(self):
         url = "https://stock.xueqiu.com/v5/stock/chart/kline.json?symbol=SH000001&begin=1654363032092&period=day&type=before&count=-1&indicator=kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance"
         r = requests.get(url)
+        print(r.json())
         timeStamp = r.json()["data"]["item"][0][0] / 1000
         tz = timezone(timedelta(hours=+8))
         dateArray = datetime.astimezone(tz).fromisoformat(timeStamp)
