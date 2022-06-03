@@ -111,6 +111,7 @@ class Command(BaseCommand):
     def findSellPoint(self, codeItem, item):
         if item.date_as <= codeItem.buy_date_as:
             return None
+
         # 对比今天和昨天
         result = SharesKdj.objects.filter(code_id=codeItem.code_id, date_as__lte=item.date_as).order_by('-date_as')
         if len(result) < 2:
@@ -124,6 +125,7 @@ class Command(BaseCommand):
             if key + 1 >= len(result):
                 break
             # 倒锤头
+            # 这部分可以帮助找到超短期的压力位， 用于做t
             hammerMax = max(sharesCollect[key].p_end, sharesCollect[key].p_start)
             hammerMin = min(sharesCollect[key].p_end, sharesCollect[key].p_start)
             hammerBody = math.fabs(sharesCollect[key].p_end - sharesCollect[key].p_start)
@@ -165,8 +167,8 @@ class Command(BaseCommand):
             return None, 0
 
         # 预计今天的股价最低的涨幅的估计
-        todayPend, today = self.getTodayPend(codeItem.code_id)
-        if datetime.strptime(today, '%Y-%m-%d').date() > lastItem.date_as:
+        todayPend, today = self.getTodayPend(codeItem.code_id, date_as)
+        if todayPend == None:
             return None, 0
 
         # 判断上升标准
@@ -213,7 +215,7 @@ class Command(BaseCommand):
             item.p_end - codeNameItem.one_hundred_day) / codeNameItem.one_hundred_day < 0.01 or abs(
             item.p_end - codeNameItem.four_year_day) / codeNameItem.four_year_day < 0.01
 
-    def getTodayPend(self, code_id):
+    def getTodayPend(self, code_id, date_as):
         sharesNameItem = SharesName.objects.filter(status=1, code_type=1, code=code_id)[0]
         if sharesNameItem.area_id == 1:
             s_code = "1." + str(code_id)
@@ -224,7 +226,10 @@ class Command(BaseCommand):
               '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
         r = requests.get(url)
         klines = r.json()["data"]["klines"][0]
-        # print(float(klines.split(',')[2]), klines.split(',')[0])
+
+        # 查到的日期是同一天
+        if klines.split(',')[0] == date_as:
+            return None, None
         return float(klines.split(',')[2]), klines.split(',')[0]
         pass
 
