@@ -50,7 +50,7 @@ class Command(BaseCommand):
         bans = self.getBans()
         industryCodeList = self.getIndustryCodeList()
 
-        for item in dateList[-1:]:
+        for item in dateList[-2:-1]:
             # 获取基本面向好的股票
             self.getkdj10(item.date_as)
             allCodeIds = SharesDateListen.objects.filter(buy_date_as=None)
