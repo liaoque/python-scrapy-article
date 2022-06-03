@@ -187,19 +187,19 @@ class Command(BaseCommand):
         four_year_start = dateList[:1200][1119].date_as
         codeNameItem.five_day = Shares.objects.filter(date_as__gte=five_start,
                                                       date_as__lte=item.date_as,
-                                                      code_id=item.code).aggregate(Min('p_end'))
+                                                      code_id=item.code).aggregate(Min('p_end'))[0].p_end
         codeNameItem.twenty_day = Shares.objects.filter(date_as__gte=twenty_start,
                                                         date_as__lte=item.date_as,
-                                                        code_id=item.code).aggregate(Min('p_end'))
+                                                        code_id=item.code).aggregate(Min('p_end'))[0].p_end
         codeNameItem.sixty_day = Shares.objects.filter(date_as__gte=sixty_start,
                                                        date_as__lte=item.date_as,
-                                                       code_id=item.code).aggregate(Min('p_end'))
+                                                       code_id=item.code).aggregate(Min('p_end'))[0].p_end
         codeNameItem.one_hundred_day = Shares.objects.filter(date_as__gte=one_hundred_start,
                                                              date_as__lte=item.date_as,
-                                                             code_id=item.code).aggregate(Min('p_end'))
+                                                             code_id=item.code).aggregate(Min('p_end'))[0].p_end
         codeNameItem.four_year_day = Shares.objects.filter(date_as__gte=four_year_start,
                                                            date_as__lte=item.date_as,
-                                                           code_id=item.code).aggregate(Min('p_end'))
+                                                           code_id=item.code).aggregate(Min('p_end'))[0].p_end
         # if codeNameItem.five_day == 0:
         #     return False
         return abs(item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
