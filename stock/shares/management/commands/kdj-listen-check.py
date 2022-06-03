@@ -158,7 +158,7 @@ class Command(BaseCommand):
             return None, 0
 
         # 先计算一个最低的拐点的股价， 然后对比今天的股价
-        todayPend, today = self.getTodayPend(codeItem.code_id)
+        todayPend, today = self.getTodayPend(codeItem.code_id, date_as)
         # if datetime.strptime(today, '%Y-%m-%d').date() > lastItem.date_as:
         #     return None, 0
 
@@ -214,7 +214,7 @@ class Command(BaseCommand):
         #  第二天的股价
         item = Shares.objects.filter(code_id=code_id, date_as__gt=date_as).order_by('date_as')
         if len(item) == 0:
-            return
+            return False, False
         return item.p_end, item.date_as
         # sharesNameItem = SharesName.objects.filter(status=1, code_type=1, code=code_id)[0]
         # if sharesNameItem.area_id == 1:
