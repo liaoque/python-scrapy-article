@@ -55,7 +55,7 @@ class Items(scrapy.Item):
         status = self['status'][0]
         code_type = self['code_type'][0]
         area_id = int(self.area_map[self['area_id'][0]])
-        cursor = self.findByCode(cursor, code)
+        cursor = self.findByCode(cursor, code, code_type)
         if cursor.rowcount:
             data = cursor.fetchall()
             if data[0]['area_id'] == 0:
@@ -105,7 +105,7 @@ class Items(scrapy.Item):
             temper_dongfangcaifu, code)
         cursor.execute(sql);
 
-    def findByCode(self, cursor, code):
-        sql = "SELECT * FROM mc_shares_name  WHERE code = '%s'" % code
+    def findByCode(self, cursor, code, code_type):
+        sql = "SELECT * FROM mc_shares_name  WHERE code = '%s' and code_type = %s" % (code, code_type)
         cursor.execute(sql);
         return cursor
