@@ -1,7 +1,7 @@
 import numpy as np
 from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import Count
+from django.db.models import Count, Max, Min
 
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
@@ -10,6 +10,7 @@ from shares.model.shares import Shares
 from shares.model.shares_date_listen import SharesDateListen
 from shares.model.shares_macd import SharesMacd
 from shares.model.shares_buys import SharesBuys
+from shares.model.shares_date import SharesDate
 import numpy as np
 import talib
 import math
@@ -24,6 +25,14 @@ class Command(BaseCommand):
     help = '记录每天-10以下的kdj股票'
 
     codeList = []
+    dateList = []
+    five_start = ''
+    twenty_start = ''
+    sixty_start = ''
+    one_hundred_start = ''
+    four_year_start = ''
+
+    date_as = None
 
     def add_arguments(self, parser):
         # parser.add_argument('poll_ids', nargs='+', type=int)
@@ -31,9 +40,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print("开始计算-----")
-        dateList = self.getAllDates()
-        for item in dateList[-30:]:
-            date_as = item.date_as
+
+        self.dateList = self.getAllDates()
+
+        # 获取基本的监控股票
+        self.codeList = self.getCodeList()
+
+        for item in self.dateList[-100:]:
+            if item.date_as <= '2022-03-31':
+                return
+
             self.getkdj10(item.date_as)
 
             # dateList = self.getAllDateListens()
@@ -42,8 +58,8 @@ class Command(BaseCommand):
             allCodeIds = SharesDateListen.objects.filter(buy_date_as=None)
             print("寻找买入点-----")
             for codeItem in allCodeIds:
-                codeItem.date_as = item.date_as
-                codeItemResult, buy_pre = self.findBuyPoint(codeItem)
+                # codeItem.date_as = item.date_as
+                codeItemResult, buy_pre = self.findBuyPoint(codeItem, item.date_as)
                 if codeItemResult != None:
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
                     print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
@@ -123,14 +139,14 @@ class Command(BaseCommand):
             key += 1
         return item
 
-    def findBuyPoint(self, codeItem):
+    def findBuyPoint(self, codeItem, date_as):
         #     需要避险
         # ban = SharesBan.objects.filter(code_id=codeItem.code_id)
         # if len(ban):
         #     return None, 0
 
-        result = Shares.objects.filter(code_id=codeItem.code_id).order_by('-date_as')
-        if len(result) < 5:
+        result = Shares.objects.filter(code_id=codeItem.code_id, date_as__lte=date_as).order_by('-date_as')
+        if len(result) < 30:
             return None, 0
 
         # 最后一天股价
@@ -142,8 +158,8 @@ class Command(BaseCommand):
 
         # 先计算一个最低的拐点的股价， 然后对比今天的股价
         todayPend, today = self.getTodayPend(codeItem.code_id)
-        if datetime.strptime(today, '%Y-%m-%d').date() > lastItem.date_as:
-            return None, 0
+        # if datetime.strptime(today, '%Y-%m-%d').date() > lastItem.date_as:
+        #     return None, 0
 
         # 判断上升标准
         # 计算ema
@@ -162,9 +178,29 @@ class Command(BaseCommand):
         return None, 0
 
     def checkPrice(self, item, codeNameItem):
-        print(item.__dict__, codeNameItem.__dict__)
-        if codeNameItem.five_day == 0:
-            return False
+        dateList = SharesDate.objects.filter(date_as__lte=item.date_at)
+        five_start = dateList[:5][4].date_as
+        twenty_start = dateList[:20][19].date_as
+        sixty_start = dateList[:60][59].date_as
+        one_hundred_start = dateList[:120][119].date_as
+        four_year_start = dateList[:1200][1119].date_as
+        codeNameItem.five_day = Shares.objects.filter(date_as__gte=five_start,
+                                                      date_as__lte=item.date_at,
+                                                      code_id=item.code).aggregate(Min('p_end'))
+        codeNameItem.twenty_day = Shares.objects.filter(date_as__gte=twenty_start,
+                                                        date_as__lte=item.date_at,
+                                                        code_id=item.code).aggregate(Min('p_end'))
+        codeNameItem.sixty_day = Shares.objects.filter(date_as__gte=sixty_start,
+                                                       date_as__lte=item.date_at,
+                                                       code_id=item.code).aggregate(Min('p_end'))
+        codeNameItem.one_hundred_day = Shares.objects.filter(date_as__gte=one_hundred_start,
+                                                             date_as__lte=item.date_at,
+                                                             code_id=item.code).aggregate(Min('p_end'))
+        codeNameItem.four_year_day = Shares.objects.filter(date_as__gte=four_year_start,
+                                                           date_as__lte=item.date_at,
+                                                           code_id=item.code).aggregate(Min('p_end'))
+        # if codeNameItem.five_day == 0:
+        #     return False
         return abs(item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
             item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
             item.p_end - codeNameItem.twenty_day) / codeNameItem.twenty_day < 0.01 or abs(
@@ -172,7 +208,12 @@ class Command(BaseCommand):
             item.p_end - codeNameItem.one_hundred_day) / codeNameItem.one_hundred_day < 0.01 or abs(
             item.p_end - codeNameItem.four_year_day) / codeNameItem.four_year_day < 0.01
 
-    def getTodayPend(self, code_id):
+    def getTodayPend(self, code_id, date_as):
+        #  第二天的股价
+        item = Shares.objects.filter(code_id=code_id, date_as__gt=date_as).order_by('date_as')
+        if len(item) == 0:
+            return
+        return item.p_end, item.date_as
         # sharesNameItem = SharesName.objects.filter(status=1, code_type=1, code=code_id)[0]
         # if sharesNameItem.area_id == 1:
         #     s_code = "1." + str(code_id)
