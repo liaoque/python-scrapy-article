@@ -1,5 +1,5 @@
 import numpy as np
-from datetime import datetime, date
+from datetime import datetime, timedelta, timezone
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count, Max, Min
 from django.db import connection
@@ -9,6 +9,7 @@ from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
 from shares.model.shares_date import SharesDate
 import time
+import requests
 
 
 # import numpy as np
@@ -29,9 +30,19 @@ class Command(BaseCommand):
             sharesDate = SharesDate(date_as=item.date_as)
             sharesDate.save()
 
-
     def getAllDates(self):
-        sql = '''
-                select 1 as id, date_as from mc_shares where date_as >= '2022-03-31' group  by date_as ;
-                '''
-        return Shares.objects.raw(sql)
+        url = "https://stock.xueqiu.com/v5/stock/chart/kline.json?symbol=SH000001&begin=1654363032092&period=day&type=before&count=-1&indicator=kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance"
+        r = requests.get(url)
+        timeStamp = r.json()["data"]["item"][0][0] / 1000
+        tz = timezone(timedelta(hours=+8))
+        dateArray = datetime.astimezone(tz).fromisoformat(timeStamp)
+
+        otherStyleTime = dateArray.strftime("%Y-%m-%d")
+        print(otherStyleTime)
+        return [
+            SharesDate(date_as=otherStyleTime)
+        ]
+        # sql = '''
+        #         select 1 as id, date_as from mc_shares where date_as >= '2022-03-31' group  by date_as ;
+        #         '''
+        # return Shares.objects.raw(sql)
