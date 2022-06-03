@@ -195,7 +195,7 @@ class Command(BaseCommand):
     def checkPrice(self, item, codeNameItem):
         dateList = SharesDate.objects.filter(date_as__lte=item.date_as).order_by('-date_as')
         five_start = dateList[:5][4].date_as
-        twenty_start = dateList[:30][29].date_as
+        twenty_start = dateList[:20][19].date_as
         sixty_start = dateList[:60][59].date_as
         one_hundred_start = dateList[:120][119].date_as
         four_year_start = dateList[:1200][1119].date_as
