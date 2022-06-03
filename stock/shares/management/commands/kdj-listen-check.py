@@ -153,7 +153,7 @@ class Command(BaseCommand):
         # 最后一天股价
         lastItem = result[0]
         codeNameItem = SharesName.objects.filter(code=codeItem.code_id)[0]
-        # 有没有到支撑位
+        # 当天有没有到支撑位
         if not self.checkPrice(lastItem, codeNameItem):
             return None, 0
 
@@ -187,7 +187,7 @@ class Command(BaseCommand):
         print(shares[0], shares[-1], emaList[-1], todayPend, preEma)
         # 今天股价> 预测股价，则判断上升，且今天必须大于监控时间
         if todayPend >= preEma:
-            item = Shares.objects.filter(code_id=codeItem.code_id, date_as=date_as)[0]
+            item = Shares.objects.filter(code_id=codeItem.code_id, date_as=today)[0]
             pre_ema = preEma * 100
             return item, pre_ema
         return None, 0
