@@ -179,7 +179,7 @@ class Command(BaseCommand):
         return None, 0
 
     def checkPrice(self, item, codeNameItem):
-        dateList = SharesDate.objects.filter(date_as__lte=item.date_as)
+        dateList = SharesDate.objects.filter(date_as__lte=item.date_as).order_by('-date_as')
         five_start = dateList[:5][4].date_as
         twenty_start = dateList[:20][19].date_as
         sixty_start = dateList[:60][59].date_as
@@ -188,19 +188,19 @@ class Command(BaseCommand):
         print(five_start, item.date_as)
         codeNameItem.five_day = Shares.objects.filter(date_as__gte=five_start,
                                                       date_as__lte=item.date_as,
-                                                      code_id=item.code).aggregate(Min('p_end'))[0].p_end
+                                                      code_id=item.code).aggregate(Min('p_end'))["p_end__min"]
         codeNameItem.twenty_day = Shares.objects.filter(date_as__gte=twenty_start,
                                                         date_as__lte=item.date_as,
-                                                        code_id=item.code).aggregate(Min('p_end'))[0].p_end
+                                                        code_id=item.code).aggregate(Min('p_end'))["p_end__min"]
         codeNameItem.sixty_day = Shares.objects.filter(date_as__gte=sixty_start,
                                                        date_as__lte=item.date_as,
-                                                       code_id=item.code).aggregate(Min('p_end'))[0].p_end
+                                                       code_id=item.code).aggregate(Min('p_end'))["p_end__min"]
         codeNameItem.one_hundred_day = Shares.objects.filter(date_as__gte=one_hundred_start,
                                                              date_as__lte=item.date_as,
-                                                             code_id=item.code).aggregate(Min('p_end'))[0].p_end
+                                                             code_id=item.code).aggregate(Min('p_end'))["p_end__min"]
         codeNameItem.four_year_day = Shares.objects.filter(date_as__gte=four_year_start,
                                                            date_as__lte=item.date_as,
-                                                           code_id=item.code).aggregate(Min('p_end'))[0].p_end
+                                                           code_id=item.code).aggregate(Min('p_end'))["p_end__min"]
         # if codeNameItem.five_day == 0:
         #     return False
         return abs(item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
