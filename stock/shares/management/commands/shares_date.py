@@ -31,17 +31,14 @@ class Command(BaseCommand):
             sharesDate.save()
 
     def getAllDates(self):
-        url = "https://stock.xueqiu.com/v5/stock/chart/kline.json?symbol=SH000001&begin=1654363032092&period=day&type=before&count=-1&indicator=kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance"
+        url = "https://37.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid=1.000001&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=1&end=20500101&lmt=1&_=1654277588142"
         r = requests.get(url)
         print(r.json())
-        timeStamp = r.json()["data"]["item"][0][0] / 1000
-        tz = timezone(timedelta(hours=+8))
-        dateArray = datetime.astimezone(tz).fromisoformat(timeStamp)
-
-        otherStyleTime = dateArray.strftime("%Y-%m-%d")
-        print(otherStyleTime)
+        klines = r.json()["data"]["klines"][0]
+        klines = klines.split(",")[0]
+        print(klines)
         return [
-            SharesDate(date_as=otherStyleTime)
+            SharesDate(date_as=klines)
         ]
         # sql = '''
         #         select 1 as id, date_as from mc_shares where date_as >= '2022-03-31' group  by date_as ;
