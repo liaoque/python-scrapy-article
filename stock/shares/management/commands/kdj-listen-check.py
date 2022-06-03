@@ -183,7 +183,7 @@ class Command(BaseCommand):
         n = len(close) % 5
         if n == 0:
             n = 5
-        preEma = ((emaList[-1] + .01) * (n + 1) - (n - 1) * emaList[-1]) / 2 * 100
+        preEma = ((emaList[-1] + .01) * (n + 1) - (n - 1) * emaList[-1]) / 2
         print(shares[0], shares[-1], emaList[-1], todayPend, preEma)
         # 今天股价> 预测股价，则判断上升，且今天必须大于监控时间
         if todayPend >= preEma:
@@ -229,7 +229,7 @@ class Command(BaseCommand):
         item = Shares.objects.filter(code_id=code_id, date_as__gt=date_as).order_by('date_as')
         if len(item) == 0:
             return False, False
-        return item[0].p_end, item[0].date_as
+        return item[0].p_end / 100, item[0].date_as
         # sharesNameItem = SharesName.objects.filter(status=1, code_type=1, code=code_id)[0]
         # if sharesNameItem.area_id == 1:
         #     s_code = "1." + str(code_id)
