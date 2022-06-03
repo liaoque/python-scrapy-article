@@ -206,7 +206,7 @@ class Command(BaseCommand):
               s_code + '&cb=&klt=101&fqt=0&lmt=' + str(1) + \
               '&end=20500101&iscca=1&fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58'
         r = requests.get(url)
-        klines = r.json()["data"]["klines"][-1]
+        klines = r.json()["data"]["klines"][0]
         print(float(klines.split(',')[2]), klines.split(',')[0])
         return float(klines.split(',')[2]), klines.split(',')[0]
         pass
