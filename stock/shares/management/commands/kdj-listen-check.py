@@ -117,22 +117,22 @@ class Command(BaseCommand):
         for value in result:
             if key + 1 >= len(result):
                 break
-            # 倒锤头
-            hammerMax = max(sharesCollect[key].p_end, sharesCollect[key].p_start)
-            hammerMin = min(sharesCollect[key].p_end, sharesCollect[key].p_start)
-            hammerBody = math.fabs(sharesCollect[key].p_end - sharesCollect[key].p_start)
-            hammerHeader = math.fabs(sharesCollect[key].p_max - hammerMax)
-            hammerFooter = math.fabs(sharesCollect[key].p_min - hammerMin)
-            if hammerHeader < hammerBody and hammerBody * 2.5 < hammerFooter:
-                print("倒锤头%s--%s--%d---%d---%d", sharesCollect[key].date_as, codeItem.code_id,
-                      hammerHeader, hammerBody, hammerFooter)
-                item = value
-                break
-            if hammerFooter < hammerBody and hammerBody * 2.5 < hammerHeader:
-                print("锤头%s--%s--%d---%d---%d", sharesCollect[key].date_as, codeItem.code_id,
-                      hammerHeader, hammerBody, hammerFooter)
-                item = value
-                break
+            # # 倒锤头
+            # hammerMax = max(sharesCollect[key].p_end, sharesCollect[key].p_start)
+            # hammerMin = min(sharesCollect[key].p_end, sharesCollect[key].p_start)
+            # hammerBody = math.fabs(sharesCollect[key].p_end - sharesCollect[key].p_start)
+            # hammerHeader = math.fabs(sharesCollect[key].p_max - hammerMax)
+            # hammerFooter = math.fabs(sharesCollect[key].p_min - hammerMin)
+            # if hammerHeader < hammerBody and hammerBody * 2.5 < hammerFooter:
+            #     print("倒锤头%s--%s--%d---%d---%d", sharesCollect[key].date_as, codeItem.code_id,
+            #           hammerHeader, hammerBody, hammerFooter)
+            #     item = value
+            #     break
+            # if hammerFooter < hammerBody and hammerBody * 2.5 < hammerHeader:
+            #     print("锤头%s--%s--%d---%d---%d", sharesCollect[key].date_as, codeItem.code_id,
+            #           hammerHeader, hammerBody, hammerFooter)
+            #     item = value
+            #     break
 
             # kdj下跌
             if value.j < result[key + 1].j:
