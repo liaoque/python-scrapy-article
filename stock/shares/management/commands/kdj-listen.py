@@ -206,7 +206,7 @@ class Command(BaseCommand):
         return None, 0
 
     def checkPrice(self, item, codeNameItem):
-        print(item.__dict__, codeNameItem.__dict__)
+        # print(item.__dict__, codeNameItem.__dict__)
         if codeNameItem.five_day == 0:
             return False
         return abs(item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
