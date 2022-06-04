@@ -149,6 +149,7 @@ class Command(BaseCommand):
             return None, 0
 
         result2 = SharesIndustryKdj.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[:2]
+        print(result2)
         if result2[0].j < result2[1].j:
             return None, 0
 
