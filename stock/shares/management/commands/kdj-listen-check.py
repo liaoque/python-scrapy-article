@@ -166,6 +166,10 @@ class Command(BaseCommand):
         # if datetime.strptime(today, '%Y-%m-%d').date() > lastItem.date_as:
         #     return None, 0
 
+        item = Shares.objects.filter(code_id=codeItem.code_id, date_as=today)[0]
+        pre_ema = item.p_start * 100
+        return item, pre_ema
+
         # 判断上升标准
         # 计算ema
         # 按 date_as 从小到大 排序
