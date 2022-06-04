@@ -151,7 +151,7 @@ class Command(BaseCommand):
 
         sharesJoinIndustry = SharesJoinIndustry.objects.filter(code_id=codeItem.code_id)[0]
         result2 = SharesIndustryKdj.objects.filter(code_id=sharesJoinIndustry.industry_code_id, date_as__lt=date_as).order_by('-date_as')[:2]
-        if result2[0].j < result2[1].j:
+        if result2[0].d < result2[1].d:
             return None, 0
 
         # 最后一天股价
