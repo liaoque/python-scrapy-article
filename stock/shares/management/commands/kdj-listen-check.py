@@ -11,6 +11,7 @@ from shares.model.shares_hours import SharesHours
 from shares.model.shares_date_listen import SharesDateListen
 from shares.model.shares_macd import SharesMacd
 from shares.model.shares_industry_kdj import SharesIndustryKdj
+from shares.model.shares_industry_macd import SharesIndustryMacd
 from shares.model.shares_join_industry import SharesJoinIndustry
 from shares.model.shares_buys import SharesBuys
 from shares.model.shares_date import SharesDate
@@ -152,8 +153,12 @@ class Command(BaseCommand):
             return None, 0
 
         sharesJoinIndustry = SharesJoinIndustry.objects.filter(code_id=codeItem.code_id)[0]
-        result2 = SharesIndustryKdj.objects.filter(code_id=sharesJoinIndustry.industry_code_id, date_as__lt=date_as).order_by('-date_as')[:2]
-        if result2[0].d < result2[1].d:
+        # result2 = SharesIndustryKdj.objects.filter(code_id=sharesJoinIndustry.industry_code_id, date_as__lt=date_as).order_by('-date_as')[:2]
+        # if result2[0].d < result2[1].d:
+        #     return None, 0
+        result2 = SharesIndustryMacd.objects.filter(code_id=sharesJoinIndustry.industry_code_id,
+                                                   date_as__lt=date_as).order_by('-date_as')[:2]
+        if result2[0].dea < result2[1].dea:
             return None, 0
 
         # 最后一天股价
