@@ -7,6 +7,7 @@ from django.db.models import Count, Max, Min
 from shares.model.shares_name import SharesName
 from shares.model.shares_kdj import SharesKdj
 from shares.model.shares import Shares
+from shares.model.shares_hours import SharesHours
 from shares.model.shares_date_listen import SharesDateListen
 from shares.model.shares_macd import SharesMacd
 from shares.model.shares_industry_kdj import SharesIndustryKdj
@@ -51,7 +52,7 @@ class Command(BaseCommand):
 
         for item in self.dateList[-60:]:
             print(item.date_as.strftime("%Y-%m-%d"))
-            if item.date_as.strftime("%Y-%m-%d") <= '2022-03-31':
+            if item.date_as.strftime("%Y-%m-%d") <= '2022-04-15':
                 continue
 
             self.getkdj10(item.date_as)
@@ -167,9 +168,9 @@ class Command(BaseCommand):
         #     return None, 0
         if todayPend == None:
             return None, 0
-        item = Shares.objects.filter(code_id=codeItem.code_id, date_as=today)[0]
-        pre_ema = item.p_start
-        return item, pre_ema
+        # item = Shares.objects.filter(code_id=codeItem.code_id, date_as=today)[0]
+        # pre_ema = item.p_start
+        # return item, pre_ema
 
         # 判断上升标准
         # 计算ema
@@ -235,7 +236,9 @@ class Command(BaseCommand):
 
     def getTodayPend(self, code_id, date_as):
         #  第二天的股价
-        item = Shares.objects.filter(code_id=code_id, date_as=date_as)
+        date_as = date_as + timedelta(hours=+10.5)
+        print(date_as)
+        item = SharesHours.objects.filter(code_id=code_id, date_as=date_as)
         if len(item) == 0:
             return None, False
         return item[0].p_end / 100, item[0].date_as
