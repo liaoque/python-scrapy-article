@@ -61,7 +61,7 @@ class Command(BaseCommand):
             key = 0
             for item in macdDIFF1:
                 macdDIFF = macdDIFF1[key]
-                print(macdDIFF)
+                print(macdDIFF1,macdDIFF)
                 break
                 macdDEA = macdDEA1[key]
                 macd = macd1[key]
