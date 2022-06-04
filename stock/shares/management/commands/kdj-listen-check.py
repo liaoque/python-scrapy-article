@@ -54,7 +54,7 @@ class Command(BaseCommand):
 
         for item in self.dateList[-60:]:
             print(item.date_as.strftime("%Y-%m-%d"))
-            if item.date_as.strftime("%Y-%m-%d") <= '2022-04-15':
+            if item.date_as.strftime("%Y-%m-%d") <= '2022-04-01':
                 continue
 
             self.getkdj10(item.date_as)
