@@ -148,7 +148,7 @@ class Command(BaseCommand):
             return None, 0
 
         result2 = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[:2]
-        if result2[0] < result2[1]:
+        if result2[0].dea < result2[1].dea:
             return None, 0
 
         # 最后一天股价
