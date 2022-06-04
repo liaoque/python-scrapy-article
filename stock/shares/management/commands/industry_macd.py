@@ -72,7 +72,7 @@ class Command(BaseCommand):
                 b = SharesIndustryMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1,
                                        date_as=date_as)
                 b.save()
-                print(b)
+                print(b,key)
                 break
             break
             # SharesKdj
