@@ -167,7 +167,7 @@ class Command(BaseCommand):
         #     return None, 0
 
         item = Shares.objects.filter(code_id=codeItem.code_id, date_as=today)[0]
-        pre_ema = item.p_start * 100
+        pre_ema = item.p_start
         return item, pre_ema
 
         # 判断上升标准
