@@ -9,6 +9,7 @@ from shares.model.shares_industry_macd import SharesIndustryMacd
 import numpy as np
 import talib
 
+
 # " /bin/cp /alidata/python/python-scrapy-article/stock/* /alidata/python/python-scrapy-article-master/stock -rf"
 
 
@@ -28,7 +29,7 @@ class Command(BaseCommand):
 
     def calculateMacd(self, today):
         # today = '2021-12-27'
-        for item in SharesName.objects.filter(status=1,code_type=2):
+        for item in SharesName.objects.filter(status=1, code_type=2):
             # 写过了
             code = item.code
             sharesKdjList = SharesIndustryMacd.objects.filter(code_id=code, date_as=today)
@@ -57,16 +58,19 @@ class Command(BaseCommand):
             # 计算kdj
             print(code + "：" + date_as + "：开始计算macd")
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(itemList)
-            macdDIFF = macdDIFF1[-1:][0]
-            macdDEA = macdDEA1[-1:][0]
-            macd = macd1[-1:][0]
+            key = 0
+            for item in macdDIFF1:
+                macdDIFF = macdDIFF1[key][0]
+                macdDEA = macdDEA1[key][0]
+                macd = macd1[key][0]
+                key + 1
+                if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
+                    print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
+                    continue
 
-            if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
-                print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
-                continue
-
-            b = SharesIndustryMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1, date_as=date_as)
-            b.save()
+                b = SharesIndustryMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1,
+                                       date_as=date_as)
+                b.save()
             # SharesKdj
             # print(shares, ky, kj, kd, shares.code_id)
             # break
@@ -79,8 +83,3 @@ class Command(BaseCommand):
                                                 signalperiod=9, signalmatype=1)
         macd = macd * 2
         return (macdDIFF, macdDEA, macd)
-
-
-
-
-
