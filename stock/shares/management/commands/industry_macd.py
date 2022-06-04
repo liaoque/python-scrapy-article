@@ -74,7 +74,7 @@ class Command(BaseCommand):
                 b.save()
                 # print(b,key)
                 # break
-            break
+            # break
             # SharesKdj
             # print(shares, ky, kj, kd, shares.code_id)
             # break
