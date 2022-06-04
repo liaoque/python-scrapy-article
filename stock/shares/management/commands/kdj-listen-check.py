@@ -165,7 +165,8 @@ class Command(BaseCommand):
         todayPend, today = self.getTodayPend(codeItem.code_id, date_as)
         # if datetime.strptime(today, '%Y-%m-%d').date() > lastItem.date_as:
         #     return None, 0
-
+        if todayPend == None:
+            return None, 0
         item = Shares.objects.filter(code_id=codeItem.code_id, date_as=today)[0]
         pre_ema = item.p_start
         return item, pre_ema
@@ -236,7 +237,7 @@ class Command(BaseCommand):
         #  第二天的股价
         item = Shares.objects.filter(code_id=code_id, date_as=date_as)
         if len(item) == 0:
-            return False, False
+            return None, False
         return item[0].p_end / 100, item[0].date_as
         # sharesNameItem = SharesName.objects.filter(status=1, code_type=1, code=code_id)[0]
         # if sharesNameItem.area_id == 1:
