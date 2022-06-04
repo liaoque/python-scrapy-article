@@ -147,6 +147,10 @@ class Command(BaseCommand):
         if len(result) < 30:
             return None, 0
 
+        result2 = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[:2]
+        if result2[0] < result2[1]:
+            return None, 0
+
         # 最后一天股价
         # 昨天股价有没有到支撑位
         lastItem = result[0]
@@ -200,7 +204,6 @@ class Command(BaseCommand):
         codeNameItem.five_day = Shares.objects.filter(date_as__gte=five_start,
                                                       date_as__lte=item.date_as,
                                                       code_id=item.code).aggregate(Min('p_end'))["p_end__min"]
-        return abs(item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01
         codeNameItem.twenty_day = Shares.objects.filter(date_as__gte=twenty_start,
                                                         date_as__lte=item.date_as,
                                                         code_id=item.code).aggregate(Min('p_end'))["p_end__min"]
