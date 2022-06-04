@@ -18,4 +18,4 @@ class SharesIndustryKdj(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.name
+        return self.code_id + ": " + str(self.j)
