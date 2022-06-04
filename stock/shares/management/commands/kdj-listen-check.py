@@ -199,7 +199,7 @@ class Command(BaseCommand):
         if todayPend >= preEma:
             item = Shares.objects.filter(code_id=codeItem.code_id, date_as=today)[0]
             pre_ema = preEma * 100
-            return item, pre_ema
+            return item, todayPend * 100
         return None, 0
 
     def checkPrice(self, item, codeNameItem):
