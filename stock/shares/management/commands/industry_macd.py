@@ -60,9 +60,9 @@ class Command(BaseCommand):
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(itemList)
             key = 0
             for item in macdDIFF1:
-                macdDIFF = macdDIFF1[key][0]
-                macdDEA = macdDEA1[key][0]
-                macd = macd1[key][0]
+                macdDIFF = macdDIFF1[key]
+                macdDEA = macdDEA1[key]
+                macd = macd1[key]
                 key + 1
                 if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
                     print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
