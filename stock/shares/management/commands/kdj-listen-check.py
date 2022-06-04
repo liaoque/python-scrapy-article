@@ -17,6 +17,7 @@ from shares.model.shares_date import SharesDate
 import numpy as np
 import talib
 import math
+import sys
 
 
 # 校验的
@@ -238,6 +239,7 @@ class Command(BaseCommand):
         #  第二天的股价
         date_as = date_as + timedelta(hours=+10.5)
         print(date_as)
+        sys.exit(0)
         item = SharesHours.objects.filter(code_id=code_id, date_as=date_as)
         if len(item) == 0:
             return None, False
