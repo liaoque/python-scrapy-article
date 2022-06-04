@@ -9,6 +9,7 @@ from shares.model.shares_kdj import SharesKdj
 from shares.model.shares import Shares
 from shares.model.shares_date_listen import SharesDateListen
 from shares.model.shares_macd import SharesMacd
+from shares.model.shares_industry_kdj import SharesIndustryKdj
 from shares.model.shares_buys import SharesBuys
 from shares.model.shares_date import SharesDate
 import numpy as np
@@ -147,8 +148,8 @@ class Command(BaseCommand):
         if len(result) < 30:
             return None, 0
 
-        result2 = SharesMacd.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[:2]
-        if result2[0].dea < result2[1].dea:
+        result2 = SharesIndustryKdj.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')[:2]
+        if result2[0].j < result2[1].j:
             return None, 0
 
         # 最后一天股价
