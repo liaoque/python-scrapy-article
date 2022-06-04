@@ -61,8 +61,7 @@ class Command(BaseCommand):
             key = 0
             for item in macdDIFF1:
                 macdDIFF = macdDIFF1[key]
-                print(macdDIFF1,macdDIFF)
-                break
+
                 macdDEA = macdDEA1[key]
                 macd = macd1[key]
                 key += 1
@@ -73,6 +72,9 @@ class Command(BaseCommand):
                 b = SharesIndustryMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1,
                                        date_as=date_as)
                 b.save()
+                print(b)
+                break
+            break
             # SharesKdj
             # print(shares, ky, kj, kd, shares.code_id)
             # break
