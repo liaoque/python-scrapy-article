@@ -237,9 +237,7 @@ class Command(BaseCommand):
 
     def getTodayPend(self, code_id, date_as):
         #  第二天的股价
-        date_as = date_as + timedelta(hours=+10.5)
-        print(date_as)
-        sys.exit(0)
+        date_as = date_as.strftime("%Y-%m-%d")+ " 10:30:00"
         item = SharesHours.objects.filter(code_id=code_id, date_as=date_as)
         if len(item) == 0:
             return None, False
