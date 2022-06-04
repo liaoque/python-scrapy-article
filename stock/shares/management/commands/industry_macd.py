@@ -70,7 +70,7 @@ class Command(BaseCommand):
                     continue
 
                 b = SharesIndustryMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1,
-                                       date_as=date_as)
+                                       date_as=item.date_as)
                 b.save()
                 # print(b,key)
                 # break
