@@ -200,6 +200,7 @@ class Command(BaseCommand):
         codeNameItem.five_day = Shares.objects.filter(date_as__gte=five_start,
                                                       date_as__lte=item.date_as,
                                                       code_id=item.code).aggregate(Min('p_end'))["p_end__min"]
+        return abs(item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01
         codeNameItem.twenty_day = Shares.objects.filter(date_as__gte=twenty_start,
                                                         date_as__lte=item.date_as,
                                                         code_id=item.code).aggregate(Min('p_end'))["p_end__min"]
