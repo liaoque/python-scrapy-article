@@ -67,7 +67,7 @@ class Command(BaseCommand):
                     print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
                     # if codeItem.code_id in industryCodeList:
                     #     send_data['buy'].append(codeItem.code_id)
-                    send_data['buy'].append(codeItem)
+                    send_data['buy'].append(codeItemResult)
 
                 pass
 
@@ -191,11 +191,13 @@ class Command(BaseCommand):
         if n == 0:
             n = 5
         preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
+        pre_ema = preEma * 100
         item = Shares(
             code_id=codeItem.code_id,
-            date_as=date_as + timedelta(hours=+8)
+            date_as=date_as + timedelta(hours=+8),
+            buy_pre=pre_ema
         )
-        pre_ema = preEma * 100
+
         return item, pre_ema
 
     def checkPrice(self, item, codeNameItem):
