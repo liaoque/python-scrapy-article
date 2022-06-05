@@ -322,11 +322,11 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
 
     def sendMessage(self, send_data):
         tz = timezone(timedelta(hours=+8))
-        str = "找到买入点：%s\n 找到卖出点：%s\n" % (
+        str_con = "找到买入点：%s\n 找到卖出点：%s\n" % (
             "\",\"".join(send_data['buy']), "\",\"".join(send_data['sell']))
         send_mail(
             '特别提醒%s' % (datetime.now(tz)),
-            str,
+            str_con,
             'lovemeand1314@163.com',
             ['844596330@qq.com'],
             fail_silently=False,
