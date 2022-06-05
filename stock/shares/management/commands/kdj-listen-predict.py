@@ -38,8 +38,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         tz = timezone(timedelta(hours=+8))
-        if datetime.today().astimezone(tz).weekday() >= 5:
-            return
+        # if datetime.today().astimezone(tz).weekday() >= 5:
+        #     return
 
         print("开始计算-----")
         dateList = self.getAllDates()
