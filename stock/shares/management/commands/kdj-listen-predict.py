@@ -153,7 +153,8 @@ class Command(BaseCommand):
         if len(ban):
             return None, 0
 
-        result = Shares.objects.filter(code_id=codeItem.code_id, date_as__lt=date_as).order_by('-date_as')
+        # 包括当天五日最低价
+        result = Shares.objects.filter(code_id=codeItem.code_id, date_as__lte=date_as).order_by('-date_as')
         if len(result) < 30:
             return None, 0
 
