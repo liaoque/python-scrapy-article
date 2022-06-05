@@ -192,7 +192,7 @@ class Command(BaseCommand):
             n = 5
         preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
         pre_ema = preEma * 100
-        item = shares(
+        item = Shares(
             code_id=codeItem.code_id,
             date_as=date_as + timedelta(hours=+8),
             p_end=pre_ema
