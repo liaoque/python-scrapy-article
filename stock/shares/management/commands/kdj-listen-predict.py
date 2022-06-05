@@ -28,7 +28,7 @@ import requests
 # 3. 判断 j 下调走势作为卖点，或者3天强制卖出
 
 class Command(BaseCommand):
-    help = '记录每天-10以下的kdj股票'
+    help = '记录每天-10以下的kdj股票，给予买入建议'
 
     codeList = []
 
@@ -67,13 +67,8 @@ class Command(BaseCommand):
                     print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
                     # if codeItem.code_id in industryCodeList:
                     #     send_data['buy'].append(codeItem.code_id)
-                    send_data['buy'].append(codeItem.code_id)
-                    if datetime.now(tz).hour < 14:
-                        continue
-                    codeItem.buy_date_as = codeItemResult.date_as
-                    codeItem.buy_pre = buy_pre
-                    codeItem.buy_start = sharesItem.p_end
-                    codeItem.save()
+                    send_data['buy'].append(codeItem)
+
                 pass
 
             allCodeIds = SharesDateListen.objects.filter(buy_start__gt=0)
@@ -86,7 +81,7 @@ class Command(BaseCommand):
                 print("找到卖出点--%s--%s---%s", codeItemResult.date_as, codeItem.code_id, sharesItem.p_end)
                 # if codeItem.code_id in industryCodeList:
                 #     send_data['sell'].append(codeItem.code_id)
-                send_data['sell'].append(codeItem.code_id)
+                send_data['sell'].append(codeItem)
                 if datetime.now(tz).hour < 15:
                     continue
                 buys = SharesBuys(
@@ -169,10 +164,10 @@ class Command(BaseCommand):
         if not self.checkPrice(lastItem, codeNameItem):
             return None, 0
 
-        # 预计今天的股价最低的涨幅的估计
-        todayPend, today = self.getTodayPend(codeItem.code_id, date_as)
-        if todayPend == None:
-            return None, 0
+        # # 预计今天的股价最低的涨幅的估计
+        # todayPend, today = self.getTodayPend(codeItem.code_id, date_as)
+        # if todayPend == None:
+        #     return None, 0
 
         # 判断上升标准
         # 计算ema
@@ -196,16 +191,12 @@ class Command(BaseCommand):
         if n == 0:
             n = 5
         preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
-
-        # 今天股价> 预测股价，则判断上升，且今天必须大于监控时间
-        if todayPend >= preEma:
-            item = Shares(
-                code_id=codeItem.code_id,
-                date_as=today
-            )
-            pre_ema = preEma * 100
-            return item, pre_ema
-        return None, 0
+        item = Shares(
+            code_id=codeItem.code_id,
+            date_as=date_as + timedelta(hours=+8)
+        )
+        pre_ema = preEma * 100
+        return item, pre_ema
 
     def checkPrice(self, item, codeNameItem):
         # print(item.__dict__, codeNameItem.__dict__)
@@ -323,7 +314,12 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
     def sendMessage(self, send_data):
         tz = timezone(timedelta(hours=+8))
         str = "找到买入点：%s\n 找到卖出点：%s\n" % (
-            "\",\"".join(send_data['buy']), "\",\"".join(send_data['sell']))
+            "\",\"".join([item.code_id for item in send_data['buy']]),
+            "\",\"".join([item.code_id for item in send_data['sell']]))
+
+        str += "参考价格：%s\n"(
+            "\",\"".join([item.code_id + "：" + str(item.buy_pre)  for item in send_data['buy']])
+        )
         send_mail(
             '特别提醒%s' % (datetime.now(tz)),
             str,
