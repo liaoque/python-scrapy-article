@@ -192,10 +192,10 @@ class Command(BaseCommand):
             n = 5
         preEma = ((emaList[-1] + .01) * (5 + 1) - (5 - 1) * emaList[-1]) / 2
         pre_ema = preEma * 100
-        item = object(
+        item = shares(
             code_id=codeItem.code_id,
             date_as=date_as + timedelta(hours=+8),
-            buy_pre=pre_ema
+            p_end=pre_ema
         )
 
         return item, pre_ema
@@ -320,7 +320,7 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
             "\",\"".join([item.code_id for item in send_data['sell']]))
 
         str_con += "参考价格：%s\n" % (
-            "\",\"".join([item.code_id + "：" + str(item.buy_pre) for item in send_data['buy']])
+            "\",\"".join([item.code_id + "：" + str(item.p_end) for item in send_data['buy']])
         )
         send_mail(
             '特别提醒%s' % (datetime.now(tz)),
