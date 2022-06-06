@@ -63,14 +63,13 @@ class Command(BaseCommand):
                 # codeItem.date_as = item.date_as
                 codeItemResult, buy_pre = self.findBuyPoint(codeItem, item.date_as)
                 if codeItemResult != None:
-
+                    print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as)
                     # if codeItem.code_id in industryCodeList:
                     #     send_data['buy'].append(codeItem.code_id)
                     send_data['buy'].append(codeItem.code_id)
                     if datetime.now(tz).hour < 14:
                         continue
                     sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                    print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
                     codeItem.buy_date_as = codeItemResult.date_as
                     codeItem.buy_pre = buy_pre
                     codeItem.buy_start = sharesItem.p_end
