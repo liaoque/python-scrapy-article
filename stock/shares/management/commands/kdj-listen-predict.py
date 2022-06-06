@@ -321,7 +321,7 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
             "\",\"".join([item.code_id for item in send_data['sell']]))
 
         str_con += "参考价格：%s\n" % (
-            "\",\"".join([item.code_id + "：" + str(item.p_end) for item in send_data['buy']])
+            "\"\n\"".join([item.code_id + "：" + str(item.p_end) for item in send_data['buy']])
         )
         send_mail(
             '特别提醒%s' % (datetime.now(tz)),
