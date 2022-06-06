@@ -69,10 +69,10 @@ class Command(BaseCommand):
                     send_data['buy'].append(codeItem.code_id)
                     if datetime.now(tz).hour < 14:
                         continue
-                    sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
+                    # sharesItem = Shares.objects.filter(date_as=item.date_as, code_id=codeItem.code_id)[0]
                     codeItem.buy_date_as = codeItemResult.date_as
-                    codeItem.buy_pre = buy_pre
-                    codeItem.buy_start = sharesItem.p_end
+                    codeItem.buy_pre = codeItemResult.buy_pre
+                    codeItem.buy_start = codeItemResult.buy_start
                     codeItem.save()
                 pass
 
@@ -199,11 +199,13 @@ class Command(BaseCommand):
 
         # 今天股价> 预测股价，则判断上升，且今天必须大于监控时间
         if todayPend >= preEma:
-            item = Shares(
-                code_id=codeItem.code_id,
-                date_as=today
-            )
             pre_ema = preEma * 100
+            item = SharesBuyItem(
+                code_id=codeItem.code_id,
+                buy_start=todayPend,
+                buy_pre=pre_ema,
+                buy_date_as=today
+            )
             return item, pre_ema
         return None, 0
 
@@ -331,3 +333,16 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
             ['844596330@qq.com'],
             fail_silently=False,
         )
+
+
+class SharesBuyItem:
+    buy_date_as = 0
+    buy_start = 0
+    buy_pre = 0
+    code_id = '0'
+
+    def __init__(self, code_id, buy_start, buy_pre, buy_date_as):
+        self.code_id = code_id
+        self.buy_start = buy_start
+        self.buy_pre = buy_pre
+        self.buy_date_as = buy_date_as
