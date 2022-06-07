@@ -47,10 +47,12 @@ class Command(BaseCommand):
             for three in aggregate_list[2:]:
                 key = "%s-%s-%s" % (one, two, three)
                 d = aggregate[one].intersection(aggregate[two], aggregate[three])
+                if '885954' == one and two == '885403' and '885841' == three:
+                    print(key, d, aggregate[one], aggregate[two], aggregate[three])
                 if d is None:
                     continue
                 l[key] = d
-                print(key, l[key], aggregate[one], aggregate[two], aggregate[three])
+
                 sys.exit(0)
                 break
         print(l)
