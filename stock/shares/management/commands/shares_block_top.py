@@ -61,7 +61,7 @@ class Command(BaseCommand):
             # break
         l2 = {key: len(l[key]) for key in l if l[key] is not None}
         res = sorted(l2.items(),key=lambda d:d[1], reverse=True)
-        print(res)
+        print(res[:10])
         # result = list(filter(lambda n: n.code_id in self.codeList, result))
         # l2 = {key: len(l[key]) for key in l if l[key] is not None}
         # print(l2)
