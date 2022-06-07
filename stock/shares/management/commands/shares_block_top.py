@@ -55,7 +55,7 @@ class Command(BaseCommand):
                 if key3 == slen:
                     continue
                 for three in aggregate_list[key3:]:
-                    key =  (one, two, three)
+                    key = (one, two, three)
                     d = aggregate[one].intersection(aggregate[two], aggregate[three])
                     if '885954' == one and two == '885403' and '885841' == three:
                         print(key, d, aggregate[one], aggregate[two], aggregate[three])
