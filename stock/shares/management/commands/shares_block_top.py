@@ -59,8 +59,9 @@ class Command(BaseCommand):
             ite += 1
             # sys.exit(0)
             # break
-        # print(l)
+        res = sorted(l.items(),key=lambda d:d[1], reverse=True)
+        print(res)
         # result = list(filter(lambda n: n.code_id in self.codeList, result))
-        l2 = {key: len(l[key]) for key in l if l[key] is not None}
-        print(l2)
+        # l2 = {key: len(l[key]) for key in l if l[key] is not None}
+        # print(l2)
         # print([{key: len(l[key])} for key in l])
