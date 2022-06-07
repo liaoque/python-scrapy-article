@@ -76,7 +76,7 @@ class Command(BaseCommand):
         all = {item.code: item.name for item in all}
         l2 = {key: len(l[key]) for key in l if l[key] is not None}
         res = sorted(l2.items(), key=lambda d: d[1], reverse=True)
-        for item in res[:10]:
+        for item in res[:20]:
             print({n: all[n] for n in item[0]}, l[item[0]])
 
         # print(res[:10])
