@@ -48,6 +48,6 @@ class Command(BaseCommand):
                 l[key] = aggregate[one].intersection_update(aggregate[two], aggregate[three])
 
         # result = list(filter(lambda n: n.code_id in self.codeList, result))
-        l = list(filter(lambda n: n, l))
-        print(l)
+        l2 = {key: len(l[key]) for key in l if l[key] is not None}
+        print(l2)
         # print([{key: len(l[key])} for key in l])
