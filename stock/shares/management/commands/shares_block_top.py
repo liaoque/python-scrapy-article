@@ -37,6 +37,8 @@ class Command(BaseCommand):
                 aggregate[item.block_code_id] = set()
             aggregate[item.block_code_id].add(item.code_id)
             aggregate_list.append(item.block_code_id)
+        self.translate(aggregate_list, aggregate)
+
 
     def translate(self, aggregate_list, aggregate):
         one = aggregate_list[0]
