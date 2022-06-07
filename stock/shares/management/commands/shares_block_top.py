@@ -46,7 +46,7 @@ class Command(BaseCommand):
         for two in aggregate_list[1:]:
             for three in aggregate_list[2:]:
                 key = "%s-%s-%s" % (one, two, three)
-                d = aggregate[one].intersection_update(aggregate[two], aggregate[three])
+                d = aggregate[one].intersection(aggregate[two], aggregate[three])
                 if d is None:
                     continue
                 l[key] = d
