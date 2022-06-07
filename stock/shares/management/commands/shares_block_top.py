@@ -29,6 +29,7 @@ class Command(BaseCommand):
             and code_type = 1
             and mc_shares.p_end > mc_shares.p_start 
             and (mc_shares.p_end - mc_shares.p_start) / mc_shares.p_start >= 0.05
+            and mc_shares_join_block.block_code_id not in ('BK0815', 'BK1050')
         """
         aggregate = {}
         aggregate_list = []
@@ -46,8 +47,8 @@ class Command(BaseCommand):
         ite = 0
         for one in aggregate_list:
             key2 = ite + 1
-            key3 = ite + 2
             for two in aggregate_list[key2:]:
+                key3 = key2 + 1
                 for three in aggregate_list[key3:]:
                     key = "%s-%s-%s" % (one, two, three)
                     d = aggregate[one].intersection(aggregate[two], aggregate[three])
