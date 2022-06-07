@@ -39,7 +39,6 @@ class Command(BaseCommand):
             aggregate_list.append(item.block_code_id)
         self.translate(aggregate_list, aggregate)
 
-
     def translate(self, aggregate_list, aggregate):
         one = aggregate_list[0]
         l = {}
@@ -48,4 +47,4 @@ class Command(BaseCommand):
                 key = "%s-%s-%s" % (one, two, three)
                 l[key] = aggregate[one].intersection_update(aggregate[two], aggregate[three])
 
-        print(l)
+        print([{item: len(l[item])} for item in l])
