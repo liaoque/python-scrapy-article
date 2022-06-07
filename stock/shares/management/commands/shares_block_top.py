@@ -22,7 +22,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         sql = """
-        select mc_shares_join_block.block_code_id, mc_shares.code_id 
+        select 1 as id, mc_shares_join_block.block_code_id, mc_shares.code_id 
         from mc_shares_join_block 
         left join mc_shares on mc_shares.code_id = mc_shares_join_block.code_id 
         where mc_shares.date_as = %s 
