@@ -32,7 +32,7 @@ class Command(BaseCommand):
             and mc_shares_join_block.block_code_id not in (
             'BK0815', 'BK1050', 'BK0596', 'BK0879', 'BK0971', 'BK0501', 'BK0701', 
             'BK0707', 'BK0804','BK0867','BK0816','BK0571','BK1051','BK0817',
-            'BK0570', 'BK0552'
+            'BK0570', 'BK0552', 'BK0705'
             )
         """
         aggregate = {}
