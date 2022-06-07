@@ -26,6 +26,7 @@ class Command(BaseCommand):
         from mc_shares_join_block 
         left join mc_shares on mc_shares.code_id = mc_shares_join_block.code_id 
         where mc_shares.date_as = %s 
+            and code_type = 2
             and mc_shares.p_end > mc_shares.p_start 
             and (mc_shares.p_end - mc_shares.p_start) / mc_shares.p_start >= 0.05
         """
@@ -46,7 +47,7 @@ class Command(BaseCommand):
             for three in aggregate_list[2:]:
                 key = "%s-%s-%s" % (one, two, three)
                 l[key] = aggregate[one].intersection_update(aggregate[two], aggregate[three])
-                print(key,aggregate[one], aggregate[two], aggregate[three])
+                print(key, l[key], aggregate[one], aggregate[two], aggregate[three])
                 break
         print(l)
         # result = list(filter(lambda n: n.code_id in self.codeList, result))
