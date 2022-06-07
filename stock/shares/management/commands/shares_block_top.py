@@ -43,10 +43,10 @@ class Command(BaseCommand):
     def translate(self, aggregate_list, aggregate):
         aggregate_list = list(set(aggregate_list))
         l = {}
-        key = 0
+        ite = 0
         for one in aggregate_list:
-            key2 = key + 1
-            key3 = key + 2
+            key2 = ite + 1
+            key3 = ite + 2
             for two in aggregate_list[key2:]:
                 for three in aggregate_list[key3:]:
                     key = "%s-%s-%s" % (one, two, three)
@@ -56,7 +56,7 @@ class Command(BaseCommand):
                     if d is None or len(d) == 0:
                         continue
                     l[key] = d
-            key += 1
+            ite += 1
             # sys.exit(0)
             # break
         # print(l)
