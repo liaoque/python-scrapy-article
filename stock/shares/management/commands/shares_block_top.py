@@ -47,4 +47,7 @@ class Command(BaseCommand):
                 key = "%s-%s-%s" % (one, two, three)
                 l[key] = aggregate[one].intersection_update(aggregate[two], aggregate[three])
 
-        print([{item: len(l[item])} for item in l])
+        # result = list(filter(lambda n: n.code_id in self.codeList, result))
+        l = filter(lambda n: n, l)
+        print(l)
+        # print([{key: len(l[key])} for key in l])
