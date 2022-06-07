@@ -49,7 +49,7 @@ class Command(BaseCommand):
                 d = aggregate[one].intersection(aggregate[two], aggregate[three])
                 if '885954' == one and two == '885403' and '885841' == three:
                     print(key, d, aggregate[one], aggregate[two], aggregate[three])
-                if d is None:
+                if d is None or len(d) == 0:
                     continue
                 l[key] = d
 
