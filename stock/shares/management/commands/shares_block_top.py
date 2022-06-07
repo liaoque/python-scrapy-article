@@ -41,7 +41,7 @@ class Command(BaseCommand):
         self.translate(aggregate_list, aggregate)
 
     def translate(self, aggregate_list, aggregate):
-        one = aggregate_list[0]
+        aggregate_list = list(set(aggregate_list))
         l = {}
         key = 0
         for one in aggregate_list:
