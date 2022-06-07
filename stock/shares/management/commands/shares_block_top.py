@@ -33,7 +33,7 @@ class Command(BaseCommand):
         aggregate_list = []
         result = Shares.objects.raw(sql, params=(date.today().strftime("%Y-%m-%d"),))
         for item in result:
-            if item.block_id not in list:
+            if item.block_code_id not in list:
                 aggregate[item.block_code_id] = set()
             aggregate[item.block_code_id].add(item.code_id)
             aggregate_list.append(item.block_code_id)
