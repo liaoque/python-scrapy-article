@@ -45,10 +45,15 @@ class Command(BaseCommand):
         aggregate_list = list(set(aggregate_list))
         l = {}
         ite = 0
+        slen = len(aggregate_list)
         for one in aggregate_list:
             key2 = ite + 1
+            if key2 == slen:
+                continue
             for two in aggregate_list[key2:]:
                 key3 = key2 + 1
+                if key3 == slen:
+                    continue
                 for three in aggregate_list[key3:]:
                     key = "%s-%s-%s" % (one, two, three)
                     d = aggregate[one].intersection(aggregate[two], aggregate[three])
@@ -61,8 +66,8 @@ class Command(BaseCommand):
             # sys.exit(0)
             # break
         l2 = {key: len(l[key]) for key in l if l[key] is not None}
-        res = sorted(l2.items(),key=lambda d:d[1], reverse=True)
-        for item  in res[:10]:
+        res = sorted(l2.items(), key=lambda d: d[1], reverse=True)
+        for item in res[:10]:
             print(item, res[item], l2[item])
 
         # print(res[:10])
