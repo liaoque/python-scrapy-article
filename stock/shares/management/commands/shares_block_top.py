@@ -12,7 +12,7 @@ import time
 
 # import numpy as np
 # import talib
-# import sys
+import sys
 
 # 统计上班年和下班的 最高和最低
 
@@ -48,6 +48,7 @@ class Command(BaseCommand):
                 key = "%s-%s-%s" % (one, two, three)
                 l[key] = aggregate[one].intersection_update(aggregate[two], aggregate[three])
                 print(key, l[key], aggregate[one], aggregate[two], aggregate[three])
+                sys.exit(0)
                 break
         print(l)
         # result = list(filter(lambda n: n.code_id in self.codeList, result))
