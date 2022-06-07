@@ -1,0 +1,50 @@
+import numpy as np
+from datetime import datetime, date
+from django.core.management.base import BaseCommand, CommandError
+from django.db.models import Count, Max, Min
+
+# from ....polls.models import Question as Poll
+from shares.model.shares_name import SharesName
+from shares.model.shares import Shares
+from shares.model.shares_season import SharesSeason
+import time
+
+
+# import numpy as np
+# import talib
+# import sys
+
+# 统计上班年和下班的 最高和最低
+
+
+class Command(BaseCommand):
+    help = '板块排行'
+
+    def handle(self, *args, **options):
+        sql = """
+        select mc_shares_join_block.block_code_id, mc_shares.code_id 
+        from mc_shares_join_block 
+        left join mc_shares on mc_shares.code_id = mc_shares_join_block.code_id 
+        where mc_shares.date_as = %s 
+            and mc_shares.p_end > mc_shares.p_start 
+            and (mc_shares.p_end - mc_shares.p_start) / mc_shares.p_start >= 0.05
+        """
+        aggregate = {}
+        aggregate_list = []
+        result = SharesName.objects.raw(sql, params=(date.today().strftime("%Y-%m-%d")))
+        for item in result:
+            if item.block_id not in list:
+                aggregate[item.block_code_id] = set()
+            aggregate[item.block_code_id].add(item.code_id)
+            aggregate_list.append(item.block_code_id)
+
+    def translate(self, aggregate_list, aggregate):
+        one = aggregate_list[0]
+        l = {}
+        for two in aggregate_list[1:]:
+            for three in aggregate_list[2:]:
+                key = "%s-%s-%s" % (one, two, three)
+                l[key] = aggregate[one].intersection_update(aggregate[two], aggregate[three])
+
+        print(l)
+
