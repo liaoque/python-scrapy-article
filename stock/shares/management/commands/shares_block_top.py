@@ -66,12 +66,12 @@ class Command(BaseCommand):
             # sys.exit(0)
             # break
 
-        # all = SharesName.objects.all()
-        # all = {item.code: item.name for item in all}
+        all = SharesName.objects.filter(code_type=3)
+        all = {item.code: item.name for item in all}
         l2 = {key: len(l[key]) for key in l if l[key] is not None}
         res = sorted(l2.items(), key=lambda d: d[1], reverse=True)
         for item in res[:10]:
-            print(item, l[item[0]])
+            print({n: all[n] for n in item[0]}, l[item[0]])
 
         # print(res[:10])
         # result = list(filter(lambda n: n.code_id in self.codeList, result))
