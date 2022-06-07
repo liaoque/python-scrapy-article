@@ -62,6 +62,7 @@ class Command(BaseCommand):
                     if d is None or len(d) < 2:
                         continue
                     l[key] = d
+                key2 += 1
             ite += 1
             # sys.exit(0)
             # break
