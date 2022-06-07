@@ -46,8 +46,8 @@ class Command(BaseCommand):
         key = 0
         for one in aggregate_list:
             key2 = key + 1
+            key3 = key + 2
             for two in aggregate_list[key2:]:
-                key3 = key + 2
                 for three in aggregate_list[key3:]:
                     key = "%s-%s-%s" % (one, two, three)
                     d = aggregate[one].intersection(aggregate[two], aggregate[three])
