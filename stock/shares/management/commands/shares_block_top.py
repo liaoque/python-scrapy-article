@@ -53,8 +53,8 @@ class Command(BaseCommand):
                     continue
                 l[key] = d
 
-                sys.exit(0)
-                break
+                # sys.exit(0)
+                # break
         print(l)
         # result = list(filter(lambda n: n.code_id in self.codeList, result))
         l2 = {key: len(l[key]) for key in l if l[key] is not None}
