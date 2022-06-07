@@ -55,7 +55,7 @@ class Command(BaseCommand):
                 if key3 == slen:
                     continue
                 for three in aggregate_list[key3:]:
-                    key = "%s-%s-%s" % (one, two, three)
+                    key =  (one, two, three)
                     d = aggregate[one].intersection(aggregate[two], aggregate[three])
                     if '885954' == one and two == '885403' and '885841' == three:
                         print(key, d, aggregate[one], aggregate[two], aggregate[three])
@@ -65,6 +65,9 @@ class Command(BaseCommand):
             ite += 1
             # sys.exit(0)
             # break
+
+        # all = SharesName.objects.all()
+        # all = {item.code: item.name for item in all}
         l2 = {key: len(l[key]) for key in l if l[key] is not None}
         res = sorted(l2.items(), key=lambda d: d[1], reverse=True)
         for item in res[:10]:
