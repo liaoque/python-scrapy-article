@@ -43,15 +43,16 @@ class Command(BaseCommand):
     def translate(self, aggregate_list, aggregate):
         one = aggregate_list[0]
         l = {}
-        for two in aggregate_list[1:]:
-            for three in aggregate_list[2:]:
-                key = "%s-%s-%s" % (one, two, three)
-                d = aggregate[one].intersection(aggregate[two], aggregate[three])
-                if '885954' == one and two == '885403' and '885841' == three:
-                    print(key, d, aggregate[one], aggregate[two], aggregate[three])
-                if d is None or len(d) == 0:
-                    continue
-                l[key] = d
+        for one in aggregate_list:
+            for two in aggregate_list[1:]:
+                for three in aggregate_list[2:]:
+                    key = "%s-%s-%s" % (one, two, three)
+                    d = aggregate[one].intersection(aggregate[two], aggregate[three])
+                    if '885954' == one and two == '885403' and '885841' == three:
+                        print(key, d, aggregate[one], aggregate[two], aggregate[three])
+                    if d is None or len(d) == 0:
+                        continue
+                    l[key] = d
 
                 # sys.exit(0)
                 # break
