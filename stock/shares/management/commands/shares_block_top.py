@@ -26,7 +26,7 @@ class Command(BaseCommand):
         from mc_shares_join_block 
         left join mc_shares on mc_shares.code_id = mc_shares_join_block.code_id 
         where mc_shares.date_as = %s 
-            and code_type = 2
+            and code_type = 1
             and mc_shares.p_end > mc_shares.p_start 
             and (mc_shares.p_end - mc_shares.p_start) / mc_shares.p_start >= 0.05
         """
