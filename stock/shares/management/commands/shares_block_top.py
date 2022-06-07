@@ -46,6 +46,7 @@ class Command(BaseCommand):
             for three in aggregate_list[2:]:
                 key = "%s-%s-%s" % (one, two, three)
                 l[key] = aggregate[one].intersection_update(aggregate[two], aggregate[three])
+                print(key,aggregate[one], aggregate[two], aggregate[three])
                 break
         print(l)
         # result = list(filter(lambda n: n.code_id in self.codeList, result))
