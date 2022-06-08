@@ -75,46 +75,39 @@ class Command(BaseCommand):
         #     ",".join(["\"" + item.code_id + "\"" for item in result])
         # )
 
-        for item in SharesName.objects.filter(status=1, code_type=1, ):
-            stockMemberList = self.getStockMember(item)
-            for item2 in stockMemberList:
-                date_as = datetime.strptime(item2['END_DATE'], '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
-                itemSharesMembers = SharesMembers.objects.filter(code_id=item.code, date_as=date_as)
-                if len(itemSharesMembers) > 0:
-                    continue
-                if item2['HOLDER_TOTAL_NUM'] is None:
-                    item2['HOLDER_TOTAL_NUM'] = 0
-                if item2['HOLD_FOCUS'] is None:
-                    item2['HOLD_FOCUS'] = ''
-                if item2['PRICE'] is None:
-                    item2['PRICE'] = 0
-                if item2['AVG_FREE_SHARES'] is None:
-                    item2['AVG_FREE_SHARES'] = 0
-                itemSharesMembers = SharesMembers(
-                    code_id=item.code, date_as=date_as,
-                    members=item2['HOLDER_TOTAL_NUM'], info=item2['HOLD_FOCUS'],
-                    price=item2['PRICE'] * 100,
-                    avg_free_shares=item2['AVG_FREE_SHARES']
-                )
-                itemSharesMembers.save()
+        # for item in SharesName.objects.filter(status=1, code_type=1, ):
+        #     stockMemberList = self.getStockMember(item)
+        #     for item2 in stockMemberList:
+        #         date_as = datetime.strptime(item2['END_DATE'], '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
+        #         itemSharesMembers = SharesMembers.objects.filter(code_id=item.code, date_as=date_as)
+        #         if len(itemSharesMembers) > 0:
+        #             continue
+        #         if item2['HOLDER_TOTAL_NUM'] is None:
+        #             item2['HOLDER_TOTAL_NUM'] = 0
+        #         if item2['HOLD_FOCUS'] is None:
+        #             item2['HOLD_FOCUS'] = ''
+        #         if item2['PRICE'] is None:
+        #             item2['PRICE'] = 0
+        #         if item2['AVG_FREE_SHARES'] is None:
+        #             item2['AVG_FREE_SHARES'] = 0
+        #         itemSharesMembers = SharesMembers(
+        #             code_id=item.code, date_as=date_as,
+        #             members=item2['HOLDER_TOTAL_NUM'], info=item2['HOLD_FOCUS'],
+        #             price=item2['PRICE'] * 100,
+        #             avg_free_shares=item2['AVG_FREE_SHARES']
+        #         )
+        #         itemSharesMembers.save()
 
-        sql = """
-        SELECT 1 as id, mc_stock_members.code_id,mc_stock_members.members,t.members as tmembers from mc_stock_members 
-                LEFT JOIN (SELECT code_id, date_as, avg_free_shares,members FROM `mc_stock_members` GROUP by code_id ORDER BY date_as desc) t 
-                ON t.code_id = mc_stock_members.code_id 
-                where t.date_as > mc_stock_members.date_as
-                GROUP by mc_stock_members.code_id 
-                ORDER BY mc_stock_members.code_id asc;
-        """
-        result = Shares.objects.raw(sql)
-        for item in result:
-            shareName2 = SharesName.objects.filter(code=item.code_id)
-            if len(shareName2) > 0:
-                if item.members >= item.tmembers:
-                    shareName2.update(member_up = 1)
-                else:
-                    shareName2.update(member_up=2)
-
+        for item in SharesName.objects.filter(code_type=1):
+            sharesMembers = SharesMembers.objects.filter(code_id=item.code).order_by('-date_as')
+            if len(sharesMembers) < 2:
+                continue
+            sharesMembers = sharesMembers[:2]
+            if sharesMembers[1].members < sharesMembers[2].tmembers:
+                # 下降
+                item.update(member_up=1)
+            else:
+                item.update(member_up=2)
 
 
         #
