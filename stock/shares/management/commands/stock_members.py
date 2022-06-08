@@ -75,28 +75,28 @@ class Command(BaseCommand):
         #     ",".join(["\"" + item.code_id + "\"" for item in result])
         # )
 
-        # for item in SharesName.objects.filter(status=1, code_type=1, ):
-        #     stockMemberList = self.getStockMember(item)
-        #     for item2 in stockMemberList:
-        #         date_as = datetime.strptime(item2['END_DATE'], '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
-        #         itemSharesMembers = SharesMembers.objects.filter(code_id=item.code, date_as=date_as)
-        #         if len(itemSharesMembers) > 0:
-        #             continue
-        #         if item2['HOLDER_TOTAL_NUM'] is None:
-        #             item2['HOLDER_TOTAL_NUM'] = 0
-        #         if item2['HOLD_FOCUS'] is None:
-        #             item2['HOLD_FOCUS'] = ''
-        #         if item2['PRICE'] is None:
-        #             item2['PRICE'] = 0
-        #         if item2['AVG_FREE_SHARES'] is None:
-        #             item2['AVG_FREE_SHARES'] = 0
-        #         itemSharesMembers = SharesMembers(
-        #             code_id=item.code, date_as=date_as,
-        #             members=item2['HOLDER_TOTAL_NUM'], info=item2['HOLD_FOCUS'],
-        #             price=item2['PRICE'] * 100,
-        #             avg_free_shares=item2['AVG_FREE_SHARES']
-        #         )
-        #         itemSharesMembers.save()
+        for item in SharesName.objects.filter(status=1, code_type=1, ):
+            stockMemberList = self.getStockMember(item)
+            for item2 in stockMemberList:
+                date_as = datetime.strptime(item2['END_DATE'], '%Y-%m-%d %H:%M:%S').date().strftime("%Y-%m-%d")
+                itemSharesMembers = SharesMembers.objects.filter(code_id=item.code, date_as=date_as)
+                if len(itemSharesMembers) > 0:
+                    continue
+                if item2['HOLDER_TOTAL_NUM'] is None:
+                    item2['HOLDER_TOTAL_NUM'] = 0
+                if item2['HOLD_FOCUS'] is None:
+                    item2['HOLD_FOCUS'] = ''
+                if item2['PRICE'] is None:
+                    item2['PRICE'] = 0
+                if item2['AVG_FREE_SHARES'] is None:
+                    item2['AVG_FREE_SHARES'] = 0
+                itemSharesMembers = SharesMembers(
+                    code_id=item.code, date_as=date_as,
+                    members=item2['HOLDER_TOTAL_NUM'], info=item2['HOLD_FOCUS'],
+                    price=item2['PRICE'] * 100,
+                    avg_free_shares=item2['AVG_FREE_SHARES']
+                )
+                itemSharesMembers.save()
 
         for item in SharesName.objects.filter(code_type=1):
             sharesMembers = SharesMembers.objects.filter(code_id=item.code).order_by('-date_as')
