@@ -105,9 +105,9 @@ class Command(BaseCommand):
             sharesMembers = sharesMembers[:2]
             if sharesMembers[1].members < sharesMembers[0].members:
                 # 下降
-                item.update(member_up=1)
+                SharesName.objects.filter(code_type=1,code=item.code).update(member_up=1)
             else:
-                item.update(member_up=2)
+                SharesName.objects.filter(code_type=1, code=item.code).update(member_up=2)
 
 
         #
