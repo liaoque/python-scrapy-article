@@ -103,7 +103,7 @@ class Command(BaseCommand):
             if len(sharesMembers) < 2:
                 continue
             sharesMembers = sharesMembers[:2]
-            if sharesMembers[1].members < sharesMembers[0].members:
+            if sharesMembers[0].members < sharesMembers[1].members:
                 # 下降
                 SharesName.objects.filter(code_type=1,code=item.code).update(member_up=1)
             else:
