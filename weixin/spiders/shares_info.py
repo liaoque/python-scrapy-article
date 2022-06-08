@@ -71,11 +71,9 @@ class Shares(scrapy.Spider):
                                  dont_filter=True,
                                  callback=self.parse_content)
 
-
         for item in results:
             yield self.request_info(item)
             time.sleep(5)
-
 
     def request_info(self, item):
         code = item[0]
@@ -149,7 +147,6 @@ class Shares(scrapy.Spider):
         # f2049 毛利率
         # f2129 净利率
         res = result["data"]["diff"][1]
-        print(res["f2023"])
         item_loader3 = ItemLoader(item=SharesInfoItems.Items())
         item_loader3.add_value("code", res["f12"])
         item_loader3.add_value("pb", float(res["f2023"]) * 100)
@@ -161,7 +158,11 @@ class Shares(scrapy.Spider):
         item_loader3.add_value("npmos", float(res["f2129"]) * 100)
         item_loader3.add_value("roe", float(res["f2037"]) * 100)
         item_loader3.add_value("type", 'gpm')
-        print(item_loader3.load_item())
+
+        s = item_loader3.load_item()
+        if s['gpm'][0] == 0 and s['npmos'][0] == 0 and s['pb'][0] == 0 and s['pe_d'][0] == 0 and s['roe'][0]:
+            print(res["f12"], item_loader3.load_item())
+            return
         yield item_loader3.load_item()
 
         pass
