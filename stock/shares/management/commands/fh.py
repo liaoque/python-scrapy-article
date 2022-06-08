@@ -259,6 +259,9 @@ class Command(BaseCommand):
         result = Shares.objects.raw(sql, params=(datetime.today().date() - timedelta(days=-15)))
         print(result)
         for item in result:
+            code = item.code_id
+            if not (code < '300000' or ('600000' < code < '700000')):
+                continue
             self.all['members'].append(item.code_id)
 
         self.sendMessage(self.all)
@@ -311,6 +314,9 @@ class Command(BaseCommand):
         str += "\n行业\n"
         for item in self.all["l2"]:
             str += "\n%s:%s\n" % (item, self.all["l2"][item])
+
+        str += "\n股东人数\n"
+        str +=  "\",\"".join(send_data['members'])
 
         send_mail(
             '分红%s' % (datetime.now(tz)),
