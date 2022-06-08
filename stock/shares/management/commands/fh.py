@@ -319,7 +319,7 @@ class Command(BaseCommand):
             str += "\n%s:%s\n" % (item, self.all["l2"][item])
 
         str += "\n股东人数\n"
-        str +=  "\",\"".join(send_data['members'])
+        str +=  "\",\"".join(self.all['members'])
 
         send_mail(
             '分红%s' % (datetime.now(tz)),
