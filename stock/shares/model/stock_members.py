@@ -17,7 +17,7 @@ class SharesMembers(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.code + ":" + self.members + ":"  + self.date_as
+        return str(self.code_id) + ":" + str(self.members) + ":"  + str(self.date_as)
 
     class SkillType():
         kdj = 1
