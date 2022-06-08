@@ -259,7 +259,7 @@ class Command(BaseCommand):
         """
 
         self.all['members'] = []
-        result = Shares.objects.raw(sql, params=(datetime.today().date() - timedelta(days=-15), datetime.today().date() - timedelta(days=-15)))
+        result = Shares.objects.raw(sql, params=(datetime.today().date() + timedelta(days=-15), datetime.today().date() + timedelta(days=-15)))
         print(result)
         for item in result:
             code = item.code_id
