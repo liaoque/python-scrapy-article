@@ -124,7 +124,7 @@ class Shares(scrapy.Spider):
         result = json.loads(response.text)
         if "data" not in result:
             return
-        if "diff" not in result["data"]:
+        if result["data"] is None or "diff" not in result["data"]:
             return
 
         res = result["data"]["diff"][0]
