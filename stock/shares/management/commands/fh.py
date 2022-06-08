@@ -237,6 +237,30 @@ class Command(BaseCommand):
             self.all["l1"] = sorted(self.all["l1"].items(), key=lambda x: x[1], reverse=True)[:20]
             self.all["l2"] = sorted(self.all["l2"].items(), key=lambda x: x[1], reverse=True)[:20]
 
+        sql = """
+        SELECT 1 as id, mc_stock_members.code_id,mc_stock_members.members,t.members as tmembers from mc_stock_members 
+                LEFT JOIN (
+                    SELECT code_id, date_as, avg_free_shares,members 
+                        FROM `mc_stock_members` 
+                        where date_as > %s
+                        GROUP by code_id ORDER BY date_as desc
+                        ) t 
+                ON t.code_id = mc_stock_members.code_id 
+                left join mc_shares_join_industry as i on t.code_id = i.code_id
+                left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2 and gpm_ex > 1000) n on n.code = i.industry_code_id
+                where t.date_as > mc_stock_members.date_as
+                and n.roe > 15 
+                and t.code_id not in (select code_id from mc_shares_ban)
+                GROUP by mc_stock_members.code_id 
+                ORDER BY mc_stock_members.code_id asc;
+        """
+
+        self.all['members'] = []
+        result = Shares.objects.raw(sql, params=(datetime.today().date() - timedelta(days=-15)))
+        print(result)
+        for item in result:
+            self.all['members'].append(item.code_id)
+
         self.sendMessage(self.all)
         pass
 
