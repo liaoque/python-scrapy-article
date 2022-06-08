@@ -252,6 +252,7 @@ class Command(BaseCommand):
             where t.date_as > mc_stock_members.date_as
             and n.roe  > 15
             and m.date_as = mc_stock_members.date_as
+            and t.members < mc_stock_members.members
             GROUP by mc_stock_members.code_id
             ORDER BY  mc_stock_members.code_id asc, mc_stock_members.date_as desc;
         """
