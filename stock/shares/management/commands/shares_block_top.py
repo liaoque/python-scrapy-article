@@ -21,7 +21,7 @@ class Command(BaseCommand):
     help = '板块排行'
 
     def handle(self, *args, **options):
-        item = SharesDate.objects.order_by('-date_as').all()[0]
+        item = SharesDate.objects.order_by('-date_as').all()[1]
         print(item)
         sql = """
         select 1 as id, mc_shares_join_block.block_code_id, mc_shares.code_id 
