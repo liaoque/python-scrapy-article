@@ -109,21 +109,21 @@ class Command(BaseCommand):
         tz = timezone(timedelta(hours=+8))
         s = "天\n"
         for item in send_data['one']:
-            s += ",".join([all[n] for n in item[0]])
+            s += ",".join([item[0][n] for n in item[0]])
             s += "---------------"
             s += ",".join(item[1])
             s += "\n"
 
         s = "周\n"
         for item in send_data['five']:
-            s += ",".join([all[n] for n in item[0]])
+            s += ",".join([item[0][n] for n in item[0]])
             s += "---------------"
             s += ",".join(item[1])
             s += "\n"
 
         s = "月\n"
         for item in send_data['twenty']:
-            s += ",".join([all[n] for n in item[0]])
+            s += ",".join([item[0][n] for n in item[0]])
             s += "---------------"
             s += ",".join(item[1])
             s += "\n"
