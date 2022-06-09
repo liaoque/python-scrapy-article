@@ -63,8 +63,8 @@ class Command(BaseCommand):
                 # codeItem.date_as = item.date_as
                 codeItemResult, buy_pre = self.findBuyPoint(codeItem, item.date_as)
                 if codeItemResult != None:
-                    sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
-                    print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
+                    # sharesItem = Shares.objects.filter(date_as=codeItemResult.date_as, code_id=codeItem.code_id)[0]
+                    # print("找到买入点--%s--%s---%s", codeItem.code_id, codeItemResult.date_as, sharesItem.p_end)
                     # if codeItem.code_id in industryCodeList:
                     #     send_data['buy'].append(codeItem.code_id)
                     send_data['buy'].append(codeItemResult)
