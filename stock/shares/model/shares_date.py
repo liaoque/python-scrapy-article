@@ -13,4 +13,4 @@ class SharesDate(models.Model):
         db_table = "mc_shares_date"
 
     def __str__(self):
-        return self.date_as
+        return str(self.date_as)
