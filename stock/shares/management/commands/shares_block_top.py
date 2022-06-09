@@ -8,7 +8,7 @@ from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
 from shares.model.shares_season import SharesSeason
 import time
-
+from shares.model.shares_date import SharesDate
 # import numpy as np
 # import talib
 import sys
@@ -21,6 +21,8 @@ class Command(BaseCommand):
     help = '板块排行'
 
     def handle(self, *args, **options):
+        item = SharesDate.objects.order_by('-date_as').all()[0]
+        print(item)
         sql = """
         select 1 as id, mc_shares_join_block.block_code_id, mc_shares.code_id 
         from mc_shares_join_block 
