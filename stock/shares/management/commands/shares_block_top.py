@@ -128,7 +128,7 @@ class Command(BaseCommand):
             s += ",".join(item[1])
             s += "\n"
 
-        print(s)
+        # print(s)
         # [[all[n] for n in item[0]] for item in send_data['one']]
         #
         # "天 %s" % ()
@@ -144,10 +144,10 @@ class Command(BaseCommand):
         #     "\",\"".join(send_data['register_date_as']),
         #     "\",\"".join(send_data['ex_date_as']))
 
-        # send_mail(
-        #     '分红%s' % (datetime.now(tz)),
-        #     s,
-        #     'lovemeand1314@163.com',
-        #     ['844596330@qq.com'],
-        #     fail_silently=False,
-        # )
+        send_mail(
+            '分红%s' % (datetime.now(tz)),
+            s,
+            'lovemeand1314@163.com',
+            ['844596330@qq.com'],
+            fail_silently=False,
+        )
