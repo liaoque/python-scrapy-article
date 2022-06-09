@@ -40,7 +40,7 @@ class Command(BaseCommand):
         """
         aggregate = {}
         aggregate_list = []
-        result = Shares.objects.raw(sql, params=(date.today().strftime("%Y-%m-%d"),))
+        result = Shares.objects.raw(sql, params=(item.date_as,))
         for item in result:
             if item.block_code_id not in aggregate:
                 aggregate[item.block_code_id] = set()
