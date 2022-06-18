@@ -247,7 +247,7 @@ class Command(BaseCommand):
                     ) t 
             ON t.code_id = mc_stock_members.code_id 
             left join mc_shares_join_industry as i on t.code_id = i.code_id
-            left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2 and gpm_ex > 1000) n on n.code = i.industry_code_id
+            left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2 and gpm_ex > 1500) n on n.code = i.industry_code_id
             left JOIN (SELECT code_id, max(date_as) as date_as FROM `mc_stock_members` where date_as <= %s group by code_id) m on m.code_id = i.code_id 
             where t.date_as > mc_stock_members.date_as
             and n.roe  > 15
@@ -276,11 +276,25 @@ class Command(BaseCommand):
             self.all[column] = []
         if len(implement_date_as) == 0:
             return
-        codeList = SharesJoinBlock.objects.filter(block_code_id__in=[
-            "BK0683",
-            "BK0520",
-            "BK0823",
-        ], code_id=[item.code_id for item in implement_date_as])
+
+
+        sql = """
+        SELECT 1 as id, code as code_id FROM `mc_shares_name` t where npmos_ex > 5000 
+        LEFT JOIN mc_shares_join_industry i on i.code_id = t.code_id 
+        LEFT JOIN mc_shares_name n on n.code = i.industry_code_id
+        where s.p_start < e.p_end
+        and n.gpm_ex > 1500
+        and code_id in (%s)
+        """
+        result = SharesJoinBlock.objects.raw(sql, params=(
+            ",".join([item.code_id for item in implement_date_as])
+        ))
+        codeList = [item.code_id for item in result]
+        # codeList = SharesJoinBlock.objects.filter(block_code_id__in=[
+        #     "BK0683",
+        #     "BK0520",
+        #     "BK0823",
+        # ], code_id=[item.code_id for item in implement_date_as])
         self.appendCode(codeList, column2)
 
     def appendCode(self, implement_date_as, column):
