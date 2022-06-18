@@ -293,7 +293,7 @@ class Command(BaseCommand):
         #     "BK0520",
         #     "BK0823",
         # ], code_id=[item.code_id for item in implement_date_as])
-        self.appendCode(codeList, column2)
+        self.appendCode(codeList, column)
 
     def appendCode(self, implement_date_as, column):
         if column not in self.all:
