@@ -202,7 +202,7 @@ class Command(BaseCommand):
             pre_ema = preEma * 100
             item = SharesBuyItem(
                 code_id=codeItem.code_id,
-                buy_start=todayPend,
+                buy_start=todayPend * 100,
                 buy_pre=pre_ema,
                 buy_date_as=today
             )
