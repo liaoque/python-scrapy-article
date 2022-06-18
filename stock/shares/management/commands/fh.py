@@ -286,6 +286,7 @@ class Command(BaseCommand):
         and n.gpm_ex > 1500
         and code_id in (%s)
         """
+        print(",".join([item.code_id for item in implement_date_as]))
         result = SharesJoinBlock.objects.raw(sql, params=(
             ",".join([item.code_id for item in implement_date_as])
         ))
