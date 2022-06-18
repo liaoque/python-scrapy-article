@@ -285,7 +285,8 @@ class Command(BaseCommand):
         where s.p_start < e.p_end
         and n.gpm_ex > 1500
         and code_id in (%s)
-        """
+        """%('"%s"' %("\",\"".join([item.code_id for item in implement_date_as])))
+        print(sql)
         print(  '"%s"' %("\",\"".join([item.code_id for item in implement_date_as])))
         result = SharesJoinBlock.objects.raw(sql, params=(
             '"%s"' %("\",\"".join([item.code_id for item in implement_date_as]))
