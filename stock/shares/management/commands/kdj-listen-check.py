@@ -309,7 +309,7 @@ class Command(BaseCommand):
 
         # 找公司 行业成长性，或者收入成长 比较靠谱的公司
         sql = """
-        SELECT n.code ,n.gpm,t.gpm as tgpm FROM (SELECT * FROM `mc_shares_name` where code_type =  1 and (gpm_ex > 1000 or npmos_ex > 1000))  n
+        SELECT n.code ,n.gpm,t.gpm as tgpm FROM (SELECT * FROM `mc_shares_name` where code_type =  1 and (gpm_ex > 4000 or npmos_ex > 4000))  n
 left join mc_shares_join_industry as i on n.code = i.code_id
 left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2 and gpm_ex > 1500) t on t.code = i.industry_code_id
 where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s  and n.npmos > 0 and n.member_up =1 
