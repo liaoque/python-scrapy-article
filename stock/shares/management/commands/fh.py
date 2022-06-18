@@ -277,20 +277,15 @@ class Command(BaseCommand):
         if len(implement_date_as) == 0:
             return
 
-
         sql = """
-        SELECT 1 as id, code as code_id FROM `mc_shares_name` t where npmos_ex > 5000 
-        LEFT JOIN mc_shares_join_industry i on i.code_id = t.code_id 
+        SELECT 1 as id, t.code as code_id FROM `mc_shares_name` t  
+        LEFT JOIN mc_shares_join_industry i on i.code_id = t.code
         LEFT JOIN mc_shares_name n on n.code = i.industry_code_id
-        where s.p_start < e.p_end
+        where t.npmos_ex > 5000 
         and n.gpm_ex > 1500
         and code_id in (%s)
         """%('"%s"' %("\",\"".join([item.code_id for item in implement_date_as])))
-        print(sql)
-        print(  '"%s"' %("\",\"".join([item.code_id for item in implement_date_as])))
-        result = SharesJoinBlock.objects.raw(sql, params=(
-            '"%s"' %("\",\"".join([item.code_id for item in implement_date_as]))
-        ))
+        result = SharesJoinBlock.objects.raw(sql)
         print(result)
         codeList = [item.code_id for item in result]
         # codeList = SharesJoinBlock.objects.filter(block_code_id__in=[
