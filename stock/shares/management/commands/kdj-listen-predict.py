@@ -325,6 +325,7 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
         )
 
         heightBuy = SharesName.objects.filter(code=[item.code_id for item in send_data['buy']], npmos_ex__gte=4500)
+        print(heightBuy)
         if len(heightBuy) > 0:
             str_con += "业绩好的：%s\n" % (
                 "\"\n\"".join([item.code for item in heightBuy])
