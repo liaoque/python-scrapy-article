@@ -212,7 +212,7 @@ class Command(BaseCommand):
                 joinBlock = SharesJoinBlock.objects.filter(block_code_id=item.code)
                 if len(joinBlock) == 0:
                     continue
-                sharesList = Shares.objects.filter(code_id=[item.code for item in joinBlock], date_as=today)
+                sharesList = Shares.objects.filter(code_id__in=[item.code for item in joinBlock], date_as=today)
                 if len(sharesList) == 0:
                     continue
                 for shareItem in sharesList:
@@ -225,7 +225,7 @@ class Command(BaseCommand):
                 joinBlock = SharesJoinIndustry.objects.filter(industry_code_id=item.code)
                 if len(joinBlock) == 0:
                     continue
-                sharesList = Shares.objects.filter(code_id=[item.code for item in joinBlock], date_as=today)
+                sharesList = Shares.objects.filter(code_id__in=[item.code for item in joinBlock], date_as=today)
                 if len(sharesList) == 0:
                     continue
                 for shareItem in sharesList:

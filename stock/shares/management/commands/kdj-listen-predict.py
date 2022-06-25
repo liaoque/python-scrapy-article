@@ -278,7 +278,7 @@ class Command(BaseCommand):
         SELECT * FROM `mc_shares_name` WHERE `code_type` != 1 AND `gpm_ex` > 3000 and npmos_ex > 3000;
         """
         codeList = SharesName.objects.raw(sql)
-        codeList = SharesJoinIndustry.objects.filter(industry_code_id=[item.code for item in codeList])
+        codeList = SharesJoinIndustry.objects.filter(industry_code_id__in=[item.code for item in codeList])
         return [item.code_id for item in codeList]
 
     # 基本面向好的公司
@@ -306,7 +306,7 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
         #     "BK0683",
         #     "BK0520",
         #     "BK0823",
-        # ], code_id=[item.code_id for item in industryList])
+        # ], code_id__in=[item.code_id for item in industryList])
         self.codeList = [item.code for item in codeList]
         return self.codeList
 
@@ -324,7 +324,7 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
             "\"\n\"".join([item.code_id + "：" + str(item.p_end) for item in send_data['buy']])
         )
 
-        heightBuy = SharesName.objects.filter(code__in=[item.code_id for item in send_data['buy']], npmos_ex__gte=4000)
+        heightBuy = SharesName.objects.filter(code__in__in=[item.code_id for item in send_data['buy']], npmos_ex__gte=4000)
         if len(heightBuy) > 0:
             str_con += "业绩好的：%s\n" % (
                 "\"\n\"".join([item.code for item in heightBuy])

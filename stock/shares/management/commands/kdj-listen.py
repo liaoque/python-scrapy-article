@@ -286,7 +286,7 @@ class Command(BaseCommand):
         SELECT * FROM `mc_shares_name` WHERE `code_type` != 1 AND `gpm_ex` > 3000 and npmos_ex > 3000;
         """
         codeList = SharesName.objects.raw(sql)
-        codeList = SharesJoinIndustry.objects.filter(industry_code_id=[item.code for item in codeList])
+        codeList = SharesJoinIndustry.objects.filter(industry_code_id__in=[item.code for item in codeList])
         return [item.code_id for item in codeList]
 
     # 基本面向好的公司
@@ -314,7 +314,7 @@ where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s
         #     "BK0683",
         #     "BK0520",
         #     "BK0823",
-        # ], code_id=[item.code_id for item in industryList])
+        # ], code_id__in=[item.code_id for item in industryList])
         self.codeList = [item.code for item in codeList]
         return self.codeList
 
