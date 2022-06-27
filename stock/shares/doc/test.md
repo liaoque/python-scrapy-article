@@ -71,7 +71,13 @@ and t.npmos_ex > n1.npmos_ex
 and n2.code is not null
 
 
-
+select * from mc_shares_name t
+LEFT JOIN mc_shares_join_industry i on i.code_id = t.code 
+LEFT JOIN  (SELECT code  FROM `mc_shares_name` WHERE code_type = 2 and `name` LIKE '%钢铁%') n1 on n1.code = i.industry_code_id
+where t.code_type = 1
+and t.npmos_ex > 2000
+and t.npmos_ex > n1.npmos_ex
+and n2.code is not null
 
 
 
@@ -80,3 +86,47 @@ LEFT JOIN mc_shares_join_industry i on i.code_id = t.code_id
 LEFT JOIN mc_shares_name n on n.code = i.industry_code_id
 where s.p_start < e.p_end
 and n.gpm_ex > 1500;
+
+
+t1 今天
+t2 昨天
+t3 前天
+buy1 环比
+buy2 同比
+同比 > 环比： 分歧
+环比 > 同比： 看多
+select ((t1.buy -t2.buy)/ abs(t2.buy)) buy1,  ((t1.buy -t3.buy)/ abs(t3.buy)) buy2, t1.industry_code_id, t1.name,t1.buy/ 1000000, t2.buy/ 1000000, t3.buy/ 1000000 from (
+    SELECT SUM(master_buy_sum - master_buy_sell) buy,i.industry_code_id, t.name FROM `mc_shares`  n
+    left join mc_shares_join_industry as i on n.code_id = i.code_id
+    left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2) t on t.code = i.industry_code_id
+    WHERE date_as = '2022-06-27'   and industry_code_id is not null
+    GROUP BY industry_code_id 
+) t1
+left join (
+    SELECT SUM(master_buy_sum - master_buy_sell) buy,i.industry_code_id, t.name FROM `mc_shares`  n
+    left join mc_shares_join_industry as i on n.code_id = i.code_id
+    left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2) t on t.code = i.industry_code_id
+    WHERE date_as = '2022-06-24'   and industry_code_id is not null
+    GROUP BY industry_code_id 
+) t2 on t1.industry_code_id = t2.industry_code_id 
+left join (
+    SELECT SUM(master_buy_sum - master_buy_sell) buy,i.industry_code_id, t.name FROM `mc_shares`  n
+    left join mc_shares_join_industry as i on n.code_id = i.code_id
+    left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2) t on t.code = i.industry_code_id
+    WHERE date_as = '2022-06-23'   and industry_code_id is not null
+    GROUP BY industry_code_id 
+) t3 on t1.industry_code_id = t3.industry_code_id  
+where t1.buy > t2.buy and t1.buy > 0 
+HAVING buy1 > buy2
+ORDER BY `buy1` ASC;
+
+
+
+
+SELECT SUM(master_buy_sum - master_buy_sell) buy,i.industry_code_id, t.name,date_as FROM `mc_shares`  n
+    left join mc_shares_join_industry as i on n.code_id = i.code_id
+    left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2) t on t.code = i.industry_code_id
+    WHERE date_as >= '2022-06-22' and date_as < '2022-06-28'  and industry_code_id is not null
+    and industry_code_id = 'BK0437'
+    GROUP BY date_as;
+
