@@ -52,7 +52,7 @@ class Command(BaseCommand):
             code_id="GCNY10YR", date_as=date_as)
         if len(year10) == 0:
             return
-        glem = sh[0].pe / year10[0].val
+        glem = (1 / sh[0].pe )/ year10[0].val
         StockIndex(
             code_id="GLEM",
             date_as=date_as,
