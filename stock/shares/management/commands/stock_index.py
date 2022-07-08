@@ -1,5 +1,6 @@
 import numpy as np
-from datetime import datetime, date
+# from datetime import datetime, date
+from datetime import datetime, timedelta, timezone
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count, Max, Min
 from django.db import connection
@@ -70,7 +71,8 @@ class Command(BaseCommand):
         pb = json2['data']['pb']
         pe = json2['data']['pe']
         ts = json2['data']['ts']
-        data_as = datetime.utcfromtimestamp(int(ts) / 1000).strftime("%Y-%m-%d")
+        tz = timezone(timedelta(hours=+8))
+        data_as = datetime.utcfromtimestamp(int(ts) / 1000).astimezone(tz).strftime("%Y-%m-%d")
         res = StockIndex.objects.filter(code_id="SH000010", date_as=data_as)
         if len(res):
             return
