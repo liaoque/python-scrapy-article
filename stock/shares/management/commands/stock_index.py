@@ -54,7 +54,7 @@ class Command(BaseCommand):
             return
         glem = sh[0].pb / year10[0].val
         StockIndex(
-            code_id="GCNY10YR",
+            code_id="GLEM",
             date_as=date_as,
             val=glem,
         ).save()
