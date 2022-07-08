@@ -145,7 +145,7 @@ class Command(BaseCommand):
         #     "\",\"".join(send_data['ex_date_as']))
 
         send_mail(
-            '分红%s' % (datetime.now(tz)),
+            '板块%s' % (datetime.now(tz)),
             s,
             'lovemeand1314@163.com',
             ['844596330@qq.com'],

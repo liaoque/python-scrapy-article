@@ -31,3 +31,4 @@ from .model.shares_cache import SharesCache
 from .model.shares_join_block import SharesJoinBlock
 from .model.shares_fh import SharesFH
 from .model.shares_industry_macd import SharesIndustryMacd
+from .model.stock_index import StockIndex
