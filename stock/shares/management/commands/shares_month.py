@@ -71,7 +71,7 @@ class Command(BaseCommand):
                                                     date_as__gte=date_start,
                                                     date_as__lte=date_end
                                                     ).aggregate(buy_count2=Sum('buy_count'))
-        print(buy_count.buy_count2)
+        print(buy_count)
         # buy_sum = Shares.objects.filter(code_id=code,
         #                                   date_as__gte=date_start,
         #                                   date_as__lte=date_end
