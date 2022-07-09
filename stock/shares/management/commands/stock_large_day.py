@@ -1,5 +1,5 @@
 import numpy as np
-from datetime import datetime, date
+from datetime import datetime, timedelta, timezone
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count, Max, Min
 from django.db import connection
@@ -14,6 +14,7 @@ import requests
 from shares.model.stock_members import SharesMembers
 from shares.model.shares_date import SharesDate
 from shares.model.shares_month import SharesMonth
+from django.core.mail import send_mail
 
 # import numpy as np
 # import talib
@@ -43,7 +44,20 @@ class Command(BaseCommand):
                 continue
             if sharesItem6[0].buy_count / sharesItem6[1].buy_count > 2:
                 codeLargeList["month"].append(item.code)
-        print(codeLargeList)
+        # print(codeLargeList)
+        send_mail(codeLargeList)
 
 
+
+    def sendMessage(self, send_data):
+        tz = timezone(timedelta(hours=+8))
+        str_con = "日放量股票：%s\n 月放量股票：%s\n" % (
+            "\",\"".join(send_data['date']), "\",\"".join(send_data['month']))
+        send_mail(
+            '放量提醒%s' % (datetime.now(tz)),
+            str_con,
+            'lovemeand1314@163.com',
+            ['844596330@qq.com'],
+            fail_silently=False,
+        )
 
