@@ -46,7 +46,8 @@ class Command(BaseCommand):
         pass
 
     def GLEM(self):
-        date_as = datetime.today().date()
+        # date_as = datetime.today().date()
+        date_as = "2022-07-08"
         res = StockIndex.objects.filter(
             code_id="GLEM", date_as=date_as)
         if len(res):
