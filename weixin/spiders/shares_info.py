@@ -69,11 +69,11 @@ class Shares(scrapy.Spider):
             else:
                 s_code = "0." + code
             url = self.get_url(s_code)
-            headers = copy.deepcopy(self.headers)
-            yield scrapy.Request(url,
-                                 headers=headers,
-                                 dont_filter=True,
-                                 callback=self.parse_content)
+            # headers = copy.deepcopy(self.headers)
+            # yield scrapy.Request(url,
+            #                      headers=headers,
+            #                      dont_filter=True,
+            #                      callback=self.parse_content)
 
             url = self.get_url2(s_code)
             headers = copy.deepcopy(self.headers)
