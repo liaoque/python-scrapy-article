@@ -79,6 +79,6 @@ class Command(BaseCommand):
         # print(buy_sum)
         halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
                                p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
-                               buy_count=int(buy_count["buy_count"]/10000),buy_sum=int(buy_sum["buy_sum"]/10000),
+                               buy_count=int(buy_count["buy_count2"]/10000),buy_sum=int(buy_sum["buy_sum2"]/10000),
                                p_month=p_month)
         halfYear.save()
