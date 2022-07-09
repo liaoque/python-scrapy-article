@@ -76,6 +76,7 @@ class Shares(scrapy.Spider):
                                  callback=self.parse_content)
 
             url = self.get_url2(s_code)
+            headers = copy.deepcopy(self.headers)
             yield scrapy.Request(url,
                                  headers=headers,
                                  dont_filter=True,
