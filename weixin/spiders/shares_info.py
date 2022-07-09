@@ -160,7 +160,7 @@ class Shares(scrapy.Spider):
         item_loader3.add_value("type", 'gpm')
 
         s = item_loader3.load_item()
-        if s['gpm'][0] == 0 and s['npmos'][0] == 0 and s['pb'][0] == 0 and s['pe_d'][0] == 0 and s['roe'][0]:
+        if int(s['gpm'][0]) == 0 and int(s['npmos'][0]) == 0 and int(s['pb'][0]) == 0 and int(s['pe_d'][0]) == 0 and int(s['roe'][0]):
             print(res["f12"], item_loader3.load_item())
             return
         yield item_loader3.load_item()
