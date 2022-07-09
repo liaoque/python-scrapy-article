@@ -44,6 +44,10 @@ class Shares(scrapy.Spider):
                "spt=1&np=3&fltt=2&invt=2&fields=f9,f12,f13,f14,f20,f23,f37,f45,f49,f134,f135,f129,f1000,f2000,f3000&" \
                "ut=bd1d9ddb04089700cf9c27f6f7426281&cb=&secid=" + str(code) + "&_=1654060484482"
 
+    def get_url2(self, code):
+        return "https://push2.eastmoney.com/api/qt/stock/get?ut=" \
+               "&fltt=2&invt=2&fields=f57,f164,f163&secid=" + str(code) + "&wbp2u=5204545223982760|0|1|0|web&cb=&_=1657375827577"
+
     def connect(self):
         if self.db == None:
             self.db = MySQLdb.connect(host=self.settings.get('MYSQL_HOST'),
@@ -70,6 +74,13 @@ class Shares(scrapy.Spider):
                                  headers=headers,
                                  dont_filter=True,
                                  callback=self.parse_content)
+
+            url = self.get_url2(s_code)
+            yield scrapy.Request(url,
+                                 headers=headers,
+                                 dont_filter=True,
+                                 callback=self.parse_content2)
+
 
         # for item in results:
         #     yield self.request_info(item)
@@ -165,6 +176,21 @@ class Shares(scrapy.Spider):
             return
         yield item_loader3.load_item()
 
+        pass
+
+    def parse_content2(self, response):
+        result = json.loads(response.text)
+        if "data" not in result:
+            return
+        if result["data"] is None or "diff" not in result["data"]:
+            return
+        res = result["data"]["diff"][0]
+        item_loader2 = ItemLoader(item=SharesInfoItems.Items())
+        item_loader2.add_value("code", res["f57"])
+        item_loader2.add_value("pe", float(res["f163"]) * 100)
+        item_loader2.add_value("pe_ttm", float(res["f164"])  * 100)
+        item_loader2.add_value("type", 'pe_ttm')
+        yield item_loader2.load_item()
         pass
 
     def findStoks(self):

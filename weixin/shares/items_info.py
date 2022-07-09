@@ -28,6 +28,8 @@ class Items(scrapy.Item):
     def save(self, cursor):
         if self['type'][0] == 'gpm':
             self.save_pb(cursor)
+        elif self['type'][0] == 'pe_ttm':
+            self.save_pe(cursor)
         else:
             self.save_gpm_ex(cursor)
 
@@ -53,6 +55,16 @@ class Items(scrapy.Item):
         npmos_ex = self['npmos_ex'][0]
         sql = "update mc_shares_name set gpm_ex = '%s', npmos_ex = '%s' WHERE code = '%s'" % (
             gpm_ex, npmos_ex, code
+        )
+        cursor.execute(sql)
+
+
+    def save_pe(self, cursor):
+        code = self['code'][0]
+        pe_ttm = self['pe_ttm'][0]
+        pe = self['pe'][0]
+        sql = "update mc_shares_name set pe = '%s', pe_ttm = '%s' WHERE code = '%s'" % (
+            pe, pe_ttm, code
         )
         cursor.execute(sql)
 
