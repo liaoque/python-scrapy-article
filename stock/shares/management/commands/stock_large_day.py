@@ -45,11 +45,12 @@ class Command(BaseCommand):
             if sharesItem6[0].buy_count / sharesItem6[1].buy_count > 2:
                 codeLargeList["month"].append(item.code)
         # print(codeLargeList)
-        send_mail(codeLargeList)
+        self.sendMessage(codeLargeList)
 
 
 
     def sendMessage(self, send_data):
+
         tz = timezone(timedelta(hours=+8))
         str_con = "日放量股票：%s\n 月放量股票：%s\n" % (
             "\",\"".join(send_data['date']), "\",\"".join(send_data['month']))
