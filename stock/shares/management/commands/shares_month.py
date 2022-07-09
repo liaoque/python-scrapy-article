@@ -70,12 +70,12 @@ class Command(BaseCommand):
         buy_count = Shares.objects.filter(code_id=code,
                                                     date_as__gte=date_start,
                                                     date_as__lte=date_end
-                                                    ).annotate(buy_count=Sum('buy_count'))
+                                                    ).annotate(buy_count2=Sum('buy_count'))
         print(buy_count)
         buy_sum = Shares.objects.filter(code_id=code,
                                           date_as__gte=date_start,
                                           date_as__lte=date_end
-                                          ).annotate(buy_sum=Sum('buy_sum'))
+                                          ).annotate(buy_sum2=Sum('buy_sum'))
         print(buy_sum)
         # halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
         #                        p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
