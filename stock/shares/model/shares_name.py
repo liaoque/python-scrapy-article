@@ -33,7 +33,20 @@ class SharesName(models.Model):
     one_hundred_day = models.IntegerField(default=0, help_text="120天最低")
     four_year_day = models.IntegerField(default=0, help_text="4年最低")
 
-
+    # 基本面向好的公司
+    def getCodeList(self):
+        # 找公司 行业成长性，或者收入成长 比较靠谱的公司
+        sql = """
+            SELECT n.code ,n.gpm,t.gpm as tgpm FROM (SELECT * FROM `mc_shares_name` where code_type =  1 and (gpm_ex > 4000 or npmos_ex > 4000))  n
+    left join mc_shares_join_industry as i on n.code = i.code_id
+    left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2 and gpm_ex > 1500) t on t.code = i.industry_code_id
+    where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s  and n.npmos > 0 and n.member_up =1 
+            and t.gpm != 0
+            """
+        codeList = SharesName.objects.raw(sql, params=('%ST%',))
+        # codeList = [item for item in codeList]
+        #  公司毛利率不能低于行业毛利率的 30%
+        return list(filter(lambda n: (n.gpm >= n.tgpm or (n.gpm / n.tgpm > 0.3)), codeList))
 
     class Meta:
         db_table = "mc_shares_name"

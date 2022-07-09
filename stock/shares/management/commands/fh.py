@@ -286,7 +286,7 @@ class Command(BaseCommand):
         and code_id in (%s)
         """%('"%s"' %("\",\"".join([item.code_id for item in implement_date_as])))
         result = SharesJoinBlock.objects.raw(sql)
-        print(result)
+        # print(result)
         codeList = result
         # codeList = SharesJoinBlock.objects.filter(block_code_id__in=[
         #     "BK0683",

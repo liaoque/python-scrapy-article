@@ -283,30 +283,7 @@ class Command(BaseCommand):
 
     # 基本面向好的公司
     def getCodeList(self):
-
-        # 找公司 行业成长性，或者收入成长 比较靠谱的公司
-        sql = """
-        SELECT n.code ,n.gpm,t.gpm as tgpm FROM (SELECT * FROM `mc_shares_name` where code_type =  1 and (gpm_ex > 1000 or npmos_ex > 1000))  n
-left join mc_shares_join_industry as i on n.code = i.code_id
-left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2 and gpm_ex > 1000) t on t.code = i.industry_code_id
-where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s  and n.npmos > 0 and n.member_up =1 
-        and t.gpm != 0
-        """
-        codeList = SharesName.objects.raw(sql, params=('%ST%',))
-        # codeList = [item for item in codeList]
-        #  公司毛利率不能低于行业毛利率的 30%
-        codeList = list(filter(lambda n: (n.gpm >= n.tgpm or (n.gpm / n.tgpm > 0.3)), codeList))
-        # print(codeList)
-
-        # if len(industry) <= 0:
-        #     return []
-        # industry = [item.code for item in industry]
-        # codeList = SharesJoinIndustry.objects.filter(industry_code_id__in=industry)
-        # codeList = SharesJoinBlock.objects.filter(block_code_id__in=[
-        #     "BK0683",
-        #     "BK0520",
-        #     "BK0823",
-        # ], code_id__in=[item.code_id for item in industryList])
+        codeList = SharesName.getCodeList()
         self.codeList = [item.code for item in codeList]
         return self.codeList
 
