@@ -13,7 +13,7 @@ import time
 import requests
 from shares.model.stock_members import SharesMembers
 from shares.model.shares_date import SharesDate
-
+from shares.model.shares_month import SharesMonth
 
 # import numpy as np
 # import talib
@@ -27,14 +27,21 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         codeList = self.getCodeList()
-        codeLargeList = []
+        codeLargeList = {
+            "date":[],
+            "month":[],
+        }
         for item in codeList:
-            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('-date_as')[:5]
-            endCount = sharesItem5[0].buy_count
-            count4 = sum([ item.buy_count for item in sharesItem5[1:]]) / 4
-            if endCount / count4 > 1.8:
-                codeLargeList.append(item.code)
+            # sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('-date_as')[:5]
+            # endCount = sharesItem5[0].buy_count
+            # count4 = sum([ item.buy_count for item in sharesItem5[1:]]) / 4
+            # if endCount / count4 > 1.8:
+            #     codeLargeList["date"].append(item.code)
 
+            sharesItem6 = SharesMonth.objects.filter(code_id=item.code).order_by('-p_year').order_by('-p_month')[:2]
+            print(sharesItem6)
+            if sharesItem6[0].buy_count / sharesItem6[1].buy_count > 2:
+                codeLargeList["month"].append(item.code)
             # print(item.code, endCount.buy_count, count4)
             # break
         print(codeLargeList)
