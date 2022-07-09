@@ -27,13 +27,17 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         codeList = self.getCodeList()
+        codeLargeList = []
         for item in codeList:
             sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('-date_as')[:5]
-            endCount = sharesItem5[4]
-            count4 = sum([ item.buy_count for item in sharesItem5[1:]])
-            print(item.code, endCount.buy_count, count4)
-            break
+            endCount = sharesItem5[0]
+            count4 = sum([ item.buy_count for item in sharesItem5[1:]]) / 4
+            if endCount / count4 > 1.8:
+                codeLargeList.append(item.code)
 
+            # print(item.code, endCount.buy_count, count4)
+            # break
+        print(codeLargeList)
 
     # 基本面向好的公司
     def getCodeList(self):
