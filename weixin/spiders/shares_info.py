@@ -185,12 +185,14 @@ class Shares(scrapy.Spider):
             return
         if result["data"] is None or "diff" not in result["data"]:
             return
+        print(result)
         res = result["data"]["diff"][0]
         item_loader2 = ItemLoader(item=SharesInfoItems.Items())
         item_loader2.add_value("code", res["f57"])
         item_loader2.add_value("pe", float(res["f163"]) * 100)
         item_loader2.add_value("pe_ttm", float(res["f164"])  * 100)
         item_loader2.add_value("type", 'pe_ttm')
+        print(item_loader2.load_item())
         yield item_loader2.load_item()
         pass
 
