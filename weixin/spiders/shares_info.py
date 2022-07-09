@@ -181,9 +181,9 @@ class Shares(scrapy.Spider):
 
     def parse_content2(self, response):
         result = json.loads(response.text)
-        print(result)
         if "data" not in result:
             return
+        print(result)
         if result["data"] is None:
             return
 
