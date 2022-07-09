@@ -8,6 +8,7 @@ from django.db import connection
 from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
 from shares.model.shares_month import SharesMonth
+from django.db.models import Avg, Count,Sum
 import time
 
 
@@ -69,14 +70,15 @@ class Command(BaseCommand):
         buy_count = Shares.objects.filter(code_id=code,
                                                     date_as__gte=date_start,
                                                     date_as__lte=date_end
-                                                    ).sum('buy_count')/10000
+                                                    ).annotate(buy_count=Sum('buy_count'))
+        print(buy_count)
         buy_sum = Shares.objects.filter(code_id=code,
                                           date_as__gte=date_start,
                                           date_as__lte=date_end
-                                          ).sum('buy_sum')/10000
-
-        halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
-                               p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
-                               buy_count=int(buy_count),buy_sum=int(buy_sum),
-                               p_month=p_month)
-        halfYear.save()
+                                          ).annotate(buy_sum=Sum('buy_sum'))
+        print(buy_sum)
+        # halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
+        #                        p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
+        #                        buy_count=int(buy_count),buy_sum=int(buy_sum),
+        #                        p_month=p_month)
+        # halfYear.save()
