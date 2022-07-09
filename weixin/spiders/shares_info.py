@@ -181,11 +181,12 @@ class Shares(scrapy.Spider):
 
     def parse_content2(self, response):
         result = json.loads(response.text)
+        print(result)
         if "data" not in result:
             return
         if result["data"] is None or "diff" not in result["data"]:
             return
-        print(result)
+
         res = result["data"]["diff"][0]
         item_loader2 = ItemLoader(item=SharesInfoItems.Items())
         item_loader2.add_value("code", res["f57"])
