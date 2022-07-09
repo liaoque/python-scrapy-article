@@ -27,6 +27,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         codeList = self.getCodeList()
+        print(codeList)
         for item in codeList:
             sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('-date_as')[:5]
             endCount = sharesItem5[4]
