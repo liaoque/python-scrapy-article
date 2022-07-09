@@ -70,7 +70,7 @@ class Command(BaseCommand):
         buy_count = Shares.objects.filter(code_id=code,
                                                     date_as__gte=date_start,
                                                     date_as__lte=date_end
-                                                    ).annotate(buy_count2=Sum('buy_count'))
+                                                    ).aggregate(buy_count2=Sum('buy_count'))
         print(buy_count.buy_count2)
         # buy_sum = Shares.objects.filter(code_id=code,
         #                                   date_as__gte=date_start,
