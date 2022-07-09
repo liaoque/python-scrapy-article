@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 continue
             if sharesItem6[0].buy_count / sharesItem6[1].buy_count > 2:
                 codeLargeList["month"].append(item.code)
-
+        print(codeLargeList)
 
 
 
