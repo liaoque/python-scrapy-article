@@ -41,7 +41,8 @@ class Command(BaseCommand):
         self.SH000300()
 
         glem = self.GLEM()
-        self.senmail(glem)
+        if glem:
+            self.senmail(glem)
         pass
 
     def GLEM(self):
