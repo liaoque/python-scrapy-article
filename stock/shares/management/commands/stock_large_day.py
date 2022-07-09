@@ -30,7 +30,7 @@ class Command(BaseCommand):
         codeLargeList = []
         for item in codeList:
             sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('-date_as')[:5]
-            endCount = sharesItem5[0]
+            endCount = sharesItem5[0].buy_count
             count4 = sum([ item.buy_count for item in sharesItem5[1:]]) / 4
             if endCount / count4 > 1.8:
                 codeLargeList.append(item.code)
