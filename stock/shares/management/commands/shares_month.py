@@ -65,9 +65,17 @@ class Command(BaseCommand):
                                                   date_as__lte=date_end
                                                   ).order_by('-date_as')[0]
 
-
+        buy_count = Shares.objects.filter(code_id=code,
+                                                    date_as__gte=date_start,
+                                                    date_as__lte=date_end
+                                                    ).sum('date_as')/10000
+        buy_sum = Shares.objects.filter(code_id=code,
+                                          date_as__gte=date_start,
+                                          date_as__lte=date_end
+                                          ).count()/10000
 
         halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
                                p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
+                               buy_count=int(buy_count),buy_sum=int(buy_sum),
                                p_month=p_month)
         halfYear.save()

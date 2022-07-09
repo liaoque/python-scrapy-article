@@ -11,6 +11,8 @@ class SharesMonth(models.Model):
     p_start = models.IntegerField(default=0)
     p_end = models.IntegerField(default=0)
     p_year = models.IntegerField(default=0)
+    buy_count = models.IntegerField(default=0, help_text="交易量， 单位万")
+    buy_sum = models.IntegerField(default=0, help_text="交易金额， 单位万")
     p_month = models.IntegerField(default=0, help_text="1 第一季，2 第二季")
 
     class Meta:
