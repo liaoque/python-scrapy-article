@@ -35,7 +35,10 @@ class Command(BaseCommand):
         tz = timezone(timedelta(hours=+8))
         date_as = datetime.today().astimezone(tz).date()
         for item in codeList:
-            sharesItem5 = Shares.objects.filter(code_id=item.code, date_as=date_as).order_by('-date_as')[:5]
+            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('-date_as')[:5]
+            if sharesItem5[0].date_as != date_as:
+                continue
+
             endCount = sharesItem5[0].buy_count
             count4 = sum([ item.buy_count for item in sharesItem5[1:]]) / 4
             if endCount / count4 > 1.8:
