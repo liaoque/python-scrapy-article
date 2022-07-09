@@ -69,11 +69,11 @@ class Shares(scrapy.Spider):
             else:
                 s_code = "0." + code
             url = self.get_url(s_code)
-            # headers = copy.deepcopy(self.headers)
-            # yield scrapy.Request(url,
-            #                      headers=headers,
-            #                      dont_filter=True,
-            #                      callback=self.parse_content)
+            headers = copy.deepcopy(self.headers)
+            yield scrapy.Request(url,
+                                 headers=headers,
+                                 dont_filter=True,
+                                 callback=self.parse_content)
 
             url = self.get_url2(s_code)
             headers = copy.deepcopy(self.headers)
@@ -83,9 +83,9 @@ class Shares(scrapy.Spider):
                                  callback=self.parse_content2)
 
 
-        # for item in results:
-        #     yield self.request_info(item)
-        #     time.sleep(5)
+        for item in results:
+            yield self.request_info(item)
+            time.sleep(5)
 
     def request_info(self, item):
         code = item[0]
@@ -183,7 +183,6 @@ class Shares(scrapy.Spider):
         result = json.loads(response.text)
         if "data" not in result:
             return
-        print(result)
         if result["data"] is None:
             return
 
@@ -193,7 +192,6 @@ class Shares(scrapy.Spider):
         item_loader2.add_value("pe", float(res["f163"]) * 100)
         item_loader2.add_value("pe_ttm", float(res["f164"])  * 100)
         item_loader2.add_value("type", 'pe_ttm')
-        print(item_loader2.load_item())
         yield item_loader2.load_item()
         pass
 
