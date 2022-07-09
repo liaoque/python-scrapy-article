@@ -32,8 +32,10 @@ class Command(BaseCommand):
             "date":[],
             "month":[],
         }
+        tz = timezone(timedelta(hours=+8))
+        date_as = datetime.today().astimezone(tz).date()
         for item in codeList:
-            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('-date_as')[:5]
+            sharesItem5 = Shares.objects.filter(code_id=item.code, date_as=date_as).order_by('-date_as')[:5]
             endCount = sharesItem5[0].buy_count
             count4 = sum([ item.buy_count for item in sharesItem5[1:]]) / 4
             if endCount / count4 > 1.8:
@@ -50,6 +52,8 @@ class Command(BaseCommand):
 
 
     def sendMessage(self, send_data):
+        if len(send_data['date']) == 0 and len(send_data['month']) == 0:
+            return
 
         tz = timezone(timedelta(hours=+8))
         str_con = "日放量股票：%s\n 月放量股票：%s\n" % (
