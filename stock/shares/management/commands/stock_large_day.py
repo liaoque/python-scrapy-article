@@ -39,7 +39,8 @@ class Command(BaseCommand):
             #     codeLargeList["date"].append(item.code)
 
             sharesItem6 = SharesMonth.objects.filter(code_id=item.code).order_by('-p_year', '-p_month')[:2]
-            print(sharesItem6)
+            if len(sharesItem6) < 2:
+                continue
             if sharesItem6[0].buy_count / sharesItem6[1].buy_count > 2:
                 codeLargeList["month"].append(item.code)
             # print(item.code, endCount.buy_count, count4)
