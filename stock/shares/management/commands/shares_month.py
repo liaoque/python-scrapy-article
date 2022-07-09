@@ -71,14 +71,14 @@ class Command(BaseCommand):
                                                     date_as__gte=date_start,
                                                     date_as__lte=date_end
                                                     ).aggregate(buy_count2=Sum('buy_count'))
-        print(buy_count)
-        # buy_sum = Shares.objects.filter(code_id=code,
-        #                                   date_as__gte=date_start,
-        #                                   date_as__lte=date_end
-        #                                   ).annotate(buy_sum2=Sum('buy_sum'))
+        # print(buy_count)
+        buy_sum = Shares.objects.filter(code_id=code,
+                                          date_as__gte=date_start,
+                                          date_as__lte=date_end
+                                          ).aggregate(buy_sum2=Sum('buy_sum'))
         # print(buy_sum)
-        # halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
-        #                        p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
-        #                        buy_count=int(buy_count),buy_sum=int(buy_sum),
-        #                        p_month=p_month)
-        # halfYear.save()
+        halfYear = SharesMonth(code_id=code, p_start=halfYearSharesStart[0].p_start,
+                               p_end=halfYearSharesEnd.p_end, p_year=int(p_year),
+                               buy_count=int(buy_count["buy_count"]/10000),buy_sum=int(buy_sum["buy_sum"]/10000),
+                               p_month=p_month)
+        halfYear.save()
