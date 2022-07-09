@@ -34,7 +34,8 @@ class SharesName(models.Model):
     four_year_day = models.IntegerField(default=0, help_text="4年最低")
 
     # 基本面向好的公司
-    def getCodeList(self):
+    @staticmethod
+    def getCodeList():
         # 找公司 行业成长性，或者收入成长 比较靠谱的公司
         sql = """
             SELECT n.code ,n.gpm,t.gpm as tgpm FROM (SELECT * FROM `mc_shares_name` where code_type =  1 and (gpm_ex > 4000 or npmos_ex > 4000))  n
@@ -48,9 +49,8 @@ class SharesName(models.Model):
         #  公司毛利率不能低于行业毛利率的 30%
         return list(filter(lambda n: (n.gpm >= n.tgpm or (n.gpm / n.tgpm > 0.3)), codeList))
 
-        # 基本面向好的公司
-
-    def getCodeListByFhCode(self, implement_date_as):
+    @staticmethod
+    def getCodeListByFhCode(implement_date_as):
         sql = """
                 SELECT 1 as id, t.code as code_id FROM `mc_shares_name` t  
                 LEFT JOIN mc_shares_join_industry i on i.code_id = t.code
