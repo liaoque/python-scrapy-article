@@ -129,9 +129,9 @@ class Shares(scrapy.Spider):
         item_loader2 = ItemLoader(item=SharesInfoItems.Items())
         item_loader2.add_value("code", res["f12"])
         item_loader2.add_value("pb", float(res["f23"]) * 100)
-        item_loader2.add_value("pe", res["f9"])
+        # item_loader2.add_value("pe", res["f9"])
         item_loader2.add_value("pe_d", float(res["f9"]) * 100)
-        item_loader2.add_value("pe_ttm", res["f164"])
+        # item_loader2.add_value("pe_ttm", res["f164"])
 
         item_loader2.add_value("gpm", float(res["f49"]) * 100)
         item_loader2.add_value("npmos", float(res["f129"]) * 100)

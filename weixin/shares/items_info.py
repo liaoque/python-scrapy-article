@@ -36,15 +36,15 @@ class Items(scrapy.Item):
     def save_pb(self, cursor):
         code = self['code'][0]
         pb = self['pb'][0]
-        pe = self['pe'][0]
+        # pe = self['pe'][0]
         pe_d = self['pe_d'][0]
-        pe_ttm = self['pe_ttm'][0]
+        # pe_ttm = self['pe_ttm'][0]
         gpm = self['gpm'][0]
         npmos = self['npmos'][0]
         roe = self['roe'][0]
         sql = "update mc_shares_name set pb = '%s', pe_d = '%s', " \
-              " gpm = '%s', npmos = '%s', roe = '%s',  pe = '%s', pe_ttm = '%s',  WHERE code = '%s'" % (
-                  pb, pe_d, gpm, npmos, roe, pe, pe_ttm, code)
+              " gpm = '%s', npmos = '%s', roe = '%s'  WHERE code = '%s'" % (
+                  pb, pe_d, gpm, npmos, roe, code)
         cursor.execute(sql)
 
     def save_gpm_ex(self, cursor):
