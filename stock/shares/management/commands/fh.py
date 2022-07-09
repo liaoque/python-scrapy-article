@@ -276,23 +276,7 @@ class Command(BaseCommand):
             self.all[column] = []
         if len(implement_date_as) == 0:
             return
-
-        sql = """
-        SELECT 1 as id, t.code as code_id FROM `mc_shares_name` t  
-        LEFT JOIN mc_shares_join_industry i on i.code_id = t.code
-        LEFT JOIN mc_shares_name n on n.code = i.industry_code_id
-        where t.npmos_ex > 5000 
-        and n.gpm_ex > 1000
-        and code_id in (%s)
-        """%('"%s"' %("\",\"".join([item.code_id for item in implement_date_as])))
-        result = SharesJoinBlock.objects.raw(sql)
-        # print(result)
-        codeList = result
-        # codeList = SharesJoinBlock.objects.filter(block_code_id__in=[
-        #     "BK0683",
-        #     "BK0520",
-        #     "BK0823",
-        # ], code_id=[item.code_id for item in implement_date_as])
+        codeList = SharesName.getCodeListByFhCode(implement_date_as)
         self.appendCode(codeList, column)
 
     def appendCode(self, implement_date_as, column):

@@ -48,6 +48,20 @@ class SharesName(models.Model):
         #  公司毛利率不能低于行业毛利率的 30%
         return list(filter(lambda n: (n.gpm >= n.tgpm or (n.gpm / n.tgpm > 0.3)), codeList))
 
+        # 基本面向好的公司
+
+    def getCodeListByFhCode(self, implement_date_as):
+        sql = """
+                SELECT 1 as id, t.code as code_id FROM `mc_shares_name` t  
+                LEFT JOIN mc_shares_join_industry i on i.code_id = t.code
+                LEFT JOIN mc_shares_name n on n.code = i.industry_code_id
+                where t.npmos_ex > 5000 
+                and n.gpm_ex > 1000
+                and code_id in (%s)
+                """ % ('"%s"' % ("\",\"".join([item.code_id for item in implement_date_as])))
+        result = SharesName.objects.raw(sql)
+        return result
+
     class Meta:
         db_table = "mc_shares_name"
         # abstract = True
