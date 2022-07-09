@@ -20,4 +20,4 @@ class SharesMonth(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.name + ":" + self.p_year + ":" + self.p_month + ":最大-" + self.p_start + ":最小-" + self.p_end
+        return self.name + ":" + str(self.p_year) + ":" + str(self.p_month) + ":最大-" + str(self.p_start) + ":最小-" + str(self.p_end)
