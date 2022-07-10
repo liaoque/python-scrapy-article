@@ -52,7 +52,7 @@ class SharesName(models.Model):
     @staticmethod
     def getCodeListByFhCode(implement_date_as):
         sql = """
-                SELECT 1 as id, t.code as code_id FROM `mc_shares_name` t  
+                SELECT 1 as id, t.code , t.code as code_id FROM `mc_shares_name` t  
                 LEFT JOIN mc_shares_join_industry i on i.code_id = t.code
                 LEFT JOIN mc_shares_name n on n.code = i.industry_code_id
                 where t.npmos_ex > 5000 
