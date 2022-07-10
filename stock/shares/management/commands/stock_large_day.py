@@ -16,6 +16,7 @@ from shares.model.shares_date import SharesDate
 from shares.model.shares_month import SharesMonth
 from django.core.mail import send_mail
 
+
 # import numpy as np
 # import talib
 # import sys
@@ -29,8 +30,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         codeList = SharesName.getCodeList()
         codeLargeList = {
-            "date":[],
-            "month":[],
+            "date": [],
+            "month": [],
         }
         tz = timezone(timedelta(hours=+8))
         date_as = datetime.today().astimezone(tz).date()
@@ -40,7 +41,7 @@ class Command(BaseCommand):
                 continue
 
             endCount = sharesItem5[0].buy_count
-            count4 = sum([ item.buy_count for item in sharesItem5[1:]]) / 4
+            count4 = sum([item.buy_count for item in sharesItem5[1:]]) / 4
             if endCount / count4 > 1.8:
                 codeLargeList["date"].append(item.code)
 
@@ -48,12 +49,14 @@ class Command(BaseCommand):
             sharesItem6 = SharesMonth.objects.filter(code_id=item.code).order_by('-p_year', '-p_month')[:2]
             if len(sharesItem6) < 2:
                 continue
+
+            if sharesItem6.p_month != datetime.today().astimezone(
+                    tz).month or sharesItem6.p_year != datetime.today().astimezone(tz).year:
+                continue
             if sharesItem6[0].buy_count / sharesItem6[1].buy_count > 2:
                 codeLargeList["month"].append(item.code)
         # print(codeLargeList)
         self.sendMessage(codeLargeList)
-
-
 
     def sendMessage(self, send_data):
         if len(send_data['date']) == 0 and len(send_data['month']) == 0:
@@ -69,4 +72,3 @@ class Command(BaseCommand):
             ['844596330@qq.com'],
             fail_silently=False,
         )
-
