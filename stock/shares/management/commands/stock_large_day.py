@@ -44,6 +44,7 @@ class Command(BaseCommand):
             if endCount / count4 > 1.8:
                 codeLargeList["date"].append(item.code)
 
+        for item in codeList:
             sharesItem6 = SharesMonth.objects.filter(code_id=item.code).order_by('-p_year', '-p_month')[:2]
             if len(sharesItem6) < 2:
                 continue
