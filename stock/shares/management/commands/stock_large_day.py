@@ -54,7 +54,7 @@ class Command(BaseCommand):
                 continue
 
             if sharesItem6[0].p_month != datetime.today().astimezone(
-                    tz).month or sharesItem6.p_year != datetime.today().astimezone(tz).year:
+                    tz).month or sharesItem6[0].p_year != datetime.today().astimezone(tz).year:
                 continue
             if sharesItem6[0].buy_count / sharesItem6[1].buy_count > 2:
                 codeLargeList["month"].append(item.code)
