@@ -42,9 +42,9 @@ class SharesName(models.Model):
     left join mc_shares_join_industry as i on n.code = i.code_id
     left JOIN (SELECT * FROM `mc_shares_name` where code_type =  2 and gpm_ex > 1500) t on t.code = i.industry_code_id
     where ( n.gpm_ex > t.gpm_ex or  n.npmos_ex > t.npmos_ex)  and n.name not like %s  and n.npmos > 0 and n.member_up =1 
-            and t.gpm != 0
+            and t.gpm != 0 and n.name not like %s 
             """
-        codeList = SharesName.objects.raw(sql, params=('%ST%',))
+        codeList = SharesName.objects.raw(sql, params=('%ST%', '%退%',))
         # codeList = [item for item in codeList]
         #  公司毛利率不能低于行业毛利率的 30%
         return list(filter(lambda n: (n.gpm >= n.tgpm or (n.gpm / n.tgpm > 0.3)), codeList))
