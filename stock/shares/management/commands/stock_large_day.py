@@ -76,7 +76,7 @@ class Command(BaseCommand):
             # if datetime.today().weekday() < 5:
             #     break
             cday = datetime.today() - timedelta(days=90)
-            sql = "SELECT code_id, cast(UNIX_TIMESTAMP(date_as)/86400/5 as signed ) as week, sum(buy_count), date_as " \
+            sql = "SELECT 1 as id, code_id, cast(UNIX_TIMESTAMP(date_as)/86400/5 as signed ) as week, sum(buy_count), date_as " \
                   "FROM `mc_shares` " \
                   "WHERE date_as > %s and code_id = %s GROUP by week"
             sharesItem5 = Shares.objects.raw(sql, params=(cday, item.code))
