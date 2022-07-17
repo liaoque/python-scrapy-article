@@ -93,7 +93,7 @@ class Command(BaseCommand):
 
 
     def sendMessage(self, send_data):
-        if len(send_data['date']) == 0 and len(send_data['month']) == 0:
+        if len(send_data['date']) == 0 and len(send_data['month']) == 0 and len(send_data['date2']) == 0 and len(send_data['week2']) == 0:
             return
 
         tz = timezone(timedelta(hours=+8))
