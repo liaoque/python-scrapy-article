@@ -73,7 +73,9 @@ class Command(BaseCommand):
 
         # 周六
         for item in codeList:
-            cday = datetime.today() - datetime.timedelta(days=90)
+            # if datetime.today().weekday() < 5:
+            #     break
+            cday = datetime.today() - timedelta(days=90)
             sql = "SELECT code_id, cast(UNIX_TIMESTAMP(date_as)/86400/5 as signed ) as week, sum(buy_count), date_as " \
                   "FROM `mc_shares` " \
                   "WHERE date_as > %s and code_id = %s GROUP by week"
