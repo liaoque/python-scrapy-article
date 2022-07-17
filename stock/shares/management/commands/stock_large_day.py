@@ -87,7 +87,6 @@ class Command(BaseCommand):
             sharesItem5 = sharesItem5[:-1]
             min_buy_count = min([item2.buy_count for item2 in sharesItem5])
             if min_buy_count / endCount > 1.5:
-                print(item.code, min_buy_count, endCount)
                 codeLargeList["week2"].append(item.code)
 
 
