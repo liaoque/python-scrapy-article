@@ -70,7 +70,7 @@ class Command(BaseCommand):
             endCount = sharesItem5[0].buy_count
             sharesItem5 = sharesItem5[:19]
             min_buy_count = min([item2.buy_count for item2 in sharesItem5])
-            # print(item.code, min_buy_count, endCount)
+            print("-------",item.code, min_buy_count, endCount)
             if min_buy_count / endCount > 1.1:
                 codeLargeList["date2"].append(item.code)
 
