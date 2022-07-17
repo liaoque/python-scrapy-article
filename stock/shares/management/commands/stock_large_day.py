@@ -70,14 +70,13 @@ class Command(BaseCommand):
             endCount = sharesItem5[0].buy_count
             sharesItem5 = sharesItem5[:19]
             min_buy_count = min([item2.buy_count for item2 in sharesItem5])
-            print("-------",item.code, min_buy_count, endCount)
             if min_buy_count / endCount > 1.1:
                 codeLargeList["date2"].append(item.code)
 
         # 周六
         for item in codeList:
-            # if datetime.today().weekday() < 5:
-            #     break
+            if datetime.today().weekday() < 5:
+                break
             cday = datetime.today() - timedelta(days=90)
             sql = "SELECT 1 as id, code_id, cast(UNIX_TIMESTAMP(date_as)/86400/7 as signed ) as week, sum(buy_count) as buy_count, date_as " \
                   "FROM `mc_shares` " \
