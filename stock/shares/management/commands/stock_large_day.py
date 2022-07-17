@@ -32,9 +32,12 @@ class Command(BaseCommand):
         codeLargeList = {
             "date": [],
             "month": [],
+            "date2": [],
+            "week2": [],
         }
         tz = timezone(timedelta(hours=+8))
         date_as = datetime.today().astimezone(tz).date()
+        # 放量
         for item in codeList:
             sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('-date_as')[:5]
             if sharesItem5[0].date_as != date_as:
@@ -55,8 +58,37 @@ class Command(BaseCommand):
                 continue
             if sharesItem6[0].buy_count / sharesItem6[1].buy_count > 2:
                 codeLargeList["month"].append(item.code)
-        # print(codeLargeList)
+
+        # 缩量
+        for item in codeList:
+            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('-date_as')[:20]
+            if sharesItem5[0].date_as != date_as:
+                continue
+
+            endCount = sharesItem5[0].buy_count
+            sharesItem5 = sharesItem5[:19]
+            min_buy_count = min([item2.buy_count for item2 in sharesItem5])
+            if min_buy_count / endCount > 1.9:
+                codeLargeList["date2"].append(item.code)
+
+        # 周六
+        for item in codeList:
+            cday = datetime.today() - datetime.timedelta(days=90)
+            sql = "SELECT code_id, cast(UNIX_TIMESTAMP(date_as)/86400/5 as signed ) as week, sum(buy_count), date_as " \
+                  "FROM `mc_shares` " \
+                  "WHERE date_as > %s and code_id = %s GROUP by week"
+            sharesItem5 = Shares.objects.raw(sql, params=(cday, item.code))
+            sharesItem5 = sharesItem5[1:]
+            endCount = sharesItem5[-1].buy_count
+            sharesItem5 = sharesItem5[:-1]
+            min_buy_count = min([item2.buy_count for item2 in sharesItem5])
+            if min_buy_count / endCount > 1.9:
+                codeLargeList["week2"].append(item.code)
+
+
         self.sendMessage(codeLargeList)
+
+
 
     def sendMessage(self, send_data):
         if len(send_data['date']) == 0 and len(send_data['month']) == 0:
@@ -65,6 +97,9 @@ class Command(BaseCommand):
         tz = timezone(timedelta(hours=+8))
         str_con = "日放量股票：%s\n 月放量股票：%s\n" % (
             "\",\"".join(send_data['date']), "\",\"".join(send_data['month']))
+
+        str_con += "\n日缩量股票：%s\n 月缩量股票：%s\n" % (
+            "\",\"".join(send_data['date2']), "\",\"".join(send_data['week2']))
         send_mail(
             '放量提醒%s' % (datetime.now(tz)),
             str_con,
