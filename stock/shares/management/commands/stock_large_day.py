@@ -62,6 +62,8 @@ class Command(BaseCommand):
         # 缩量
         for item in codeList:
             sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('-date_as')[:20]
+            if len(sharesItem5) < 20:
+                continue
             # if sharesItem5[0].date_as != date_as:
             #     continue
 
