@@ -128,6 +128,7 @@ class Command(BaseCommand):
 
     def country(self):
         url = "https://markets.tradingeconomics.com/chart?s=gcny10yr:gov&interval=1d&span=10d&securify=new&url=/china/government-bond-yield&AUTH=K8t7E1iGf9YG%2FmZyx2Nm4oFXpVAVW%2FwgYN%2BZEijTewhqirxDKJwbCthm%2BnVaUZN%2F&ohlc=0"
+        url = "https://markets.tradingeconomics.com/chart?s=gcny10yr:gov&interval=1d&span=1d&securify=new&url=/china/government-bond-yield&AUTH=Nnlo5T4ecFIfp8H4QnwgWpYbPUMkCIOxPg2s1z0RXb7cu%2Bc9bmQhzPkS3PlCjXJg&ohlc=0"
         r = requests.get(url)
         json2 = r.json()
         data = json2['series'][0]['data']
