@@ -34,6 +34,7 @@ class Command(BaseCommand):
             "month": [],
             "date2": [],
             "week2": [],
+            "date3": [],
         }
         tz = timezone(timedelta(hours=+8))
         date_as = datetime.today().astimezone(tz).date()
@@ -89,6 +90,19 @@ class Command(BaseCommand):
             if min_buy_count / endCount > 1.5:
                 codeLargeList["week2"].append(item.code)
 
+        codeList = SharesName.objects.filter(code_type=1, status=1).all()
+        for item in codeList:
+            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('-date_as')[:20]
+            if len(sharesItem5) < 20:
+                continue
+            # if sharesItem5[0].date_as != date_as:
+            #     continue
+
+            endCount = sharesItem5[0].buy_count
+            sharesItem5 = sharesItem5[:19]
+            min_buy_count = min([item2.buy_count for item2 in sharesItem5])
+            if min_buy_count / endCount > 1.5:
+                codeLargeList["date3"].append(item.code)
 
         self.sendMessage(codeLargeList)
 
@@ -102,8 +116,12 @@ class Command(BaseCommand):
         str_con = "日放量股票：%s\n 月放量股票：%s\n" % (
             "\",\"".join(send_data['date']), "\",\"".join(send_data['month']))
 
-        str_con += "\n日缩量股票：%s\n 月缩量股票：%s\n" % (
+        str_con += "\n日缩量股票：%s\n 周缩量股票：%s\n" % (
             "\",\"".join(send_data['date2']), "\",\"".join(send_data['week2']))
+
+        str_con += "\na日缩量股票：%s\n " % (
+            "\",\"".join(send_data['date3'])
+        )
         send_mail(
             '放量提醒%s' % (datetime.now(tz)),
             str_con,
