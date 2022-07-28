@@ -104,15 +104,16 @@ class Command(BaseCommand):
             if min_buy_count / endCount > 1.5:
                 codeLargeList["date3"].append(item.code)
 
+
         self.sendMessage(codeLargeList)
 
 
 
     def sendMessage(self, send_data):
-        if len(send_data['date']) == 0 and len(send_data['month']) == 0 \
-                and len(send_data['date2']) == 0 and len(send_data['week2']) == 0 \
-                and len(send_data['date3']) == 0:
-            return
+        # if len(send_data['date']) == 0 and len(send_data['month']) == 0 \
+        #         and len(send_data['date2']) == 0 and len(send_data['week2']) == 0 \
+        #         and len(send_data['date3']) == 0:
+        #     return
 
         tz = timezone(timedelta(hours=+8))
         str_con = "日放量股票：%s\n 月放量股票：%s\n" % (
