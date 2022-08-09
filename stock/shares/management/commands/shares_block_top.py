@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
 from shares.model.shares import Shares
+from shares.model.shares_cache import SharesCache
 from shares.model.shares_season import SharesSeason
 import time
 from shares.model.shares_date import SharesDate
@@ -100,9 +101,11 @@ class Command(BaseCommand):
                 l[item[0]]
             ])
 
-        fo = open("shares_block.json", "w+")
-        fo.write("\",\"".join(d))
-        fo.close()
+        cache = SharesCache(title="shares_block.json",cache= "\",\"".join(d))
+        cache.save();
+        # fo = open("shares_block.json", "w+")
+        # fo.write("\",\"".join(d))
+        # fo.close()
 
         return c
         # print(res[:10])
