@@ -21,7 +21,7 @@ import talib
 from django.core.mail import send_mail
 import math
 import requests
-
+from shares.model.shares_cache import SharesCache
 
 # 1. 先记录 j < 0 作为参考点
 # 2. 记录 diff 的上涨走势 且 J < 40  作为买点
@@ -303,9 +303,20 @@ class Command(BaseCommand):
                 "\",\"".join([item.code for item in heightBuy])
             )
 
-        str_con += "参考价格：%s\n" % (
-            "\"\n\"".join([item.code_id + "：" + str(item.p_end) for item in send_data['buy']])
-        )
+        heightBuy = SharesJoinBlock.objects.filter(code_id__in=[item.code_id for item in send_data['buy']],  block_code_id = "885869")
+        if len(heightBuy) > 0:
+            str_con += "半年报预增：%s\n" % (
+                "\",\"".join([item.code_id for item in heightBuy])
+            )
+
+        cache = SharesCache.objects.filter(title="shares_block.json")[0]
+
+        heightBuy = SharesCache.objects.filter(code_id__in=[item.code_id for item in send_data['buy']],
+                                                   block_code_id__in=cache.split(","))
+        if len(heightBuy) > 0:
+            str_con += "月板块：%s\n" % (
+                "\",\"".join([item.code_id for item in heightBuy])
+            )
 
 
         send_mail(
