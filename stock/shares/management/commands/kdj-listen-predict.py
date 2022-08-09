@@ -312,7 +312,7 @@ class Command(BaseCommand):
         cache = SharesCache.objects.filter(title="shares_block.json")[0]
 
         heightBuy = SharesCache.objects.filter(code_id__in=[item.code_id for item in send_data['buy']],
-                                                   block_code_id__in=cache.split(","))
+                                                   block_code_id__in=cache.cache.split(","))
         if len(heightBuy) > 0:
             str_con += "月板块：%s\n" % (
                 "\",\"".join([item.code_id for item in heightBuy])
