@@ -101,8 +101,12 @@ class Command(BaseCommand):
                 l[item[0]]
             ])
 
-        cache = SharesCache(title="shares_block.json",cache= "\",\"".join(d))
-        cache.save();
+        cache = SharesCache.objects.filter(title="shares_block.json")
+        if len(cache) >0:
+            cache.save(cache= "\",\"".join(d))
+        else:
+            cache = SharesCache(title="shares_block.json",cache= "\",\"".join(d))
+            cache.save();
         # fo = open("shares_block.json", "w+")
         # fo.write("\",\"".join(d))
         # fo.close()
