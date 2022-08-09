@@ -6,7 +6,8 @@ from .shares_name import SharesName
 
 
 class SharesCache(models.Model):
-    title = models.ForeignKey(SharesName, on_delete=models.CASCADE)
+    id = models.IntegerField(primary_key=True)
+    title = models.CharField(max_length=200)
     cache = models.TextField(default=0, help_text='缓存')
     created_at = models.DateTimeField()
 
