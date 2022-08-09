@@ -103,6 +103,7 @@ class Command(BaseCommand):
 
         cache = SharesCache.objects.filter(title="shares_block.json")
         if len(cache) > 0:
+            cache = cache[0]
             cache.cache = "\",\"".join(d)
         else:
             cache = SharesCache(title="shares_block.json", cache="\",\"".join(d))
