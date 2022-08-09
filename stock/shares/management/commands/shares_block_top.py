@@ -92,12 +92,18 @@ class Command(BaseCommand):
         res = sorted(l2.items(), key=lambda d: d[1], reverse=True)
         # return res[:20]
         c = []
+        d = []
         for item in res[:20]:
+            d.extend(item[0])
             c.append([
                 {n: all[n] for n in item[0]},
                 l[item[0]]
             ])
-            # print({n: all[n] for n in item[0]}, l[item[0]])
+
+        fo = open("shares_block.json", "w+")
+        fo.write("\",\"".join(d))
+        fo.close()
+
         return c
         # print(res[:10])
         # result = list(filter(lambda n: n.code_id in self.codeList, result))
