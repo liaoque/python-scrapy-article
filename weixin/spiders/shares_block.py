@@ -126,6 +126,7 @@ class SharesBlock(scrapy.Spider):
         try:
             sql = 'update mc_shares_cache set cache = %s  where title = "shares_block-join"' % (int(cache) + 100);
             # 执行SQL语句
+            print(sql)
             self.cursor.execute(sql)
         except:
             print("Error: unable to fecth data")
