@@ -121,7 +121,7 @@ class SharesBlock(scrapy.Spider):
         except Exception as e:
             print("Error: unable to fecth data～～～～", e)
         if len(results):
-            cache = results[0]
+            cache = results[0][0]
         else:
             cache = 0
         try:
