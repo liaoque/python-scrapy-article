@@ -98,7 +98,8 @@ class SharesBlock(scrapy.Spider):
         return item_loader2.load_item()
 
     def findStoks(self, cache):
-        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1 order by code asc limit %s,100 '%(cache);
+        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1 order by code asc limit %s,100 ' % (
+            cache);
         results = []
         try:
             print(sql)
@@ -124,6 +125,10 @@ class SharesBlock(scrapy.Spider):
             cache = results[0][0]
         else:
             cache = 0
+
+        if cache > 7000:
+            cache = 0
+
         try:
             sql = 'update mc_shares_cache set `cache`  = %s  where title = "shares_block-join"' % (int(cache) + 100);
             print(sql)
