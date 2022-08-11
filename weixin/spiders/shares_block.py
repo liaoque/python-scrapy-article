@@ -110,7 +110,7 @@ class SharesBlock(scrapy.Spider):
         return results
 
     def findCache(self):
-        sql = 'select cache from mc_shares_cache where title = "shares_block-join"';
+        sql = 'select `cache`  from mc_shares_cache where title = "shares_block-join"';
         results = []
         try:
             # 执行SQL语句
@@ -125,7 +125,7 @@ class SharesBlock(scrapy.Spider):
         else:
             cache = 0
         try:
-            sql = 'update mc_shares_cache set cache = %s  where title = "shares_block-join"' % (int(cache) + 100);
+            sql = 'update mc_shares_cache set `cache`  = %s  where title = "shares_block-join"' % (int(cache) + 100);
             # 执行SQL语句
             print(sql)
             self.cursor.execute(sql)
