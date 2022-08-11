@@ -129,8 +129,8 @@ class SharesBlock(scrapy.Spider):
             # 执行SQL语句
             print(sql)
             self.cursor.execute(sql)
-        except:
-            print("Error: unable to fecth data")
+        except Exception as e:
+            print("Error: unable to fecth data～～～～", e)
         return cache
 
     def __del__(self):
