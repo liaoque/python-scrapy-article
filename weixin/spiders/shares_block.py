@@ -111,9 +111,6 @@ class SharesBlock(scrapy.Spider):
 
     def findCache(self):
         sql = 'select `cache`  from mc_shares_cache where title = "shares_block-join"';
-        self.cursor.execute(sql)
-        # 获取所有记录列表
-        results = self.cursor.fetchall()
         results = []
         try:
             # 执行SQL语句
@@ -121,8 +118,8 @@ class SharesBlock(scrapy.Spider):
             self.cursor.execute(sql)
             # 获取所有记录列表
             results = self.cursor.fetchall()
-        except:
-            print("Error: unable to fecth data")
+        except Exception as e:
+            print("Error: unable to fecth data～～～～", e)
         if len(results):
             cache = results[0]
         else:
