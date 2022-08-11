@@ -58,7 +58,7 @@ class SharesBlock(scrapy.Spider):
                                  dont_filter=True,
                                  callback=self.parse)
             self.ping()
-            time.sleep(10)
+            time.sleep(1)
 
     def parse(self, response):
         code = response.request.headers.getlist('code')[0].decode("UTF-8")
@@ -125,10 +125,8 @@ class SharesBlock(scrapy.Spider):
         else:
             cache = 0
         try:
-            print(cache, "00000000")
             sql = 'update mc_shares_cache set `cache`  = %s  where title = "shares_block-join"' % (int(cache) + 100);
             # 执行SQL语句
-            print(sql)
             self.cursor.execute(sql)
         except Exception as e:
             print("Error: unable to fecth data～～～～", e)
