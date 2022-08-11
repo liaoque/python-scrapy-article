@@ -101,6 +101,7 @@ class SharesBlock(scrapy.Spider):
         sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1 order by code asc limit %s,100 '%(cache*100);
         results = []
         try:
+            print(sql)
             # 执行SQL语句
             self.cursor.execute(sql)
             # 获取所有记录列表
