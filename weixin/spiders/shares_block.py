@@ -114,7 +114,6 @@ class SharesBlock(scrapy.Spider):
         results = []
         try:
             # 执行SQL语句
-            print(sql)
             self.cursor.execute(sql)
             # 获取所有记录列表
             results = self.cursor.fetchall()
@@ -126,6 +125,7 @@ class SharesBlock(scrapy.Spider):
             cache = 0
         try:
             sql = 'update mc_shares_cache set `cache`  = %s  where title = "shares_block-join"' % (int(cache) + 100);
+            print(sql)
             # 执行SQL语句
             self.cursor.execute(sql)
         except Exception as e:
