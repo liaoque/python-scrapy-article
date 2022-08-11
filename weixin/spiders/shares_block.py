@@ -124,7 +124,7 @@ class SharesBlock(scrapy.Spider):
         else:
             cache = 0
         try:
-            sql = 'update mc_shares_cache set cache = %s  where title = "shares_block-join"' % (cache + 100);
+            sql = 'update mc_shares_cache set cache = %s  where title = "shares_block-join"' % (int(cache) + 100);
             # 执行SQL语句
             self.cursor.execute(sql)
         except:
