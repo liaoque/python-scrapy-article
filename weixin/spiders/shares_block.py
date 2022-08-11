@@ -114,6 +114,7 @@ class SharesBlock(scrapy.Spider):
         results = []
         try:
             # 执行SQL语句
+            print(sql)
             self.cursor.execute(sql)
             # 获取所有记录列表
             results = self.cursor.fetchall()
