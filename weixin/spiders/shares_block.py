@@ -98,7 +98,7 @@ class SharesBlock(scrapy.Spider):
         return item_loader2.load_item()
 
     def findStoks(self, cache):
-        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1 and code >=%s limit 100'%(cache);
+        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1 limit %s,100 order by code asc'%(cache*100);
         results = []
         try:
             # 执行SQL语句
