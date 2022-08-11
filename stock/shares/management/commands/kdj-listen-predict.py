@@ -303,7 +303,7 @@ class Command(BaseCommand):
                 "\",\"".join([item.code for item in heightBuy2])
             )
 
-        heightBuy = SharesJoinBlock.objects.filter(code_id__in=[item.code_id for item in heightBuy2],  block_code_id = "885869")
+        heightBuy = SharesJoinBlock.objects.filter(code_id__in=[item.code for item in heightBuy2],  block_code_id = "885869")
         if len(heightBuy) > 0:
             str_con += "半年报预增：%s\n" % (
                 "\",\"".join([item.code_id for item in heightBuy])
@@ -311,7 +311,7 @@ class Command(BaseCommand):
 
         cache = SharesCache.objects.filter(title="shares_block.json")[0]
 
-        heightBuy = SharesJoinBlock.objects.filter(code_id__in=[item.code_id for item in heightBuy2],
+        heightBuy = SharesJoinBlock.objects.filter(code_id__in=[item.code for item in heightBuy2],
                                                    block_code_id__in=cache.cache.split(","))
         if len(heightBuy) > 0:
             str_con += "月板块：%s\n" % (
