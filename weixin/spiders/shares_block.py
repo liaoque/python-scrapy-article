@@ -131,7 +131,7 @@ class SharesBlock(scrapy.Spider):
             self.db.commit()
         except Exception as e:
             print("Error: unable to fecth data～～～～", e)
-        return cache
+        return int(cache)
 
     def __del__(self):
         if self.db != None:
