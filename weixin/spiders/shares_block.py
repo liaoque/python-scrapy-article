@@ -56,6 +56,7 @@ class SharesBlock(scrapy.Spider):
                                  headers=headers,
                                  dont_filter=True,
                                  callback=self.parse)
+            self.ping()
             time.sleep(10)
 
 
@@ -112,3 +113,14 @@ class SharesBlock(scrapy.Spider):
         if self.db != None:
             self.cursor.close()
             self.db.close()
+
+
+    def ping(self):
+        sql = 'select id as 1';
+        try:
+            # 执行SQL语句
+            self.cursor.execute(sql)
+            # 获取所有记录列表
+            self.cursor.fetchall()
+        except:
+            print("Error: unable to fecth data")
