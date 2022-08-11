@@ -116,11 +116,11 @@ class SharesBlock(scrapy.Spider):
 
 
     def ping(self):
-        sql = 'select id as 1';
+        sql = 'select 1 as id';
         try:
             # 执行SQL语句
             self.cursor.execute(sql)
             # 获取所有记录列表
-            self.cursor.fetchall()
+            results = self.cursor.fetchall()
         except:
             print("Error: unable to fecth data")
