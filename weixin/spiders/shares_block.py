@@ -111,6 +111,9 @@ class SharesBlock(scrapy.Spider):
 
     def findCache(self):
         sql = 'select `cache`  from mc_shares_cache where title = "shares_block-join"';
+        self.cursor.execute(sql)
+        # 获取所有记录列表
+        results = self.cursor.fetchall()
         results = []
         try:
             # 执行SQL语句
