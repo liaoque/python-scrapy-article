@@ -297,13 +297,13 @@ class Command(BaseCommand):
             "\",\"".join([item.code_id for item in send_data['buy']]),
             "\",\"".join([item.code_id for item in send_data['sell']]))
 
-        heightBuy = SharesName.objects.filter(code__in=[item.code_id for item in send_data['buy']], npmos_ex__gte=4500)
-        if len(heightBuy) > 0:
+        heightBuy2 = SharesName.objects.filter(code__in=[item.code_id for item in send_data['buy']], npmos_ex__gte=4500)
+        if len(heightBuy2) > 0:
             str_con += "业绩好的：%s\n" % (
-                "\",\"".join([item.code for item in heightBuy])
+                "\",\"".join([item.code for item in heightBuy2])
             )
 
-        heightBuy = SharesJoinBlock.objects.filter(code_id__in=[item.code_id for item in send_data['buy']],  block_code_id = "885869")
+        heightBuy = SharesJoinBlock.objects.filter(code_id__in=[item.code_id for item in heightBuy2],  block_code_id = "885869")
         if len(heightBuy) > 0:
             str_con += "半年报预增：%s\n" % (
                 "\",\"".join([item.code_id for item in heightBuy])
@@ -311,11 +311,11 @@ class Command(BaseCommand):
 
         cache = SharesCache.objects.filter(title="shares_block.json")[0]
 
-        heightBuy = SharesJoinBlock.objects.filter(code_id__in=[item.code_id for item in send_data['buy']],
+        heightBuy = SharesJoinBlock.objects.filter(code_id__in=[item.code_id for item in heightBuy2],
                                                    block_code_id__in=cache.cache.split(","))
         if len(heightBuy) > 0:
             str_con += "月板块：%s\n" % (
-                "\",\"".join([item.code_id for item in heightBuy])
+                "\",\"".join(list(set([item.code_id for item in heightBuy])))
             )
 
 
