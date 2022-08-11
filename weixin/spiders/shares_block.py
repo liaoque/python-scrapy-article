@@ -45,7 +45,8 @@ class SharesBlock(scrapy.Spider):
 
     def start_requests(self):
         self.connect()
-        results = self.findStoks()
+        cache = self.findCache()
+        results = self.findStoks(cache)
         for item in results:
             code = item[0]
 
@@ -58,7 +59,6 @@ class SharesBlock(scrapy.Spider):
                                  callback=self.parse)
             self.ping()
             time.sleep(10)
-
 
     def parse(self, response):
         code = response.request.headers.getlist('code')[0].decode("UTF-8")
@@ -97,8 +97,8 @@ class SharesBlock(scrapy.Spider):
         item_loader2.add_value("code_type", 2)
         return item_loader2.load_item()
 
-    def findStoks(self):
-        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1';
+    def findStoks(self, cache):
+        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1 and code >=%s limit 100'%(cache);
         results = []
         try:
             # 执行SQL语句
@@ -109,11 +109,32 @@ class SharesBlock(scrapy.Spider):
             print("Error: unable to fecth data")
         return results
 
+    def findCache(self):
+        sql = 'select cache from mc_shares_cache where title = "shares_block-join"';
+        results = []
+        try:
+            # 执行SQL语句
+            self.cursor.execute(sql)
+            # 获取所有记录列表
+            results = self.cursor.fetchall()
+        except:
+            print("Error: unable to fecth data")
+        if len(results):
+            cache = results[0]
+        else:
+            cache = 0
+        try:
+            sql = 'update mc_shares_cache set cache = %s  where title = "shares_block-join"' % (cache + 100);
+            # 执行SQL语句
+            self.cursor.execute(sql)
+        except:
+            print("Error: unable to fecth data")
+        return cache
+
     def __del__(self):
         if self.db != None:
             self.cursor.close()
             self.db.close()
-
 
     def ping(self):
         sql = 'select 1 as id';
