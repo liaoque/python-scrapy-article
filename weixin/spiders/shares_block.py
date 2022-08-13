@@ -126,7 +126,7 @@ class SharesBlock(scrapy.Spider):
         else:
             cache = 0
 
-        if cache > 7000:
+        if cache > 5000:
             cache = 0
 
         try:
