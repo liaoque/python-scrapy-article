@@ -21,7 +21,7 @@ class Items(scrapy.Item):
         code_id = self['code_id'][0]
         block_code_id = self['block_code_id'][0]
         code_type = self['code_type'][0]
-        if self.exitsByCode(cursor, code_id, block_code_id):
+        if self.exitsByCode(cursor, code_id, block_code_id, code_type):
             return
         sql = """
             INSERT INTO mc_shares_join_block (code_id, block_code_id,code_type)
@@ -38,8 +38,8 @@ class Items(scrapy.Item):
 
     pass
 
-    def exitsByCode(self, cursor, code_id, block_code_id):
-        sql = "SELECT code_id FROM mc_shares_join_block  WHERE code_id = '%s' and block_code_id='%s'" % (
-        code_id, block_code_id)
+    def exitsByCode(self, cursor, code_id, block_code_id, code_type):
+        sql = "SELECT code_id FROM mc_shares_join_block  WHERE code_id = '%s' and block_code_id='%s' code_type = '%s'" % (
+        code_id, block_code_id, str(code_type))
         cursor.execute(sql)
         return cursor.rowcount > 0
