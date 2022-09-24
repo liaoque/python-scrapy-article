@@ -96,6 +96,7 @@ class Items(scrapy.Item):
             self['SECURITY_CODE'][0],
             self['REPORT_DATE'][0],
         )
+        print(self['PREPAYMENT'][0])
         cursor.execute(sql, params)
 
     def insertByCode(self, cursor):
@@ -137,4 +138,5 @@ class Items(scrapy.Item):
 
 
         )
+        print(self['PREPAYMENT'][0])
         cursor.execute(sql, params)
