@@ -40,10 +40,10 @@ class Items(scrapy.Item):
         for item in s:
             if item not in self:
                 self[item] = [0]
-
-        for item in s:
-            if self[item][0] is None:
+            if self[item][0] is None or self[item][0] == 'None':
                 self[item] = [0]
+
+
 
 
     def save(self, cursor):
