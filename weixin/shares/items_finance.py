@@ -100,7 +100,11 @@ class Items(scrapy.Item):
                     turnover_rate, goods_turnover_rate,account_turnover_rate,
                     non_operating_incom, non_operating_expenses,income_from_investment,
                     notes_payable, notes_receivable, prepayment)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (
+                    %s, %s, %s, %s, %s, %s, %s, 
+                    %s, %s, %s, %s, %s, %s, %s, 
+                    %s, %s, %s
+                    )
                     """;
         params = (
 
