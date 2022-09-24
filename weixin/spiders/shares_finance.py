@@ -70,7 +70,7 @@ class SharesFinance(scrapy.Spider):
     def parse_content(self, response):
         result = json.loads(response.text)
         for item in result["data"]:
-            headers = []
+            headers = {}
             headers['XSMLL'] = item.XSMLL
             headers['XSJLL'] = item.XSJLL
             headers['ZZCZZTS'] = item.ZZCZZTS
@@ -91,7 +91,7 @@ class SharesFinance(scrapy.Spider):
     def parse_zcfzb(self, response):
         result = json.loads(response.text)
         for item in result["data"]:
-            headers = []
+            headers = {}
             headers['XSMLL'] = response.request.headers.getlist('XSMLL')[0].decode("UTF-8")
             headers['XSJLL'] = response.request.headers.getlist('XSJLL')[0].decode("UTF-8")
             headers['ZZCZZTS'] = response.request.headers.getlist('ZZCZZTS')[0].decode("UTF-8")
@@ -114,7 +114,7 @@ class SharesFinance(scrapy.Spider):
     def parse_lrb(self, response):
         result = json.loads(response.text)
         for item in result["data"]:
-            headers = []
+            headers = {}
             headers['XSMLL'] = response.request.headers.getlist('XSMLL')[0].decode("UTF-8")
             headers['XSJLL'] = response.request.headers.getlist('XSJLL')[0].decode("UTF-8")
             headers['ZZCZZTS'] = response.request.headers.getlist('ZZCZZTS')[0].decode("UTF-8")
