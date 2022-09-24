@@ -37,11 +37,11 @@ class Items(scrapy.Item):
              "TOAZZL",  "CHZZL",  "YSZKZZL",  "NOTE_ACCOUNTS_PAYABLE",  "NOTE_ACCOUNTS_RECE",
              "PREPAYMENT",  "NOTE_ACCOUNTS_PAYABLE",  "NONBUSINESS_INCOME",
              "NONBUSINESS_EXPENSE", "INVEST_INCOME",]
-        for item in ["SECURITY_CODE", "SECURITY_CODE", "SECURITY_CODE", "SECURITY_CODE"]:
+        for item in s:
             if item not in self:
                 self[item] = [0]
 
-        for item in ["SECURITY_CODE", "SECURITY_CODE", "SECURITY_CODE", "SECURITY_CODE"]:
+        for item in s:
             if item is None:
                 self[item] = [0]
 
