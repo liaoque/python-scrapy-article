@@ -43,7 +43,7 @@ class SharesFinance(scrapy.Spider):
                '&code=' + code
 
     def get_url_lrb(self, code, dates):
-        return 'https://emweb.securities.eastmoney.com/PC_HSF10/NewFinanceAnalysis/zcfzbAjaxNew?' \
+        return 'https://emweb.securities.eastmoney.com/PC_HSF10/NewFinanceAnalysis/lrbAjaxNew?' \
                'companyType=4&reportDateType=0&reportType=1&dates=' + dates + \
                '&code=' + code
 
