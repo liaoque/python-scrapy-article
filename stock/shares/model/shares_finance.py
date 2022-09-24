@@ -38,7 +38,6 @@ class SharesFinance(models.Model):
     turnover_rate = models.FloatField(default=0, help_text="总资产周转率")
     goods_turnover_rate = models.FloatField(default=0, help_text="存货周转率")
     account_turnover_rate = models.FloatField(default=0, help_text="应收账款周转率")
-
     non_operating_incom = models.FloatField(default=0, help_text="营业外收入")
     non_operating_expenses = models.FloatField(default=0, help_text="营业外支出")
     income_from_investment = models.FloatField(default=0, help_text="投资收益")
@@ -48,7 +47,6 @@ class SharesFinance(models.Model):
 
     class Meta:
         db_table = "mc_shares_finance"
-        # abstract = True
 
     def __str__(self):
         return self.code_id + ":" + self.title + ":" + datetime.strftime(self.date_as, '%Y-%m-%d') +\
