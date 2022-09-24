@@ -47,10 +47,11 @@ class Items(scrapy.Item):
     def save(self, cursor):
         code = self['SECURITY_CODE'][0]
         date_as = self['REPORT_DATE'][0]
+        self.defaults()
         if self.exitsByCode(cursor, code, date_as):
-            self.updateByCode(self, cursor)
+            self.updateByCode(cursor)
         else:
-            self.insertByCode(self, cursor)
+            self.insertByCode(cursor)
 
     def exitsByCode(self, cursor, code, date_as):
         sql = "SELECT code_id FROM mc_shares_finance  WHERE code_id = %s and date_as=%s"
