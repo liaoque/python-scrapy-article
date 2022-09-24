@@ -68,7 +68,7 @@ class Items(scrapy.Item):
                 update mc_shares_finance 
                         set  gpm = %s, `npmos` = %s, 
                         turnover_days = %s, goods_turnover_days = %s, `account_turnover_days` = %s, 
-                        turnover_rate = %s, goods_turnover_rate = %s, `npmaccount_turnover_rateos` = %s, 
+                        turnover_rate = %s, goods_turnover_rate = %s, `account_turnover_rate` = %s, 
                         non_operating_incom = %s, non_operating_expenses = %s, `income_from_investment` = %s,
                          notes_payable = %s, notes_receivable = %s , prepayment = %s 
                         where code_id = %s and date_as=%s
@@ -83,13 +83,15 @@ class Items(scrapy.Item):
             self['CHZZL'][0],
             self['YSZKZZL'][0],
 
+            self['NONBUSINESS_INCOME'][0],
+            self['NONBUSINESS_EXPENSE'][0],
+            self['INVEST_INCOME'][0],
+
             self['NOTE_ACCOUNTS_PAYABLE'][0],
             self['NOTE_ACCOUNTS_RECE'][0],
             self['PREPAYMENT'][0],
 
-            self['NONBUSINESS_INCOME'][0],
-            self['NONBUSINESS_EXPENSE'][0],
-            self['INVEST_INCOME'][0],
+
 
             self['SECURITY_CODE'][0],
             self['REPORT_DATE'][0],
@@ -124,12 +126,15 @@ class Items(scrapy.Item):
             self['CHZZL'][0],
             self['YSZKZZL'][0],
 
-            self['NOTE_ACCOUNTS_PAYABLE'][0],
-            self['NOTE_ACCOUNTS_RECE'][0],
-            self['PREPAYMENT'][0],
 
             self['NONBUSINESS_INCOME'][0],
             self['NONBUSINESS_EXPENSE'][0],
             self['INVEST_INCOME'][0],
+
+            self['NOTE_ACCOUNTS_PAYABLE'][0],
+            self['NOTE_ACCOUNTS_RECE'][0],
+            self['PREPAYMENT'][0],
+
+
         )
         cursor.execute(sql, params)
