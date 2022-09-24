@@ -42,7 +42,7 @@ class Items(scrapy.Item):
                 self[item] = [0]
 
         for item in s:
-            if item is None:
+            if self[item][0] is None:
                 self[item] = [0]
 
 
