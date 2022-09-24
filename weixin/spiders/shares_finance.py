@@ -106,7 +106,7 @@ class SharesFinance(scrapy.Spider):
             headers['PREPAYMENT'] = str(item['PREPAYMENT'])
             s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
             headers['s_code'] = s_code
-            url = self.parse_lrb(s_code, str(item['REPORT_DATE']))
+            url = self.get_url_lrb(s_code, str(item['REPORT_DATE']))
             yield scrapy.Request(url,
                                  headers=self.headers,
                                  dont_filter=True,
