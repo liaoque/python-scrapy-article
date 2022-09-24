@@ -39,9 +39,11 @@ class Items(scrapy.Item):
              "NONBUSINESS_EXPENSE", "INVEST_INCOME",]
         for item in ["SECURITY_CODE", "SECURITY_CODE", "SECURITY_CODE", "SECURITY_CODE"]:
             if item not in self:
-                self[item] = [None]
+                self[item] = [0]
 
-
+        for item in ["SECURITY_CODE", "SECURITY_CODE", "SECURITY_CODE", "SECURITY_CODE"]:
+            if item is None:
+                self[item] = [0]
 
 
     def save(self, cursor):
