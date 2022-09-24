@@ -71,18 +71,18 @@ class SharesFinance(scrapy.Spider):
         result = json.loads(response.text)
         for item in result["data"]:
             headers = {}
-            print(str(item))
-            headers['XSMLL'] = item['XSMLL']
-            headers['XSJLL'] = item['XSJLL']
-            headers['ZZCZZTS'] = item['ZZCZZTS']
-            headers['CHZZTS'] = item['CHZZTS']
-            headers['YSZKZZTS'] = item['YSZKZZTS']
-            headers['TOAZZL'] = item['TOAZZL']
-            headers['CHZZL'] = item['CHZZL']
-            headers['YSZKZZL'] = item['YSZKZZL']
+            # print(str(item))
+            headers['XSMLL'] = str(item['XSMLL'])
+            headers['XSJLL'] = str(item['XSJLL'])
+            headers['ZZCZZTS'] = str(item['ZZCZZTS'])
+            headers['CHZZTS'] = str(item['CHZZTS'])
+            headers['YSZKZZTS'] = str(item['YSZKZZTS'])
+            headers['TOAZZL'] = str(item['TOAZZL'])
+            headers['CHZZL'] = str(item['CHZZL'])
+            headers['YSZKZZL'] = str(item['YSZKZZL'])
 
             s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
-            url = self.get_url_zcfzb(s_code, item['REPORT_DATE'])
+            url = self.get_url_zcfzb(s_code, str(item['REPORT_DATE']))
             yield scrapy.Request(url,
                                  headers=headers,
                                  dont_filter=True,
@@ -101,11 +101,11 @@ class SharesFinance(scrapy.Spider):
             headers['TOAZZL'] = response.request.headers.getlist('TOAZZL')[0].decode("UTF-8")
             headers['CHZZL'] = response.request.headers.getlist('CHZZL')[0].decode("UTF-8")
             headers['YSZKZZL'] = response.request.headers.getlist('YSZKZZL')[0].decode("UTF-8")
-            headers['NOTE_ACCOUNTS_PAYABLE'] = item['NOTE_ACCOUNTS_PAYABLE']
-            headers['NOTE_ACCOUNTS_RECE'] = item['NOTE_ACCOUNTS_RECE']
-            headers['PREPAYMENT'] = item['PREPAYMENT']
+            headers['NOTE_ACCOUNTS_PAYABLE'] = str(item['NOTE_ACCOUNTS_PAYABLE'])
+            headers['NOTE_ACCOUNTS_RECE'] = str(item['NOTE_ACCOUNTS_RECE'])
+            headers['PREPAYMENT'] = str(item['PREPAYMENT'])
             s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
-            url = self.parse_lrb(s_code, item['REPORT_DATE'])
+            url = self.parse_lrb(s_code, str(item['REPORT_DATE']))
             yield scrapy.Request(url,
                                  headers=self.headers,
                                  dont_filter=True,
@@ -127,9 +127,9 @@ class SharesFinance(scrapy.Spider):
             headers['NOTE_ACCOUNTS_PAYABLE'] = response.request.headers.getlist('NOTE_ACCOUNTS_PAYABLE')[0].decode("UTF-8")
             headers['NOTE_ACCOUNTS_RECE'] = response.request.headers.getlist('NOTE_ACCOUNTS_RECE')[0].decode("UTF-8")
             headers['PREPAYMENT'] = response.request.headers.getlist('PREPAYMENT')[0].decode("UTF-8")
-            headers['NONBUSINESS_INCOME'] = item['NONBUSINESS_INCOME']
-            headers['NONBUSINESS_EXPENSE'] = item['NONBUSINESS_EXPENSE']
-            headers['INVEST_INCOME'] = item['INVEST_INCOME']
+            headers['NONBUSINESS_INCOME'] = str(item['NONBUSINESS_INCOME'])
+            headers['NONBUSINESS_EXPENSE'] = str(item['NONBUSINESS_EXPENSE'])
+            headers['INVEST_INCOME'] = str(item['INVEST_INCOME'])
             item_loader = ItemLoader(item=SharesItems.Items())
             item_loader.add_value("SECURITY_CODE", headers['SECURITY_CODE'])
             item_loader.add_value("REPORT_DATE", headers['REPORT_DATE'])
