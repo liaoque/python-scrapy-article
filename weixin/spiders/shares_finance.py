@@ -72,6 +72,7 @@ class SharesFinance(scrapy.Spider):
         for item in result["data"]:
             headers = {}
             # print(str(item))
+            s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
             headers['XSMLL'] = str(item['XSMLL'])
             headers['XSJLL'] = str(item['XSJLL'])
             headers['ZZCZZTS'] = str(item['ZZCZZTS'])
@@ -80,8 +81,7 @@ class SharesFinance(scrapy.Spider):
             headers['TOAZZL'] = str(item['TOAZZL'])
             headers['CHZZL'] = str(item['CHZZL'])
             headers['YSZKZZL'] = str(item['YSZKZZL'])
-
-            s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
+            headers['s_code'] = s_code
             url = self.get_url_zcfzb(s_code, str(item['REPORT_DATE']))
             yield scrapy.Request(url,
                                  headers=headers,
@@ -105,6 +105,7 @@ class SharesFinance(scrapy.Spider):
             headers['NOTE_ACCOUNTS_RECE'] = str(item['NOTE_ACCOUNTS_RECE'])
             headers['PREPAYMENT'] = str(item['PREPAYMENT'])
             s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
+            headers['s_code'] = s_code
             url = self.parse_lrb(s_code, str(item['REPORT_DATE']))
             yield scrapy.Request(url,
                                  headers=self.headers,
