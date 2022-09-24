@@ -71,6 +71,7 @@ class SharesFinance(scrapy.Spider):
         result = json.loads(response.text)
         for item in result["data"]:
             headers = {}
+            print(str(item))
             headers['XSMLL'] = item.XSMLL
             headers['XSJLL'] = item.XSJLL
             headers['ZZCZZTS'] = item.ZZCZZTS
