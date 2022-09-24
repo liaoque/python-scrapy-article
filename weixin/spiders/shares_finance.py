@@ -61,7 +61,7 @@ class SharesFinance(scrapy.Spider):
             else:
                 s_code = 'SZ' + code
             url = self.get_url(s_code)
-            self.headers['s_code'] = item.s_code
+            self.headers['s_code'] = s_code
             yield scrapy.Request(url,
                                  headers=self.headers,
                                  dont_filter=True,
