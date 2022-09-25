@@ -110,8 +110,16 @@ class SharesFinance(scrapy.Spider):
     # 资产负债表
     def parse_zcfzb(self, response):
         result = json.loads(response.text)
+        s = ["NOTE_ACCOUNTS_PAYABLE", "NOTE_ACCOUNTS_RECE", "PREPAYMENT", ]
         for item in result["data"]:
+            for item2 in s:
+                if item2 not in item:
+                    item[item2] = 0
+
             headers = {}
+            headers['NOTE_ACCOUNTS_PAYABLE'] = str(item['NOTE_ACCOUNTS_PAYABLE'])
+            headers['NOTE_ACCOUNTS_RECE'] = str(item['NOTE_ACCOUNTS_RECE'])
+            headers['PREPAYMENT'] = str(item['PREPAYMENT'])
             companyType = response.request.headers.getlist('companyType')[0].decode("UTF-8")
             headers['XSMLL'] = response.request.headers.getlist('XSMLL')[0].decode("UTF-8")
             headers['XSJLL'] = response.request.headers.getlist('XSJLL')[0].decode("UTF-8")
@@ -121,9 +129,6 @@ class SharesFinance(scrapy.Spider):
             headers['TOAZZL'] = response.request.headers.getlist('TOAZZL')[0].decode("UTF-8")
             headers['CHZZL'] = response.request.headers.getlist('CHZZL')[0].decode("UTF-8")
             headers['YSZKZZL'] = response.request.headers.getlist('YSZKZZL')[0].decode("UTF-8")
-            headers['NOTE_ACCOUNTS_PAYABLE'] = str(item['NOTE_ACCOUNTS_PAYABLE'])
-            headers['NOTE_ACCOUNTS_RECE'] = str(item['NOTE_ACCOUNTS_RECE'])
-            headers['PREPAYMENT'] = str(item['PREPAYMENT'])
             s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
             headers['s_code'] = s_code
             headers['companyType'] = companyType
@@ -136,8 +141,16 @@ class SharesFinance(scrapy.Spider):
     # 利润表
     def parse_lrb(self, response):
         result = json.loads(response.text)
+        s = ["NOTE_ACCOUNTS_PAYABLE", "NOTE_ACCOUNTS_RECE", "PREPAYMENT", ]
         for item in result["data"]:
+            for item2 in s:
+                if item2 not in item:
+                    item[item2] = 0
+
             headers = {}
+            headers['NONBUSINESS_INCOME'] = str(item['NONBUSINESS_INCOME'])
+            headers['NONBUSINESS_EXPENSE'] = str(item['NONBUSINESS_EXPENSE'])
+            headers['INVEST_INCOME'] = str(item['INVEST_INCOME'])
             headers['XSMLL'] = response.request.headers.getlist('XSMLL')[0].decode("UTF-8")
             headers['XSJLL'] = response.request.headers.getlist('XSJLL')[0].decode("UTF-8")
             headers['ZZCZZTS'] = response.request.headers.getlist('ZZCZZTS')[0].decode("UTF-8")
@@ -149,9 +162,7 @@ class SharesFinance(scrapy.Spider):
             headers['NOTE_ACCOUNTS_PAYABLE'] = response.request.headers.getlist('NOTE_ACCOUNTS_PAYABLE')[0].decode("UTF-8")
             headers['NOTE_ACCOUNTS_RECE'] = response.request.headers.getlist('NOTE_ACCOUNTS_RECE')[0].decode("UTF-8")
             headers['PREPAYMENT'] = response.request.headers.getlist('PREPAYMENT')[0].decode("UTF-8")
-            headers['NONBUSINESS_INCOME'] = str(item['NONBUSINESS_INCOME'])
-            headers['NONBUSINESS_EXPENSE'] = str(item['NONBUSINESS_EXPENSE'])
-            headers['INVEST_INCOME'] = str(item['INVEST_INCOME'])
+
             companyType = response.request.headers.getlist('companyType')[0].decode("UTF-8")
             item_loader = ItemLoader(item=SharesItems.Items())
             item_loader.add_value("SECURITY_CODE", item['SECURITY_CODE'])
