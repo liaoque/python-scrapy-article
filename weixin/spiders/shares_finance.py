@@ -58,8 +58,10 @@ class SharesFinance(scrapy.Spider):
             code = item[0]
             if int(code) < 600000:
                 s_code = 'SZ' +code
-            else:
+            elif int(code) < 800000:
                 s_code = 'SH' + code
+            else:
+                s_code = 'BJ' + code
             url = self.get_url(s_code)
             self.headers['s_code'] = s_code
             yield scrapy.Request(url,
