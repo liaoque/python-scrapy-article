@@ -39,12 +39,12 @@ class SharesFinance(scrapy.Spider):
 
     def get_url_zcfzb(self, code, dates, type):
         return 'https://emweb.securities.eastmoney.com/PC_HSF10/NewFinanceAnalysis/zcfzbAjaxNew?' \
-               'companyType=4&reportDateType=0&reportType=' + type + '&dates=' + dates + \
+               'companyType='+type +'&reportDateType=0&reportType=1&dates=' + dates + \
                '&code=' + code
 
     def get_url_lrb(self, code, dates, type):
         return 'https://emweb.securities.eastmoney.com/PC_HSF10/NewFinanceAnalysis/lrbAjaxNew?' \
-               'companyType=4&reportDateType=0&reportType='+type +'&dates=' + dates + \
+               'companyType='+type +'&reportDateType=0&reportType=1&dates=' + dates + \
                '&code=' + code
 
     def get_url(self, code):
