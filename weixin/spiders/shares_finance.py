@@ -86,7 +86,12 @@ class SharesFinance(scrapy.Spider):
 
     def parse_content(self, response):
         result = json.loads(response.text)
+        s = ["XSMLL", "XSJLL", "ZZCZZTS", "CHZZTS", "YSZKZZTS", "TOAZZL", "CHZZL", "YSZKZZL",]
         for item in result["data"]:
+            for item2 in s:
+                if item2 not in item:
+                    item[item2] = 0
+
             headers = {}
             # print(str(item))
             s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
@@ -141,7 +146,7 @@ class SharesFinance(scrapy.Spider):
     # 利润表
     def parse_lrb(self, response):
         result = json.loads(response.text)
-        s = ["NOTE_ACCOUNTS_PAYABLE", "NOTE_ACCOUNTS_RECE", "PREPAYMENT", ]
+        s = ["NONBUSINESS_INCOME", "NONBUSINESS_EXPENSE", "INVEST_INCOME", ]
         for item in result["data"]:
             for item2 in s:
                 if item2 not in item:
