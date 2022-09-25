@@ -30,13 +30,14 @@ class Items(scrapy.Item):
     NONBUSINESS_INCOME = scrapy.Field()
     NONBUSINESS_EXPENSE = scrapy.Field()
     INVEST_INCOME = scrapy.Field()
+    companyType = scrapy.Field()
 
     def defaults(self):
         s = ["SECURITY_CODE", "REPORT_DATE", "REPORT_DATE_NAME",
              "XSMLL",  "XSJLL",  "ZZCZZTS",  "CHZZTS",  "YSZKZZTS",
              "TOAZZL",  "CHZZL",  "YSZKZZL",  "NOTE_ACCOUNTS_PAYABLE",  "NOTE_ACCOUNTS_RECE",
              "PREPAYMENT",  "NOTE_ACCOUNTS_PAYABLE",  "NONBUSINESS_INCOME",
-             "NONBUSINESS_EXPENSE", "INVEST_INCOME",]
+             "NONBUSINESS_EXPENSE", "INVEST_INCOME", "companyType"]
         for item in s:
             if item not in self:
                 self[item] = [0]
@@ -70,7 +71,7 @@ class Items(scrapy.Item):
                         turnover_days = %s, goods_turnover_days = %s, `account_turnover_days` = %s, 
                         turnover_rate = %s, goods_turnover_rate = %s, `account_turnover_rate` = %s, 
                         non_operating_incom = %s, non_operating_expenses = %s, `income_from_investment` = %s,
-                         notes_payable = %s, notes_receivable = %s , prepayment = %s 
+                         notes_payable = %s, notes_receivable = %s , prepayment = %s , companyType = %s
                         where code_id = %s and date_as=%s
                 """
         params = (
@@ -90,11 +91,12 @@ class Items(scrapy.Item):
             self['NOTE_ACCOUNTS_PAYABLE'][0],
             self['NOTE_ACCOUNTS_RECE'][0],
             self['PREPAYMENT'][0],
-
+            self['companyType'][0],
 
 
             self['SECURITY_CODE'][0],
             self['REPORT_DATE'][0],
+
         )
         print(self['PREPAYMENT'][0])
         cursor.execute(sql, params)
@@ -105,11 +107,11 @@ class Items(scrapy.Item):
                     turnover_days, goods_turnover_days,account_turnover_days,
                     turnover_rate, goods_turnover_rate,account_turnover_rate,
                     non_operating_incom, non_operating_expenses,income_from_investment,
-                    notes_payable, notes_receivable, prepayment)
+                    notes_payable, notes_receivable, prepayment, companyType)
                     VALUES (
                     %s, %s, %s, %s, %s, %s, %s, 
                     %s, %s, %s, %s, %s, %s, %s, 
-                    %s, %s, %s
+                    %s, %s, %s, %s
                     )
                     """;
         params = (
@@ -135,6 +137,7 @@ class Items(scrapy.Item):
             self['NOTE_ACCOUNTS_PAYABLE'][0],
             self['NOTE_ACCOUNTS_RECE'][0],
             self['PREPAYMENT'][0],
+            self['companyType'][0],
 
 
         )

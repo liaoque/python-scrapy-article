@@ -44,6 +44,7 @@ class SharesFinance(models.Model):
     notes_payable = models.FloatField(default=0, help_text="应付票据及应付账款")
     notes_receivable = models.FloatField(default=0, help_text="应收票据及应收账款")
     prepayment = models.FloatField(default=0, help_text="预付款项")
+    companyType = models.FloatField(default=0, help_text="东方财富必须字段")
 
     class Meta:
         db_table = "mc_shares_finance"
