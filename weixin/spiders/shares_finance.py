@@ -77,9 +77,9 @@ class SharesFinance(scrapy.Spider):
         s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
         url = self.get_url(s_code)
         headers['s_code'] = s_code
-        headers['type'] = type
+        headers['companyType'] = type
         yield scrapy.Request(url,
-                             headers=self.headers,
+                             headers=headers,
                              dont_filter=True,
                              callback=self.parse_content)
 
@@ -90,7 +90,7 @@ class SharesFinance(scrapy.Spider):
             headers = {}
             # print(str(item))
             s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
-            type = response.request.headers.getlist('type')[0].decode("UTF-8")
+            companyType = response.request.headers.getlist('companyType')[0].decode("UTF-8")
             headers['XSMLL'] = str(item['XSMLL'])
             headers['XSJLL'] = str(item['XSJLL'])
             headers['ZZCZZTS'] = str(item['ZZCZZTS'])
@@ -100,8 +100,8 @@ class SharesFinance(scrapy.Spider):
             headers['CHZZL'] = str(item['CHZZL'])
             headers['YSZKZZL'] = str(item['YSZKZZL'])
             headers['s_code'] = s_code
-            headers['type'] = type
-            url = self.get_url_zcfzb(s_code, str(item['REPORT_DATE']), type)
+            headers['companyType'] = companyType
+            url = self.get_url_zcfzb(s_code, str(item['REPORT_DATE']), companyType)
             yield scrapy.Request(url,
                                  headers=headers,
                                  dont_filter=True,
@@ -112,7 +112,7 @@ class SharesFinance(scrapy.Spider):
         result = json.loads(response.text)
         for item in result["data"]:
             headers = {}
-            type = response.request.headers.getlist('type')[0].decode("UTF-8")
+            companyType = response.request.headers.getlist('companyType')[0].decode("UTF-8")
             headers['XSMLL'] = response.request.headers.getlist('XSMLL')[0].decode("UTF-8")
             headers['XSJLL'] = response.request.headers.getlist('XSJLL')[0].decode("UTF-8")
             headers['ZZCZZTS'] = response.request.headers.getlist('ZZCZZTS')[0].decode("UTF-8")
@@ -126,8 +126,8 @@ class SharesFinance(scrapy.Spider):
             headers['PREPAYMENT'] = str(item['PREPAYMENT'])
             s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
             headers['s_code'] = s_code
-            headers['type'] = type
-            url = self.get_url_lrb(s_code, str(item['REPORT_DATE']), type)
+            headers['companyType'] = companyType
+            url = self.get_url_lrb(s_code, str(item['REPORT_DATE']), companyType)
             yield scrapy.Request(url,
                                  headers=headers,
                                  dont_filter=True,
@@ -152,7 +152,7 @@ class SharesFinance(scrapy.Spider):
             headers['NONBUSINESS_INCOME'] = str(item['NONBUSINESS_INCOME'])
             headers['NONBUSINESS_EXPENSE'] = str(item['NONBUSINESS_EXPENSE'])
             headers['INVEST_INCOME'] = str(item['INVEST_INCOME'])
-            companyType = response.request.headers.getlist('type')[0].decode("UTF-8")
+            companyType = response.request.headers.getlist('companyType')[0].decode("UTF-8")
             item_loader = ItemLoader(item=SharesItems.Items())
             item_loader.add_value("SECURITY_CODE", item['SECURITY_CODE'])
             item_loader.add_value("REPORT_DATE", item['REPORT_DATE'])
