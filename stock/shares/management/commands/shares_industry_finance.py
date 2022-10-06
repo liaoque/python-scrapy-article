@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         shares = SharesName.objects.filter(code_type=2)
-        sharesFinanceDateAll = SharesFinance.objects.groupby('date_as').orderby('date_as').all()
+        sharesFinanceDateAll = SharesFinance.objects.values("date_as").annotate(counts=Count(id))
         for item in shares:
             joinIndustry = SharesJoinIndustry.objects.filter(industry_code_id=item.code)
             for item_date in sharesFinanceDateAll:
