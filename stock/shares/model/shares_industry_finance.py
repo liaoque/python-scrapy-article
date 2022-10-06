@@ -26,7 +26,7 @@ class SharesIndustryFinance(models.Model):
     prepayment = models.FloatField(default=0, help_text="预付款项")
 
     class Meta:
-        db_table = "mc_shares_finance"
+        db_table = "mc_shares_industry_finance"
 
     def __str__(self):
         return self.code_id + ":" + self.title + ":" + datetime.strftime(self.date_as, '%Y-%m-%d') +\
