@@ -33,3 +33,4 @@ from .model.shares_fh import SharesFH
 from .model.shares_industry_macd import SharesIndustryMacd
 from .model.stock_index import StockIndex
 from .model.shares_finance import SharesFinance
+from .model.shares_industry_finance import SharesIndustryFinance
