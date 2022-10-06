@@ -30,7 +30,7 @@ class Command(BaseCommand):
         for item in shares:
             joinIndustry = SharesJoinIndustry.objects.filter(industry_code_id=item.code)
             for item_date in sharesFinanceDateAll:
-                finance = SharesFinance.objects.filter(date_as=item_date.date_as,
+                finance = SharesFinance.objects.filter(date_as=item_date['date_as'],
                                                        code_id__in=[item.code_id for item in joinIndustry])
                 self.saveFinance(finance, item.industry_code_id)
 
