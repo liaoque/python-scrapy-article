@@ -38,8 +38,8 @@ class Command(BaseCommand):
         l = len(finance)
         if l < 3:
             return
+        finance = finance.all()[1:-1]
         print(finance)
-        finance = finance[1:-1]
         title = finance[0]['title']
         date_as = finance[0]['date_as']
         gpm = sum([item.gpm for item in finance]) / l
