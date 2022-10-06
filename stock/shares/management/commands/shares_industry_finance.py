@@ -38,6 +38,7 @@ class Command(BaseCommand):
         l = len(finance)
         if l < 3:
             return
+        print(finance)
         finance = finance[1:-1]
         title = finance[0]['title']
         date_as = finance[0]['date_as']
