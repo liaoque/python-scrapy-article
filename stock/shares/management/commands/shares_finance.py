@@ -30,9 +30,9 @@ class Command(BaseCommand):
         sharesFinanceItem = SharesFinance.objects.order_by('-date_as').all()[0]
         allList = []
         for item in shares:
-            if SharesFinance.objects.filter(date_as=sharesFinanceItem.date_as, code_id=item.code_id).count() == 0:
+            if SharesFinance.objects.filter(date_as=sharesFinanceItem.date_as, code_id=item.code).count() == 0:
                 continue
-            all = SharesFinance.objects.filter(code_id=item.code_id).order_by('-date_as')[:2]
+            all = SharesFinance.objects.filter(code_id=item.code).order_by('-date_as')[:2]
             # 净利率低增长的
             if all[0].npmos <= all[1].npmos:
                 continue
@@ -40,7 +40,7 @@ class Command(BaseCommand):
             if (all[0].non_operating_incom - all[1].non_operating_incom) / all[1].non_operating_incom > 0.5:
                 continue
 
-            sharesJoinIndustry = SharesJoinIndustry.objects.filter(code_id=item.code_id)[0]
+            sharesJoinIndustry = SharesJoinIndustry.objects.filter(code_id=item.code)[0]
             ic = SharesIndustryFinance.objects.filter(code_id=sharesJoinIndustry.industry_code_id)[0]
             # 低于行业 存货周转率
             if all[0].goods_turnover_rate < ic.goods_turnover_rate:
