@@ -38,8 +38,7 @@ class Command(BaseCommand):
         l = len(finance)
         if l < 3:
             return
-        finance = finance.order_by('npmos')[1:]
-        finance = finance.order_by('-npmos')[1:]
+        finance = finance.order_by('npmos')[1:len(finance)-1]
         print(finance)
         title = finance[0]['title']
         date_as = finance[0]['date_as']
