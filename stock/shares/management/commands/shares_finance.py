@@ -58,7 +58,7 @@ class Command(BaseCommand):
             if all[0].goods_turnover_rate < ic.goods_turnover_rate:
                 continue
             # 低于行业 应收款周转率
-            if all[0].account_turnover_days < ic.account_turnover_days:
+            if all[0].account_turnover_rate < ic.account_turnover_rate:
                 continue
 
             allList.append(all[0])
