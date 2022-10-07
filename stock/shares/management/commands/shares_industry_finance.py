@@ -41,9 +41,9 @@ class Command(BaseCommand):
         print(finance.order_by('npmos'))
         finance = finance.order_by('npmos')[1:len(finance)-1]
         print(finance)
-        finance = finance.values()
-        title = finance[0]['title']
-        date_as = finance[0]['date_as']
+        # finance = finance.values()
+        title = finance[0].title
+        date_as = finance[0].date_as
         gpm = sum([item.gpm for item in finance]) / l
         npmos = sum([item.npmos for item in finance]) / l
         turnover_days = sum([item.turnover_days for item in finance]) / l
