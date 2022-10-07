@@ -48,9 +48,9 @@ class Command(BaseCommand):
             oldSharesFinance = SharesFinance.objects.filter(code_id=item.code, date_as=date_as_t)
             if len(oldSharesFinance) > 0:
                 oldSharesFinance = oldSharesFinance[0]
-                # 净利率低增长的
-                if all[0].npmos <= oldSharesFinance.npmos:
-                    continue
+                # # 净利率低增长的
+                # if all[0].npmos <= oldSharesFinance.npmos:
+                #     continue
                 # 低于前期 存货周转率
                 if all[0].goods_turnover_rate < oldSharesFinance.goods_turnover_rate:
                     continue
