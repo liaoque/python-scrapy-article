@@ -43,6 +43,11 @@ class Command(BaseCommand):
                 continue
 
             # 银行，证券，保险不要
+            sharesJoinIndustry = SharesJoinIndustry.objects.filter(code_id=item.code);
+            if len(sharesJoinIndustry) == 0:
+                print(item.code, "++++++")
+                continue
+
             sharesJoinIndustry = SharesJoinIndustry.objects.filter(code_id=item.code)[0]
             if sharesJoinIndustry.industry_code_id in ['BK0475', 'BK0474', 'BK0473']:
                 continue
