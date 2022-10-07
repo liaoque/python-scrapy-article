@@ -42,8 +42,13 @@ class Command(BaseCommand):
                 1].non_operating_incom > 0.5:
                 continue
 
+            # 银行，证券，保险不要
             sharesJoinIndustry = SharesJoinIndustry.objects.filter(code_id=item.code)[0]
+            if sharesJoinIndustry.industry_code_id in ['BK0475', 'BK0474', 'BK0473']:
+                continue
+
             ic = SharesIndustryFinance.objects.filter(code_id=sharesJoinIndustry.industry_code_id)[0]
+
             # 低于行业 存货周转率
             if all[0].goods_turnover_rate < ic.goods_turnover_rate:
                 continue
