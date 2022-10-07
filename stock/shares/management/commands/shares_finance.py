@@ -36,8 +36,10 @@ class Command(BaseCommand):
             # 净利率低增长的
             if all[0].npmos <= all[1].npmos:
                 continue
+
             # 非营业收入增长过高不要
-            if (all[0].non_operating_incom - all[1].non_operating_incom) / all[1].non_operating_incom > 0.5:
+            if all[1].non_operating_incom > 0 and (all[0].non_operating_incom - all[1].non_operating_incom) / all[
+                1].non_operating_incom > 0.5:
                 continue
 
             sharesJoinIndustry = SharesJoinIndustry.objects.filter(code_id=item.code)[0]
@@ -64,5 +66,3 @@ class Command(BaseCommand):
             ['844596330@qq.com'],
             fail_silently=False,
         )
-
-
