@@ -44,7 +44,7 @@ class Command(BaseCommand):
 
             sss =  all[0].date_as.timetuple()
             # time.strptime(all[0].date_as, '%Y-%m-%d')
-            date_as_t =  (sss.tm_year - 1) + "-" + sss.tm_mon + "-" + sss.tm_mday
+            date_as_t =  str(sss.tm_year - 1) + "-" + str(sss.tm_mon) + "-" + str(sss.tm_mday)
             print(date_as_t)
             oldSharesFinance = SharesFinance.objects.filter(code_id=item.code, date_as=date_as_t)
             if len(oldSharesFinance) > 0:
