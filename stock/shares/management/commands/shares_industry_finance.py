@@ -32,7 +32,7 @@ class Command(BaseCommand):
             for item_date in sharesFinanceDateAll:
                 finance = SharesFinance.objects.filter(date_as=item_date['date_as'],
                                                        code_id__in=[item.code_id for item in joinIndustry])
-                self.saveFinance(finance, item.industry_code_id)
+                self.saveFinance(finance, item.code)
 
     def saveFinance(self, finance, industry_code):
         l = len(finance)
