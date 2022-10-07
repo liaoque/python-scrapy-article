@@ -42,6 +42,23 @@ class Command(BaseCommand):
                 1].non_operating_incom > 0.5:
                 continue
 
+            sss = time.strptime(all[0].date_as, '%Y-%m-%d')
+            date_as_t =  (sss.tm_year - 1) + "-" + sss.tm_mon + "-" + sss.tm_mday
+            print(date_as_t)
+            oldSharesFinance = SharesFinance.objects.filter(code_id=item.code, date_as=date_as_t)
+            if len(oldSharesFinance) > 0:
+                oldSharesFinance = oldSharesFinance[0]
+                # 净利率低增长的
+                if all[0].npmos <= oldSharesFinance.npmos:
+                    continue
+                # 低于前期 存货周转率
+                if all[0].goods_turnover_rate < oldSharesFinance.goods_turnover_rate:
+                    continue
+                # 低于前期 应收款周转率
+                if all[0].account_turnover_rate < oldSharesFinance.account_turnover_rate:
+                    continue
+
+
             # 银行，证券，保险不要
             sharesJoinIndustryList = SharesJoinIndustry.objects.filter(code_id=item.code);
             if len(sharesJoinIndustryList) == 0:
