@@ -104,6 +104,8 @@ class SharesFinance(scrapy.Spider):
             headers['TOAZZL'] = str(item['TOAZZL'])
             headers['CHZZL'] = str(item['CHZZL'])
             headers['YSZKZZL'] = str(item['YSZKZZL'])
+            headers['PARENTNETPROFIT'] = str(item['PARENTNETPROFIT'])
+            headers['KCFJCXSYJLR'] = str(item['KCFJCXSYJLR'])
             headers['s_code'] = s_code
             headers['companyType'] = companyType
             url = self.get_url_zcfzb(s_code, str(item['REPORT_DATE']), companyType)
@@ -134,6 +136,10 @@ class SharesFinance(scrapy.Spider):
             headers['TOAZZL'] = response.request.headers.getlist('TOAZZL')[0].decode("UTF-8")
             headers['CHZZL'] = response.request.headers.getlist('CHZZL')[0].decode("UTF-8")
             headers['YSZKZZL'] = response.request.headers.getlist('YSZKZZL')[0].decode("UTF-8")
+
+            headers['PARENTNETPROFIT'] = response.request.headers.getlist('PARENTNETPROFIT')[0].decode("UTF-8")
+            headers['KCFJCXSYJLR'] = response.request.headers.getlist('KCFJCXSYJLR')[0].decode("UTF-8")
+
             s_code = response.request.headers.getlist('s_code')[0].decode("UTF-8")
             headers['s_code'] = s_code
             headers['companyType'] = companyType
@@ -167,6 +173,8 @@ class SharesFinance(scrapy.Spider):
             headers['NOTE_ACCOUNTS_PAYABLE'] = response.request.headers.getlist('NOTE_ACCOUNTS_PAYABLE')[0].decode("UTF-8")
             headers['NOTE_ACCOUNTS_RECE'] = response.request.headers.getlist('NOTE_ACCOUNTS_RECE')[0].decode("UTF-8")
             headers['PREPAYMENT'] = response.request.headers.getlist('PREPAYMENT')[0].decode("UTF-8")
+            headers['PARENTNETPROFIT'] = response.request.headers.getlist('PARENTNETPROFIT')[0].decode("UTF-8")
+            headers['KCFJCXSYJLR'] = response.request.headers.getlist('KCFJCXSYJLR')[0].decode("UTF-8")
 
             companyType = response.request.headers.getlist('companyType')[0].decode("UTF-8")
             item_loader = ItemLoader(item=SharesItems.Items())
@@ -185,8 +193,12 @@ class SharesFinance(scrapy.Spider):
             item_loader.add_value("NOTE_ACCOUNTS_RECE", headers['NOTE_ACCOUNTS_RECE'])
             item_loader.add_value("PREPAYMENT", headers['PREPAYMENT'])
             item_loader.add_value("NONBUSINESS_INCOME", headers['NONBUSINESS_INCOME'])
-            item_loader.add_value("NONBUSINESS_EXPENSE", headers['NONBUSINESS_INCOME'])
+            item_loader.add_value("NONBUSINESS_EXPENSE", headers['NONBUSINESS_EXPENSE'])
             item_loader.add_value("INVEST_INCOME", headers['INVEST_INCOME'])
+
+            item_loader.add_value("PARENTNETPROFIT", headers['PARENTNETPROFIT'])
+            item_loader.add_value("KCFJCXSYJLR", headers['KCFJCXSYJLR'])
+
             item_loader.add_value("companyType", companyType)
             yield item_loader.load_item()
 

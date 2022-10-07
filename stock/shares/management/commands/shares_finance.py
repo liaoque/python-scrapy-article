@@ -37,9 +37,8 @@ class Command(BaseCommand):
             if all[0].npmos <= all[1].npmos:
                 continue
 
-            # 非营业收入增长过高不要
-            if all[1].non_operating_incom > 0 and (all[0].non_operating_incom - all[1].non_operating_incom) / all[
-                1].non_operating_incom > 0.5:
+            # 非营业收入 不超过净利润的5%
+            if all[1].non_operating_incom > 0 and all[0].non_operating_incom  / all[0].parentnetprofit > 0.05:
                 continue
 
             sss =  all[0].date_as.timetuple()

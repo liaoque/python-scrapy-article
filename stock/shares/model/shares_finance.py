@@ -43,6 +43,8 @@ class SharesFinance(models.Model):
     income_from_investment = models.FloatField(default=0, help_text="投资收益")
     notes_payable = models.FloatField(default=0, help_text="应付票据及应付账款")
     notes_receivable = models.FloatField(default=0, help_text="应收票据及应收账款")
+    parentnetprofit = models.FloatField(default=0, help_text="归属净利润(元)")
+    kcfjcxsyjlr = models.FloatField(default=0, help_text="扣非净利润(元)")
     prepayment = models.FloatField(default=0, help_text="预付款项")
     companyType = models.FloatField(default=0, help_text="东方财富必须字段")
 
@@ -50,8 +52,8 @@ class SharesFinance(models.Model):
         db_table = "mc_shares_finance"
 
     def __str__(self):
-        return self.code_id + ":" + self.title + ":" + datetime.strftime(self.date_as, '%Y-%m-%d') +\
-                " 净利润:" + str(self.gpm) + " 毛利润:" + str(self.npmos) +  " 总资产周转率:" + str(self.turnover_rate) + \
+        return self.code_id + ":" + self.title + ":" + datetime.strftime(self.date_as, '%Y-%m-%d') + \
+               " 净利润:" + str(self.gpm) + " 毛利润:" + str(self.npmos) + " 总资产周转率:" + str(self.turnover_rate) + \
                " 存货周转率:" + str(self.goods_turnover_rate) + " 应收账款周转率:" + str(self.account_turnover_rate) + \
                " 营业外收入:" + str(self.non_operating_expenses) + " 营业外支出:" + str(self.income_from_investment) + \
                " 应付票据及应付账款:" + str(self.notes_payable) + " 应收票据及应收账款:" + str(self.notes_receivable) + \
