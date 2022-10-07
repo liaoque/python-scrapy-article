@@ -67,7 +67,7 @@ class Command(BaseCommand):
     def sendMessage(self, allList):
         tz = timezone(timedelta(hours=+8))
         str_con = "找到基本面相对较好的公司：%s" % (
-            "\",\"".join(allList['code_id'])
+            "\",\"".join([item.code_id for item in allList])
         )
         send_mail(
             '特别提醒%s' % (datetime.now(tz)),
