@@ -75,6 +75,10 @@ class Command(BaseCommand):
 
             ic = SharesIndustryFinance.objects.filter(code_id=sharesJoinIndustry.industry_code_id)[0]
 
+            # 净利润 低于行业净利润
+            if all[0].npmos < ic.npmos:
+                continue
+
             # 低于行业 存货周转率
             if all[0].goods_turnover_rate < ic.goods_turnover_rate:
                 continue

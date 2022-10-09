@@ -53,7 +53,7 @@ class SharesFinance(models.Model):
 
     def __str__(self):
         return self.code_id + ":" + self.title + ":" + datetime.strftime(self.date_as, '%Y-%m-%d') + \
-               " 净利润:" + str(self.gpm) + " 毛利润:" + str(self.npmos) + " 总资产周转率:" + str(self.turnover_rate) + \
+               " 毛利率:" + str(self.gpm) + " 净利率:" + str(self.npmos) + " 总资产周转率:" + str(self.turnover_rate) + \
                " 存货周转率:" + str(self.goods_turnover_rate) + " 应收账款周转率:" + str(self.account_turnover_rate) + \
                " 营业外收入:" + str(self.non_operating_expenses) + " 营业外支出:" + str(self.income_from_investment) + \
                " 应付票据及应付账款:" + str(self.notes_payable) + " 应收票据及应收账款:" + str(self.notes_receivable) + \
