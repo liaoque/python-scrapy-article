@@ -33,7 +33,7 @@ class Command(BaseCommand):
             if SharesFinance.objects.filter(date_as=sharesFinanceItem.date_as, code_id=item.code).count() == 0:
                 continue
             all = SharesFinance.objects.filter(code_id=item.code).order_by('-date_as')[:2]
-            # 净利率低增长的
+            # 销售净利率 低增长的
             if all[0].npmos <= all[1].npmos:
                 continue
 
