@@ -39,12 +39,12 @@ class SharesFinance(scrapy.Spider):
 
     def get_url_zcfzb(self, code, dates, type):
         return 'https://emweb.securities.eastmoney.com/PC_HSF10/NewFinanceAnalysis/zcfzbAjaxNew?' \
-               'companyType='+type +'&reportDateType=0&reportType=1&dates=' + dates + \
+               'companyType=' + type + '&reportDateType=0&reportType=1&dates=' + dates + \
                '&code=' + code
 
     def get_url_lrb(self, code, dates, type):
         return 'https://emweb.securities.eastmoney.com/PC_HSF10/NewFinanceAnalysis/lrbAjaxNew?' \
-               'companyType='+type +'&reportDateType=0&reportType=1&dates=' + dates + \
+               'companyType=' + type + '&reportDateType=0&reportType=1&dates=' + dates + \
                '&code=' + code
 
     def get_url(self, code):
@@ -59,7 +59,7 @@ class SharesFinance(scrapy.Spider):
         for item in results:
             code = item[0]
             if int(code) < 600000:
-                s_code = 'SZ' +code
+                s_code = 'SZ' + code
             elif int(code) < 800000:
                 s_code = 'SH' + code
             else:
@@ -83,10 +83,9 @@ class SharesFinance(scrapy.Spider):
                              dont_filter=True,
                              callback=self.parse_content)
 
-
     def parse_content(self, response):
         result = json.loads(response.text)
-        s = ["XSMLL", "XSJLL", "ZZCZZTS", "CHZZTS", "YSZKZZTS", "TOAZZL", "CHZZL", "YSZKZZL",]
+        s = ["XSMLL", "XSJLL", "ZZCZZTS", "CHZZTS", "YSZKZZTS", "TOAZZL", "CHZZL", "YSZKZZL", ]
         for item in result["data"]:
             for item2 in s:
                 if item2 not in item:
@@ -152,6 +151,9 @@ class SharesFinance(scrapy.Spider):
     # 利润表
     def parse_lrb(self, response):
         result = json.loads(response.text)
+        if "data" not in result:
+            print(response.text, response.request)
+            return
         s = ["NONBUSINESS_INCOME", "NONBUSINESS_EXPENSE", "INVEST_INCOME", ]
         for item in result["data"]:
             for item2 in s:
@@ -170,7 +172,8 @@ class SharesFinance(scrapy.Spider):
             headers['TOAZZL'] = response.request.headers.getlist('TOAZZL')[0].decode("UTF-8")
             headers['CHZZL'] = response.request.headers.getlist('CHZZL')[0].decode("UTF-8")
             headers['YSZKZZL'] = response.request.headers.getlist('YSZKZZL')[0].decode("UTF-8")
-            headers['NOTE_ACCOUNTS_PAYABLE'] = response.request.headers.getlist('NOTE_ACCOUNTS_PAYABLE')[0].decode("UTF-8")
+            headers['NOTE_ACCOUNTS_PAYABLE'] = response.request.headers.getlist('NOTE_ACCOUNTS_PAYABLE')[0].decode(
+                "UTF-8")
             headers['NOTE_ACCOUNTS_RECE'] = response.request.headers.getlist('NOTE_ACCOUNTS_RECE')[0].decode("UTF-8")
             headers['PREPAYMENT'] = response.request.headers.getlist('PREPAYMENT')[0].decode("UTF-8")
             headers['PARENTNETPROFIT'] = response.request.headers.getlist('PARENTNETPROFIT')[0].decode("UTF-8")
@@ -213,7 +216,6 @@ class SharesFinance(scrapy.Spider):
         except:
             print("Error: unable to fecth data")
         return results
-
 
     def __del__(self):
         if self.db != None:
