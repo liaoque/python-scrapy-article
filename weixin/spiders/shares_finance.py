@@ -206,7 +206,7 @@ class SharesFinance(scrapy.Spider):
             yield item_loader.load_item()
 
     def findStoks(self):
-        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1';
+        sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1 order by code';
         results = []
         try:
             # 执行SQL语句
