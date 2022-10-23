@@ -22,26 +22,28 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         l = []
-        for item in SharesJoinBlock.objects.filter(block_code_id='BK0712'):
-            code = item.cod_id
+        for item in SharesJoinBlock.objects.filter(block_code_id='BK0712', code_id="603556"):
+            code = item.code_id
             url = "http://basic.10jqka.com.cn/" +str(code)+"/operate.html"
             r = requests.get(url, headers={
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
             })
-            print(r.text.encode('latin-1').decode('gbk').encode('utf-8'))
-            if r.text.encode('latin-1').decode('gbk').encode('utf-8').find("印度") != -1:
+            t = r.text.encode('latin-1').decode('gbk').encode('utf-8')
+            t = str(t)
+            print(t)
+            if t.find("印度") != -1:
                 l.append(code)
                 continue
-            if r.text.encode('latin-1').decode('gbk').encode('utf-8').find("印尼") != -1:
+            if t.find("印尼") != -1:
                 l.append(code)
                 continue
-            if r.text.encode('latin-1').decode('gbk').encode('utf-8').find("缅甸") != -1:
+            if t.find("缅甸") != -1:
                 l.append(code)
                 continue
-            if r.text.encode('latin-1').decode('gbk').encode('utf-8').find("老挝") != -1:
+            if t.find("老挝") != -1:
                 l.append(code)
                 continue
-            if r.text.encode('latin-1').decode('gbk').encode('utf-8').find("越南") != -1:
+            if t.find("越南") != -1:
                 l.append(code)
                 continue
 
