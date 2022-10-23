@@ -28,20 +28,20 @@ class Command(BaseCommand):
             r = requests.get(url, headers={
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
             })
-
-            if r.text.find("印度") != -1:
+            print(r.text.encode('latin-1').decode('gbk').encode('utf-8'))
+            if r.text.encode('latin-1').decode('gbk').encode('utf-8').find("印度") != -1:
                 l.append(code)
                 continue
-            if r.text.find("印尼") != -1:
+            if r.text.encode('latin-1').decode('gbk').encode('utf-8').find("印尼") != -1:
                 l.append(code)
                 continue
-            if r.text.find("缅甸") != -1:
+            if r.text.encode('latin-1').decode('gbk').encode('utf-8').find("缅甸") != -1:
                 l.append(code)
                 continue
-            if r.text.find("老挝") != -1:
+            if r.text.encode('latin-1').decode('gbk').encode('utf-8').find("老挝") != -1:
                 l.append(code)
                 continue
-            if r.text().find("越南") != -1:
+            if r.text.encode('latin-1').decode('gbk').encode('utf-8').find("越南") != -1:
                 l.append(code)
                 continue
 
