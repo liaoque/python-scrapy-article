@@ -23,23 +23,22 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         l = []
         for item in SharesJoinBlock.objects.filter(block_code_id='BK0712'):
-            code = item.code
+            code = item.cod_id
             url = "http://basic.10jqka.com.cn/" +str(code)+"/operate.html"
             r = requests.get(url, headers={
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
             })
 
-            print(r.text())
-            if r.text().find("印度") != -1:
+            if r.text.find("印度") != -1:
                 l.append(code)
                 continue
-            if r.text().find("印尼") != -1:
+            if r.text.find("印尼") != -1:
                 l.append(code)
                 continue
-            if r.text().find("缅甸") != -1:
+            if r.text.find("缅甸") != -1:
                 l.append(code)
                 continue
-            if r.text().find("老挝") != -1:
+            if r.text.find("老挝") != -1:
                 l.append(code)
                 continue
             if r.text().find("越南") != -1:
