@@ -29,20 +29,20 @@ class Command(BaseCommand):
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
             })
 
-            print(r.content)
-            if r.content.find("印度") != -1:
+            print(r.text())
+            if r.text().find("印度") != -1:
                 l.append(code)
                 continue
-            if r.content.find("印尼") != -1:
+            if r.text().find("印尼") != -1:
                 l.append(code)
                 continue
-            if r.content.find("缅甸") != -1:
+            if r.text().find("缅甸") != -1:
                 l.append(code)
                 continue
-            if r.content.find("老挝") != -1:
+            if r.text().find("老挝") != -1:
                 l.append(code)
                 continue
-            if r.content.find("越南") != -1:
+            if r.text().find("越南") != -1:
                 l.append(code)
                 continue
 
