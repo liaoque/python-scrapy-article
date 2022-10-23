@@ -12,25 +12,25 @@ import numpy as np
 import talib
 import requests
 
+
 # " /bin/cp /alidata/python/python-scrapy-article/stock/* /alidata/python/python-scrapy-article-master/stock -rf"
 
 
 class Command(BaseCommand):
     help = '查印度，印尼，缅甸，老挝，越南'
 
-
-
     def handle(self, *args, **options):
         l = []
-        for item in SharesJoinBlock.objects.filter(block_code_id='BK0712', code_id="603556"):
+        for item in SharesJoinBlock.objects.filter(block_code_id='BK0712'):
             code = item.code_id
-            url = "http://basic.10jqka.com.cn/" +str(code)+"/operate.html"
+            url = "http://basic.10jqka.com.cn/" + str(code) + "/operate.html"
             r = requests.get(url, headers={
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
             })
-            t = r.text.encode('latin-1').decode('gbk').encode('utf-8')
+            t = r.content.decode('gbk')  # .encode('utf-8')
             t = str(t)
-            print(t)
+            # print(t)
+
             if t.find("印度") != -1:
                 l.append(code)
                 continue
