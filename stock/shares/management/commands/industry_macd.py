@@ -94,6 +94,7 @@ class Command(BaseCommand):
             sharesList = SharesIndustry.objects.filter(code_id=code).order_by('-date_as')
             if len(sharesList) == 0:
                 continue
+            sharesList = np.array(sharesList)
 
             # 按比例归一
             sharesIndustry = sharesList[-1:][0]
