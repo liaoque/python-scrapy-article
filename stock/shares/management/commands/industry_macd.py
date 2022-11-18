@@ -100,7 +100,9 @@ class Command(BaseCommand):
             sharesIndustry = sharesList[-1:][0]
             sharesIndustry.avg_p_min_rate = sharesIndustry.p_min / item.four_year_day
 
-            sharesListMacd = SharesIndustryMacd.objects.filter(code_id=code).order_by('-date_as')[-3:]
+            sharesListMacd = SharesIndustryMacd.objects.filter(code_id=code).order_by('-date_as')
+            sharesListMacd = np.array(sharesListMacd)
+            sharesListMacd = sharesListMacd[-3:]
             if sharesListMacd > 3 and sharesListMacd[0].diff > sharesListMacd[3].diff:
                 sharesIndustry.macd = 1
 
