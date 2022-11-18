@@ -103,7 +103,7 @@ class Command(BaseCommand):
             sharesListMacd = SharesIndustryMacd.objects.filter(code_id=code).order_by('-date_as')
             sharesListMacd = np.array(sharesListMacd)
             sharesListMacd = sharesListMacd[-3:]
-            if sharesListMacd > 3 and sharesListMacd[0].diff > sharesListMacd[3].diff:
+            if len(sharesListMacd) > 3 and sharesListMacd[0].dea > sharesListMacd[3].dea:
                 sharesIndustry.macd = 1
 
             sharesList10 = sharesList[-10:]
