@@ -1,10 +1,11 @@
 import numpy as np
 from datetime import datetime
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import Count
+from django.db.models import Count, Max, Min
 
 from shares.model.shares_name import SharesName
 from shares.model.shares_industry_macd import SharesIndustryMacd
+from shares.model.shares_industry import SharesIndustry
 
 import numpy as np
 import talib
@@ -52,8 +53,8 @@ class Command(BaseCommand):
             shares = np.array(itemList)[-1:][0]
             date_as = str(shares.date_as)
             # print(code + "：" + str(date_as) + "---" + str(today) + "----" + str(len(itemList)))
-            # if date_as != today:
-            #     continue
+            if date_as != today:
+                continue
 
             # 计算kdj
             print(code + "：" + date_as + "：开始计算macd")
@@ -78,6 +79,40 @@ class Command(BaseCommand):
             # SharesKdj
             # print(shares, ky, kj, kd, shares.code_id)
             # break
+
+        # 归一处理
+        for item in SharesName.objects.filter(status=1, code_type=2):
+            # 写过了
+            code = item.code
+            if item.four_year_day == 0:
+                # 当前板块最小的值
+                item.four_year_day = SharesIndustry.objects.filter(code_id=item.code).aggregate(Min('p_end'))[
+                    "p_end__min"]
+                item.save()
+                pass
+
+            sharesList = SharesIndustry.objects.filter(code_id=code).order_by('-date_as')
+            if len(sharesList) == 0:
+                continue
+
+            # 按比例归一
+            sharesIndustry = sharesList[-1:][0]
+            sharesIndustry.avg_p_min_rate = sharesIndustry.p_min / item.four_year_day
+
+            sharesListMacd = SharesIndustryMacd.objects.filter(code_id=code).order_by('-date_as')[-3:]
+            if sharesListMacd > 3 and sharesListMacd[0].diff > sharesListMacd[3].diff:
+                sharesIndustry.macd = 1
+
+            sharesList10 = sharesList[-10:]
+            sharesIndustry.avg10 = sum([item.p_end for item in sharesList10]) / len(sharesList10)
+            sharesIndustry.avg10_rate = sharesIndustry.avg10 / item.four_year_day
+
+            sharesList20 = sharesList[-20:]
+            sharesIndustry.avg20 = sum([item.p_end for item in sharesList20]) / len(sharesList20)
+            sharesIndustry.avg20_rate = sharesIndustry.avg20 / item.four_year_day
+            print(sharesIndustry)
+            sharesIndustry.save()
+
         pass
 
     def talib_Macd(self, data):
