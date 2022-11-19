@@ -96,25 +96,29 @@ class Command(BaseCommand):
                 continue
             sharesList = np.array(sharesList)
 
-            # 按比例归一
-            sharesIndustry = sharesList[1]
-            sharesIndustry.avg_p_min_rate = sharesIndustry.p_min / item.four_year_day
+            i = 0;
+            c = len(sharesList)
+            while i < c:
+                # 按比例归一
+                sharesIndustry = sharesList[i]
+                sharesIndustry.avg_p_min_rate = sharesIndustry.p_min / item.four_year_day
 
-            sharesListMacd = SharesIndustryMacd.objects.filter(code_id=code).order_by('-date_as')
-            sharesListMacd = np.array(sharesListMacd)
-            sharesListMacd = sharesListMacd[:4]
-            if len(sharesListMacd) > 3 and sharesListMacd[0].dea > sharesListMacd[3].dea:
-                sharesIndustry.macd = 1
+                sharesListMacd = SharesIndustryMacd.objects.filter(code_id=code).order_by('-date_as')
+                sharesListMacd = np.array(sharesListMacd)
+                sharesListMacd = sharesListMacd[i:4 * (i + 1)]
+                if len(sharesListMacd) > 3 and sharesListMacd[0].dea > sharesListMacd[3].dea:
+                    sharesIndustry.macd = 1
 
-            sharesList10 = sharesList[:10]
-            sharesIndustry.avg10 = sum([item.p_end for item in sharesList10]) / len(sharesList10)
-            sharesIndustry.avg10_rate = sharesIndustry.avg10 / item.four_year_day
+                sharesList10 = sharesList[i:10 * (i + 1)]
+                sharesIndustry.avg10 = sum([item.p_end for item in sharesList10]) / len(sharesList10)
+                sharesIndustry.avg10_rate = sharesIndustry.avg10 / item.four_year_day
 
-            sharesList20 = sharesList[:20]
-            sharesIndustry.avg20 = sum([item.p_end for item in sharesList20]) / len(sharesList20)
-            sharesIndustry.avg20_rate = sharesIndustry.avg20 / item.four_year_day
-            print(sharesIndustry)
-            sharesIndustry.save()
+                sharesList20 = sharesList[i:20 * (i + 1)]
+                sharesIndustry.avg20 = sum([item.p_end for item in sharesList20]) / len(sharesList20)
+                sharesIndustry.avg20_rate = sharesIndustry.avg20 / item.four_year_day
+                print(sharesIndustry)
+                sharesIndustry.save()
+                i = i + 1
 
         pass
 
