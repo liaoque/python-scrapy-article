@@ -102,6 +102,7 @@ class Command(BaseCommand):
                 # 按比例归一
                 sharesIndustry = sharesList[i]
                 sharesIndustry.avg_p_min_rate = sharesIndustry.p_min / item.four_year_day
+                sharesIndustry.avg_p_max_rate = sharesIndustry.p_max / item.four_year_day
 
                 sharesListMacd = SharesIndustryMacd.objects.filter(code_id=code).order_by('-date_as')
                 sharesListMacd = np.array(sharesListMacd)
