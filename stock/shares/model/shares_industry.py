@@ -10,6 +10,12 @@ class SharesIndustry(models.Model):
     p_max = models.IntegerField(default=0)
     p_start = models.IntegerField(default=0)
     p_end = models.IntegerField(default=0)
+    macd = models.IntegerField(default=0)
+    avg10 = models.FloatField(default=0)
+    avg20 = models.FloatField(default=0)
+    avg10_rate = models.FloatField(default=0)
+    avg20_rate = models.FloatField(default=0)
+    avg_p_min_rate	 = models.FloatField(default=0)
     date_as = models.DateField()
 
     class Meta:
