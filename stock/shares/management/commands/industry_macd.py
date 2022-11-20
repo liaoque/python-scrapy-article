@@ -84,7 +84,7 @@ class Command(BaseCommand):
         for item in SharesName.objects.filter(status=1, code_type=2):
             # 写过了
             code = item.code
-            if code in ['BK0420','BK0421', 'BK0422', 'BK0424']:
+            if code in ['BK0420', 'BK0421', 'BK0422', 'BK0424']:
                 continue
 
             if item.four_year_day == 0:
@@ -120,6 +120,23 @@ class Command(BaseCommand):
                 sharesList20 = sharesList[i:20 + i]
                 sharesIndustry.avg20 = sum([item.p_end for item in sharesList20]) / len(sharesList20)
                 sharesIndustry.avg20_rate = sharesIndustry.avg20 / item.four_year_day
+
+                sharesList30 = sharesList[i:30 + i]
+                sharesIndustry.avg30 = sum([item.p_end for item in sharesList30]) / len(sharesList30)
+                sharesIndustry.avg30_rate = sharesIndustry.avg30 / item.four_year_day
+
+                sharesList60 = sharesList[i:60 + i]
+                sharesIndustry.avg60 = sum([item.p_end for item in sharesList60]) / len(sharesList60)
+                sharesIndustry.avg60_rate = sharesIndustry.avg60 / item.four_year_day
+
+                sharesList120 = sharesList[i:120 + i]
+                sharesIndustry.avg120 = sum([item.p_end for item in sharesList120]) / len(sharesList120)
+                sharesIndustry.avg120_rate = sharesIndustry.avg120 / item.four_year_day
+
+                sharesList200 = sharesList[i:200 + i]
+                sharesIndustry.avg200 = sum([item.p_end for item in sharesList200]) / len(sharesList200)
+                sharesIndustry.avg200_rate = sharesIndustry.avg200 / item.four_year_day
+
                 print(sharesIndustry)
                 sharesIndustry.save()
                 i = i + 1
