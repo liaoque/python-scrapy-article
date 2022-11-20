@@ -84,8 +84,8 @@ class Command(BaseCommand):
         for item in SharesName.objects.filter(status=1, code_type=2):
             # 写过了
             code = item.code
-            if code in ['BK0420', 'BK0421', 'BK0422', 'BK0424']:
-                continue
+            # if code in ['BK0420', 'BK0421', 'BK0422', 'BK0424']:
+            #     continue
 
             if item.four_year_day == 0:
                 # 当前板块最小的值
