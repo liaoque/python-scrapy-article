@@ -17,6 +17,7 @@ class SharesIndustry(models.Model):
     avg20_rate = models.FloatField(default=0)
     avg_p_min_rate	 = models.FloatField(default=0)
     avg_p_max_rate	 = models.FloatField(default=0)
+    max_min_flag	 = models.IntegerField(default=0)
     date_as = models.DateField()
 
     class Meta:
