@@ -31,11 +31,11 @@ class Command(BaseCommand):
             sharesListSource3 = np.array(sharesListSource3)[:3]
             for item2 in sharesListSource3:
                 if abs(sharesListSource[0].avg_p_min_rate - item2.avg_p_min_rate) < .2:
-                    send_data['buy'].append(sharesListSource[0])
+                    send_data['buy'].append(sharesListSource[0].code_id)
                     break
 
         if len(send_data['buy']) > 0:
-            self.sendMessage(send_data['buy'])
+            self.sendMessage(send_data)
 
     def sendMessage(self, send_data):
         tz = timezone(timedelta(hours=+8))
