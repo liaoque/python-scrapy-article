@@ -1,20 +1,10 @@
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import Count, Max, Min
 
 # from ....polls.models import Question as Poll
 from shares.model.shares_name import SharesName
-from shares.model.shares_kdj import SharesKdj
-from shares.model.shares import Shares
-from shares.model.shares_hours import SharesHours
-from shares.model.shares_date_listen import SharesDateListen
-from shares.model.shares_macd import SharesMacd
-from shares.model.shares_industry_kdj import SharesIndustryKdj
-from shares.model.shares_industry_macd import SharesIndustryMacd
-from shares.model.shares_join_industry import SharesJoinIndustry
-from shares.model.shares_buys import SharesBuys
-from shares.model.shares_date import SharesDate
+from django.core.mail import send_mail
 import numpy as np
 import talib
 import math
@@ -54,6 +44,35 @@ class Command(BaseCommand):
             up = True
             sharesListSource = np.array(sharesListSource)
             self.defMaxMin(sharesListSource, i + 1, up, between)
+
+        send_data = {
+            'buy': [],
+            'sell': [],
+        }
+        for item in SharesName.objects.filter(status=1, code_type=2):
+            code = item.code
+            sharesListSource = SharesIndustry.objects.filter(code_id=code).order_by('date_as')
+
+            sharesListSource3 = SharesIndustry.objects.filter(code_id=code, max_min_flag=1).order_by('date_as')
+            sharesListSource3 = np.array(sharesListSource3)[:3]
+            for item2 in sharesListSource3:
+                if abs(sharesListSource[0].avg_p_min_rate - item2.avg_p_min_rate) < .2:
+                    send_data['buy'].append(sharesListSource[0].code_id)
+                    break
+
+        if len(send_data['buy']) > 0:
+            self.sendMessage(send_data)
+
+    def sendMessage(self, send_data):
+        tz = timezone(timedelta(hours=+8))
+        str_con = "支撑位板块代码：%s\n" % ("\",\"".join(send_data['buy']))
+        send_mail(
+            '触碰支撑位%s' % (datetime.now(tz)),
+            str_con,
+            'lovemeand1314@163.com',
+            ['844596330@qq.com'],
+            fail_silently=False,
+        )
 
     def defMaxMin(self, sharesListSource, i, up, between):
         if len(sharesListSource) < 10:
