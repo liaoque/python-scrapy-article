@@ -56,6 +56,8 @@ class Command(BaseCommand):
             self.defMaxMin(sharesListSource, i + 1, up, between)
 
     def defMaxMin(self, sharesListSource, i, up, between):
+        if len(sharesListSource) < 10:
+            return
         sharesList = sharesListSource[i * 10:10 + i * 10]
         if len(sharesList) < 10:
             return
