@@ -104,6 +104,8 @@ class Command(BaseCommand):
             while i < c:
                 # 按比例归一
                 sharesIndustry = sharesList[i]
+                if sharesIndustry.avg200 != 0:
+                    continue
                 sharesIndustry.avg_p_min_rate = sharesIndustry.p_min / item.four_year_day
                 sharesIndustry.avg_p_max_rate = sharesIndustry.p_max / item.four_year_day
 
