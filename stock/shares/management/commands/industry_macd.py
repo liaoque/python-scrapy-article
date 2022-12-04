@@ -31,7 +31,6 @@ class Command(BaseCommand):
     def calculateMacd(self, today):
         # today = '2021-12-27'
         for item in SharesName.objects.filter(status=1, code_type=2):
-            break
             # 写过了
             code = item.code
             sharesKdjList = SharesIndustryMacd.objects.filter(code_id=code, date_as=today)
