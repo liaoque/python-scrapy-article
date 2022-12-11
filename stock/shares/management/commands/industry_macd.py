@@ -99,7 +99,7 @@ class Command(BaseCommand):
                 continue
             sharesList = np.array(sharesList)
 
-            i = 0;
+            i = len(sharesList) - 2;
             c = len(sharesList)
             while i < c:
                 # 按比例归一
