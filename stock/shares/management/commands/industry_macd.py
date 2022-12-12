@@ -99,8 +99,9 @@ class Command(BaseCommand):
                 continue
             sharesList = np.array(sharesList)
 
-            i = len(sharesList) - 2;
-            c = len(sharesList)
+            i = 0;
+            # c = len(sharesList)
+            c = 2
             while i < c:
                 # 按比例归一
                 sharesIndustry = sharesList[i]
