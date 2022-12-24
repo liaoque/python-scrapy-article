@@ -24,6 +24,10 @@ class Command(BaseCommand):
             'buy': [],
             'sell': [],
         }
+        send_data_week = {
+            'buy': [],
+            'sell': [],
+        }
         for item in SharesName.objects.filter(status=1, code_type=2):
             code = item.code
             sharesListSource3 = SharesIndustry.objects.filter(code_id=code, max_min_flag=1).order_by('-date_as')
@@ -41,15 +45,18 @@ class Command(BaseCommand):
             for item2 in sharesListSource3:
                 sharesListSource = SharesIndustryWeek.objects.filter(code_id=code).order_by('-date_as')
                 if abs(sharesListSource[0].avg_p_min_rate - item2.avg_p_min_rate) < .2 :
-                    send_data['buy'].append(sharesListSource[0].code_id)
+                    send_data_week['buy'].append(sharesListSource[0].code_id)
                     break
 
         if len(send_data['buy']) > 0:
-            self.sendMessage(send_data)
+            self.sendMessage(send_data, "日线级别")
 
-    def sendMessage(self, send_data):
+        if len(send_data_week['buy']) > 0:
+            self.sendMessage(send_data_week, "周线级别")
+
+    def sendMessage(self, send_data, sss):
         tz = timezone(timedelta(hours=+8))
-        str_con = "支撑位板块代码：%s\n" % ("\",\"".join(send_data['buy']))
+        str_con =  "%s支撑位板块代码：%s\n" % (sss, "\",\"".join(send_data['buy']))
         send_mail(
             '触碰支撑位%s' % (datetime.now(tz)),
             str_con,
