@@ -43,12 +43,36 @@ ORDER BY `mc_shares_industry`.`date_as`  ASC) t GROUP by date_year, date_week;
                 )
                 b.save()
 
+            sharesList = SharesIndustryWeek.objects.filter(code_id=code).order_by('-date_as')
+            self.defMaxMin(sharesList, item)
+
             sharesListSource = SharesIndustryWeek.objects.filter(code_id=code).order_by('date_as')
             i = 0
             between = 0
             up = True
             sharesListSource = np.array(sharesListSource)
             self.defMaxMin(sharesListSource, i + 1, up, between)
+
+
+    def pRate(self, sharesList, item):
+        if len(sharesList) == 0:
+            return
+        sharesList = np.array(sharesList)
+
+        i = 0;
+        # c = len(sharesList)
+        c = 2
+        while i < c:
+            # 按比例归一
+            sharesIndustry = sharesList[i]
+            if sharesIndustry.avg_p_min_rate != 0:
+                i = i + 1
+                continue
+            sharesIndustry.avg_p_min_rate = sharesIndustry.p_min / item.four_year_day
+            sharesIndustry.avg_p_max_rate = sharesIndustry.p_max / item.four_year_day
+
+            sharesIndustry.save()
+            i = i + 1
 
 
     def defMaxMin(self, sharesListSource, i, up, between):
