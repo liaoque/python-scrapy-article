@@ -49,3 +49,8 @@ ORDER BY `mc_shares_industry`.`date_as`  ASC) t GROUP by date_year, date_week;
 
 
 
+
+
+
+
+
