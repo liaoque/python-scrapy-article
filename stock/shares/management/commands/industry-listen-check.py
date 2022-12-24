@@ -9,6 +9,7 @@ from shares.model.shares_industry import SharesIndustry
 from shares.model.shares_industry_macd import SharesIndustryMacd
 from shares.model.shares_industry_week import SharesIndustryWeek
 
+
 # 校验的
 # 1. 检测当天板块 macd是否上升
 # 2. 板块回踩10日均线
@@ -17,7 +18,6 @@ from shares.model.shares_industry_week import SharesIndustryWeek
 
 class Command(BaseCommand):
     help = '支撑位板块代码检测'
-
 
     def handle(self, *args, **options):
         send_data = {
@@ -34,7 +34,9 @@ class Command(BaseCommand):
             sharesListSource3 = np.array(sharesListSource3)[:3]
             for item2 in sharesListSource3:
                 sharesListSource = SharesIndustry.objects.filter(code_id=code).order_by('-date_as')
-                sharesIndustryMacd = SharesIndustryMacd.objects.filter(code_id=code, date_as=sharesListSource[0].date_as).order_by('-date_as')
+                sharesIndustryMacd = SharesIndustryMacd.objects.filter(code_id=code,
+                                                                       date_as=sharesListSource[0].date_as).order_by(
+                    '-date_as')
                 if abs(sharesListSource[0].avg_p_min_rate - item2.avg_p_min_rate) < .2 \
                         and sharesIndustryMacd[0].macd >= 0:
                     send_data['buy'].append(sharesListSource[0].code_id)
@@ -44,19 +46,24 @@ class Command(BaseCommand):
             sharesListSource3 = np.array(sharesListSource3)[:3]
             for item2 in sharesListSource3:
                 sharesListSource = SharesIndustryWeek.objects.filter(code_id=code).order_by('-date_as')
-                if abs(sharesListSource[0].avg_p_min_rate - item2.avg_p_min_rate) < .2 :
+                if abs(sharesListSource[0].avg_p_min_rate - item2.avg_p_min_rate) < .2:
                     send_data_week['buy'].append(sharesListSource[0].code_id)
                     break
 
-        if len(send_data['buy']) > 0:
-            self.sendMessage(send_data, "日线级别")
+        self.sendMessage(send_data, send_data_week)
 
-        if len(send_data_week['buy']) > 0:
-            self.sendMessage(send_data_week, "周线级别")
+    def sendMessage(self, send_data, send_data_week):
+        if len(send_data['buy']) <= 0 and len(send_data_week['buy']) <= 0:
+            return
 
-    def sendMessage(self, send_data, sss):
         tz = timezone(timedelta(hours=+8))
-        str_con =  "%s支撑位板块代码：%s\n" % (sss, "\",\"".join(send_data['buy']))
+        str_con = " 日线级别看三天，三天不涨马上走，\n " \
+                  "周线级别， 1， 2， 6方式买入，承受3次支撑"
+
+        if len(send_data['buy']) > 0:
+            str_con = str_con + "日线级别支撑位板块代码：%s\n" % ("\",\"".join(send_data['buy']))
+        if len(send_data['buy']) > 0:
+            str_con = str_con + "周线级别支撑位板块代码：%s\n" % ("\",\"".join(send_data_week['buy']))
         send_mail(
             '触碰支撑位%s' % (datetime.now(tz)),
             str_con,
