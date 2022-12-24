@@ -43,12 +43,66 @@ ORDER BY `mc_shares_industry`.`date_as`  ASC) t GROUP by date_year, date_week;
                 )
                 b.save()
 
+            sharesListSource = SharesIndustryWeek.objects.filter(code_id=code).order_by('date_as')
+            i = 0
+            between = 0
+            up = True
+            sharesListSource = np.array(sharesListSource)
+            self.defMaxMin(sharesListSource, i + 1, up, between)
 
 
+    def defMaxMin(self, sharesListSource, i, up, between):
+        if len(sharesListSource) < 5:
+            return
+        sharesList = sharesListSource[i * 5:5 + i * 5]
+        if len(sharesList) < 5:
+            return
+        lastIndex = len(sharesList) - 1
+        print(sharesList)
+        if up:
+            p_start = min(sharesList[0].p_end, sharesList[0].p_start)
+            if p_start > sharesList[lastIndex].p_end:
+                # 趋势反转， 到了压力位
+                between = maxIndustryIndex = self.max(sharesListSource, between, 5 + i * 5)
+                maxIndustry = sharesListSource[maxIndustryIndex]
+                maxIndustry.max_min_flag = -1
+                maxIndustry.save()
+                # sMaxIndustry = None
+                up = False
+            self.defMaxMin(sharesListSource, i + 1, up, between)
+        else:
+            p_start = max(sharesList[0].p_end, sharesList[0].p_start)
+            if p_start < sharesList[lastIndex].p_end:
+                # 趋势反转， 到了支撑位
+                between = minIndustryIndex = self.min(sharesListSource, between, 5 + i * 5)
+                minIndustry = sharesListSource[minIndustryIndex]
+                minIndustry.max_min_flag = 1
+                minIndustry.save()
+                # sMaxIndustry = None
+                up = True
+            self.defMaxMin(sharesListSource, i + 1, up, between)
 
 
+    def max(self, sharesList, start, end):
+        c = end
+        max2 = start
+        i = start
+        while i < c:
+            if sharesList[max2].p_end < sharesList[i].p_end:
+                max2 = i
+            i = i + 1
+        return max2
 
-
+    def min(self, sharesList, start, end):
+        # sharesList = sharesList[start:end]
+        c = end
+        min2 = start
+        i = start
+        while i < c:
+            if sharesList[min2].p_end > sharesList[i].p_end:
+                min2 = i
+            i = i + 1
+        return min2
 
 
 

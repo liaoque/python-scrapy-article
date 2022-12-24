@@ -6,7 +6,7 @@ from shares.model.shares_name import SharesName
 import numpy as np
 from django.core.mail import send_mail
 from shares.model.shares_industry import SharesIndustry
-
+from shares.model.shares_industry_macd import SharesIndustryMacd
 
 # 校验的
 # 1. 检测当天板块 macd是否上升
@@ -15,7 +15,7 @@ from shares.model.shares_industry import SharesIndustry
 
 
 class Command(BaseCommand):
-    help = '记录每天-10以下的kdj股票'
+    help = '支撑位板块代码检测'
 
 
     def handle(self, *args, **options):
@@ -25,11 +25,13 @@ class Command(BaseCommand):
         }
         for item in SharesName.objects.filter(status=1, code_type=2):
             code = item.code
-            sharesListSource = SharesIndustry.objects.filter(code_id=code).order_by('-date_as')
             sharesListSource3 = SharesIndustry.objects.filter(code_id=code, max_min_flag=1).order_by('-date_as')
             sharesListSource3 = np.array(sharesListSource3)[:3]
             for item2 in sharesListSource3:
-                if abs(sharesListSource[0].avg_p_min_rate - item2.avg_p_min_rate) < .2:
+                sharesListSource = SharesIndustry.objects.filter(code_id=code).order_by('-date_as')
+                sharesIndustryMacd = SharesIndustryMacd.objects.filter(code_id=code, date_as=sharesListSource[0].date_as).order_by('-date_as')
+                if abs(sharesListSource[0].avg_p_min_rate - item2.avg_p_min_rate) < .2 \
+                        and sharesIndustryMacd[0].macd >= 0:
                     send_data['buy'].append(sharesListSource[0].code_id)
                     break
         if len(send_data['buy']) > 0:
