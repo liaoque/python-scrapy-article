@@ -10,6 +10,7 @@ import talib
 import math
 import sys
 from shares.model.shares_industry import SharesIndustry
+from shares.model.shares_industry_week import SharesIndustryWeek
 
 
 # 校验的
@@ -49,6 +50,10 @@ class Command(BaseCommand):
             'buy': [],
             'sell': [],
         }
+        send_data_week = {
+            'buy': [],
+            'sell': [],
+        }
         for item in SharesName.objects.filter(status=1, code_type=2):
             code = item.code
             sharesListSource = SharesIndustry.objects.filter(code_id=code).order_by('-date_as')
@@ -60,12 +65,28 @@ class Command(BaseCommand):
                     send_data['buy'].append(sharesListSource[0].code_id)
                     break
 
-        if len(send_data['buy']) > 0:
-            self.sendMessage(send_data)
+            sharesListSource3 = SharesIndustryWeek.objects.filter(code_id=code, max_min_flag=1).order_by('-date_as')
+            sharesListSource3 = np.array(sharesListSource3)[:3]
+            for item2 in sharesListSource3:
+                sharesListSource = SharesIndustryWeek.objects.filter(code_id=code).order_by('-date_as')
+                if abs(sharesListSource[0].avg_p_min_rate - item2.avg_p_min_rate) < .2:
+                    send_data_week['buy'].append(sharesListSource[0].code_id)
+                    break
 
-    def sendMessage(self, send_data):
+        self.sendMessage(send_data, send_data_week)
+
+    def sendMessage(self, send_data, send_data_week):
+        if len(send_data['buy']) <= 0 and len(send_data_week['buy']) <= 0:
+            return
+
         tz = timezone(timedelta(hours=+8))
-        str_con = "支撑位板块代码：%s\n" % ("\",\"".join(send_data['buy']))
+        str_con = "买入方式，直接龙头，日线级别看三天，三天不涨马上走，\n " \
+                  "周线级别， 1， 2， 6方式买入，承受3次支撑"
+
+        if len(send_data['buy']) > 0:
+            str_con = str_con + "日线级别支撑位板块代码：%s\n" % ("\",\"".join(send_data['buy']))
+        if len(send_data['buy']) > 0:
+            str_con = str_con + "周线级别支撑位板块代码：%s\n" % ("\",\"".join(send_data_week['buy']))
         send_mail(
             '触碰支撑位%s' % (datetime.now(tz)),
             str_con,
