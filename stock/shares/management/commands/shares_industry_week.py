@@ -46,6 +46,7 @@ ORDER BY `mc_shares_industry`.`date_as`  ASC) t GROUP by date_year, date_week;
             sharesList = SharesIndustryWeek.objects.filter(code_id=code).order_by('-date_as')
             self.pRate(sharesList, item2)
 
+
             sharesListSource = SharesIndustryWeek.objects.filter(code_id=code).order_by('date_as')
             i = 0
             between = 0
