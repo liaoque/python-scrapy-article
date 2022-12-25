@@ -81,7 +81,7 @@ class Command(BaseCommand):
 
         tz = timezone(timedelta(hours=+8))
         str_con = "买入方式，直接龙头，日线级别看三天，三天不涨马上走，\n " \
-                  "周线级别， 1， 2， 6方式买入，承受3次支撑"
+                  "周线级别， 1， 2， 6方式买入，承受3次支撑，\n"
 
         if len(send_data['buy']) > 0:
             str_con = str_con + "日线级别支撑位板块代码：%s\n" % ("\",\"".join(send_data['buy']))
