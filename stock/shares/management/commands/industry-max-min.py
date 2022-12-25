@@ -85,7 +85,7 @@ class Command(BaseCommand):
 
         if len(send_data['buy']) > 0:
             str_con = str_con + "日线级别支撑位板块代码：%s\n" % ("\",\"".join(send_data['buy']))
-        if len(send_data['buy']) > 0:
+        if len(send_data_week['buy']) > 0:
             str_con = str_con + "周线级别支撑位板块代码：%s\n" % ("\",\"".join(send_data_week['buy']))
         send_mail(
             '触碰支撑位%s' % (datetime.now(tz)),
