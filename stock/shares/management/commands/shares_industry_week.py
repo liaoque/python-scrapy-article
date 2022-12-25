@@ -27,7 +27,7 @@ FROM (SELECT code_id,p_min, p_max,p_start, p_end,date_as, YEAR(date_as) as date_
 ORDER BY `mc_shares_industry`.`date_as`  ASC) t GROUP by date_year, date_week;
             '''
             for item in SharesIndustryWeek.objects.raw(sql, params=(code,)):
-
+                break
                 sharesKdjList = SharesIndustryWeek.objects.filter(code_id=code, date_as=item.date_as)
                 if len(sharesKdjList):
                     continue
@@ -44,7 +44,7 @@ ORDER BY `mc_shares_industry`.`date_as`  ASC) t GROUP by date_year, date_week;
                 b.save()
 
             sharesList = SharesIndustryWeek.objects.filter(code_id=code).order_by('-date_as')
-            self.defMaxMin(sharesList, item)
+            self.pRate(sharesList, item)
 
             sharesListSource = SharesIndustryWeek.objects.filter(code_id=code).order_by('date_as')
             i = 0
