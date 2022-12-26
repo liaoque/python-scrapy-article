@@ -68,7 +68,7 @@ class Command(BaseCommand):
             sharesListSource3 = SharesIndustryWeek.objects.filter(code_id=code, max_min_flag=1).order_by('-date_as')
             sharesListSource3 = np.array(sharesListSource3)[:3]
             for item2 in sharesListSource3:
-                sharesListSource = SharesIndustryWeek.objects.filter(code_id=code).order_by('-date_as')
+                sharesListSource = SharesIndustry.objects.filter(code_id=code).order_by('-date_as')
                 if abs(sharesListSource[0].avg_p_min_rate - item2.avg_p_min_rate) < .02:
                     send_data_week['buy'].append(sharesListSource[0].code_id)
                     break
