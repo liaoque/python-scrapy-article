@@ -23,6 +23,7 @@ import math
 import requests
 from shares.model.shares_cache import SharesCache
 
+
 # 1. 先记录 j < 0 作为参考点
 # 2. 记录 diff 的上涨走势 且 J < 40  作为买点
 # 3. 判断 j 下调走势作为卖点，或者3天强制卖出
@@ -205,9 +206,13 @@ class Command(BaseCommand):
         # print(item.__dict__, codeNameItem.__dict__)
         if codeNameItem.five_day == 0:
             return False
-        return abs(item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
-            item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
-            item.p_end - codeNameItem.twenty_day) / codeNameItem.twenty_day < 0.01 or abs(
+        if (abs(item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
+                item.p_end - codeNameItem.five_day) / codeNameItem.five_day < 0.01 or abs(
+            item.p_end - codeNameItem.twenty_day) / codeNameItem.twenty_day < 0.01) \
+                and codeNameItem.macd_up == 1:
+            return True
+
+        return abs(
             item.p_end - codeNameItem.sixty_day) / codeNameItem.sixty_day < 0.01 or abs(
             item.p_end - codeNameItem.one_hundred_day) / codeNameItem.one_hundred_day < 0.01 or abs(
             item.p_end - codeNameItem.four_year_day) / codeNameItem.four_year_day < 0.01
@@ -303,7 +308,8 @@ class Command(BaseCommand):
                 "\",\"".join([item.code for item in heightBuy2])
             )
 
-        heightBuy = SharesJoinBlock.objects.filter(code_id__in=[item.code for item in heightBuy2],  block_code_id = "885869")
+        heightBuy = SharesJoinBlock.objects.filter(code_id__in=[item.code for item in heightBuy2],
+                                                   block_code_id="885869")
         if len(heightBuy) > 0:
             str_con += "三季报预增：%s\n" % (
                 "\",\"".join([item.code_id for item in heightBuy])
@@ -317,7 +323,6 @@ class Command(BaseCommand):
             str_con += "月板块：%s\n" % (
                 "\",\"".join(list(set([item.code_id for item in heightBuy])))
             )
-
 
         send_mail(
             '特别提醒%s' % (datetime.now(tz)),

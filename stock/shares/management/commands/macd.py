@@ -32,7 +32,7 @@ class Command(BaseCommand):
         # self.KdjCompute(today)
         dateList = self.getAllDates()
         today = dateList[-1].date_as
-        yesterday = dateList[-2].date_as
+        yesterday = dateList[-4].date_as
         sql = """
                 SELECT 1 as id, m.code_id, m.diff,m.dea, t.diff as diff2,t.dea as dea2
                 from (select * from mc_shares_macd where date_as = %s) m
