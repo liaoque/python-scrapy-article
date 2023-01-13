@@ -12,7 +12,8 @@ class SharesIndustryMonth(models.Model):
     p_start = models.IntegerField(default=0)
     p_end = models.IntegerField(default=0)
     p_year = models.IntegerField(default=0)
-    p_month = models.IntegerField(default=0, help_text="1 第一季，2 第二季")
+    p_month = models.IntegerField(default=0, help_text="月")
+    avg5 = models.BigIntegerField(default=0, help_text="月")
 
     class Meta:
         db_table = "mc_shares_industry_month"
