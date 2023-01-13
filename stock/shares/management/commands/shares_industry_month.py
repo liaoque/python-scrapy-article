@@ -31,23 +31,23 @@ class Command(BaseCommand):
             p_year_end = sharesItemEnd.date_as.strftime('%Y')
             print(p_year_end)
 
-            # while p_year <= p_year_end:
-            #     p_month = 1
-            #     while p_month <= 12:
-            #         date_start = p_year + "-" + str(p_month) + "-01"
-            #         if p_month in [1, 3, 5, 7, 8, 10, 12]:
-            #             p_month_day_end = "31"
-            #         elif p_month in [4, 6, 9, 11]:
-            #             p_month_day_end = "30"
-            #         else:
-            #             localtime = time.mktime(time.strptime(p_year + "-03-01", "%Y-%m-%d")) - 1
-            #             p_month_day_end = time.strftime("%d", time.localtime(localtime))
-            #         date_end = p_year + "-" + str(p_month) + "-" + str(p_month_day_end)
-            #         # print(date_start, date_end)
-            #         time.sleep(1)
-            #         self.saveMonth(code, p_year, date_start, date_end, p_month)
-            #         p_month = p_month + 1
-            #     p_year = str(int(p_year) + 1)
+            while p_year <= p_year_end:
+                p_month = 1
+                while p_month <= 12:
+                    date_start = p_year + "-" + str(p_month) + "-01"
+                    if p_month in [1, 3, 5, 7, 8, 10, 12]:
+                        p_month_day_end = "31"
+                    elif p_month in [4, 6, 9, 11]:
+                        p_month_day_end = "30"
+                    else:
+                        localtime = time.mktime(time.strptime(p_year + "-03-01", "%Y-%m-%d")) - 1
+                        p_month_day_end = time.strftime("%d", time.localtime(localtime))
+                    date_end = p_year + "-" + str(p_month) + "-" + str(p_month_day_end)
+                    # print(date_start, date_end)
+                    time.sleep(1)
+                    self.saveMonth(code, p_year, date_start, date_end, p_month)
+                    p_month = p_month + 1
+                p_year = str(int(p_year) + 1)
 
             listSharesIndustryMonth = SharesIndustryMonth.objects.filter(code_id=code).order_by('p_year', 'p_month')
             listSharesIndustryMonthLen = len(listSharesIndustryMonth)
