@@ -44,7 +44,7 @@ class Command(BaseCommand):
                         p_month_day_end = time.strftime("%d", time.localtime(localtime))
                     date_end = p_year + "-" + str(p_month) + "-" + str(p_month_day_end)
                     # print(date_start, date_end)
-                    time.sleep(1)
+                    # time.sleep(1)
                     self.saveMonth(code, p_year, date_start, date_end, p_month)
                     p_month = p_month + 1
                 p_year = str(int(p_year) + 1)
