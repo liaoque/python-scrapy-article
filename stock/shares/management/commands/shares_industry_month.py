@@ -55,6 +55,7 @@ class Command(BaseCommand):
             while i < listSharesIndustryMonthLen:
                 listSharesIndustryMonth2 = listSharesIndustryMonth[i:i + 5]
                 if len(listSharesIndustryMonth2) < 5:
+                    i = i + 1
                     continue
                 listSharesIndustryMonth2[4].avg5 = sum([item.p_end for item in listSharesIndustryMonth2]) / 5
                 listSharesIndustryMonth2[4].save()
