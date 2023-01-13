@@ -56,8 +56,8 @@ class Command(BaseCommand):
                 listSharesIndustryMonth2 = listSharesIndustryMonth[i:i + 5]
                 if len(listSharesIndustryMonth2) < 5:
                     continue
-                listSharesIndustryMonth2[i + 4].avg5 = sum([item.p_end for item in listSharesIndustryMonth2]) / 5
-                listSharesIndustryMonth2[i + 4].save()
+                listSharesIndustryMonth2[4].avg5 = sum([item.p_end for item in listSharesIndustryMonth2]) / 5
+                listSharesIndustryMonth2[4].save()
                 i = i + 1
 
     def saveMonth(self, code, p_year, date_start, date_end, p_month):
