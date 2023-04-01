@@ -26,7 +26,7 @@ class SharesIndustry(models.Model):
     avg60_rate = models.FloatField(default=0)
     avg120_rate = models.FloatField(default=0)
     avg200_rate = models.FloatField(default=0)
-    p_rate = models.FloatField(default=0)
+    p_range = models.FloatField(default=0)
 
     date_as = models.DateField()
 

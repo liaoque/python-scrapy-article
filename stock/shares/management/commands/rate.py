@@ -9,8 +9,8 @@ from shares.model.shares_macd import SharesMacd
 from shares.model.shares import Shares
 from shares.model.shares_kdj_compute import SharesKdjCompute
 from shares.model.shares_kdj_compute_detail import SharesKdjComputeDetail
-# from ....shares.model.shares_kdj import SharesKdj
-# from ....shares.model.shares import Shares
+from shares.model.shares_date import SharesDate
+
 import numpy as np
 import talib
 import sys
@@ -25,12 +25,24 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         codeList = SharesName.objects.filter(code_type=1, status=1).all()
         for item in codeList:
-            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('+date_as').all()
+            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('date_as')
             c = len(sharesItem5)
-            for key, item in sharesItem5:
+            for key in range(c):
                 if key + 1 >= c:
                     break
-                item.p_rate = (item.p_end - sharesItem5[key + 1].p_end) / sharesItem5[key + 1].p_end * 10000
-                item.save()
+                item = sharesItem5[key]
+                sharesItem5[key + 1].p_range = (item.p_end - sharesItem5[key + 1].p_end) / sharesItem5[key + 1].p_end * 10000
+                sharesItem5[key + 1].save()
             break
 
+        codeList = SharesName.objects.filter(code_type=2, status=1).all()
+        for item in codeList:
+            sharesItem5 = SharesDate.objects.filter(code_id=item.code).order_by('date_as')
+            c = len(sharesItem5)
+            for key in range(c):
+                if key + 1 >= c:
+                    break
+                item = sharesItem5[key]
+                sharesItem5[key + 1].p_range = (item.p_end - sharesItem5[key + 1].p_end) / sharesItem5[key + 1].p_end * 10000
+                sharesItem5[key + 1].save()
+            break
