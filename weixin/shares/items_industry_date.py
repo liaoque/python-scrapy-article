@@ -27,7 +27,7 @@ class Items(scrapy.Item):
         if self.exitsByCode(cursor, code, date_as):
             return
         sql = """
-            INSERT INTO mc_shares_industry (code_id, p_min, p_max, p_start, p_end, date_as)
+            INSERT INTO mc_shares_industry (code_id, p_min, p_max, p_start, p_end,p_rate, date_as)
             VALUES (%s, %s, %s,  %s,  %s, %s)
             """;
         params = (
@@ -36,6 +36,7 @@ class Items(scrapy.Item):
             int(float(self["p_max"][0]) * 100),
             int(float(self["p_start"][0]) * 100),
             int(float(self["p_end"][0]) * 100),
+            int(float(self["p_rate"][0]) * 100),
             self["date_as"][0]
         )
         cursor.execute(sql, params)

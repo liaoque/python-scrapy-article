@@ -79,6 +79,7 @@ class Shares_industry_date(scrapy.Spider):
             item_loader.add_value("p_start", res[1])
             item_loader.add_value("p_end", res[2])
             item_loader.add_value("date_as", res[0])
+            item_loader.add_value("p_rate", res[8])
             yield item_loader.load_item()
 
     def findIndustry(self):
