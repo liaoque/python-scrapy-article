@@ -113,7 +113,7 @@ class Shares(scrapy.Spider):
         item_loader.add_value("p_max", res["f44"])
         item_loader.add_value("p_start", res["f46"])
         item_loader.add_value("p_end", res["f43"])
-        item_loader.add_value("p_range", res["f171"])
+        item_loader.add_value("p_range", res["f170"])
         item_loader.add_value("buy_count", res["f47"])
         item_loader.add_value("buy_sum", res["f48"])
         item_loader.add_value("master_buy_sum", res["f135"])
