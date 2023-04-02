@@ -59,11 +59,11 @@ class Command(BaseCommand):
                 item = sharesItem5[key]
                 sharesItem5[key + 1].p_range = (sharesItem5[key + 1].p_end - item.p_end) / item.p_end * 10000
 
-                # 对应行业指数，跑赢行业指数 1， 否额0
+                # 对应行业指数，跑赢行业指数 1， 否额-1
                 sharesItem5[key + 1].p_range_win = 1
                 p_range = self.getIndustry(item.code)
                 if p_range > sharesItem5[key + 1].p_range:
-                    sharesItem5[key + 1].p_range_win = 0
+                    sharesItem5[key + 1].p_range_win = -1
                 sharesItem5[key + 1].save()
 
 
