@@ -14,6 +14,7 @@ class Shares(models.Model):
     p_start = models.IntegerField(default=0)
     p_end = models.IntegerField(default=0)
     p_range = models.IntegerField(default=0)
+    p_range_win = models.IntegerField(default=0)
     buy_count = models.IntegerField(default=0)
     buy_sum = models.IntegerField(default=0)
     master_buy_sum = models.IntegerField(default=0, help_text="主力流如")

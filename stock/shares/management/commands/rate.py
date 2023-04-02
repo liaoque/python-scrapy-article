@@ -10,6 +10,7 @@ from shares.model.shares import Shares
 from shares.model.shares_kdj_compute import SharesKdjCompute
 from shares.model.shares_kdj_compute_detail import SharesKdjComputeDetail
 from shares.model.shares_industry import SharesIndustry
+from shares.model.shares_join_industry import SharesJoinIndustry
 
 import numpy as np
 import talib
@@ -23,9 +24,10 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        codeList = SharesName.objects.filter(code_type=1, status=1).all()
+        codeList = SharesName.objects.filter(code_type=2, status=1).all()
         for item in codeList:
-            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('date_as')
+            sharesItem5 = SharesIndustry.objects.filter(code_id=item.code).order_by('date_as')
+            sharesItem5 = sharesItem5[-60:]
             c = len(sharesItem5)
             for key in range(c):
                 if key + 1 >= c:
@@ -34,13 +36,40 @@ class Command(BaseCommand):
                 sharesItem5[key + 1].p_range = (sharesItem5[key + 1].p_end - item.p_end) / item.p_end * 10000
                 sharesItem5[key + 1].save()
 
-        codeList = SharesName.objects.filter(code_type=2, status=1).all()
+        codeList = SharesName.objects.filter(code_type=1, status=1).all()
         for item in codeList:
-            sharesItem5 = SharesIndustry.objects.filter(code_id=item.code).order_by('date_as')
+            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('date_as')
+            sharesItem5 = sharesItem5[-60:]
             c = len(sharesItem5)
             for key in range(c):
                 if key + 1 >= c:
                     break
                 item = sharesItem5[key]
-                sharesItem5[key + 1].p_range =(sharesItem5[key + 1].p_end - item.p_end) / item.p_end * 10000
+                sharesItem5[key + 1].p_range = (sharesItem5[key + 1].p_end - item.p_end) / item.p_end * 10000
                 sharesItem5[key + 1].save()
+
+        codeList = SharesName.objects.filter(code_type=1, status=1).all()
+        for item in codeList:
+            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('date_as')
+            sharesItem5 = sharesItem5[-60:]
+            c = len(sharesItem5)
+            for key in range(c):
+                if key + 1 >= c:
+                    break
+                item = sharesItem5[key]
+                sharesItem5[key + 1].p_range = (sharesItem5[key + 1].p_end - item.p_end) / item.p_end * 10000
+
+                # 对应行业指数，跑赢行业指数 1， 否额0
+                sharesItem5[key + 1].p_range_win = 1
+                p_range = self.getIndustry(item.code)
+                if p_range > sharesItem5[key + 1].p_range:
+                    sharesItem5[key + 1].p_range_win = 0
+                sharesItem5[key + 1].save()
+
+
+    def getIndustry(self, code):
+        shares = SharesJoinIndustry.objects.filter(code_id=code)
+        if len(shares) > 0:
+            sharesItem5 = SharesIndustry.objects.filter(code_id=shares[0].industry_code_id).order_by('-date_as')
+            return sharesItem5[0].p_range
+        return 0;
