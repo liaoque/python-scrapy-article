@@ -31,7 +31,7 @@ class Command(BaseCommand):
                 if key + 1 >= c:
                     break
                 item = sharesItem5[key]
-                sharesItem5[key + 1].p_range = (item.p_end - sharesItem5[key + 1].p_end) / sharesItem5[key + 1].p_end * 10000
+                sharesItem5[key + 1].p_range = (sharesItem5[key + 1].p_end - item.p_end) / item.p_end * 10000
                 sharesItem5[key + 1].save()
 
         codeList = SharesName.objects.filter(code_type=2, status=1).all()
@@ -42,5 +42,5 @@ class Command(BaseCommand):
                 if key + 1 >= c:
                     break
                 item = sharesItem5[key]
-                sharesItem5[key + 1].p_range = (item.p_end - sharesItem5[key + 1].p_end) / sharesItem5[key + 1].p_end * 10000
+                sharesItem5[key + 1].p_range =(sharesItem5[key + 1].p_end - item.p_end) / item.p_end * 10000
                 sharesItem5[key + 1].save()
