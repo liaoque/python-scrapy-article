@@ -13,7 +13,7 @@ from shares.model.shares_join_industry import SharesJoinIndustry
 import time
 import requests
 from django.core.mail import send_mail
-
+from shares.model.shares_name import SharesName
 
 # import numpy as np
 # import talib
@@ -26,6 +26,7 @@ class Command(BaseCommand):
     help = '财报分析'
 
     def handle(self, *args, **options):
+        SharesName.objects.filter(code_type=1).update(finance_up=0)
         shares = SharesName.objects.filter(code_type=1)
         sharesFinanceItem = SharesFinance.objects.order_by('-date_as').all()[0]
         allList = []
@@ -85,7 +86,7 @@ class Command(BaseCommand):
             # 低于行业 应收款周转率
             if all[0].account_turnover_rate < ic.account_turnover_rate:
                 continue
-
+            SharesName.objects.filter(code=all[0].code_id).update(finance_up=1)
             allList.append(all[0])
         self.sendMessage(allList)
 
