@@ -15,61 +15,66 @@ from shares.model.shares_join_industry import SharesJoinIndustry
 import numpy as np
 import talib
 import sys
-
+from shares.model.shares_date import SharesDate
+from django.db import connection
 
 class Command(BaseCommand):
-    help = '计算p_rate'
+    help = '计算p_rate2'
 
     def add_arguments(self, parser):
         pass
 
     def handle(self, *args, **options):
-        codeList = SharesName.objects.filter(code_type=2, status=1).all()
-        for item in codeList:
-            sharesItem5 = SharesIndustry.objects.filter(code_id=item.code).order_by('date_as')
-            sharesItem5 = sharesItem5[-60:]
-            c = len(sharesItem5)
-            for key in range(c):
-                if key + 1 >= c:
-                    break
-                item = sharesItem5[key]
-                sharesItem5[key + 1].p_range = (sharesItem5[key + 1].p_end - item.p_end) / item.p_end * 10000
-                sharesItem5[key + 1].save()
-
-        codeList = SharesName.objects.filter(code_type=1, status=1).all()
-        for item in codeList:
-            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('date_as')
-            sharesItem5 = sharesItem5[-60:]
-            c = len(sharesItem5)
-            for key in range(c):
-                if key + 1 >= c:
-                    break
-                item = sharesItem5[key]
-                sharesItem5[key + 1].p_range = (sharesItem5[key + 1].p_end - item.p_end) / item.p_end * 10000
-                sharesItem5[key + 1].save()
-
-        codeList = SharesName.objects.filter(code_type=1, status=1).all()
-        for item in codeList:
-            sharesItem5 = Shares.objects.filter(code_id=item.code).order_by('date_as')
-            sharesItem5 = sharesItem5[-60:]
-            c = len(sharesItem5)
-            for key in range(c):
-                if key + 1 >= c:
-                    break
-                item = sharesItem5[key]
-                sharesItem5[key + 1].p_range = (sharesItem5[key + 1].p_end - item.p_end) / item.p_end * 10000
-
-                # 对应行业指数，跑赢行业指数 1， 否额-1
-                sharesItem5[key + 1].p_range_win = 1
-                p_range = self.getIndustry(item.code)
-                if p_range > sharesItem5[key + 1].p_range:
-                    sharesItem5[key + 1].p_range_win = -1
-                sharesItem5[key + 1].save()
+        shareDate = SharesDate.objects.order_by('date_as')
+        c = len(shareDate)
+        for key in range(c):
+            if key + 1 >= c:
+                break
+            start = shareDate[key].date_as
+            end = shareDate[key+1].date_as
+            self.updateSharesRange(start, end)
+            self.updateIndustryRange(start, end)
+            self.updateIndustryRange2(start)
 
 
-    def getIndustry(self, code):
-        shares = SharesJoinIndustry.objects.filter(code_id=code)
-        if len(shares) > 0:
-            sharesItem5 = SharesIndustry.objects.filter(code_id=shares[0].industry_code_id).order_by('-date_as')
-            return sharesItem5[0].p_range
-        return 0;
+    def updateSharesRange(self, start, end):
+        sql = '''
+        update mc_shares t2 
+        left join (select * from mc_shares where date_as =  %s ) t1 
+        on t1.code_id = t2.code_id 
+        set t2.p_range = (t2.p_end - t1.p_end) / t1.p_end * 10000 
+        where t2.date_as =  %s and t1.p_end > 0 and t2.p_end > 0 
+        '''
+        cursor = connection.cursor()
+        return cursor.execute(sql, [start, end])
+
+    def updateIndustryRange(self, start, end):
+        sql = '''
+        update mc_shares_industry t2 
+        left join (select * from mc_shares_industry where date_as =  %s ) t1 
+        on t1.code_id = t2.code_id 
+        set t2.p_range = (t2.p_end - t1.p_end) / t1.p_end * 10000 
+        where t2.date_as =  %s and t1.p_end > 0 and t2.p_end > 0 
+        '''
+        cursor = connection.cursor()
+        print(sql)
+        return cursor.execute(sql, [start, end])
+
+    def updateIndustryRange2(self, start):
+        sql = ''' 
+        update mc_shares t2 
+        left join mc_shares_join_industry t3 on t3.code_id =  t2.code_id 
+        left join (select * from mc_shares_industry where date_as = %s ) t1 
+        on t1.code_id = t3.industry_code_id 
+        set t2.p_range_win =     
+            CASE
+             WHEN t2.p_range > t1.p_range THEN
+                 1
+             WHEN t2.p_range < t1.p_range THEN
+                 -1
+             ELSE 0 
+            END
+        where t2.date_as = %s 
+        '''
+        cursor = connection.cursor()
+        return cursor.execute(sql, [start, start])
