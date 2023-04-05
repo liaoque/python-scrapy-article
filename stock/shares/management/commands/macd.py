@@ -45,7 +45,7 @@ class Command(BaseCommand):
         for item in result:
             shareName2 = SharesName.objects.filter(code=item.code_id)
             if len(shareName2) > 0:
-                print(item.diff , item.diff2 , item.dea , item.dea2)
+                # print(item.diff, item.diff2, item.dea, item.dea2)
                 if item.diff > item.diff2 and item.dea > item.dea2:
                     shareName2.update(macd_up=1)
                 else:
@@ -85,9 +85,12 @@ class Command(BaseCommand):
             if repr(macdDIFF) in ("inf", "nan") or repr(macdDEA) in ("inf", "nan") or repr(macd) in ("inf", "nan"):
                 print("计算出未知数据", (code, macdDIFF, macdDEA, macd))
                 continue
-
-            b = SharesMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1, date_as=date_as)
-            b.save()
+            sharesMacdL = SharesMacd.objects.filter(code_id=code, date_as=date_as)
+            if len(sharesMacdL) > 0:
+                sharesMacdL.update(diff=macdDIFF, macd=macd, dea=macdDEA,)
+            else:
+                b = SharesMacd(code_id=code, diff=macdDIFF, macd=macd, dea=macdDEA, cycle_type=1, date_as=date_as)
+                b.save()
         pass
 
     def talib_Macd(self, data):
