@@ -29,3 +29,33 @@
  
  
  
+ 1. 先选强势股
+ 2. 强势股挑macd向上
+ 3. 选财务好的
+ 记录下来
+ 
+
+// 强势股挑macd向上, 选财务好的
+```
+select * from mc_shares_name 
+where mc_shares_name.macd_up = 2
+and mc_shares_name.finance_up = 1
+and code in (
+    select code_id from (
+     select code_id, count(1) c from mc_shares 
+        where date_as > '2023-03-21' and p_range_win = 1
+        group by code_id
+        having c > 5
+        order by c desc
+    ) t
+)
+```
+
+
+// 买入年报好的
+2021年
+回测 2022年
+
+
+
+

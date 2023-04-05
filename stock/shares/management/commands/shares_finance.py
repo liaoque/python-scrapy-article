@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 continue
 
             # 非营业收入 不超过净利润的5%
-            if all[1].non_operating_incom > 0 and all[0].non_operating_incom  / all[0].parentnetprofit > 0.05:
+            if all[1].non_operating_incom > 0 and all[0].non_operating_incom  / all[0].parentnetprofit > 0.09:
                 continue
 
             sss =  all[0].date_as.timetuple()

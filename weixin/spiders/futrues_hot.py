@@ -6,7 +6,7 @@ import weixin.shares.futrues_hot as SharesItems
 import time
 import copy
 
-
+#期货
 #
 # 热门金属列表
 # http://ai.10jqka.com.cn/commodity/stocklinkage/info/getdetail
