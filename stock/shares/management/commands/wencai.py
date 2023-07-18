@@ -8,10 +8,10 @@ if __name__ == '__main__':
     day = datetime.today().strftime('%Y-%m-%d')
     yeasterday = ""
     date_obj = datetime.strptime(day, '%Y-%m-%d')
-    today = date_obj - timedelta(days=1)
+    today = date_obj - timedelta(days=0)
     today = today.strftime('%Y-%m-%d')
-    yeasterday = date_obj - timedelta(days=4)
-    yeasteryeasterday = date_obj - timedelta(days=5)
+    yeasterday = date_obj - timedelta(days=1)
+    yeasteryeasterday = date_obj - timedelta(days=2)
     yeasterday = yeasterday.strftime('%Y-%m-%d')
     yeasteryeasterday = yeasteryeasterday.strftime('%Y-%m-%d')
     # today = "2023-07-01"
