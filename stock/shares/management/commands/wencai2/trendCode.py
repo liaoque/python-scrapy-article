@@ -1,6 +1,6 @@
 
 import requests
-import wencai2.common
+import shares.management.commands.wencai2.common
 
 def trendCode(today, yeasterday):
     s = '%smacd向上，%s收盘价高于开盘价，%s收盘价高于5日均价，%s回踩5日均线，概念，行业，股票市场类型，%s去除新股，去除ST，去除北交所,10日内有涨停' % (
@@ -13,7 +13,7 @@ def trendCode(today, yeasterday):
     url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
     data = {
         'business_cat': 'soniu',
-        'comp_id': wencai2.common.comp_id,
+        'comp_id': shares.management.commands.wencai2.common.comp_id,
         'page': '1',
         'perpage': '100',
         'query': s,
@@ -26,4 +26,4 @@ def trendCode(today, yeasterday):
     response = requests.post(url, data=data, headers=headers)
     # print(response.json()["answer"]["components"][0]['data']["datas"])
     codes = response.json()["answer"]["components"][0]["data"]["datas"]
-    return wencai2.common.toCode(codes)
+    return shares.management.commands.wencai2.common.toCode(codes)

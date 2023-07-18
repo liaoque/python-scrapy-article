@@ -1,5 +1,5 @@
 import requests
-import wencai2.common
+import shares.management.commands.wencai2.common
 
 
 def trendFirst(today):
@@ -11,7 +11,7 @@ def trendFirst(today):
     url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
     data = {
         'business_cat': 'soniu',
-        'comp_id': wencai2.common.comp_id,
+        'comp_id': shares.management.commands.wencai2.common.comp_id,
         'page': '1',
         'perpage': '100',
         'query': s,
@@ -25,7 +25,7 @@ def trendFirst(today):
     # print(response.json()["answer"]["components"][0]['data']["datas"])
     codes2 = response.json()["answer"]["components"][0]["data"]["datas"]
 
-    codes = wencai2.common.toCode(codes2)
+    codes = shares.management.commands.wencai2.common.toCode(codes2)
 
     return codes
 
@@ -39,7 +39,7 @@ def trendNight(today):
     url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
     data = {
         'business_cat': 'soniu',
-        'comp_id': wencai2.common.comp_id,
+        'comp_id': shares.management.commands.wencai2.common.comp_id,
         'page': '1',
         'perpage': '100',
         'query': s,
@@ -53,7 +53,7 @@ def trendNight(today):
     # print(response.json()["answer"]["components"][0]['data']["datas"])
     codes2 = response.json()["answer"]["components"][0]["data"]["datas"]
 
-    codes = wencai2.common.toCode(codes2)
+    codes = shares.management.commands.wencai2.common.toCode(codes2)
 
     return codes
 
@@ -74,7 +74,7 @@ def top(codes):
         if concepts == None:
             continue
         for concept in concepts:
-            if concept in wencai2.common.filter_concept:
+            if concept in shares.management.commands.wencai2.common.filter_concept:
                 continue
             concept_dict[concept]["concept"] = concept
             concept_dict[concept]["count"] += 1

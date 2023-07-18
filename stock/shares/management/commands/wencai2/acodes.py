@@ -1,5 +1,5 @@
 import requests
-import wencai2.common
+import shares.management.commands.wencai2.common
 
 
 # 补涨的
@@ -11,7 +11,7 @@ def buzhang(today, yeasterday, yeasteryeasterday, concept):
     url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
     data = {
         'business_cat': 'soniu',
-        'comp_id': wencai2.common.comp_id,
+        'comp_id': shares.management.commands.wencai2.common.comp_id,
         'page': '1',
         'perpage': '1000',
         'query': s,
@@ -25,7 +25,7 @@ def buzhang(today, yeasterday, yeasteryeasterday, concept):
     # print(response.json()["answer"]["components"][0]['data']["datas"])
     codes2 = response.json()["answer"]["components"][0]["data"]["datas"]
 
-    codes = wencai2.common.toCode(codes2)
+    codes = shares.management.commands.wencai2.common.toCode(codes2)
 
     return codes
 
@@ -38,7 +38,7 @@ def codes(today, concept):
     url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
     data = {
         'business_cat': 'soniu',
-        'comp_id': wencai2.common.comp_id,
+        'comp_id': shares.management.commands.wencai2.common.comp_id,
         'page': '1',
         'perpage': '1000',
         'query': s,
@@ -52,6 +52,6 @@ def codes(today, concept):
     # print(response.json()["answer"]["components"][0]['data']["datas"])
     codes2 = response.json()["answer"]["components"][0]["data"]["datas"]
 
-    codes = wencai2.common.toCode(codes2)
+    codes = shares.management.commands.wencai2.common.toCode(codes2)
 
     return codes
