@@ -1,0 +1,92 @@
+curl -H 'Host: h5.moutai519.com.cn'
+-H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'MT-Device-ID: 2BD6276D-A59F-4E81-B0EF-8AA0FC5E97D0'
+ -H 'MT-Lat: '
+ -H 'X-Requested-With: XMLHttpRequest'
+ -H 'MT-Lng: '
+ -H 'Accept-Language: zh-CN,zh-Hans;q=0.9'
+ -H 'MT-Request-ID: b8bc8f1d-c25a-462d-a534-2bfa60032208'
+ -H 'Client-User-Agent: iOS;16.0.3;Apple;iPhone 8 Plus'
+ -H 'MT-R: clips_OlU6TmFRag5rCXwbNAQ/Tz1SKlN8THcecBp/HGhHdw=='
+ -H 'MT-APP-Version: 1.2.16' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 16_0_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 moutaiapp/1.2.16 device-id/08e4bdaaefba725996f60ece795c4ff5'
+ -H 'Referer: https://h5.moutai519.com.cn/gux/game/main?appConfig=2_1_2'
+ -H 'x-csrf-token: '
+ -H 'Cookie: MT-Device-ID-Wap=2BD6276D-A59F-4E81-B0EF-8AA0FC5E97D0; MT-Token-Wap=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtdCIsImV4cCI6MTY2OTA4NTAxMywidXNlcklkIjoxMTAyODA2MTA3LCJkZXZpY2VJZCI6IjJCRDYyNzZELUE1OUYtNEU4MS1CMEVGLThBQTBGQzVFOTdEMCIsImlhdCI6MTY2NjQ5MzAxM30.sUXYDz7usutljDPQ4EYdTmYhqst1R_H1qQBhJwLDsP4; YX_SUPPORT_WEBP=1; _bl_uid=0Xld39LnkOCrgOgn9sy71ggfR39t'
+ --compressed 'https://h5.moutai519.com.cn/game/userinfo?__timestamp=1666494087538&'
+
+ 回答大家几个问题
+1是光伏怎么样?
+上半年光伏出口大爆发啊，但是我们很容易把欧洲和美国带入我们，以为这种爆发是长期不间断的，
+其实不是，因为欧洲人和美国人干活超级慢，他光伏安装很多时候要干一年，所以欧美现在光伏库存特别严重，后面出口可能下滑。
+
+2.储能的话是这样的。
+
+情况和光伏差不多，欧洲需求在减弱，但是美国的需求起来了，而且很多是那种户外储能。
+没有安装的问题，同时国内加大力度，目前来看还可以再跑一阵子，但是这么高强度的上储能不可能持续太久，所以赚点钱要跑。
+
+3.未来看什么方向?
+
+我个人认为海外，特别是印度和越南为代表的东南亚是非常好的新逻辑，这些国家目前经济发展非常的快，而且人口占全世界人口的50%，是未来全球最大的增量市场。
+他们对我们的需求主要有2块
+
+1各类工厂的基础设施，这里面有工厂设备机械，施工安装，还有后期的管理和运营维护。
+
+这里面我比较看好火电的出口，原因是我们火
+中话术全球领生	回出管带一路白政康文
+持的便宜资金所以可以给上市公司做出非常好的资金回报。
+
+就比如说大家之前炒的那个欧洲修电厂卖电的公司，人家在东南亚也投资了很多电厂，随着这些国家adp的快速增长，
+
+
+    select code_id from mc_shares_join_block where block_code_id = 'BK0712'
+    UNION select code_id from mc_shares_join_industry where industry_code_id = 'BK0428'
+    group by code_id
+    having count(1) > 1
+
+
+SELECT code_id,COUNT(1) from (
+select code_id from mc_shares_join_block where block_code_id = 'BK0712'
+UNION ALL select code_id from mc_shares_join_industry where industry_code_id = 'BK0428'
+) t
+GROUP by code_id
+HAVING COUNT(1) > 1;
+
+
+code_id	COUNT(1)
+000862	2
+600157	2
+600509	2
+
+
+SELECT code_id,COUNT(1) from (
+select code_id from mc_shares_join_block where block_code_id = 'BK0712'
+UNION ALL select code_id from mc_shares_join_industry where industry_code_id = 'BK0457'
+) t
+GROUP by code_id
+HAVING COUNT(1) > 1;
+
+消费电子
+SELECT code_id,COUNT(1) from (
+select code_id from mc_shares_join_block where block_code_id = 'BK0712'
+UNION ALL select code_id from mc_shares_join_industry where industry_code_id = 'BK1037'
+) t
+GROUP by code_id
+HAVING COUNT(1) > 1;
+
+
+10.22会员直播
+
+都是些周中提过的老几样。
+
+长线可以看出口:
+
+个人觉得一带一路上修电厂的项目有看头，短期催化的话看欧洲冬天吧，他们应该还是会缺电的，然后长线来看一带一路政策上也比较支持，中亚和东南亚项目也很有持续性，最后一带一路跌了7年了，估值具备一定吸引力。
+
+还有些短线超跌的，可以去看反弹。
+
+锂电的正极材料：2个月跌了50%了，又是基金重仓，按道理机构会自救，同时 新能源赛道嘛，业绩还不错。
+
+中概互联：哪怕还要继续跌，现在这个位置也该弹一下再跌吧？
+
+网络安全：这个属于政府加大投资的方向，而且整个行业已经跌了2年了，位置够低。
+
+就这些，祝大家下周发财！
