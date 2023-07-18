@@ -2,123 +2,78 @@ import requests
 import numpy as np
 from datetime import datetime, timedelta
 
-
-
-comp_id = "6734520"
-
-
-def trend(today):
-    s = '%s去除ST，去除北交所，%s去除新股，所属行业，所属概念，%s开盘价=%s涨停价，%s竞价未匹配金额，%s涨跌幅降序' % (
-        today, today, today, today, today, today,
-    )
-
-    url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
-    data = {
-        'business_cat': 'soniu',
-        'comp_id': comp_id,
-        'page': '1',
-        'perpage': '100',
-        'query': s,
-        'uuid': '24087'
-    }
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
-    }
-    response = requests.post(url, data=data, headers=headers)
-    # print(response.json()["answer"]["components"][0]['data']["datas"])
-    codes2 = response.json()["answer"]["components"][0]["data"]["datas"]
-
-    codes = []
-    for item in codes2:
-        code = item.get("股票代码", "")
-        name = item.get("股票简称", "")
-        type_ = item.get("股票市场类型", "")
-        if type_ is not None:
-            type_ = type_.split(";")
-
-        industry = item.get("所属同花顺行业", "")
-        if industry is not None:
-            industry = industry.split("-")
-
-        concept = item.get("所属概念", "")
-        if concept is not None:
-            concept = concept.split(";")
-
-        codes.append({
-            "code": code,
-            "name": name,
-            "type": type_,
-            "industry": industry,
-            "concept": concept,
-        })
-
-    return codes
-
-
-def trendCode(today, yeasterday):
-    s = '%smacd向上，%s收盘价高于开盘价，%s收盘价高于5日均价，%s回踩5日均线，概念，行业' % (
-        today, today, today,yeasterday
-    )
-    # s = '%s去除ST，去除北交所，%s去除新股，所属行业，所属概念，%s开盘价=%s涨停价，%s竞价未匹配金额，%s涨跌幅降序' % (
-    #     today, today, today, today, today, today,
-    # )
-
-    url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
-    data = {
-        'business_cat': 'soniu',
-        'comp_id': comp_id,
-        'page': '1',
-        'perpage': '100',
-        'query': s,
-        'uuid': '24087'
-    }
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
-    }
-    response = requests.post(url, data=data, headers=headers)
-    # print(response.json()["answer"]["components"][0]['data']["datas"])
-    codes = response.json()["answer"]["components"][0]["data"]["datas"]
-    return [{
-        "code": item["股票代码"],
-        "name": item["股票简称"],
-        "type": item["股票市场类型"].split(";"),
-        "industry": item["所属同花顺行业"].split("-"),
-        "concept": item["所属概念"].split(";"),
-    } for item in codes]
-
+from wencai2 import trend, trendCode, acodes, common, pic_n
 
 if __name__ == '__main__':
-
-
-    today =   datetime.today().strftime('%Y-%m-%d')
-
+    day = datetime.today().strftime('%Y-%m-%d')
     yeasterday = ""
+    date_obj = datetime.strptime(day, '%Y-%m-%d')
+    today = date_obj - timedelta(days=1)
+    today = today.strftime('%Y-%m-%d')
+    yeasterday = date_obj - timedelta(days=4)
+    yeasteryeasterday = date_obj - timedelta(days=5)
+    yeasterday = yeasterday.strftime('%Y-%m-%d')
+    yeasteryeasterday = yeasteryeasterday.strftime('%Y-%m-%d')
+    # today = "2023-07-01"
+    # yeasterday = "2023-06-30"
+    # 查最强票
+    codes = trend.trendNight(today)
+    # 把这些最强票，统计5个最强概念，及其龙头
+    concepts_sorted = trend.top(codes)
+    # print(concepts_sorted)
 
-    date_obj = datetime.strptime(today, '%Y-%m-%d')
-    yeasterday = date_obj - timedelta(days=1)
+    for item in concepts_sorted:
+        # 打印概念和龙头
+        print(item["concept"], "-----龙头:", item["codes2"][0]["name"], item["codes2"][0]["code"], item["codes2"][0]["concept"])
+        # 查该概念的符合的股票集合
+        codes2 = acodes.buzhang(today, yeasterday, yeasteryeasterday , item["concept"])
 
-    codes = trend(today)
-    item = [ code["concept"] for code in codes]
-    arr_2d = np.array(item)
-    concept = arr_2d.flatten()
+        intersection2 = []
+        for codes3 in codes2:
+            if codes3["code"] in item["codes"]:
+                continue
+            if codes3["code"] > "680000":
+                continue
+            # 匹配概念，跟龙头， 记录跟龙头的匹配度
+            intersection = list(set(codes3["concept"]) & set(item["codes2"][0]["concept"]))
+            intersection2.append({
+                "code": codes3["code"],
+                "name": codes3["name"],
+                "c": len(intersection),
+                "intersection": intersection,
+            })
+        # 匹配度排序
+        intersection2 = sorted(intersection2, key=lambda x: x['c'], reverse=True)
+        print(intersection2)
+        print("+++++++++++++++++++")
+        # 查N的
+        # for item2 in intersection2:
+        #     # 非3字开头的
+        #     if item2["code"][0] != "3" and pic_n.check(today, item2["code"]):
+        #         print("匹配--------------",item2["code"])
 
-    codes = trendCode(today, yeasterday)
-    arr_2d = np.array(codes)
+    # pic_n.check(today, "002931.SZ")
+    # print(concepts_sorted)
 
-    filtered_codes = []
-    concept_set = set(concept)
-
-    for item in codes:
-        # 将industry和concept字段转为集合，以便进行集合操作
-        industry_set = set(item["concept"])
-        # 检查industry集合是否包含concept集合的任何一个元素
-        if any(concept in concept_set for concept in industry_set):
-            # 如果不包含，就加入到filtered_codes列表中
-            filtered_codes.append(item)
-
-    # 将过滤后的codes转为numpy数组
-    arr_2d_filtered = np.array(filtered_codes)
-    print(arr_2d_filtered)
-
+    # removals = ['标普道琼斯A股', '转融券标的', '沪股通', '融资融券', '雄安新区', '京津冀一体化', '转融券标的', '参股银行', '共同富裕示范区']
+    #
+    # for item in removals:
+    #     concept_set.discard(item)  # 使用discard方法移除元素，如果元素不存在，不会抛出错误
+    #
+    # codes = trendCode(today, yeasterday)
+    # arr_2d = np.array(codes)
+    #
+    # filtered_codes = []
+    #
+    # for item in codes:
+    #     # 将industry和concept字段转为集合，以便进行集合操作
+    #     industry_set = set(item["concept"])
+    #     # 检查industry集合是否包含concept集合的任何一个元素
+    #     if any(concept in concept_set for concept in industry_set):
+    #         # 如果不包含，就加入到filtered_codes列表中
+    #         filtered_codes.append(item)
+    #
+    # # 将过滤后的codes转为numpy数组
+    # arr_2d_filtered = np.array(filtered_codes)
+    #
+    # print('","'.join([code["code"].replace(".SZ", "").replace(".SH", "") for code in arr_2d_filtered]))
