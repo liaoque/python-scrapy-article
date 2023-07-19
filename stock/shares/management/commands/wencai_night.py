@@ -19,9 +19,17 @@ class Command(BaseCommand):
         # today = "2023-07-17"
         codes2 = trend.trendNight(today)
         concepts_sorted = trend.top(codes2)
-        tomorrow_concept = [item["concept"] for item in concepts_sorted]
+        # tomorrow_concept = [item["concept"] for item in concepts_sorted]
 
-        str = "night：%s\n" % ("\",\"".join(tomorrow_concept))
+        str = ""
+        for item in concepts_sorted:
+            str = str + "%s\n" % (item["concept"])
+            for item2 in item["codes2"][:5]:
+                str = str + "%s %s\n" % (item2["code"], item2["name"])
+            str = str + "++++++++++\n"
+
+
+        # str = "night：%s\n" % ("\",\"".join(tomorrow_concept))
         print(str)
         send_mail(
             'night %s' % today,
