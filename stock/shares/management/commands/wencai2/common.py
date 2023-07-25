@@ -1,3 +1,7 @@
+import json
+import os
+
+
 comp_id = "6734520"
 
 filter_concept = ["分拆上市意愿", "人民币贬值受益", "富时罗素概念", "富时罗素概念股", "标普道琼斯A股", "沪股通", "深股通", "融资融券", "转融券标的", "再融资", "送转填权",
@@ -49,3 +53,17 @@ def toCode(codes2):
 def toString(codes):
     cc = [item["code"][0:6] for item in codes]
     return "\",\"".join(cc)
+
+
+def read_json_file(file_path):
+    if not os.path.exists(file_path):  # 检测文件是否存在
+        with open(file_path, 'w', encoding='utf-8') as new_file:
+            json.dump({}, new_file)  # 创建一个新的空JSON文件，初始内容为一个空字典
+
+    with open(file_path, 'r+', encoding='utf-8') as file:
+        data = json.load(file)
+    return data
+
+def write_json_file(file_path, data):
+    with open(file_path, 'w+', encoding='utf-8') as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)

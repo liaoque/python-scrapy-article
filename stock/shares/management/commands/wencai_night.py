@@ -15,10 +15,14 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
+        file_path = "data.json"
+        json_data = common.read_json_file(file_path)
         today = datetime.today().strftime('%Y-%m-%d')
         # today = "2023-07-17"
         codes2 = trend.trendNight(today)
         concepts_sorted = trend.top(codes2)
+        json_data[today] = [{"concept": item["concept"], "codes": item["codes"]} for item in concepts_sorted]
+        common.write_json_file(file_path, json_data)
         # tomorrow_concept = [item["concept"] for item in concepts_sorted]
 
         str = ""
