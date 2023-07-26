@@ -5,6 +5,8 @@ import os
 from datetime import datetime, timedelta
 import configparser
 
+plt.rcParams['font.family'] = 'Arial Unicode MS'
+
 
 def read_ini_file(file_path):
     config = configparser.ConfigParser()
@@ -33,8 +35,8 @@ def read_json_file(file_path):
 # start = ini_config.get(section_name, "start")
 # end = ini_config.get(section_name, "end")
 
-plt.rcParams['font.sans-serif'] = ['PingFang SC']  # 使用系统已安装的中文字体
-plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+# plt.rcParams['font.sans-serif'] = ['PingFang SC']  # 使用系统已安装的中文字体
+# plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
 start = ""
 end = ""

@@ -1,7 +1,7 @@
 import requests
 import numpy as np
 from datetime import datetime, timedelta
-
+from collections import OrderedDict
 from shares.management.commands.wencai2 import trend, trendCode, acodes, common, pic_n
 from django.core.management.base import BaseCommand, CommandError
 
@@ -21,9 +21,14 @@ class Command(BaseCommand):
         # today = "2023-07-17"
         codes2 = trend.trendNight(today)
         concepts_sorted = trend.top(codes2)
+
+
         json_data[today] = [{"concept": item["concept"], "codes": item["codes"]} for item in concepts_sorted]
+        json_data = OrderedDict(sorted(json_data.items()))
+        json_data = dict(json_data)
         common.write_json_file(file_path, json_data)
         # tomorrow_concept = [item["concept"] for item in concepts_sorted]
+
 
         str = ""
         for item in concepts_sorted:

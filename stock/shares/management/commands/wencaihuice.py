@@ -3,8 +3,9 @@ import numpy as np
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 from django.core.management.base import BaseCommand, CommandError
-
+from collections import OrderedDict
 from shares.management.commands.wencai2 import trend, trendCode, acodes, common, pic_n
+
 
 class Command(BaseCommand):
     help = '计算各种指标'
@@ -13,8 +14,28 @@ class Command(BaseCommand):
         # parser.add_argument('poll_ids', nargs='+', type=int)
         pass
 
+    def da(self):
+        file_path = "data.json"
+        json_data = common.read_json_file(file_path)
+        data = pic_n.getData(datetime.today().strftime('%Y-%m-%d'), "000001.SZ", -100)
+        days = [item[0] for item in data]
+        for i in range(len(days)):
+            today = datetime.utcfromtimestamp(days[i] / 1000)
+            today = today.strftime('%Y-%m-%d')
+            codes = trend.trendNight(today)
+            if len(codes) == 0:
+                continue
+            concepts_sorted = trend.top(codes)
+            json_data[today] = [{"concept": item["concept"], "codes": item["codes"]} for item in concepts_sorted]
+
+        json_data = OrderedDict(sorted(json_data.items()))
+        json_data = dict(json_data)
+        common.write_json_file(file_path, json_data)
+
     def handle(self, *args, **options):
-        file_path= "data.json"
+        # self.da()
+        # return
+        file_path = "data.json"
         today = datetime.today().strftime('%Y-%m-%d')
         codes2 = trend.trendFirst(today)
 
@@ -46,9 +67,7 @@ class Command(BaseCommand):
                 continue
             concepts_sorted = trend.top(codes)
 
-
-            json_data[today] = [{ "concept": item["concept"], "codes": item["codes"] } for item in concepts_sorted]
-
+            json_data[today] = [{"concept": item["concept"], "codes": item["codes"]} for item in concepts_sorted]
 
             # 第二天的风口
             codes2 = trend.trendFirst(tomorrow)
@@ -124,14 +143,14 @@ class Command(BaseCommand):
         plt.grid(True)
         plt.show()
 
-            # print("ta today -------", today, ta, taa,taf )
-                    # print(intersection2)
+        # print("ta today -------", today, ta, taa,taf )
+        # print(intersection2)
 
-            # print(concepts_sorted)
-            # print(concepts_sorted2)
+        # print(concepts_sorted)
+        # print(concepts_sorted2)
 
-            # print(days[i])
-            # break
+        # print(days[i])
+        # break
         # today = today.strftime('%Y-%m-%d')
         # yeasterday = yeasterday.strftime('%Y-%m-%d')
         # yeasteryeasterday = yeasteryeasterday.strftime('%Y-%m-%d')

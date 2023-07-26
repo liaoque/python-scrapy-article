@@ -47,10 +47,11 @@ def getData(today, stock_code, n=-10):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
         "Referer": "https://xueqiu.com/",
-        "Cookie": "xq_a_token=197a3a870824d1754f6edf083d719bd1a3aabe88; xqat=197a3a870824d1754f6edf083d719bd1a3aabe88; xq_r_token=f3676d47182482b690747de814788450c6d4fcf1; xq_id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOi0xLCJpc3MiOiJ1YyIsImV4cCI6MTY5MTYyNzcwNSwiY3RtIjoxNjg5MTcwMTk0OTA4LCJjaWQiOiJkOWQwbjRBWnVwIn0.cCXKN95tZEuqIdo6IQjc6P8thVTmM2KCNemtN64JmI91pO1RTrwV3a4hWCS7za5E5by8zDAuXZ3uxsRlFc1jtcbKFanRvPcT_9gUjzMqJbxyWhWVZOLuWBxm0bJZ8o7x6ljPiu4Qc771OaMQYvNZT6a4SO5CX-WrLeHT-UZf4IbbIungLF2QhBhgvcuZhMlYoV3TMPkGP7RzgKUYo5jn8ZIJRA9k8S4tRWPnvFp1uBl7c_fJ42pH4Af97U0XYk3rBF5MwHzJWu7_ZCADi9VgKdhapB-D6MXHkN9-KxU0cQHwb5jPg6AI8P6e3cXhVrmhttifsAfnAJcb2Ggqz4cZaw;"
+        "Cookie": "device_id=f93428ccc6e79071de4a4ca5c97f434c; s=ch16q0aijy; snbim_minify=true; bid=8ef484bce3b63d26a12f5c4af675f48f_lhat0b77; Hm_lvt_1db88642e346389874251b5a1eded6e3=1689170238; xq_a_token=715ae77c7b72c67549b80e153e894ef2e19f0446; xqat=715ae77c7b72c67549b80e153e894ef2e19f0446; xq_r_token=a1c71f74d5f0fd50f87640a0682c837e5a07f706; xq_id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOi0xLCJpc3MiOiJ1YyIsImV4cCI6MTY5MjkyMzcyMSwiY3RtIjoxNjkwMzg3NDQxMDEzLCJjaWQiOiJkOWQwbjRBWnVwIn0.o8JzWoLlHa3zHZL1puHuVgHKcrvZWXfYOAajqmMJPC78Wj9GgtOTuCvf5flMJprhxRCLxSBhSPb16pcNvIxUMWx3lxTAbEIuxiO4gqugkdIlRmN4Nzm2VrVwFoVjvagvFTwbxyptRMi0N3HKpahJFs_f7DndBPSpiBaH6qRU6bCQ7C9PSa5LTSnI4fmRWt2wD3OGEDjw6KCBNnsqfLfVm13JH53r3vhzZIjmNOrNygJz-HVPswvN3Ie6FEhM2z_LeiFezW0aVXDy0_trtjZvdmER0b1qbGLfk2tistz4f4b1AuxK9imtddI4wK6p_oY9ajmurCim5egt9o3RRF70nA; u=941690387441190; is_overseas=0;"
     }
 
     response = requests.get(url, params=data, headers=headers)
+    print(response)
     # print(response.json()["answer"]["components"][0]['data']["datas"])
     codes2 = response.json()
 
