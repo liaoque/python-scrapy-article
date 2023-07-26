@@ -45,7 +45,7 @@ if len(end) == 0:
     end = datetime.today().strftime('%Y-%m-%d')
 
 if len(start) == 0:
-    start = (datetime.today() - timedelta(days=30)).strftime('%Y-%m-%d')
+    start = (datetime.today() - timedelta(days=5)).strftime('%Y-%m-%d')
 
 json_data = read_json_file("data.json")
 
