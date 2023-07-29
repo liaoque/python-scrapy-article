@@ -19,9 +19,13 @@ class Command(BaseCommand):
         json_data = common.read_json_file(file_path)
         today = datetime.today().strftime('%Y-%m-%d')
         # today = "2023-07-17"
-        codes2 = trend.trendNight(today)
-        concepts_sorted = trend.top(codes2)
 
+        codes2 = trend.trendFirst(today)
+
+        codes3 = trend.trendNight(today)
+        codes2 = codes3 + codes2
+
+        concepts_sorted = trend.top(codes2)
 
         json_data[today] = [{"concept": item["concept"], "codes": item["codes"]} for item in concepts_sorted]
         json_data = OrderedDict(sorted(json_data.items()))
