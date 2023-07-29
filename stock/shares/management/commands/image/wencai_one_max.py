@@ -9,8 +9,9 @@ plt.rcParams['font.family'] = 'Arial Unicode MS'
 
 
 def read_ini_file(file_path):
-    config = configparser.ConfigParser()
-    config.read(file_path)
+    with open(file_path, "r", encoding="utf-8") as file:
+        config = configparser.ConfigParser()
+        config.read_file(file)
     return config
 
 
@@ -24,22 +25,20 @@ def read_json_file(file_path):
     return data
 
 
-#
 # # 示例文件路径
-# file_path = 'one.ini'
+file_path = 'config.ini'
 #
 # # 读取 INI 文件
-# ini_config = read_ini_file(file_path)
-# section_name = 'one'  # INI 文件中的节名
+ini_config = read_ini_file(file_path)
+section_name = 'k-line'  # INI 文件中的节名
 #
-# start = ini_config.get(section_name, "start")
-# end = ini_config.get(section_name, "end")
+start = ini_config.get(section_name, "start")
+end = ini_config.get(section_name, "end")
 
-# plt.rcParams['font.sans-serif'] = ['PingFang SC']  # 使用系统已安装的中文字体
-# plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+hot = ini_config.get(section_name, "hot").split(',')
 
-start = ""
-end = ""
+if hot[0] == "":
+    hot = []
 
 if len(end) == 0:
     end = datetime.today().strftime('%Y-%m-%d')
@@ -56,7 +55,8 @@ for key, value in json_data.items():
     if key >= start and key <= end:
         concepts_sorted2[key] = value
         for iem in value:
-            tomorrow_concept.append(iem["concept"])
+            if (len(hot) == 0 or  iem["concept"] in hot):
+                tomorrow_concept.append(iem["concept"])
         x.append(key)
 
 tomorrow_concept = list(set(tomorrow_concept))
