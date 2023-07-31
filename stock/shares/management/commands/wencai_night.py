@@ -34,16 +34,45 @@ class Command(BaseCommand):
         # tomorrow_concept = [item["concept"] for item in concepts_sorted]
 
 
-        str = ""
+        str = "补涨概念：\n"
         for item in concepts_sorted:
             str = str + "%s\n" % (item["concept"])
             for item2 in item["codes2"][:5]:
                 str = str + "%s %s\n" % (item2["code"], item2["name"])
             str = str + "++++++++++\n"
 
+        str = str + "=================================\n"
+        str = str + "补涨选股\n"
+        for item in concepts_sorted:
+            # 打印概念和龙头
+            print(item["concept"], "-----龙头:", item["codes2"][0]["name"], item["codes2"][0]["code"],
+                  item["codes2"][0]["concept"])
 
-        # str = "night：%s\n" % ("\",\"".join(tomorrow_concept))
-        print(str)
+            str = str + "%s, %s, %s, %s\n"%(item["concept"], "-----龙头:", item["codes2"][0]["name"], item["codes2"][0]["code"],)
+            # 查该概念的符合的股票集合
+            codes2 = acodes.buzhang(today, yeasterday, yeasteryeasterday, item["concept"])
+
+            intersection2 = []
+            for codes3 in codes2:
+                if codes3["code"] in item["codes"]:
+                    continue
+                if codes3["code"] > "680000":
+                    continue
+                # 匹配概念，跟龙头， 记录跟龙头的匹配度
+                intersection = list(set(codes3["concept"]) & set(item["codes2"][0]["concept"]))
+                intersection2.append({
+                    "code": codes3["code"],
+                    "name": codes3["name"],
+                    "c": len(intersection),
+                    "intersection": intersection,
+                })
+            
+            # 匹配度排序
+            intersection2 = sorted(intersection2, key=lambda x: x['c'], reverse=True)
+            for item2 in intersection2[:5]:
+                str = str + "%s %s\n" % (item2["code"], item2["name"])
+                
+                
         send_mail(
             'night %s' % today,
             str,
