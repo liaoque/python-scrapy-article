@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from django.core.mail import send_mail
 
+
 class Command(BaseCommand):
     help = '计算各种指标'
 
@@ -33,7 +34,6 @@ class Command(BaseCommand):
         common.write_json_file(file_path, json_data)
         # tomorrow_concept = [item["concept"] for item in concepts_sorted]
 
-
         str = "补涨概念：\n"
         for item in concepts_sorted:
             str = str + "%s\n" % (item["concept"])
@@ -43,12 +43,22 @@ class Command(BaseCommand):
 
         str = str + "=================================\n"
         str = str + "补涨选股\n"
+
+        data = pic_n.getData(datetime.today().strftime('%Y-%m-%d'), "000001.SZ", -10)
+        days = [item[0] for item in data]
+
+        yeasterday = datetime.utcfromtimestamp(days[len(days) - 2] / 1000)
+        yeasterday = yeasterday.strftime('%Y-%m-%d')
+        yeasteryeasterday = datetime.utcfromtimestamp(days[len(days) - 3] / 1000)
+        yeasteryeasterday = yeasteryeasterday.strftime('%Y-%m-%d')
+        print(yeasterday, yeasteryeasterday,)
         for item in concepts_sorted:
             # 打印概念和龙头
             print(item["concept"], "-----龙头:", item["codes2"][0]["name"], item["codes2"][0]["code"],
                   item["codes2"][0]["concept"])
 
-            str = str + "%s, %s, %s, %s\n"%(item["concept"], "-----龙头:", item["codes2"][0]["name"], item["codes2"][0]["code"],)
+            str = str + "%s, %s, %s, %s\n" % (
+                item["concept"], "-----龙头:", item["codes2"][0]["name"], item["codes2"][0]["code"],)
             # 查该概念的符合的股票集合
             codes2 = acodes.buzhang(today, yeasterday, yeasteryeasterday, item["concept"])
 
@@ -66,13 +76,12 @@ class Command(BaseCommand):
                     "c": len(intersection),
                     "intersection": intersection,
                 })
-            
+
             # 匹配度排序
             intersection2 = sorted(intersection2, key=lambda x: x['c'], reverse=True)
             for item2 in intersection2[:5]:
                 str = str + "%s %s\n" % (item2["code"], item2["name"])
-                
-                
+
         send_mail(
             'night %s' % today,
             str,
@@ -80,5 +89,3 @@ class Command(BaseCommand):
             ['844596330@qq.com'],
             fail_silently=False,
         )
-
-
