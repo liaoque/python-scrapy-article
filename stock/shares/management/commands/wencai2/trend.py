@@ -2,8 +2,9 @@ import requests
 import shares.management.commands.wencai2.common
 
 
+
 def trendFirst(today):
-    s = '%s去除ST，去除北交所，%s去除新股，所属行业，所属概念，%s开盘价=%s涨停价，%s竞价未匹配大于0，%s涨跌幅降序，20日涨跌幅' % (
+    s = '%s去除ST，去除北交所，%s去除新股，所属行业，所属概念，%s开盘价=%s涨停价，%s竞价未匹配大于0，%s涨跌幅降序，5日涨跌幅' % (
         today, today, today, today, today, today,
     )
     print(s)
@@ -71,6 +72,7 @@ def top(codes):
             continue
         # 拆分concept字符串
         concepts = item["concept"]
+
         if concepts == None:
             continue
         for concept in concepts:
@@ -81,6 +83,16 @@ def top(codes):
             concept_dict[concept]["codes"].append(item["code"])
             concept_dict[concept]["codes2"].append(item)
             # concept_dict[concept]["full"] = max(concept_dict[concept]["full"], item["full"])
+        industries = item["industry"]
+        if industries == None:
+            continue
+        for industry in industries:
+            if industry in shares.management.commands.wencai2.common.filter_concept:
+                continue
+            concept_dict[industry]["concept"] = industry
+            concept_dict[industry]["count"] += 1
+            concept_dict[industry]["codes"].append(item["code"])
+            concept_dict[industry]["codes2"].append(item)
 
     for concept in concept_dict:
         concept_dict[concept]['codes2'] = sorted(concept_dict[concept]['codes2'], key=lambda x: x['full'], reverse=True)

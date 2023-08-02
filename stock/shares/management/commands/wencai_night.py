@@ -2,7 +2,7 @@ import requests
 import numpy as np
 from datetime import datetime, timedelta
 from collections import OrderedDict
-from shares.management.commands.wencai2 import trend, trendCode, acodes, common, pic_n
+from shares.management.commands.wencai2 import trend, trendCode, acodes, common, pic_n, trendDown
 from django.core.management.base import BaseCommand, CommandError
 
 from django.core.mail import send_mail
@@ -51,7 +51,7 @@ class Command(BaseCommand):
         yeasterday = yeasterday.strftime('%Y-%m-%d')
         yeasteryeasterday = datetime.utcfromtimestamp(days[len(days) - 3] / 1000)
         yeasteryeasterday = yeasteryeasterday.strftime('%Y-%m-%d')
-        print(yeasterday, yeasteryeasterday,)
+        print(yeasterday, yeasteryeasterday, )
         for item in concepts_sorted:
             # 打印概念和龙头
             print(item["concept"], "-----龙头:", item["codes2"][0]["name"], item["codes2"][0]["code"],
@@ -81,6 +81,16 @@ class Command(BaseCommand):
             intersection2 = sorted(intersection2, key=lambda x: x['c'], reverse=True)
             for item2 in intersection2[:5]:
                 str = str + "%s %s\n" % (item2["code"], item2["name"])
+
+        str = str + "\n+++++++++++\n"
+        str = str + "下跌趋势\n"
+        codes2 = trendDown.trendNightDown(today)
+        concepts_sorted = trend.top(codes2)
+        for item in concepts_sorted:
+            str = str + "%s\n" % (item["concept"])
+            for item2 in item["codes2"][:5]:
+                str = str + "%s %s\n" % (item2["code"], item2["name"])
+            str = str + "++++++++++\n"
 
         send_mail(
             'night %s' % today,
