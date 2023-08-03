@@ -31,8 +31,8 @@ def trendFirstDown(today):
 
 
 def trendNightDown(today):
-    s = '%s去除ST，%s去除北交所，%s去除新股，所属行业，所属概念，%s收盘价涨跌幅<-0.07，5日涨跌幅降序' % (
-        today, today, today, today
+    s = '%s去除ST，%s去除北交所，%s去除新股，所属行业，所属概念，%s收盘价涨跌幅<%s，5日涨跌幅降序' % (
+        today, today, today, today, "-7%"
     )
     print(s)
     # s = "半年报预增，所属概念，s去除ST，去除北交所，去除新股"
