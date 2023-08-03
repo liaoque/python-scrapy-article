@@ -19,12 +19,14 @@ class Command(BaseCommand):
         file_path = "data.json"
         json_data = common.read_json_file(file_path)
         today = datetime.today().strftime('%Y-%m-%d')
-        # today = "2023-07-17"
+        # today = "2023-08-03"
 
         codes2 = trend.trendFirst(today)
 
         codes3 = trend.trendNight(today)
         codes2 = codes3 + codes2
+        codes2 = list({d['code']:d for d in codes2}.values())
+
 
         concepts_sorted = trend.top(codes2)
 

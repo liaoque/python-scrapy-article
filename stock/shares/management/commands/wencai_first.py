@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         today = datetime.today().strftime('%Y-%m-%d')
-        # today = "2023-07-17"
+        # today = "2023-08-03"
         codes2 = trend.trendFirst(today)
         concepts_sorted = trend.top(codes2)
         # tomorrow_concept = [item["concept"] for item in concepts_sorted]

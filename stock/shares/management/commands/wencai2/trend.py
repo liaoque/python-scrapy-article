@@ -73,26 +73,25 @@ def top(codes):
         # 拆分concept字符串
         concepts = item["concept"]
 
-        if concepts == None:
-            continue
-        for concept in concepts:
-            if concept in shares.management.commands.wencai2.common.filter_concept:
-                continue
-            concept_dict[concept]["concept"] = concept
-            concept_dict[concept]["count"] += 1
-            concept_dict[concept]["codes"].append(item["code"])
-            concept_dict[concept]["codes2"].append(item)
+        if concepts != None:
+            for concept in concepts:
+                if concept in shares.management.commands.wencai2.common.filter_concept:
+                    continue
+                concept_dict[concept]["concept"] = concept
+                concept_dict[concept]["count"] += 1
+                concept_dict[concept]["codes"].append(item["code"])
+                concept_dict[concept]["codes2"].append(item)
             # concept_dict[concept]["full"] = max(concept_dict[concept]["full"], item["full"])
+
         industries = item["industry"]
-        if industries == None:
-            continue
-        for industry in industries:
-            if industry in shares.management.commands.wencai2.common.filter_concept:
-                continue
-            concept_dict[industry]["concept"] = industry
-            concept_dict[industry]["count"] += 1
-            concept_dict[industry]["codes"].append(item["code"])
-            concept_dict[industry]["codes2"].append(item)
+        if industries != None:
+            for industry in industries:
+                if industry in shares.management.commands.wencai2.common.filter_concept:
+                    continue
+                concept_dict[industry]["concept"] = industry
+                concept_dict[industry]["count"] += 1
+                concept_dict[industry]["codes"].append(item["code"])
+                concept_dict[industry]["codes2"].append(item)
 
     for concept in concept_dict:
         concept_dict[concept]['codes2'] = sorted(concept_dict[concept]['codes2'], key=lambda x: x['full'], reverse=True)
