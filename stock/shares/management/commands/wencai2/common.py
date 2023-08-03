@@ -25,7 +25,7 @@ def toCode(codes2):
 
         industry = item.get("所属同花顺行业", "")
         if industry is not None:
-            industry = industry.split("-")
+            industry = list(set(industry.split("-")))
 
         concept = item.get("所属概念", "")
         if concept is not None:
