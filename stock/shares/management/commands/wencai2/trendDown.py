@@ -31,7 +31,7 @@ def trendFirstDown(today):
 
 
 def trendNightDown(today):
-    s = '%s去除ST，%s去除北交所，%s去除新股，所属行业，所属概念，%s收盘价<-7%，5日涨跌幅降序' % (
+    s = '%s去除ST，%s去除北交所，%s去除新股，所属行业，所属概念，%s收盘价涨跌幅<-0.07，5日涨跌幅降序' % (
         today, today, today, today, today
     )
     print(s)
