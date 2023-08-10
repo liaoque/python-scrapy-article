@@ -44,14 +44,15 @@ dates = pic_n.getData()
 if len(end) == 0 and len(start) == 0:
     start = dates[len(dates) -5]
 
+concepts = []
 blockStr = None
 if len(hot) > 0:
     blockStr = hot
-
+    concepts = hot.split("和")
 
 x = []
 block1Line = []
-concepts = []
+
 for item in dates:
     if start > item:
         continue
@@ -84,7 +85,7 @@ for item in dates:
         else:
             block2[0] = block2[1]
     if blockStr == "" or blockStr is None :
-        blockStr = "%s, %s"%(block1[0]["concept"], block2[0]["concept"])
+        blockStr = "%s和%s"%(block1[0]["concept"], block2[0]["concept"])
         concepts.append(block1[0]["concept"])
         if block2[0]["concept"] != "":
             concepts.append(block2[0]["concept"])
