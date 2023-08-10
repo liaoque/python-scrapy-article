@@ -48,7 +48,7 @@ concepts = []
 blockStr = None
 if len(hot) > 0:
     blockStr = hot
-    concepts = hot.split("和")
+    concepts =  hot.replace("和",",").split(",")
 
 x = []
 block1Line = []
