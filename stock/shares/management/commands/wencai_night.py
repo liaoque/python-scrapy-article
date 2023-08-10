@@ -49,10 +49,8 @@ class Command(BaseCommand):
         data = pic_n.getData(datetime.today().strftime('%Y-%m-%d'), "000001.SZ", -10)
         days = data
 
-        yeasterday = datetime.utcfromtimestamp(days[len(days) - 2] / 1000)
-        yeasterday = yeasterday.strftime('%Y-%m-%d')
-        yeasteryeasterday = datetime.utcfromtimestamp(days[len(days) - 3] / 1000)
-        yeasteryeasterday = yeasteryeasterday.strftime('%Y-%m-%d')
+        yeasterday = days[len(days) - 2]
+        yeasteryeasterday = days[len(days) - 3]
         print(yeasterday, yeasteryeasterday, )
         for item in concepts_sorted:
             # 打印概念和龙头
