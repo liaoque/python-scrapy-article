@@ -31,28 +31,15 @@ def check(today, stock_code):
 
 
 def getData(today, stock_code, n=-10):
-    dt = datetime.strptime(today, "%Y-%m-%d")
-    parts = stock_code.split('.')
-    code = ''.join([parts[1], parts[0]])
-
-    url = 'https://stock.xueqiu.com/v5/stock/chart/kline.json'
+    url = 'https://69.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid=1.000001&ut=&fields1=f1&fields2=f51&klt=101&fqt=1&end=20500101&lmt=300&_=1691403957512'
     data = {
-        'symbol': code,
-        'begin': (int(dt.timestamp()) + 86300) * 1000,
-        'period': 'day',
-        'type': 'before',
-        'count': n,
-        'indicator': 'kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance'
     }
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        "Referer": "https://xueqiu.com/",
-        "Cookie": "device_id=f93428ccc6e79071de4a4ca5c97f434c; s=ch16q0aijy; snbim_minify=true; bid=8ef484bce3b63d26a12f5c4af675f48f_lhat0b77; Hm_lvt_1db88642e346389874251b5a1eded6e3=1689170238; xq_a_token=715ae77c7b72c67549b80e153e894ef2e19f0446; xqat=715ae77c7b72c67549b80e153e894ef2e19f0446; xq_r_token=a1c71f74d5f0fd50f87640a0682c837e5a07f706; xq_id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOi0xLCJpc3MiOiJ1YyIsImV4cCI6MTY5MjkyMzcyMSwiY3RtIjoxNjkwMzg3NDQxMDEzLCJjaWQiOiJkOWQwbjRBWnVwIn0.o8JzWoLlHa3zHZL1puHuVgHKcrvZWXfYOAajqmMJPC78Wj9GgtOTuCvf5flMJprhxRCLxSBhSPb16pcNvIxUMWx3lxTAbEIuxiO4gqugkdIlRmN4Nzm2VrVwFoVjvagvFTwbxyptRMi0N3HKpahJFs_f7DndBPSpiBaH6qRU6bCQ7C9PSa5LTSnI4fmRWt2wD3OGEDjw6KCBNnsqfLfVm13JH53r3vhzZIjmNOrNygJz-HVPswvN3Ie6FEhM2z_LeiFezW0aVXDy0_trtjZvdmER0b1qbGLfk2tistz4f4b1AuxK9imtddI4wK6p_oY9ajmurCim5egt9o3RRF70nA; u=941690387441190; is_overseas=0;"
+        "Referer": "http://quote.eastmoney.com/zs000001.html",
     }
 
     response = requests.get(url, params=data, headers=headers)
-    print(response)
-    # print(response.json()["answer"]["components"][0]['data']["datas"])
     codes2 = response.json()
 
-    return codes2["data"]["item"]
+    return codes2["data"]["klines"]

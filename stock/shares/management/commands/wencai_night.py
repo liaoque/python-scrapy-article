@@ -47,7 +47,7 @@ class Command(BaseCommand):
         str = str + "补涨选股\n"
 
         data = pic_n.getData(datetime.today().strftime('%Y-%m-%d'), "000001.SZ", -10)
-        days = [item[0] for item in data]
+        days = data
 
         yeasterday = datetime.utcfromtimestamp(days[len(days) - 2] / 1000)
         yeasterday = yeasterday.strftime('%Y-%m-%d')

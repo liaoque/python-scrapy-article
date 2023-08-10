@@ -19,7 +19,7 @@ class Command(BaseCommand):
         file_path = "data.json"
 
         data = pic_n.getData(datetime.today().strftime('%Y-%m-%d'), "000001.SZ", -1)
-        days = [item[0] for item in data]
+        days = data
         json_data = common.read_json_file(file_path)
         for i in range(len(days)):
             today = datetime.utcfromtimestamp(days[i] / 1000)
