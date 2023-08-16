@@ -37,6 +37,12 @@ def toCode(codes2):
             if key.find("区间涨跌幅:", 0, len(key)) != -1:
                 full = item.get(key, "")
                 break
+     
+        jingjia = 0
+        for key in item:
+            if key.find("竞价未匹配:", 0, len(key)) != -1:
+                jingjia = item.get(key, "")
+                break
 
         codes.append({
             "code": code,
@@ -45,6 +51,7 @@ def toCode(codes2):
             "industry": industry,
             "concept": concept,
             "full": full,
+            "jingjia": jingjia,
         })
     return codes
 
@@ -67,3 +74,19 @@ def read_json_file(file_path):
 def write_json_file(file_path, data):
     with open(file_path, 'w+', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
+
+
+def get_previous_key_value(d, target_key):
+    # 对字典的键进行排序
+    sorted_keys = sorted(d.keys())
+    
+    # 获取目标键的索引
+    target_index = sorted_keys.index(target_key)
+    
+    # 如果目标键是第一个键，则没有前一个键
+    if target_index == 0:
+        return None
+    
+    # 获取前一个键，并返回其值
+    previous_key = sorted_keys[target_index - 1]
+    return d[previous_key]
