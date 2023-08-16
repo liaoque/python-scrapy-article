@@ -55,21 +55,21 @@ class Command(BaseCommand):
         json_data = dict(json_data)
         common.write_json_file(file_path, json_data)
 
-        str += "\n情绪：平"
+        qingxu = "\n情绪：平"
         yeastDayData = common.get_previous_key_value(json_data, today)
         if yeastDayData is not None:
             if yeastDayData["jingjia"]["down"] != 0:
                 if json_data[today]["jingjia"]["down"] > yeastDayData["jingjia"]["down"]:
-                    str = "情绪：好"
+                    qingxu = "情绪：好"
                 elif  json_data[today]["jingjia"]["down"] < yeastDayData["jingjia"]["down"]:
-                    str = "情绪：差"
+                    qingxu = "情绪：差"
             elif yeastDayData["jingjia"]["up"] != 0:
                 if json_data[today]["jingjia"]["up"] > yeastDayData["jingjia"]["up"]:
-                    str = "情绪：好"
+                    qingxu = "情绪：好"
                 elif  json_data[today]["jingjia"]["up"] < yeastDayData["jingjia"]["up"]:
-                    str = "情绪：差"
+                    qingxu = "情绪：差"
 
-
+        str += qingxu
         # str = "first：%s\n" % ("\",\"".join(tomorrow_concept))
         send_mail(
             'first %s' % today,
