@@ -4,8 +4,8 @@ import shares.management.commands.wencai2.common
 
 
 def trendFirst(today):
-    s = '%s去除ST，去除北交所，%s去除新股，所属行业，所属概念，%s开盘价=%s涨停价，%s竞价未匹配大于0，%s涨跌幅降序，5日涨跌幅' % (
-        today, today, today, today, today, today,
+    s = '%s去除ST，去除北交所，%s去除新股，所属行业，所属概念，%s开盘价=%s涨停价，%s竞价未匹配大于0，%s竞价未匹配，%s涨跌幅降序，5日涨跌幅' % (
+        today, today, today, today, today, today, today,
     )
     print(s)
     # s = "半年报预增，所属概念，s去除ST，去除北交所，去除新股"
