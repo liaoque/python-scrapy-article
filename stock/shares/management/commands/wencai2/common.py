@@ -40,7 +40,7 @@ def toCode(codes2):
      
         jingjia = 0
         for key in item:
-            if key.find("竞价未匹配:", 0, len(key)) != -1:
+            if key.find("竞价未匹配金额", 0, len(key)) != -1:
                 jingjia = item.get(key, "")
                 break
 
