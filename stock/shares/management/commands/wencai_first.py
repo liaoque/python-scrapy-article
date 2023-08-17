@@ -58,12 +58,12 @@ class Command(BaseCommand):
         qingxu = "\n情绪：平"
         yeastDayData = common.get_previous_key_value(json_data, today)
         if yeastDayData is not None:
-            if yeastDayData["jingjia"]["down"] != 0:
+            if yeastDayData["jingjia"]["down"] != 0 and json_data[today]["jingjia"]["down"] != 0:
                 if json_data[today]["jingjia"]["down"] > yeastDayData["jingjia"]["down"]:
                     qingxu = "情绪：好"
                 elif  json_data[today]["jingjia"]["down"] < yeastDayData["jingjia"]["down"]:
                     qingxu = "情绪：差"
-            elif yeastDayData["jingjia"]["up"] != 0:
+            elif yeastDayData["jingjia"]["up"] != 0 and json_data[today]["jingjia"]["up"] != 0:
                 if json_data[today]["jingjia"]["up"] > yeastDayData["jingjia"]["up"]:
                     qingxu = "情绪：好"
                 elif  json_data[today]["jingjia"]["up"] < yeastDayData["jingjia"]["up"]:
