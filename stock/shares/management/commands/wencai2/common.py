@@ -1,10 +1,10 @@
 import json
 import os
 
-comp_id = "6734520"
+comp_id = "6836372"
 
 filter_concept = ["分拆上市意愿", "人民币贬值受益", "富时罗素概念", "富时罗素概念股", "标普道琼斯A股", "沪股通", "深股通", "融资融券", "转融券标的", "再融资", "送转填权",
-                  "股权转让","核准制次新股",
+                  "股权转让", "核准制次新股",
                   "并购重组", "超跌", "MSCI概念", "一季报增长", "一季报预增", "业绩增长", "年报增长", "超跌", "央企国企改革", "地方国企改革", "三季报增长", "半年报预增",
                   "中报增长",
                   "山东国企改革", "上海国企改革", "江苏国企改革", "深圳国企改革", "重庆国企改革", "广东国企改革", "北京国企改革", "天津国企改革", "甘肃国企改革", "河南国企改革",
@@ -14,7 +14,7 @@ filter_concept = ["分拆上市意愿", "人民币贬值受益", "富时罗素�
                   "参股新三板", "同花顺漂亮100"]
 
 
-def toCode(codes2):
+def toCode(codes2, filter=True):
     codes = []
     for item in codes2:
         code = item.get("股票代码", "")
@@ -30,7 +30,9 @@ def toCode(codes2):
         concept = item.get("所属概念", "")
         if concept is not None:
             concept = concept.split(";")
-            concept = [x for x in concept if x not in filter_concept]
+            if filter:
+                concept = [x for x in concept if x not in filter_concept]
+
 
         full = 0
         for key in item:
@@ -67,3 +69,5 @@ def read_json_file(file_path):
 def write_json_file(file_path, data):
     with open(file_path, 'w+', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
+
+

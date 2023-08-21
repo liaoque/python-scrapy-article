@@ -2,7 +2,7 @@ import requests
 import numpy as np
 from datetime import datetime, timedelta
 from collections import OrderedDict
-from shares.management.commands.wencai2 import trend, trendCode, acodes, common, pic_n, trendDown
+from shares.management.commands.wencai2 import trend, trendCode, acodes, common, pic_n, trendDown, concept1, concept2
 from django.core.management.base import BaseCommand, CommandError
 
 from django.core.mail import send_mail
@@ -25,8 +25,7 @@ class Command(BaseCommand):
 
         codes3 = trend.trendNight(today)
         codes2 = codes3 + codes2
-        codes2 = list({d['code']:d for d in codes2}.values())
-
+        codes2 = list({d['code']: d for d in codes2}.values())
 
         concepts_sorted = trend.top(codes2)
 
@@ -92,6 +91,13 @@ class Command(BaseCommand):
                 str = str + "%s %s\n" % (item2["code"], item2["name"])
             str = str + "++++++++++\n"
 
+        codes4 = trend.trendNight(today, False)
+
+        str = str + "concept1：\n"
+        str = str + joinCode(concept1.conceptCom(codes4))
+        str = str + "concept2：\n"
+        str = str + joinCode(concept2.conceptCom(codes4))
+
         send_mail(
             'night %s' % today,
             str,
@@ -99,3 +105,13 @@ class Command(BaseCommand):
             ['844596330@qq.com'],
             fail_silently=False,
         )
+
+
+def joinCode(concepts_sorted):
+    str = ""
+    for item in concepts_sorted:
+        str = str + "%s\n" % (item["concept"])
+        for item2 in item["codes2"][:5]:
+            str = str + "%s %s\n" % (item2["code"], item2["name"])
+        str = str + "++++++++++\n"
+    return str

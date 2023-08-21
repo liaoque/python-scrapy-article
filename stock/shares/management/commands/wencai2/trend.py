@@ -2,7 +2,6 @@ import requests
 import shares.management.commands.wencai2.common
 
 
-
 def trendFirst(today):
     s = '%s去除ST，去除北交所，%s去除新股，所属行业，所属概念，%s开盘价=%s涨停价，%s竞价未匹配大于0，%s涨跌幅降序，5日涨跌幅' % (
         today, today, today, today, today, today,
@@ -31,7 +30,7 @@ def trendFirst(today):
     return codes
 
 
-def trendNight(today):
+def trendNight(today, filter_concept=True):
     s = '%s去除ST，%s去除北交所，%s去除新股，所属行业，所属概念，%s收盘价=%s涨停价，%s涨停封单额，%s首次涨停时间，%s涨停封板时长，%s涨停价成交量*收盘价，%s涨停类型，%s竞价涨幅降序，5日涨跌幅降序' % (
         today, today, today, today, today, today, today, today, today, today, today
     )
@@ -53,8 +52,10 @@ def trendNight(today):
     response = requests.post(url, data=data, headers=headers)
     # print(response.json()["answer"]["components"][0]['data']["datas"])
     codes2 = response.json()["answer"]["components"][0]["data"]["datas"]
-
-    codes = shares.management.commands.wencai2.common.toCode(codes2)
+    if filter_concept:
+        codes = shares.management.commands.wencai2.common.toCode(codes2)
+    else:
+        codes = shares.management.commands.wencai2.common.toCode(codes2, False)
 
     return codes
 
