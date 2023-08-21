@@ -1,6 +1,7 @@
 import requests
 import numpy as np
 from datetime import datetime, timedelta
+from collections import OrderedDict
 
 from shares.management.commands.wencai2 import trend, trendCode, acodes, common, pic_n, trendDown
 from django.core.mail import send_mail
@@ -22,6 +23,8 @@ class Command(BaseCommand):
         # tomorrow_concept = [item["concept"] for item in concepts_sorted]
         print(concepts_sorted)
 
+        jingjia_up = sum([item["jingjia"] for item in codes2])
+
         str = "竞价涨停\n"
         for item in concepts_sorted:
             str = str + "%s\n" % (item["concept"])
@@ -37,8 +40,36 @@ class Command(BaseCommand):
             for item2 in item["codes2"][:5]:
                 str = str + "%s %s\n" % (item2["code"], item2["name"])
             str = str + "++++++++++\n"
+        
+        jingjia_down = sum([item["jingjia"] for item in codes2])
 
+        file_path = "first.json"
+        json_data = common.read_json_file(file_path)
+        json_data[today] = {
+            "jingjia": {
+                "up": jingjia_up,
+                "down": jingjia_down,
+            }
+        }
+        json_data = OrderedDict(sorted(json_data.items()))
+        json_data = dict(json_data)
+        common.write_json_file(file_path, json_data)
 
+        qingxu = "\n情绪：平"
+        yeastDayData = common.get_previous_key_value(json_data, today)
+        if yeastDayData is not None:
+            if yeastDayData["jingjia"]["down"] != 0 or json_data[today]["jingjia"]["down"] != 0:
+                if json_data[today]["jingjia"]["down"] > yeastDayData["jingjia"]["down"]:
+                    qingxu = "情绪：好"
+                elif  json_data[today]["jingjia"]["down"] < yeastDayData["jingjia"]["down"]:
+                    qingxu = "情绪：差"
+            elif yeastDayData["jingjia"]["up"] != 0 or json_data[today]["jingjia"]["up"] != 0:
+                if json_data[today]["jingjia"]["up"] > yeastDayData["jingjia"]["up"]:
+                    qingxu = "情绪：好"
+                elif  json_data[today]["jingjia"]["up"] < yeastDayData["jingjia"]["up"]:
+                    qingxu = "情绪：差"
+
+        str += qingxu
         # str = "first：%s\n" % ("\",\"".join(tomorrow_concept))
         send_mail(
             'first %s' % today,

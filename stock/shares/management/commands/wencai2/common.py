@@ -40,6 +40,12 @@ def toCode(codes2, filter=True):
                 full = item.get(key, "")
                 break
 
+        jingjia = 0
+        for key in item:
+            if key.find("竞价未匹配金额", 0, len(key)) != -1:
+                jingjia = item.get(key, "")
+                break
+
         codes.append({
             "code": code,
             "name": name,
@@ -47,6 +53,7 @@ def toCode(codes2, filter=True):
             "industry": industry,
             "concept": concept,
             "full": full,
+            "jingjia": jingjia,
         })
     return codes
 
@@ -71,3 +78,17 @@ def write_json_file(file_path, data):
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
+def get_previous_key_value(d, target_key):
+    # 对字典的键进行排序
+    sorted_keys = sorted(d.keys())
+
+    # 获取目标键的索引
+    target_index = sorted_keys.index(target_key)
+
+    # 如果目标键是第一个键，则没有前一个键
+    if target_index == 0:
+        return None
+
+    # 获取前一个键，并返回其值
+    previous_key = sorted_keys[target_index - 1]
+    return d[previous_key]
