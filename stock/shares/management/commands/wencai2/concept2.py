@@ -61,7 +61,7 @@ concept2 = [
 
 def conceptCom(codes):
     for item in codes:
-        if item["concept"] not None:
+        if item["concept"] is not None:
             item["concept"] = [x for x in item["concept"] if x in concept2]
 
     return trend.top(codes)
