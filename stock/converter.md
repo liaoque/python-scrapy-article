@@ -1,0 +1,252 @@
+package template
+
+type Table1FromJSON struct {
+	Code                      string      `json:"股票代码" column:"代码;type=daima"` //a
+	BriefName                 string      `json:"股票简称" column:"名称"`            //a
+	BanKuai                   string      `json:"上市板块"`
+	LeiXing                   string      `json:"股票市场类型"`
+	SuoShuHangYe              string      `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"` //a
+	DieTingFengDanE           interface{} `json:"跌停封单额" column:"跌停封单额;type=float"`           //a
+	SuoShuGaiNian             string      `json:"所属概念"`                                      //a
+	JingJiaZhangFuToday       float64     `json:"竞价涨幅" column:"竞价涨幅;type=percent"`
+	ZhangDieFuQianFuQuanToday string      `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+	HigestPriceToday          string      `json:"最高价:不复权" column:"最高价;type=float"`
+	ShouPanJiaToday           interface{} `json:"收盘价:不复权" column:"收盘价;type=float"`
+	LowestPriceToday          string      `json:"最低价:不复权" column:"最低价;type=float"`
+
+	ZhangDie4thDay              float64 `json:"区间涨跌幅:前复权3" column:"4日涨跌幅;type=percent"`
+	JingJiaJinEYesterday        float64 `json:"竞价金额昨日" column:"昨日竞价金额"`
+	JingJiaJinEToday            float64 `json:"竞价金额"`
+	ChengJiaoEYesterday         string  `json:"成交额昨日" column:"昨日成交额;type=float"`
+	ZiYouLiuTongShiZhiYesterday float64 `json:"自由流通市值昨日" column:"昨日自由流通市值"`
+	//ZiYouLiuTongShiZhiToday float64 `json:"自由流通市值昨日" column:"昨日自由流通市值"`
+
+	LianBanTianShuYesterday int    `json:"连续涨停天数昨日" column:"昨日连板天数"`
+	LatestPrice             string `json:"最新价"`
+
+	LianXuZhangTingTianShuOneHundred int     `json:"涨停次数" column:"25日涨停次数"`
+	LianXuDieTingTianShuToday        int     `json:"连续跌停天数" column:"今日连续跌停天数"`
+	ZhangTingJia                     float64 `json:"涨停价"`
+	JingJiaJinEChengJiaoLiangBi      float64 `json:"{(}竞价金额{/}成交额昨日{)}" column:"竞价量比;type=float"`
+	JingJiaJinEJingJiaLiangBi        float64 `json:"{(}竞价金额{/}竞价金额昨日{)}" column:"今昨量比;type=float"`
+	ZhangFu5                         float64 `json:"区间涨跌幅:前复权2" column:"5日涨跌幅;type=percent"`
+	ZhangFu120                       float64 `json:"区间涨跌幅:前复权1" column:"120日涨跌幅;type=percent"`
+}
+
+type Table struct {
+	Code                         string      `json:"code"`
+	MarketCode                   string      `json:"market_code"`
+	BanKuai                      string      `json:"上市板块"`
+	BelongToHangYe               string      `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	BelongToGaiNian              string      `json:"所属概念"`
+	LatestPrice                  string      `json:"最新价"`
+	ZhangTingLeiXingToday        string      `json:"涨停类型"`
+	ZhangDieFuQianFuQuanToday    string      `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+	Province                     string      `json:"省份"`
+	JingJiaWeiPiPeiJinEYesterday float64     `json:"竞价未匹配金额昨日" column:"昨日竞价未匹配金额"`
+	JingJiaWeiPiPeiJinEToday     float64     `json:"竞价未匹配金额"`
+	JingJiaZhangFuToday          float64     `json:"竞价涨幅" column:"竞价涨幅;type=percent"`
+	JingJiaZhangFuPaiMingToday   string      `json:"竞价涨幅排名"`
+	DaiMa                        string      `json:"股票代码" column:"代码;type=daima"`
+	MarketType                   string      `json:"股票市场类型"`
+	Name                         string      `json:"股票简称" column:"名称"`
+	ZhangTingJia                 float64     `json:"涨停价"`
+	KaiPanJia                    interface{} `json:"开盘价:不复权" column:"开盘价;type=float"`
+	ShouPanJia                   interface{} `json:"收盘价:不复权" column:"收盘价;type=float"`
+}
+
+type ZuoCengZhangTing struct {
+	Code                                     string `json:"code"`
+	MarketCode                               string `json:"market_code"`
+	BanKuai                                  string `json:"上市板块"`
+	BelongToHangYe                           string `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	BelongToGaiNian                          string `json:"所属概念"`
+	CengZhangTingYesterday                   string `json:"曾涨停昨日" column:"昨日曾涨停"`
+	CengDieTingYesterday                     string `json:"曾跌停昨日" column:"昨日曾跌停"` //a
+	LatestPrice                              string `json:"最新价"`
+	ZhangTingCiShu25Days                     int    `json:"涨停次数" column:"25日涨停次数"`
+	ZhangDieFuQianFuQuanToday                string `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+	DaiMa                                    string `json:"股票代码" column:"代码;type=daima"`
+	MarketType                               string `json:"股票市场类型"`
+	BriefName                                string `json:"股票简称" column:"名称"`
+	LianXuZhangTingTianShuDayBeforeYesterday int    `json:"连续涨停天数前日" column:"前天连板天数"`
+}
+
+type ZuoCengDieTing struct {
+	Code                                     string `json:"code"`
+	MarketCode                               string `json:"market_code"`
+	BanKuai                                  string `json:"上市板块"`
+	BelongToHangYe                           string `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	BelongToGaiNian                          string `json:"所属概念"`
+	CengDieTingYesterday                     string `json:"曾跌停昨日" column:"昨日曾跌停"`
+	LatestPrice                              string `json:"最新价"`
+	ZhangTingCiShu25Days                     int    `json:"涨停次数" column:"25日涨停次数"`
+	ZhangDieFuQianFuQuanToday                string `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+	DaiMa                                    string `json:"股票代码" column:"代码;type=daima"`
+	MarketType                               string `json:"股票市场类型"`
+	BriefName                                string `json:"股票简称" column:"名称"`
+	LianXuZhangTingTianShuDayBeforeYesterday int    `json:"连续涨停天数前日" column:"前天连板天数"`
+}
+
+type T4 struct {
+	Code                                     string `json:"code"`
+	MarketCode                               string `json:"market_code"`
+	BelongToHangYe                           string `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	BelongToGaiNian                          string `json:"所属概念"`
+	ZhangTingCiShu25Day                      int    `json:"涨停次数" column:"25日涨停次数"`
+	ZhangDieFuQianFuQuanToday                string `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+	DaiMa                                    string `json:"股票代码" column:"代码;type=daima"`
+	BriefName                                string `json:"股票简称" column:"名称"`
+	LianXuZhangTingTianShuDayBeforeYesterday int    `json:"连续涨停天数前日" column:"前天连板天数"`
+}
+
+type JinCengDieTing struct {
+	Code                      string `json:"code"`
+	MarketCode                string `json:"market_code"`
+	BelongToHangYe            string `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	BelongToGaiNian           string `json:"所属概念"`
+	CengDieTingToday          string `json:"曾跌停" column:"今日曾跌停"`
+	LatestPrice               string `json:"最新价"`
+	ZhangTingTianShu25Days    int    `json:"涨停次数" column:"25日涨停次数"`
+	ZhangDieFuQianFuQuanToday string `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+	DaiMa                     string `json:"股票代码" column:"代码;type=daima"`
+	BriefName                 string `json:"股票简称" column:"名称"`
+	LianXuZhangTingTianShu    int    `json:"连续涨停天数昨日" column:"昨日连板天数"`
+}
+
+type JinCengZhangTing struct {
+	Code                      string `json:"code"`
+	MarketCode                string `json:"market_code"`
+	BelongToHangYe            string `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	BelongToGaiNian           string `json:"所属概念"`
+	CengDieTingToday          string `json:"曾涨停" column:"今日曾涨停"`
+	LatestPrice               string `json:"最新价"`
+	ZhangTingTianShu25Days    int    `json:"涨停次数" column:"25日涨停次数"`
+	ZhangDieFuQianFuQuanToday string `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+	DaiMa                     string `json:"股票代码" column:"代码;type=daima"`
+	BriefName                 string `json:"股票简称" column:"名称"`
+	LianXuZhangTingTianShu    int    `json:"连续涨停天数昨日" column:"昨日连板天数"`
+}
+
+type ChuangBaiRiXinGao struct {
+	Code                      string `json:"code"`
+	MarketCode                string `json:"market_code"`
+	JiTianJiBanToday          int    `json:"涨停次数" column:"25日涨停次数"`
+	BelongToHangYe            string `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	BelongToGaiNian           string `json:"所属概念"`
+	ZhangDieFuQianFuQuanToday string `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+	DaiMa                     string `json:"股票代码" column:"代码;type=daima"`
+	BriefName                 string `json:"股票简称" column:"名称"`
+	LianXuZhangTingYesterday  int    `json:"连续涨停天数昨日" column:"昨日连板天数"`
+	LianBanTianShuToday       int    `json:"连续涨停天数" column:"连板天数"`
+}
+
+type ZhuChuangZhangTing struct {
+	Code                           string      `json:"code"`
+	MarketCode                     string      `json:"market_code"`
+	BelongToHangYe                 string      `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	BelongToGaiNian                string      `json:"所属概念"`
+	ZhangTingFengDanEToday         interface{} `json:"涨停封单额" column:"涨停封单额;type=float"`
+	ZhangTingFengBanShiChangToday  float64     `json:"涨停封板时长"`
+	ZhangTingCiShu25Days           int         `json:"涨停次数" column:"25日涨停次数"`
+	ZhangDieFuQianFuQuanToday      string      `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+	DaiMa                          string      `json:"股票代码" column:"代码;type=daima"`
+	BriefName                      string      `json:"股票简称" column:"名称"`
+	LianBanTianShuYesterday        int         `json:"连续涨停天数昨日" column:"昨日连板天数"`
+	LianBanTianShuToday            int         `json:"连续涨停天数" column:"连板天数"`
+	ShouCiZhangTingShiJian         string      `json:"首次涨停时间"`
+	ZhangTingJiaChengJiaoJinEToday float64     `json:"{(}涨停价成交量{*}收盘价:不复权{)}" column:"涨停价成交金额"`
+	TINGLEIXING                    string      `json:"涨停类型" column:"涨停类型"`
+}
+
+type QuShi struct {
+	Code                            string  `json:"code"`
+	MarketCode                      string  `json:"market_code"`
+	ChengJiaoE100Days               float64 `json:"区间成交额100日" column:"100日成交额"`
+	QuJianZhangDieFu100Days         float64 `json:"区间涨跌幅:前复权100日" column:"100日涨跌幅;type=percent"`
+	QuJianZhangDieFu25Days          float64 `json:"区间涨跌幅:前复权" column:"25日涨跌幅;type=percent"`
+	QuJianZhangDieFu5Days           float64 `json:"区间涨跌幅:前复权5日" column:"5日涨跌幅;type=percent"`
+	BelongToHangYe                  string  `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	BelongToGaiNian                 string  `json:"所属概念"`
+	ZhangTingCiShu25Days            int     `json:"涨停次数" column:"25日涨停次数"`
+	ZhangDieFuQianFuQuanToday       string  `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+	DaiMa                           string  `json:"股票代码" column:"代码;type=daima"`
+	BriefName                       string  `json:"股票简称" column:"名称"`
+	LianXuZhangTingTianShuYesterday int     `json:"连续涨停天数昨日" column:"昨日连板天数"`
+	LianXuZhangTingTianShuToday     int     `json:"连续涨停天数" column:"连板天数"`
+	JingJiaZhangFu                  float64 `json:"竞价涨幅" column:"竞价涨幅;type=percent"`
+}
+
+type YiZiBan struct {
+	Code                      string  `json:"code"`
+	MarketCode                string  `json:"market_code"`
+	BelongToHangYe            string  `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	BelongToGaiNian           string  `json:"所属概念"`
+	ZhangDieFuQianFuQuanToday string  `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+	JingJiaWeiPiPeiJinEToday  float64 `json:"竞价未匹配金额"`
+	DaiMa                     string  `json:"股票代码" column:"代码;type=daima"`
+	BriefName                 string  `json:"股票简称" column:"名称"`
+}
+
+type FanBao struct {
+	Code                           string `json:"code"`
+	MarketCode                     string `json:"market_code"`
+	BelongToHangYe                 string `json:"所属同花顺行业" column:"所属行业"`
+	BelongToGaiNian                string `json:"所属概念"`
+	ZhangTingCiShu25Days           int    `json:"涨停次数" column:"25日涨停次数"`
+	ZhangDieFuQianFuQuanToday      string `json:"涨跌幅:前复权" column:"涨跌幅;type=percent"`
+	DaiMa                          string `json:"股票代码" column:"代码"`
+	BriefName                      string `json:"股票简称" column:"名称"`
+	LianXuZhangTingTianShu3DaysAgo int    `json:"连续涨停天数3日前" column:"3天前连板天数"`
+}
+
+type ZhiShu struct {
+	BriefName                          string      `json:"指数简称"`
+	LuGuTongZiJinLiuXiang5Days         float64     `json:"指数@区间陆股通资金流向总和5日" column:"5日陆股通资金流向"`
+	ZhiShuChengJiaoEToday              interface{} `json:"指数@成交额" column:"今日成交额;type=float"`
+	ZhiShuCHengJiaoEYesterday          interface{} `json:"指数@成交额昨日" column:"昨日成交额;type=float"`
+	ZhiShuCHengJiaoEDayBeforeYesterday interface{} `json:"指数@成交额前日" column:"前日成交额;type=float"`
+	ZhangDieFuQianFuQuan               interface{} `json:"指数@涨跌幅:前复权" column:"指数涨跌幅;type=percent"`
+	ChengJiaoEYesterday                float64     `json:"指数@融资余额昨日" column:"昨日融资余额"`
+	ChengJiaoEDayBeforeYesterday       float64     `json:"指数@融资余额前日" column:"前日融资余额"`
+}
+
+type YiDong struct {
+	Code                            string      `json:"股票代码" column:"代码;type=daima"`
+	MarketCode                      string      `json:"股票简称" column:"名称"`
+	ZhangTingCiShu                  int         `json:"涨停次数" column:"25日涨停次数"`
+	LianXuZhangTingTianShuYesterday int         `json:"连续涨停天数昨日" column:"昨日连板天数"`
+	LianXuZhangTingTianShu          int         `json:"连续涨停天数" column:"连板天数"`
+	JianGuanLeiXing                 string      `json:"监管类型"`
+	JianGuanLeiXingYesterday        string      `json:"监管类型昨日" column:"昨日监管类型"`
+	JianGuanRiQi                    string      `json:"监管日期"`
+	JianGuanRiQiYesterday           string      `json:"监管日期昨日" column:"昨日监管日期"`
+	QuJianYiDongLeiXing             string      `json:"异动类型" column:"区间异动类型"`
+	YiDongShiJian                   string      `json:"异动时间" column:"异动时间"`
+	XianJia                         string      `json:"最新价" column:"现价;type=float"`
+	ZhangDieFu                      string      `json:"最新涨跌幅" column:"涨跌幅;type=float"`
+	GuPiaoShiChangLieXing           string      `json:"股票市场类型"`
+	YiDongGuPiao                    string      `json:"异动股票"`
+	YiDongQuJianZhangDieFu          float64     `json:"异动区间涨跌幅" column:"异动区间涨跌幅"`
+	WenXunHabnLianJie               string      `json:"问询函件链接"`
+	QuJianTingPanCiShu              int         `json:"区间停牌次数"`
+	YiDongQuJianHuanShouLv          interface{} `json:"异动区间换手率" column:"异动区间换手率;type=percent"`
+}
+
+type YiZiDieTing struct {
+	Code                string  `json:"股票代码" column:"代码;type=daima"`
+	Name                string  `json:"股票简称" column:"名称"`
+	SuoShuHangYe        string  `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	SuoShuGaiNian       string  `json:"所属概念"`
+	JingJiaWeiPiPeiJinE float64 `json:"竞价未匹配金额"`
+	ZhangDieFu          string  `json:"涨跌幅:前复权"  column:"涨跌幅;type=percent"`
+}
+
+type QuJianCengZhangTing struct {
+	Code                 string `json:"股票代码" column:"代码;type=daima"`
+	Name                 string `json:"股票简称" column:"名称"`
+	SuoShuHangYe         string `json:"所属同花顺行业" column:"所属行业;type=belongToHangYe"`
+	SuoShuGaiNian        string `json:"所属概念"`
+	QuJianZhangTingCiShu int    `json:"涨停次数"  column:"5日涨停次数"`
+	ZhangTingCiShu       int    `json:"最大涨幅满足条件的次数"  column:"曾涨停次数"`
+}
