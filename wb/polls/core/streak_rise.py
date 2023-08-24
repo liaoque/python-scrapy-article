@@ -201,7 +201,7 @@ Sub 取炸板股票()
     
 End Sub
 """
-def step3(table1, data):
+def step3(data):
     
     zhabangupiao = {}
     for items in data:
@@ -221,32 +221,14 @@ def step3(table1, data):
 # 取一字板
 def step4(table1, data):
     
-    if len(table1) > 0 and len(table1[0]["YiZiBan"]) > 0:
-        return data
-    
-    data2 = table1[0]["YiZiBan"]
-    
-    for items in data2:
-        data[items["code"]]["yiziban"] = 0
-        if items["code"] in data:
-            data[items["code"]]["yiziban"] = items["jingjiaweipipeijinetoday"]
-        
+
     return data
 
 
 # 取首板（连板天数为1）的股票涨停封单额
 def step5(table1, data):
     
-    if len(table1) > 0 and len(table1[0]["ZhuChuangZhangTing"]) > 0:
-        return data
-    
-    data2 = table1[0]["ZhuChuangZhangTing"]
-    
-    for items in data2:
-        data[items["code"]]["zhuchuangzhangting"] = 0
-        if items["code"] in data and items["lianbantianshutoday"] == 1:
-            data[items["code"]]["zhuchuangzhangting"] = items["zhangtingfengdanetoday"]
-        
+
     return data
 
         

@@ -7,4 +7,4 @@ concept = [
 
 
 def filter_concept(date):
-    return [ for x in date if x not in filter_con]
+    return [x for x in date if x not in concept]

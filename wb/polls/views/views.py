@@ -39,7 +39,7 @@ def index(request):
     table1 = list(table.find({}, {"YiZiDieTing":1}))
     dietinggupiao = streak_rise.step2(table1, data)
     
-    
+    zhabangupiao = streak_rise.step3(data)
     
     client.close()
 
