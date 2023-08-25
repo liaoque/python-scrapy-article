@@ -253,10 +253,20 @@ Sub 取创百日新高股票()
     
 End Sub
 """
-def step4(table1, data):
-    
-
-    return data
+def step4(data):
+    chuangbairixingao = {}
+    for items in data:
+        if items["chuangbairixingao"] == 1:
+            items["suoshugainian"] = list(set(items["suoshugainian"]))
+            chuangbairixingao[items["code"]] = {
+                "code":items["code"],
+                "briefname":items["briefname"],
+                "suoshugainian":items["suoshugainian"], # 概念
+                "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"], 
+                "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"], 
+            }
+        
+    return chuangbairixingao
 
 
 """
@@ -293,17 +303,73 @@ Sub 取一字板股票()
     
 End Sub
 """
-def step5(table1, data):
+def step5(data):
+    yiziban = {}
+    for items in data:
+        if items["jingjiaweipipeijinetoday"] > 0:
+            items["suoshugainian"] = list(set(items["suoshugainian"]))
+            yiziban[items["code"]] = {
+                "code":items["code"],
+                "briefname":items["briefname"],
+                "suoshugainian":items["suoshugainian"], # 概念
+                "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"], 
+                "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"], 
+            }
+        
+    return yiziban
+
+"""
+Sub 取首板股票()
+    Dim rng As Range
+    Dim dic As Object
+    Dim arr, arr1
+    'Range("表1").Sort "趋势", 2, , , , , , 1
+    Sheet5.Range("ag2:am99999").Clear
+    Set dic = CreateObject("scripting.dictionary")
+    h = 2
+    For Each rng In Range("表1[  代码]")
+        If rng.Offset(0, 21) <> "" Then
+            Sheet5.Range("ag" & h) = rng
+            Sheet5.Range("ah" & h) = rng.Offset(0, 1)
+            arr = Split(rng.Offset(0, 4), ";")
+            For i = LBound(arr) To UBound(arr)
+                If arr(i) <> "" Then
+                    If Not dic.exists(arr(i)) Then
+                        dic(arr(i)) = 1
+                    End If
+                End If
+            Next
+            arr1 = dic.keys()
+            dic.RemoveAll
+            Sheet5.Range("ai" & h) = ";" & Join(arr1, ";") & ";"
+            Sheet5.Range("aj" & h) = Round(rng.Offset(0, 21) / 100000000, 2) '未匹配金额
+            Sheet5.Range("ak" & h) = Round(rng.Offset(0, 14) / 100000000, 2)
+            h = h + 1
+        End If
+    Next
+
+    Set dic = Nothing '关闭字典
     
+End Sub
+"""
 
-    return data
+def step5_1(data):
+    shoubangupiao = {}
+    for items in data:
+        if items["zhangtingfengdanetoday"] > 0:
+            items["suoshugainian"] = list(set(items["suoshugainian"]))
+            shoubangupiao[items["code"]] = {
+                "code":items["code"],
+                "briefname":items["briefname"],
+                "suoshugainian":items["suoshugainian"], # 概念
+                "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"], 
+                "zhangtingfengdanetoday": items["zhangtingfengdanetoday"], 
+            }
+        
+    return shoubangupiao
 
-        
-        
-        
-        
-        
-        
+
+
 """
 Sub 生成连涨概念()
     On Error Resume Next
@@ -357,8 +423,28 @@ Sub 生成连涨概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
-        
-        
+def step6(data):
+    lianzhanggainian = {}
+    lianzhanggainian2 = []
+    for items in data:
+        for item in items["suoshugainian"]:
+            if item not in lianzhanggainian2:
+                lianzhanggainian2.append(item)
+                lianzhanggainian[item] = {
+                    "suoshugainian": item,
+                    "count": 1
+                }
+            else:
+                lianzhanggainian[item]["count"] = lianzhanggainian[item]["count"] + 1
+    
+    lianzhanggainian2 = []
+    for items in lianzhanggainian:
+        lianzhanggainian2.append({
+                    "suoshugainian": items["suoshugainian"],
+                    "count": items["count"],
+                })
+    return lianzhanggainian2
+
         
 """
 Sub 生成跌停概念()
@@ -405,8 +491,8 @@ Sub 生成跌停概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
-        
-        
+def step7(data):
+    return step6(data)
 
 """
 Sub 生成炸板概念()
@@ -453,6 +539,9 @@ Sub 生成炸板概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
+def step8(data):
+    return step6(data)
+
 
 """
 Sub 生成创百日新高概念()
@@ -499,7 +588,8 @@ Sub 生成创百日新高概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
-
+def step9(data):
+    return step6(data)
 
 """
 Sub 生成一字板概念()
@@ -546,7 +636,10 @@ Sub 生成一字板概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
-
+def step10(data):
+    return step6(data)
+    
+    
 """
 Sub 生成首板概念()
     On Error Resume Next
@@ -592,7 +685,8 @@ Sub 生成首板概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
-
+def step11(data):
+    return step6(data)
 
 """
 Sub 取涨停原因()
@@ -629,6 +723,21 @@ Sub 取涨停原因()
     Sheet5.Range("a:h").Sort "涨停大肉数", 2, , , , , , 1
 End Sub
 """
+def step12(lianzhanggupiao, lianzhanggainian):
+    lianzhanggupiao = []
+    for items in lianzhanggupiao:
+        items["yuanyin"] = []
+        items["cishu"] = 0
+        for item in items["suoshugainian"]:
+            for gainnian in lianzhanggainian:
+                if item == gainian["suoshugainian"]:
+                    if gainian["count"] > items["cishu"]:
+                        items["yuanyin"].append(gainian["suoshugainian"])
+                        items["cishu"] = gainian["count"]
+                    elif gainian["count"] == items["cishu"]:
+                        items["yuanyin"].append(gainian["suoshugainian"])
+        lianzhanggupiao.append(items)
+    return lianzhanggupiao
 
 """
 Sub 取跌停原因()
@@ -661,7 +770,8 @@ Sub 取跌停原因()
     Sheet5.Range("i:o").Sort "跌停大面数", 2, , , , , , 1
 End Sub
 """
-
+def step13(dietinggupiao, dietinggainian):
+    return step12(dietinggupiao, dietinggainian)
 
 """
 Sub 取炸板原因()
@@ -694,7 +804,8 @@ Sub 取炸板原因()
     Sheet5.Range("q:w").Sort "炸板数", 2, , , , , , 1
 End Sub
 """
-
+def step14(zhabangupiao, zhabangainian):
+    return step12(zhabangupiao, zhabangainian)
 
 """
 Sub 取创百日新高原因()
@@ -728,7 +839,9 @@ Sub 取创百日新高原因()
 End Sub
 
 """
-
+def step15(chuangbairixingao, chuangbairixingaogainnian):
+    return step12(chuangbairixingao, chuangbairixingaogainnian)
+    
 """
 Sub 取一字板原因()
     Dim rng As Range
@@ -760,7 +873,9 @@ Sub 取一字板原因()
     Sheet5.Range("ag:am").Sort "今竞封数", 2, , , , , , 1
 End Sub
 """
-
+def step16(yizibangupiao, yizibangainian):
+    return step12(yizibangupiao, yizibangainian)
+    
 """
 Sub 取首板原因()
     Dim rng As Range
@@ -792,7 +907,9 @@ Sub 取首板原因()
     Sheet5.Range("ao:au").Sort "首板数", 2, , , , , , 1
 End Sub
 """
-
+def step17(shoubangupiao, shoubangainian):
+    return step12(shoubangupiao, shoubangainian)
+    
 
 """
 Sub 排列涨停原因()
@@ -816,10 +933,9 @@ Sub 排列涨停原因()
                 If Not dic.exists(概念) Then
                     dic(概念) = 1
                     Sheet7.Cells(3, 概念计数 * 3 + 1) = 概念
-                    '容量 = Sheet5.Range("h" & i)
-                    '容量 = Evaluate("round(SUMIFS(表1[昨日自由流通市值],表1[所属概念],""*;" & 概念 & ";*"")/100000000,2)") ' + Evaluate("SUMIFS(表2[实际流通],表2[所属概念],""*;" & 概念 & ";*"")")
+
                     Sheet7.Cells(3, 概念计数 * 3 + 2) = 容量
-                    'If 容量 < 9000 Then Sheet7.Cells(3, 概念计数 * 3 + 2).Interior.ColorIndex = 35
+
                     Sheet7.Cells(4, 概念计数 * 3 + 1) = "名称"
                     Sheet7.Cells(4, 概念计数 * 3 + 2) = "竞价未匹配"
                     Set rng = Sheet5.Range("f:f").Find(";" & 概念 & ";", , , 2) '模糊
@@ -845,7 +961,18 @@ Sub 排列涨停原因()
     Next
 End Sub
 """
-
+def step18(lianzhanggupiao, lianzhanggainian):
+    lian_zhang_sort = []
+    for gainian in lianzhanggainian:
+        gainian["gai_nian_gu_piao"] = []
+        for item in lianzhanggupiao:
+            if item["suoshugainian"] == gainian['suoshugainian']:
+                gainian["gai_nian_gu_piao"].append(item)
+        
+        gainian["gai_nian_jing_jia_wei_pi_pei"] = sum([x['jingjiaweipipeijinetoday'] for x in gainian["gai_nian_gu_piao"]])
+        lian_zhang_sort.append(gainian)
+    return lian_zhang_sort
+        
 """
 Sub 排列跌停原因()
     Dim dic As Object
@@ -896,7 +1023,8 @@ Sub 排列跌停原因()
     Next
 End Sub
 """
-
+def step19(dietinggupiao, dietinggainian):
+    return step18(dietinggupiao, dietinggainian)
 
 """
 Sub 排列炸板原因()
@@ -947,6 +1075,9 @@ Sub 排列炸板原因()
     Next
 End Sub
 """
+def step20(zhabangupiao, zhabangainian):
+    return step18(zhabangupiao, zhabangainian)
+
 
 """
 Sub 排列创百日新高原因()
@@ -998,6 +1129,8 @@ Sub 排列创百日新高原因()
     Next
 End Sub
 """
+def step21(chuangbairixingao, chuangbairixingaogainnian):
+    return step18(chuangbairixingao, chuangbairixingaogainnian)
 
 
 """
@@ -1050,7 +1183,8 @@ Sub 排列一字板原因()
     Next
 End Sub
 """
-
+def step22(yizibangupiao, yizibangainian):
+    return step18(yizibangupiao, yizibangainian)
 
 """
 Sub 排列首板原因()
@@ -1102,7 +1236,10 @@ Sub 排列首板原因()
     Next
 End Sub
 """
-
+def step23(shoubangupiao, shoubangainian):
+    return step18(shoubangupiao, shoubangainian)
+    
+    
 """
 Sub 排列竞涨停竞跌停()
     Dim dic As Object
@@ -1147,6 +1284,29 @@ Sub 排列竞涨停竞跌停()
     Sheet4.Range("H6").Interior.Color = RGB(255, 255, 255)
 End Sub
 """
+def step24(yizibangupiao, dietinggupiao, jin_jia_yeastday):
+    jin_jia = {
+        zhang_ting: sum([x["zhangtingfengdanetoday"] for x in yizibangupiao]),
+        die_ting: sum([x["zhangtingfengdanetoday"] for x in yizibangupiao]),
+        qingxu: 0,
+    }
+    
+    if jin_jia_yeastday['die_ting'] > 0:
+        if jin_jia['die_ting'] > jin_jia_yeastday['die_ting']:
+            jin_jia['qingxu'] = 1
+        elif jin_jia['die_ting'] < jin_jia_yeastday['die_ting']:
+            jin_jia['qingxu'] = -1
+        return jin_jia
+    
+    if jin_jia_yeastday['zhang_ting'] > 0:
+        if jin_jia['zhang_ting'] > jin_jia_yeastday['zhang_ting']:
+            jin_jia['qingxu'] = 1
+        elif jin_jia['zhang_ting'] < jin_jia_yeastday['zhang_ting']:
+            jin_jia['qingxu'] = -1
+        
+    return jin_jia
+
+
 
 """
 Sub 排列5日涨跌幅()
@@ -1220,8 +1380,24 @@ Sub 排列5日涨跌幅()
     End If
 End Sub
 """
-
-        
-        
-        
+def step25(data):
+    data2 = {
+        zhu_ban: {"zhangfu5": -1000, "suoshugainian":[], "code": ""},
+        chuang_ye_ban: {"zhangfu5": -1000, "suoshugainian":[], "code": ""},
+        ke_chuang_ban: {"zhangfu5": -1000, "suoshugainian":[], "code": ""},
+    }
     
+    for item in data:
+        if item["code"][2:4] != '68' and item["code"][2:4] != '30':
+            if data2["zhuban"]["zhangfu5"] < item["zhangfu5"]:
+                data2["zhuban"] = item
+
+        elif item["code"][2:4] == '30':
+            if data2["chuang_ye_ban"]["zhangfu5"] < item["zhangfu5"]:
+                data2["chuang_ye_ban"] = item
+                
+        elif item["code"][2:4] == '68':
+            if data2["ke_chuang_ban"]["zhangfu5"] < item["zhangfu5"]:
+                data2["ke_chuang_ban"] = item
+    return data2
+

@@ -8,6 +8,8 @@ import time
 from pymongo import MongoClient
 import polls.core.init_data 
 import polls.core.streak_rise 
+import polls.core.suo_shu_gai_nian 
+import polls.core.bu_zhang 
 
 def index(request):
 
@@ -34,12 +36,96 @@ def index(request):
     data = init_data.step5(table1, data)
     
     
+    #取连涨股票
     lianzhanggupiao = streak_rise.step1(table1, data)
     
+    #取跌停股票
     table1 = list(table.find({}, {"YiZiDieTing":1}))
     dietinggupiao = streak_rise.step2(table1, data)
     
+    # 取炸板股票
     zhabangupiao = streak_rise.step3(data)
+    
+    # 取创百日新高股票
+    chuangbairixingao = streak_rise.step4(data)
+    
+    # 取一字板股票
+    yizibangupiao = streak_rise.step5(data)
+    
+    # 取首板股票
+    shoubangupiao = streak_rise.step5_1(data)
+    
+    # 生成连涨概念
+    lianzhanggainian = streak_rise.step6(lianzhanggupiao)
+    
+    # 生成跌停概念
+    dietinggainian = streak_rise.step7(dietinggupiao)
+    
+    # 生成炸板概念
+    zhabangainian = streak_rise.step8(zhabangupiao)
+    
+    #生成创百日新高概念
+    chuangbairixingaogainnian = streak_rise.step9(chuangbairixingao)
+    
+    #生成一字板概念
+    yizibangainian = streak_rise.step10(yizibangupiao)
+    
+    #生成首板概念
+    shoubangainian = streak_rise.step11(shoubangupiao)
+    
+    #取涨停原因
+    lianzhanggupiao = streak_rise.step12(lianzhanggupiao, lianzhanggainian)
+    
+    #取跌停原因
+    dietinggupiao = streak_rise.step13(dietinggupiao, dietinggainian)
+
+    #取炸板原因
+    zhabangupiao = streak_rise.step14(zhabangupiao, zhabangainian)
+
+    #取创百日新高原因
+    chuangbairixingao = streak_rise.step15(chuangbairixingao, chuangbairixingaogainnian)
+    
+    #取一字板原因
+    yizibangupiao = streak_rise.step16(yizibangupiao, yizibangainian)
+
+    #取首板原因
+    shoubangupiao = streak_rise.step17(shoubangupiao, shoubangainian)
+
+    #排列涨停原因
+    lian_zhang_sort = streak_rise.step18(lianzhanggupiao, lianzhanggainian)
+    
+    #排列跌停原因
+    die_ting_sort = streak_rise.step19(dietinggupiao, dietinggainian)
+    
+    #排列炸板原因
+    zha_ban_sort = streak_rise.step20(zhabangupiao, zhabangainian)
+    
+    #排列创百日新高原因
+    chuang_bai_ri_xin_gao_sort = streak_rise.step21(chuangbairixingao, chuangbairixingaogainnian)
+    
+    #排列一字板原因
+    yi_zi_ban_sort = streak_rise.step22(yizibangupiao, yizibangainian)
+    
+    #排列首板原因
+    shou_ban_sort = streak_rise.step23(shoubangupiao, shoubangainian)
+    
+    #排列竞涨停竞跌停
+    jing_jia_sort = streak_rise.step24(yizibangupiao, dietinggupiao, jin_jia_yeastday)
+    
+    #排列5日涨跌幅
+    day_5_sort = streak_rise.step25(data)
+    
+    """
+    table1 = list(table.find({}, {"Table":1}))
+    data2 = suo_shu_gai_nian.suo_shu_gai_nian(table1, {
+        chuang_ye_set:0,
+        zhu_ban_set:0,
+    })
+    """
+    
+    bu_zhang = bu_zhang.bu_zhang(data, yesterday, yester_yesterday)
+    
+    
     
     client.close()
 
