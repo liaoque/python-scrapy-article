@@ -160,7 +160,7 @@ def step1(table1, fd = 1):
                     
         # 过滤概念
         suoshugainian = items["suoshugainian"].split(";")
-        items["suoshugainian"] = concept.filter(date)
+        items["suoshugainian"] = concept.filter(suoshugainian)
         
         data2[items["code"]] = items
 

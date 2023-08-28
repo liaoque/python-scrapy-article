@@ -18,20 +18,27 @@ def index(request):
     current_timestamp = time.time()
     current_time = time.strftime("%Y%m%d", time.localtime())
     print('d'+current_time)
+    
+    # 取所有数据
     table = db['d'+current_time]         # 选择你的数据库
     table1 = list(table.find({}, {"Table1FromJSON":1}))
     
+    # 标记趋势
     data = init_data.step1(table1)
     
+    # 标记炸板
     table1 = list(table.find({}, {"JinCengZhangTing":1}))
     data = init_data.step2(table1, data)
 
+    # 标记百日新高
     table1 = list(table.find({}, {"ChuangBaiRiXinGao":1}))
     data = init_data.step3(table1, data)
     
+    # 标记一字板
     table1 = list(table.find({}, {"YiZiBan":1}))
     data = init_data.step4(table1, data)
     
+    #标记 首版
     table1 = list(table.find({}, {"ZhuChuangZhangTing":1}))
     data = init_data.step5(table1, data)
     
@@ -55,7 +62,7 @@ def index(request):
     # 取首板股票
     shoubangupiao = streak_rise.step5_1(data)
     
-    # 生成连涨概念
+    # 生成连涨概念 计算概念出现得次数
     lianzhanggainian = streak_rise.step6(lianzhanggupiao)
     
     # 生成跌停概念
@@ -73,7 +80,7 @@ def index(request):
     #生成首板概念
     shoubangainian = streak_rise.step11(shoubangupiao)
     
-    #取涨停原因
+    #取涨停原因， 匹配涨停概念， 并标记最多的原因得次数
     lianzhanggupiao = streak_rise.step12(lianzhanggupiao, lianzhanggainian)
     
     #取跌停原因
@@ -91,7 +98,7 @@ def index(request):
     #取首板原因
     shoubangupiao = streak_rise.step17(shoubangupiao, shoubangainian)
 
-    #排列涨停原因
+    #排列涨停原因，对概念计算竞价未匹配
     lian_zhang_sort = streak_rise.step18(lianzhanggupiao, lianzhanggainian)
     
     #排列跌停原因
@@ -109,10 +116,10 @@ def index(request):
     #排列首板原因
     shou_ban_sort = streak_rise.step23(shoubangupiao, shoubangainian)
     
-    #排列竞涨停竞跌停
+    #排列竞涨停竞跌停， 可以当作情绪看待
     jing_jia_sort = streak_rise.step24(yizibangupiao, dietinggupiao, jin_jia_yeastday)
     
-    #排列5日涨跌幅
+    #排列5日涨跌幅，取每个概念涨跌幅最高得
     day_5_sort = streak_rise.step25(data)
     
     """

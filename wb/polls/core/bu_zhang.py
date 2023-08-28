@@ -145,11 +145,17 @@ def bu_zhang(data, yeasterday, yester_yesterday):
     fdgn = 0 # 封单概念
     for item2 in yeaster["shou_ban_sort"]:
         item2["color"] = 0
+        
+        # 标记趋势变弱
         for item in yester_yesterday["shou_ban_sort"]:
             if item2["suoshugainian"] == item["suoshugainian"] and item["gai_nian_jing_jia_wei_pi_pei"] > item2["gai_nian_jing_jia_wei_pi_pei"]:
                 item2["color"] = 35
         
+        # 趋势未变弱
+        # 根据封单的股票数，取强势的首版概念
+        # 根据封单额度，取强势的首版概念
         if item2["color"] != 35:
+            
             if imax < len(item2["gai_nian_gu_piao"]):
             
                 imax = len(item2["gai_nian_gu_piao"])
@@ -171,8 +177,9 @@ def bu_zhang(data, yeasterday, yester_yesterday):
             fdgn.append(item2["suoshugainian"])
             
             
+    # 5日内的最强势概念和股票
     gn = []
-    outgn = ";"
+    outgn = []
     yzgp = "" #阈值股票名
     if yeasterday["day_5_sort"]["zhu_ban"]["zhangfu5"] != -1000:
         gn = (yeasterday["day_5_sort"]["zhu_ban"]["suoshugainian"])
@@ -201,14 +208,20 @@ def bu_zhang(data, yeasterday, yester_yesterday):
     # '3、在"table1"中找到5日涨跌幅最大的股票，这个例子是尚太科技，用这个股票的所属概念比对昨原因表里的首板的非绿的概念找出相同的概念。
     
     max_code = max([x["zhangfu5"] for x in data])
-    gn.extend(max_code["suoshugainian"])
-    for item2 in yeaster["shou_ban_sort"]:
-        gn.append(item2["suoshugainian"])
+    outgn.extend(max_code["suoshugainian"])
     
-    gn.extend(maxgn)
-    gn.extend(fdgn)
+    for item2 in yeaster["shou_ban_sort"]:
+        if item2["color"] == 35:
+            continue
+        if item2["suoshugainian"] in gn:
+            outgn.append(item2["suoshugainian"])
+    
+    outgn.extend(maxgn)
+    outgn.extend(fdgn)
+    
+    
     
     return {
         "yzcode": yzcode,
-        "gn":gn,
+        "gn":list(set(outgn)),
     }
