@@ -137,7 +137,7 @@ Sub 补涨()
     昨标高
 End Sub
 """
-def bu_zhang(data, yeasterday, yester_yesterday):
+def bu_zhang(data, table_data, yeasterday, yester_yesterday):
     imax = 0 # 最多概念
     maxgn = [] # 最大概念
     fd = 0 #封单

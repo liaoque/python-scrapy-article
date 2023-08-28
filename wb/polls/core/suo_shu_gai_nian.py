@@ -246,7 +246,7 @@ def suo_shu_gai_nian(table1, setting):
                 gn.extend(item["suoshugainian"])
     
     gn = list(set(gn))
-    
+    return gn
     
     
     

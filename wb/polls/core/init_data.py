@@ -1,5 +1,6 @@
 
 import polls.core.concept
+import polls.core.gn 
 
 """
 Sub 增加前后分号()
@@ -163,11 +164,14 @@ def step1(table1, fd = 1):
         items["suoshugainian"] = concept.filter(suoshugainian)
         
         data2[items["code"]] = items
+    
+    data2 = gn.gn_merge(data2)
+    return data2
 
 #炸板
 def step2(table1, data):
     
-    if len(table1) > 0 and len(table1[0]["JinCengZhangTing"]) > 0:
+    if len(table1) == 0 or len(table1[0]["JinCengZhangTing"]) == 0:
         return data
     
     data2 = table1[0]["JinCengZhangTing"]
@@ -183,7 +187,7 @@ def step2(table1, data):
 # 创百日新高
 def step3(table1, data):
     
-    if len(table1) > 0 and len(table1[0]["ChuangBaiRiXinGao"]) > 0:
+    if len(table1) == 0 or len(table1[0]["ChuangBaiRiXinGao"]) == 0:
         return data
     
     data2 = table1[0]["ChuangBaiRiXinGao"]
@@ -199,7 +203,7 @@ def step3(table1, data):
 # 取一字板
 def step4(table1, data):
     
-    if len(table1) > 0 and len(table1[0]["YiZiBan"]) > 0:
+    if len(table1) == 0 or len(table1[0]["YiZiBan"]) == 0:
         return data
     
     data2 = table1[0]["YiZiBan"]
@@ -215,7 +219,7 @@ def step4(table1, data):
 # 取首板（连板天数为1）的股票涨停封单额
 def step5(table1, data):
     
-    if len(table1) > 0 and len(table1[0]["ZhuChuangZhangTing"]) > 0:
+    if len(table1) == 0 or len(table1[0]["ZhuChuangZhangTing"]) == 0:
         return data
     
     data2 = table1[0]["ZhuChuangZhangTing"]
@@ -226,6 +230,19 @@ def step5(table1, data):
             data[items["code"]]["zhangtingfengdanetoday"] = items["zhangtingfengdanetoday"]
         
     return data
+
+
+# 合并 table概念
+def step6(table1, name="Table" path="data.xlsx"):
+    
+    if len(table1) == 0 or len(table1[0][name]) == 0:
+        return data
+    
+    data2 = table1[0][name]
+    
+    return gn.gn_merge(data2, path)
+
+
 
         
         

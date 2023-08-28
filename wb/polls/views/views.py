@@ -11,6 +11,7 @@ import polls.core.streak_rise
 import polls.core.suo_shu_gai_nian 
 import polls.core.bu_zhang 
 
+
 def index(request):
 
     client = MongoClient(DATABASES['wb']['CLIENT']['host'], DATABASES['wb']['CLIENT']['port'])  # 默认连接到 localhost 和端口 27017
@@ -41,6 +42,9 @@ def index(request):
     #标记 首版
     table1 = list(table.find({}, {"ZhuChuangZhangTing":1}))
     data = init_data.step5(table1, data)
+    
+    table = list(table.find({}, {"Table":1}))
+    table_data = init_data.step6(table, "Table")
     
     
     #取连涨股票
@@ -130,10 +134,10 @@ def index(request):
     })
     """
     
-    bu_zhang = bu_zhang.bu_zhang(data, yesterday, yester_yesterday)
+    bu_zhang = bu_zhang.bu_zhang(data, table_data, yesterday, yester_yesterday)
     
     
-    
+
     client.close()
 
     context = {
