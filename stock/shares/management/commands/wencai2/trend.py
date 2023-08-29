@@ -3,7 +3,7 @@ import shares.management.commands.wencai2.common
 
 
 def trendFirst(today):
-    s = '%s去除ST，去除北交所，%s去除新股，所属行业，所属概念，%s开盘价=%s涨停价，%s竞价未匹配大于0，%s竞价未匹配金额，%s涨跌幅降序，5日涨跌幅' % (
+    s = '%s去除ST，去除北交所，%s去除新股，所属行业，所属概念，%s 9:25的开盘价=%s 9:25的涨停价，%s竞价未匹配大于0，%s竞价未匹配金额，%s涨跌幅降序，5日涨跌幅' % (
         today, today, today, today, today, today, today,
     )
     print(s)
@@ -63,7 +63,7 @@ def trendNight(today, filter_concept=True):
 from collections import defaultdict
 
 
-def top(codes):
+def top(codes, filter_industry=True):
     concept_dict = defaultdict(lambda: {"concept": "", "count": 0, "codes": [], "codes2": []})
     # key = ""
     # item = codes[0]
@@ -84,6 +84,8 @@ def top(codes):
                 concept_dict[concept]["codes2"].append(item)
             # concept_dict[concept]["full"] = max(concept_dict[concept]["full"], item["full"])
 
+        if filter_industry == False:
+            continue;
         industries = item["industry"]
         if industries != None:
             for industry in industries:
