@@ -1,4 +1,3 @@
-
 import openpyxl
 
 """
@@ -121,11 +120,8 @@ End Sub
 
 
 def gn_merge(data, path="data.xlsx"):
-    
-
     # 打开 Excel 文件
     workbook = openpyxl.load_workbook(path)
-
 
     # 选择工作表（可以根据工作表名称或索引来选择）
     sheet = workbook['Table3']
@@ -133,7 +129,13 @@ def gn_merge(data, path="data.xlsx"):
     # 遍历行
     for row in sheet.iter_rows(min_row=1, values_only=True):
         code = row[0]
-        gn = row[2]
-        data2[code].extend(gn.split(","))
+        if code == "代码":
+            continue
 
-    return data2
+        gn = row[2]
+
+        if code not in data:
+            continue
+        data[code]["suoshugainian"].extend(gn.split(","))
+
+    return data

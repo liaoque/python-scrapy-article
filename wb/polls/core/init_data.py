@@ -1,6 +1,4 @@
-
-import polls.core.concept
-import polls.core.gn 
+from polls.core import concept, gn
 
 """
 Sub 增加前后分号()
@@ -129,21 +127,27 @@ Sub 增加前后分号()
 End Sub
 """
 
-def step1(table1, fd = 1):
+
+def step1(table1, fd=1):
     data2 = {}
-    
-    if len(table1) == 0 or len(table1[0]["Table1FromJSON"]) == 0:
+
+    if len(table1) == 0 or "Table1FromJSON" not in table1[0] or len(table1[0]["Table1FromJSON"]) == 0:
         return data2
-    
+
     data = table1[0]["Table1FromJSON"]
-    
+
     for items in data:
+        if items["zhangdiefuqianfuquantoday"] == "":
+            items["zhangdiefuqianfuquantoday"] = "0"
+        items["zhangdiefuqianfuquantoday"] = float(items["zhangdiefuqianfuquantoday"])
+        items["lowestpricetoday"] = float(items["lowestpricetoday"])
+        items["higestpricetoday"] = float(items["higestpricetoday"])
         items["qushi"] = 0
         if fd == 0:
             # 竞价涨幅
             if items["jingjiazhangfutoday"] >= 0.05:
                 items["qushi"] = 1
-            elif items["jingjiazhangfutoday"]  < -0.095:
+            elif items["jingjiazhangfutoday"] < -0.095:
                 items["qushi"] = -1
         else:
             # 涨跌幅
@@ -153,111 +157,88 @@ def step1(table1, fd = 1):
                 items["qushi"] = -1
             if items['shoupanjiatoday'] != 0:
                 # (收盘价-最低价)/收盘价 > 0.095
-                if items['shoupanjiatoday'] - items["lowestpricetoday"] /  items['shoupanjiatoday'] > 0.095:
+                if (items['shoupanjiatoday'] - items["lowestpricetoday"]) / items['shoupanjiatoday'] > 0.095:
                     items["qushi"] = 1
-                #最高价-收盘价)/收盘价 > 0.095
-                if items["qushi"] == "" and items["higestpricetoday"] - items['shoupanjiatoday'] /  items['shoupanjiatoday'] > 0.095:
+                # 最高价-收盘价)/收盘价 > 0.095
+                if items["qushi"] == 0 and (items["higestpricetoday"] - items['shoupanjiatoday']) / items[
+                    'shoupanjiatoday'] > 0.095:
                     items["qushi"] = -1
-                    
+
         # 过滤概念
         suoshugainian = items["suoshugainian"].split(";")
-        items["suoshugainian"] = concept.filter(suoshugainian)
-        
-        data2[items["code"]] = items
-    
+        items["suoshugainian"] = concept.filter1(suoshugainian)
+
+        data2[items["code"][0:-3]] = items
+
     data2 = gn.gn_merge(data2)
     return data2
 
-#炸板
+
+# 炸板
 def step2(table1, data):
-    
-    if len(table1) == 0 or len(table1[0]["JinCengZhangTing"]) == 0:
+    if len(table1) == 0 or "JinCengZhangTing" not in table1[0] or len(table1[0]["JinCengZhangTing"]) == 0:
         return data
-    
+
     data2 = table1[0]["JinCengZhangTing"]
-    
+
     for items in data2:
-        data[items["code"]]["zhaban"] = 0
-        if items["code"] in data:
-            data[items["code"]]["zhaban"] = 1
-        
+        code = items["code"][0:-3]
+        data[code]["zhaban"] = 0
+        if code in data:
+            data[code]["zhaban"] = 1
+
     return data
-    
-    
+
+
 # 创百日新高
 def step3(table1, data):
-    
-    if len(table1) == 0 or len(table1[0]["ChuangBaiRiXinGao"]) == 0:
+    if len(table1) == 0 or "ChuangBaiRiXinGao" not in table1[0] or len(table1[0]["ChuangBaiRiXinGao"]) == 0:
         return data
-    
+
     data2 = table1[0]["ChuangBaiRiXinGao"]
-    
+
     for items in data2:
         data[items["code"]]["chuangbairixingao"] = 0
         if items["code"] in data:
             data[items["code"]]["chuangbairixingao"] = 1
-        
+
     return data
 
 
 # 取一字板
 def step4(table1, data):
-    
-    if len(table1) == 0 or len(table1[0]["YiZiBan"]) == 0:
+    if len(table1) == 0 or "YiZiBan" not in table1[0] or len(table1[0]["YiZiBan"]) == 0:
         return data
-    
+
     data2 = table1[0]["YiZiBan"]
-    
+
     for items in data2:
         data[items["code"]]["jingjiaweipipeijinetoday"] = 0
         if items["code"] in data:
             data[items["code"]]["jingjiaweipipeijinetoday"] = items["jingjiaweipipeijinetoday"]
-        
+
     return data
 
 
 # 取首板（连板天数为1）的股票涨停封单额
 def step5(table1, data):
-    
-    if len(table1) == 0 or len(table1[0]["ZhuChuangZhangTing"]) == 0:
+    if len(table1) == 0 or "ZhuChuangZhangTing" not in table1[0] or len(table1[0]["ZhuChuangZhangTing"]) == 0:
         return data
-    
+
     data2 = table1[0]["ZhuChuangZhangTing"]
-    
+
     for items in data2:
         data[items["code"]]["zhangtingfengdanetoday"] = 0
         if items["code"] in data and items["lianbantianshutoday"] == 1:
             data[items["code"]]["zhangtingfengdanetoday"] = items["zhangtingfengdanetoday"]
-        
+
     return data
 
 
 # 合并 table概念
-def step6(table1, name="Table" path="data.xlsx"):
-    
-    if len(table1) == 0 or len(table1[0][name]) == 0:
-        return data
-    
+def step6(table1, name="Table", path="data.xlsx"):
+    if len(table1) == 0 or name not in table1[0] or len(table1[0][name]) == 0:
+        return []
+
     data2 = table1[0][name]
-    
     return gn.gn_merge(data2, path)
-
-
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    

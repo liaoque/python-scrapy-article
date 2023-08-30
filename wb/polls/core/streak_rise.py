@@ -1,4 +1,3 @@
-
 import polls.core.concept
 
 """
@@ -75,31 +74,34 @@ Sub 取连涨股票()
 End Sub
 """
 
-#取连涨股票
-def step1(table1, data):
 
+# 取连涨股票
+def step1(table1, data):
     lianzhanggupiao = {}
-    for items in data:
-        
+    for (code, items) in data.items():
+        if "jingjiaweipipeijinetoday" not in items:
+            items["jingjiaweipipeijinetoday"] = 0
         if items["qushi"] == 1:
             items["suoshugainian"] = list(set(items["suoshugainian"]))
-            lianzhanggupiao[items["code"]] = {
-                "code":items["code"],
-                "briefname":items["briefname"],
-                "suoshugainian":items["suoshugainian"], # 概念
-                "lianxuzhangtingtianshuonehundred":items["lianxuzhangtingtianshuonehundred"], # 25日涨停次数
-                "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"], # 未匹配金额
-                "zhangtingfengdanetoday": 0, # 封单额
+            lianzhanggupiao[code] = {
+                "code": items["code"],
+                "briefname": items["briefname"],
+                "suoshugainian": items["suoshugainian"],  # 概念
+                "lianxuzhangtingtianshuonehundred": items["lianxuzhangtingtianshuonehundred"],  # 25日涨停次数
+                "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],  # 未匹配金额
+                "zhangtingfengdanetoday": 0,  # 封单额
             }
-    
-    if len(table1) > 0 and len(table1[0]["ZhuChuangZhangTing"]) > 0:
+
+    if len(table1) == 0 or "ZhuChuangZhangTing" not in table1[0] or len(table1[0]["ZhuChuangZhangTing"]) == 0:
         return lianzhanggupiao
-    
+
     for items in table1[0]["ZhuChuangZhangTing"]:
-        if items["code"] in lianzhanggupiao:
-            lianzhanggupiao[items["code"]]["zhangtingfengdanetoday"] = items["zhangtingfengdanetoday"]
-    
+        code = items["code"][0:-3]
+        if code in lianzhanggupiao:
+            lianzhanggupiao[code]["zhangtingfengdanetoday"] = items["zhangtingfengdanetoday"]
+
     return lianzhanggupiao
+
 
 """
 Sub 取跌停股票()
@@ -142,31 +144,32 @@ Sub 取跌停股票()
     Set dic = Nothing '关闭字典
     
 """
+
+
 def step2(table1, data):
-    
     dietinggupiao = {}
-    for items in data:
+    for (code, items) in data.items():
         if items["qushi"] == -1:
             items["suoshugainian"] = list(set(items["suoshugainian"]))
-            dietinggupiao[items["code"]] = {
-                "code":items["code"],
-                "briefname":items["briefname"],
-                "suoshugainian":items["suoshugainian"], # 概念
-                "dietingfengdane": items["dietingfengdane"], 
-                "jingjiaweipipeijine": 0, 
+            dietinggupiao[code] = {
+                "code": items["code"],
+                "briefname": items["briefname"],
+                "suoshugainian": items["suoshugainian"],  # 概念
+                "dietingfengdane": items["dietingfengdane"],
+                "jingjiaweipipeijine": 0,
             }
-            
-            
-    if len(table1) > 0 and len(table1[0]["YiZiDieTing"]) > 0:
+
+    if len(table1) == 0 or "YiZiDieTing" not in table1[0] or len(table1[0]["YiZiDieTing"]) == 0:
         return dietinggupiao
-    
+
     for items in table1[0]["YiZiDieTing"]:
-        if items["code"] in dietinggupiao:
-            dietinggupiao[items["code"]]["jingjiaweipipeijine"] = items["jingjiaweipipeijine"]
-            
+        code = items["code"][0:-3]
+        if code in dietinggupiao:
+            dietinggupiao[code]["jingjiaweipipeijine"] = items["jingjiaweipipeijine"]
+
     return dietinggupiao
-           
-    
+
+
 """
 Sub 取炸板股票()
     Dim rng As Range
@@ -201,20 +204,22 @@ Sub 取炸板股票()
     
 End Sub
 """
+
+
 def step3(data):
-    
     zhabangupiao = {}
-    for items in data:
-        if items["zhaban"] == 1:
-            items["suoshugainian"] = list(set(items["suoshugainian"]))
-            zhabangupiao[items["code"]] = {
-                "code":items["code"],
-                "briefname":items["briefname"],
-                "suoshugainian":items["suoshugainian"], # 概念
-                "zhangdiefuqianfuquantoday": items["zhangdiefuqianfuquantoday"], 
-                "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"], 
-            }
-        
+    for (code, items) in data.items():
+        if "zhaban" not in items or items["zhaban"] != 1:
+            continue
+        items["suoshugainian"] = list(set(items["suoshugainian"]))
+        zhabangupiao[code] = {
+            "code": items["code"],
+            "briefname": items["briefname"],
+            "suoshugainian": items["suoshugainian"],  # 概念
+            "zhangdiefuqianfuquantoday": items["zhangdiefuqianfuquantoday"],
+            "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"],
+        }
+
     return zhabangupiao
 
 
@@ -253,19 +258,22 @@ Sub 取创百日新高股票()
     
 End Sub
 """
+
+
 def step4(data):
     chuangbairixingao = {}
-    for items in data:
-        if items["chuangbairixingao"] == 1:
-            items["suoshugainian"] = list(set(items["suoshugainian"]))
-            chuangbairixingao[items["code"]] = {
-                "code":items["code"],
-                "briefname":items["briefname"],
-                "suoshugainian":items["suoshugainian"], # 概念
-                "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"], 
-                "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"], 
-            }
-        
+    for (code, items) in data.items():
+        if "chuangbairixingao" not in items or items["chuangbairixingao"] != 1:
+            continue
+        items["suoshugainian"] = list(set(items["suoshugainian"]))
+        chuangbairixingao[code] = {
+            "code": items["code"],
+            "briefname": items["briefname"],
+            "suoshugainian": items["suoshugainian"],  # 概念
+            "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],
+            "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"],
+        }
+
     return chuangbairixingao
 
 
@@ -303,20 +311,26 @@ Sub 取一字板股票()
     
 End Sub
 """
+
+
 def step5(data):
     yiziban = {}
-    for items in data:
-        if items["jingjiaweipipeijinetoday"] > 0:
-            items["suoshugainian"] = list(set(items["suoshugainian"]))
-            yiziban[items["code"]] = {
-                "code":items["code"],
-                "briefname":items["briefname"],
-                "suoshugainian":items["suoshugainian"], # 概念
-                "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"], 
-                "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"], 
-            }
-        
+
+    for (code, items) in data.items():
+        if "jingjiaweipipeijinetoday" not in items or items["jingjiaweipipeijinetoday"] <= 0:
+            continue
+
+        items["suoshugainian"] = list(set(items["suoshugainian"]))
+        yiziban[code] = {
+            "code": items["code"],
+            "briefname": items["briefname"],
+            "suoshugainian": items["suoshugainian"],  # 概念
+            "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],
+            "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"],
+        }
+
     return yiziban
+
 
 """
 Sub 取首板股票()
@@ -353,21 +367,23 @@ Sub 取首板股票()
 End Sub
 """
 
+
 def step5_1(data):
     shoubangupiao = {}
-    for items in data:
-        if items["zhangtingfengdanetoday"] > 0:
-            items["suoshugainian"] = list(set(items["suoshugainian"]))
-            shoubangupiao[items["code"]] = {
-                "code":items["code"],
-                "briefname":items["briefname"],
-                "suoshugainian":items["suoshugainian"], # 概念
-                "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"], 
-                "zhangtingfengdanetoday": items["zhangtingfengdanetoday"], 
-            }
-        
-    return shoubangupiao
+    for (code, items) in data.items():
+        if "zhangtingfengdanetoday" not in items or items["zhangtingfengdanetoday"] <= 0:
+            continue
 
+        items["suoshugainian"] = list(set(items["suoshugainian"]))
+        shoubangupiao[code] = {
+            "code": items["code"],
+            "briefname": items["briefname"],
+            "suoshugainian": items["suoshugainian"],  # 概念
+            "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],
+            "zhangtingfengdanetoday": items["zhangtingfengdanetoday"],
+        }
+
+    return shoubangupiao
 
 
 """
@@ -423,29 +439,21 @@ Sub 生成连涨概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
+
+
 def step6(data):
     lianzhanggainian = {}
-    lianzhanggainian2 = []
-    for items in data:
+    for (code, items) in data.items():
+        if "suoshugainian" not in items:
+            continue
         for item in items["suoshugainian"]:
-            if item not in lianzhanggainian2:
-                lianzhanggainian2.append(item)
-                lianzhanggainian[item] = {
-                    "suoshugainian": item,
-                    "count": 1
-                }
+            if item not in lianzhanggainian:
+                lianzhanggainian[item] = 1
             else:
-                lianzhanggainian[item]["count"] = lianzhanggainian[item]["count"] + 1
-    
-    lianzhanggainian2 = []
-    for items in lianzhanggainian:
-        lianzhanggainian2.append({
-                    "suoshugainian": items["suoshugainian"],
-                    "count": items["count"],
-                })
-    return lianzhanggainian2
+                lianzhanggainian[item] = lianzhanggainian[item] + 1
+    return lianzhanggainian
 
-        
+
 """
 Sub 生成跌停概念()
     On Error Resume Next
@@ -491,8 +499,11 @@ Sub 生成跌停概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
+
+
 def step7(data):
     return step6(data)
+
 
 """
 Sub 生成炸板概念()
@@ -539,6 +550,8 @@ Sub 生成炸板概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
+
+
 def step8(data):
     return step6(data)
 
@@ -588,8 +601,11 @@ Sub 生成创百日新高概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
+
+
 def step9(data):
     return step6(data)
+
 
 """
 Sub 生成一字板概念()
@@ -636,10 +652,12 @@ Sub 生成一字板概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
+
+
 def step10(data):
     return step6(data)
-    
-    
+
+
 """
 Sub 生成首板概念()
     On Error Resume Next
@@ -685,8 +703,11 @@ Sub 生成首板概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 """
+
+
 def step11(data):
     return step6(data)
+
 
 """
 Sub 取涨停原因()
@@ -723,21 +744,24 @@ Sub 取涨停原因()
     Sheet5.Range("a:h").Sort "涨停大肉数", 2, , , , , , 1
 End Sub
 """
+
+
 def step12(lianzhanggupiao, lianzhanggainian):
-    lianzhanggupiao = []
-    for items in lianzhanggupiao:
+    lianzhanggupiao2 = {}
+    for (code, items) in lianzhanggupiao.items():
         items["yuanyin"] = []
         items["cishu"] = 0
-        for item in items["suoshugainian"]:
-            for gainnian in lianzhanggainian:
-                if item == gainian["suoshugainian"]:
-                    if gainian["count"] > items["cishu"]:
-                        items["yuanyin"].append(gainian["suoshugainian"])
-                        items["cishu"] = gainian["count"]
-                    elif gainian["count"] == items["cishu"]:
-                        items["yuanyin"].append(gainian["suoshugainian"])
-        lianzhanggupiao.append(items)
-    return lianzhanggupiao
+        for (gn, count) in lianzhanggainian.items():
+            if gn not in items["suoshugainian"]:
+                continue
+            if count > items["cishu"]:
+                items["yuanyin"].append(gn)
+                items["cishu"] = count
+            elif count == items["cishu"]:
+                items["yuanyin"].append(gn)
+        lianzhanggupiao2[code] = items
+    return lianzhanggupiao2
+
 
 """
 Sub 取跌停原因()
@@ -770,8 +794,11 @@ Sub 取跌停原因()
     Sheet5.Range("i:o").Sort "跌停大面数", 2, , , , , , 1
 End Sub
 """
+
+
 def step13(dietinggupiao, dietinggainian):
     return step12(dietinggupiao, dietinggainian)
+
 
 """
 Sub 取炸板原因()
@@ -804,8 +831,11 @@ Sub 取炸板原因()
     Sheet5.Range("q:w").Sort "炸板数", 2, , , , , , 1
 End Sub
 """
+
+
 def step14(zhabangupiao, zhabangainian):
     return step12(zhabangupiao, zhabangainian)
+
 
 """
 Sub 取创百日新高原因()
@@ -839,9 +869,12 @@ Sub 取创百日新高原因()
 End Sub
 
 """
+
+
 def step15(chuangbairixingao, chuangbairixingaogainnian):
     return step12(chuangbairixingao, chuangbairixingaogainnian)
-    
+
+
 """
 Sub 取一字板原因()
     Dim rng As Range
@@ -873,9 +906,12 @@ Sub 取一字板原因()
     Sheet5.Range("ag:am").Sort "今竞封数", 2, , , , , , 1
 End Sub
 """
+
+
 def step16(yizibangupiao, yizibangainian):
     return step12(yizibangupiao, yizibangainian)
-    
+
+
 """
 Sub 取首板原因()
     Dim rng As Range
@@ -907,9 +943,11 @@ Sub 取首板原因()
     Sheet5.Range("ao:au").Sort "首板数", 2, , , , , , 1
 End Sub
 """
+
+
 def step17(shoubangupiao, shoubangainian):
     return step12(shoubangupiao, shoubangainian)
-    
+
 
 """
 Sub 排列涨停原因()
@@ -961,18 +999,29 @@ Sub 排列涨停原因()
     Next
 End Sub
 """
+
+
 def step18(lianzhanggupiao, lianzhanggainian):
-    lian_zhang_sort = []
-    for gainian in lianzhanggainian:
-        gainian["gai_nian_gu_piao"] = []
-        for item in lianzhanggupiao:
-            if item["suoshugainian"] == gainian['suoshugainian']:
-                gainian["gai_nian_gu_piao"].append(item)
-        
-        gainian["gai_nian_jing_jia_wei_pi_pei"] = sum([x['jingjiaweipipeijinetoday'] for x in gainian["gai_nian_gu_piao"]])
-        lian_zhang_sort.append(gainian)
+    lian_zhang_sort = {}
+    for (gn, count) in lianzhanggainian.items():
+        gn_item = {
+            "suoshugainian": gn,
+            "count": count,
+            "gai_nian_gu_piao": [],
+            "gai_nian_jing_jia_wei_pi_pei": 0
+        }
+        # gainian["gai_nian_gu_piao"] = []
+        for (code, item) in lianzhanggupiao.items():
+            if gn in item["suoshugainian"]:
+
+                gn_item["gai_nian_gu_piao"].append(item)
+
+        gn_item["gai_nian_jing_jia_wei_pi_pei"] = sum(
+            [x['jingjiaweipipeijinetoday'] for x in gn_item["gai_nian_gu_piao"]])
+        lian_zhang_sort[gn] = gn_item
     return lian_zhang_sort
-        
+
+
 """
 Sub 排列跌停原因()
     Dim dic As Object
@@ -1023,8 +1072,11 @@ Sub 排列跌停原因()
     Next
 End Sub
 """
+
+
 def step19(dietinggupiao, dietinggainian):
     return step18(dietinggupiao, dietinggainian)
+
 
 """
 Sub 排列炸板原因()
@@ -1075,6 +1127,8 @@ Sub 排列炸板原因()
     Next
 End Sub
 """
+
+
 def step20(zhabangupiao, zhabangainian):
     return step18(zhabangupiao, zhabangainian)
 
@@ -1129,6 +1183,8 @@ Sub 排列创百日新高原因()
     Next
 End Sub
 """
+
+
 def step21(chuangbairixingao, chuangbairixingaogainnian):
     return step18(chuangbairixingao, chuangbairixingaogainnian)
 
@@ -1183,8 +1239,11 @@ Sub 排列一字板原因()
     Next
 End Sub
 """
+
+
 def step22(yizibangupiao, yizibangainian):
     return step18(yizibangupiao, yizibangainian)
+
 
 """
 Sub 排列首板原因()
@@ -1236,10 +1295,12 @@ Sub 排列首板原因()
     Next
 End Sub
 """
+
+
 def step23(shoubangupiao, shoubangainian):
     return step18(shoubangupiao, shoubangainian)
-    
-    
+
+
 """
 Sub 排列竞涨停竞跌停()
     Dim dic As Object
@@ -1284,28 +1345,29 @@ Sub 排列竞涨停竞跌停()
     Sheet4.Range("H6").Interior.Color = RGB(255, 255, 255)
 End Sub
 """
+
+
 def step24(yizibangupiao, dietinggupiao, jin_jia_yeastday):
     jin_jia = {
-        zhang_ting: sum([x["zhangtingfengdanetoday"] for x in yizibangupiao]),
-        die_ting: sum([x["zhangtingfengdanetoday"] for x in yizibangupiao]),
-        qingxu: 0,
+        "zhang_ting": sum([x["zhangtingfengdanetoday"] for x in yizibangupiao]),
+        "die_ting": sum([x["zhangtingfengdanetoday"] for x in dietinggupiao]),
+        "qing_xu": 0,
     }
-    
+
     if jin_jia_yeastday['die_ting'] > 0:
         if jin_jia['die_ting'] > jin_jia_yeastday['die_ting']:
-            jin_jia['qingxu'] = 1
+            jin_jia['qing_xu'] = 1
         elif jin_jia['die_ting'] < jin_jia_yeastday['die_ting']:
-            jin_jia['qingxu'] = -1
+            jin_jia['qing_xu'] = -1
         return jin_jia
-    
+
     if jin_jia_yeastday['zhang_ting'] > 0:
         if jin_jia['zhang_ting'] > jin_jia_yeastday['zhang_ting']:
-            jin_jia['qingxu'] = 1
+            jin_jia['qing_xu'] = 1
         elif jin_jia['zhang_ting'] < jin_jia_yeastday['zhang_ting']:
-            jin_jia['qingxu'] = -1
-        
-    return jin_jia
+            jin_jia['qing_xu'] = -1
 
+    return jin_jia
 
 
 """
@@ -1380,24 +1442,25 @@ Sub 排列5日涨跌幅()
     End If
 End Sub
 """
+
+
 def step25(data):
     data2 = {
-        zhu_ban: {"zhangfu5": -1000, "suoshugainian":[], "code": ""},
-        chuang_ye_ban: {"zhangfu5": -1000, "suoshugainian":[], "code": ""},
-        ke_chuang_ban: {"zhangfu5": -1000, "suoshugainian":[], "code": ""},
+        "zhu_ban": {"zhangfu5": 0, "suoshugainian": [], "code": ""},
+        "chuang_ye_ban": {"zhangfu5": 0, "suoshugainian": [], "code": ""},
+        "ke_chuang_ban": {"zhangfu5": 0, "suoshugainian": [], "code": ""},
     }
-    
-    for item in data:
+
+    for (code, item) in data.items():
         if item["code"][2:4] != '68' and item["code"][2:4] != '30':
-            if data2["zhuban"]["zhangfu5"] < item["zhangfu5"]:
-                data2["zhuban"] = item
+            if data2["zhu_ban"]["code"] == "":
+                data2["zhu_ban"] = item
 
         elif item["code"][2:4] == '30':
-            if data2["chuang_ye_ban"]["zhangfu5"] < item["zhangfu5"]:
+            if data2["chuang_ye_ban"]["code"] == "":
                 data2["chuang_ye_ban"] = item
-                
+
         elif item["code"][2:4] == '68':
-            if data2["ke_chuang_ban"]["zhangfu5"] < item["zhangfu5"]:
+            if data2["ke_chuang_ban"]["code"] == "":
                 data2["ke_chuang_ban"] = item
     return data2
-

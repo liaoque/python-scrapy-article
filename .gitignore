@@ -5,3 +5,6 @@ weixin/*/__pycache__
 build/*
 .idea
 config.ini
+.idea/*
+wb/polls/core/__pycache__/*
+wb/polls/views/__pycache__/*

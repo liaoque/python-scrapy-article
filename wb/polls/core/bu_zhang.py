@@ -137,91 +137,99 @@ Sub 补涨()
     昨标高
 End Sub
 """
+
+
 def bu_zhang(data, table_data, yeasterday, yester_yesterday):
-    imax = 0 # 最多概念
-    maxgn = [] # 最大概念
-    fd = 0 #封单
-    fd2 = 0 # 封单2
-    fdgn = 0 # 封单概念
-    for item2 in yeaster["shou_ban_sort"]:
+    imax = 0  # 最多概念
+    maxgn = []  # 最大概念
+    fd = 0  # 封单
+    fd2 = 0  # 封单2
+    fdgn = []  # 封单概念
+    sortgn = []
+    for item2 in yeasterday["shou_ban_sort"]:
         item2["color"] = 0
-        
+
         # 标记趋势变弱
         for item in yester_yesterday["shou_ban_sort"]:
-            if item2["suoshugainian"] == item["suoshugainian"] and item["gai_nian_jing_jia_wei_pi_pei"] > item2["gai_nian_jing_jia_wei_pi_pei"]:
+            if item2["suoshugainian"] == item["suoshugainian"] and item["gai_nian_jing_jia_wei_pi_pei"] > item2[
+                "gai_nian_jing_jia_wei_pi_pei"]:
                 item2["color"] = 35
-        
+
         # 趋势未变弱
         # 根据封单的股票数，取强势的首版概念
         # 根据封单额度，取强势的首版概念
         if item2["color"] != 35:
-            
+            sortgn.append({"gn": item2["suoshugainian"], "c": len(item2["gai_nian_gu_piao"])})
             if imax < len(item2["gai_nian_gu_piao"]):
-            
+
                 imax = len(item2["gai_nian_gu_piao"])
                 maxgn.append(item2["suoshugainian"])
                 fd = item2["jingjiaweipipeijinetoday"]
-                
+
             elif imax == len(item2["gai_nian_gu_piao"]):
-            
+
                 if fd < item2["jingjiaweipipeijinetoday"]:
                     maxgn.append(item2["suoshugainian"])
                     fd = item2["jingjiaweipipeijinetoday"]
                 elif fd == item2["jingjiaweipipeijinetoday"]:
                     maxgn.append(item2["suoshugainian"])
-            
+
         if fd2 < item2["jingjiaweipipeijinetoday"]:
             fdgn.append(item2["suoshugainian"])
             fd2 = item2["jingjiaweipipeijinetoday"]
         elif fd2 == item2["jingjiaweipipeijinetoday"]:
             fdgn.append(item2["suoshugainian"])
-            
-            
+
+    if "新股与次新股" in maxgn or "国企改革" in maxgn:
+        sortgn = sorted(sortgn, key=lambda x: x["c"], reverse=True)
+        ngn = sortgn[0]["gn"]
+        if "新股与次新股" == ngn or "国企改革" == ngn:
+            ngn = sortgn[1]["gn"]
+            maxgn.append(ngn)
+
     # 5日内的最强势概念和股票
     gn = []
     outgn = []
-    yzgp = "" #阈值股票名
+    yzgp = ""  # 阈值股票名
     if yeasterday["day_5_sort"]["zhu_ban"]["zhangfu5"] != -1000:
         gn = (yeasterday["day_5_sort"]["zhu_ban"]["suoshugainian"])
         fd = yeasterday["day_5_sort"]["zhu_ban"]["zhangfu5"]
         yzgp = yeasterday["day_5_sort"]["zhu_ban"]["code"]
-        
+
     if yeasterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"] != -1000:
         if fd < yeasterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]:
             fd = yeasterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]
             gn = (yeasterday["day_5_sort"]["chuang_ye_ban"]["suoshugainian"])
             yzgp = yeasterday["day_5_sort"]["chuang_ye_ban"]["code"]
-            
+
     if yeasterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"] != -1000:
         if fd < yeasterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]:
             fd = yeasterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]
             gn = (yeasterday["day_5_sort"]["ke_chuang_ban"]["suoshugainian"])
             yzgp = yeasterday["day_5_sort"]["ke_chuang_ban"]["code"]
-    
+
     # 取出阈值股票的5日涨幅
-    yzcode  = {}
+    yzcode = {}
     for x in data:
         if x["code"] == yzgp:
             yzcode = x
             break
-    
+
     # '3、在"table1"中找到5日涨跌幅最大的股票，这个例子是尚太科技，用这个股票的所属概念比对昨原因表里的首板的非绿的概念找出相同的概念。
-    
+
     max_code = max([x["zhangfu5"] for x in data])
     outgn.extend(max_code["suoshugainian"])
-    
-    for item2 in yeaster["shou_ban_sort"]:
+
+    for item2 in yeasterday["shou_ban_sort"]:
         if item2["color"] == 35:
             continue
         if item2["suoshugainian"] in gn:
             outgn.append(item2["suoshugainian"])
-    
+
     outgn.extend(maxgn)
     outgn.extend(fdgn)
-    
-    
-    
+
     return {
         "yzcode": yzcode,
-        "gn":list(set(outgn)),
+        "gn": list(set(outgn)),
     }

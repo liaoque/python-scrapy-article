@@ -1,3 +1,6 @@
+from polls.core import concept, gn
+from collections import Counter
+
 """
 Sub 生成所属概念()
     Debug.Print Now & "生成所属概念"
@@ -232,23 +235,137 @@ Sub 生成所属概念()
     Next
 End Sub
 """
-def suo_shu_gai_nian(table1, setting):
-    if len(table1) > 0 and len(table1[0]["Table"]) > 0:
-        return data
-    gn = []
+
+
+def suo_shu_gai_nian(table1, data):
+    if len(table1) == 0 or "Table" not in table1[0] or len(table1[0]["Table"]) == 0:
+        return []
+    xia_xian = concept.xia_xian()
     data2 = table1[0]["Table"]
-    
+    gns = []
     for item in data2:
-        if item["code"][3:5] == "30":
-            if item["code"] > setting["chuang_ye_set"]:
-                gn.extend(item["suoshugainian"])
-            elif item["code"] > setting["zhu_ban_set"]:
-                gn.extend(item["suoshugainian"])
-    
-    gn = list(set(gn))
+        if item["code"][0:5] == "SZ.30" or item["code"][0:6] == "SZ.688" or item["code"][0:6] == "SZ.689":
+            if item["jingjiazhangfu"] > xia_xian["chuang_ye_set"]:
+                gns.extend(item["suoshugainian"].slipt(";"))
+        else:
+            if item["jingjiazhangfu"] > xia_xian["zhu_set"]:
+                gns.extend(item["suoshugainian"].slipt(";"))
+
+    gns = list(set(gns))
+    # 使用 Counter 统计数组中各个元素的个数
+    element_counts = Counter(gns)
+
+    # 将统计结果转换成字典
+    element_dict = dict(element_counts)
+
+    element_dict = concept.filter2(element_dict)
+
+
     return gn
+
+
+"""
+Sub 生成所属概念表()
+    On Error Resume Next
+'    Application.ScreenUpdating = False
+'    t = Timer
+    Dim rng As Range
+    Dim dic As Object
+    Dim nogn, gnstr As String
+    Dim arr
+    Dim i As Integer
+    Dim js_cy, js_zb, a, cyset, zbset, lz
+    nogn = ";富时罗素概念;富时罗素概念股;标普道琼斯A股;沪股通;深股通;融资融券;转融券标的;送转填权;股权转让;并购重组;超跌;MSCI概念;一季报增长;业绩增长;年报增长;超跌;"
+    '取出有效概念合并成一个长字符串
+    cyset = Range("设置值[设置值]").Rows(1)
+    zbset = Range("设置值[设置值]").Rows(2)
+    For Each rng In Range("表[所属概念]")
+        If Left(rng.Offset(0, -4), 5) = "SZ.30" Then '创业
+            If rng.Offset(0, 1) > cyset Then gnstr = gnstr & rng
+        Else '主板
+            If rng.Offset(0, 1) > zbset Then gnstr = gnstr & rng
+        End If
+    Next
+    'Debug.Print str_cy
+    '概念长字符串拆分成数组
+    If gnstr <> "" Then arr = Split(Left(gnstr, Len(gnstr) - 1), ";")
     
+    '概念数组转字典去重
+    Set dic = CreateObject("scripting.dictionary")
+    If gnstr <> "" Then
+        For i = LBound(arr) To UBound(arr)
+            If InStr(nogn, ";" & arr(i) & ";") < 1 Then '去掉不要的概念
+                'If arr(i) <> "" Then
+                    If Not dic.exists(arr(i)) Then
+'                        js_cy = Evaluate("COUNTIFS(表[ [  代码] ],""SZ.30*"",表[所属概念],""*;" & arr(i) & ";*"")")
+'                        js_zb = Evaluate("SUMPRODUCT(IF(ISERROR(FIND(""SZ.30"",表[  代码])),1,0),IF(ISERROR(FIND("";" & arr(i) & ";"",表[所属概念])),0,1))")
+'                        dic(arr(i)) = Array(js_cy, js_zb)
+                        dic(arr(i)) = Evaluate("COUNTIFS(表[所属概念],""*;" & arr(i) & ";*"")")
+                    End If
+                'End If
+            End If
+        Next
+    End If
     
+
+    '把字典输出到概念表
+    If Range("创业板概念[#data]").Rows.Count > 1 Then Range("创业板概念[#data]").Delete Shift:=xlShiftUp '清空原表
+    Range("创业板概念[实际流通]").NumberFormatLocal = "0.0000_ "
+    Range("创业板概念[[#Headers],[所属概念]]").Offset(1, 0).Resize(dic.Count) = Application.Transpose(dic.keys)
+    Range("创业板概念[[#Headers],[计数]]").Offset(1, 0).Resize(dic.Count, 1) = Application.Transpose(dic.items)
+
+    Set dic = Nothing '关闭字典
     
+    Range("创业板概念[所属概念]").SpecialCells(4).Rows.Delete Shift:=xlShiftUp
+    'Range("创业板概念[计数]").Replace "1", "", 1 '1是完全匹配
+    Range("创业板概念[计数]").SpecialCells(4).Rows.Delete Shift:=xlShiftUp
     
+    '排序
+    Range("创业板概念").Sort "计数", 2, , , , , , 1
+    Range("表1").Sort "连涨天数", 2, , , , , , 1
+    Range("表2").Sort "连涨天数", 2, , , , , , 1
     
+    '计算创业板实际流通
+    For Each a In Range("创业板概念[所属概念]")
+        If a.Offset(0, 1) > 0 Then
+            'a.Offset(0, 2) = Evaluate("round(AVERAGEIFS(表[竞价涨幅],表[所属概念],""*;" & a & ";*""),4)")
+            a.Offset(0, 2) = Evaluate("round(SUMIFS(表[竞价涨幅],表[所属概念],""*;" & a & ";*""),4)")
+        End If
+    Next
+    
+End Sub
+"""
+# 废弃
+def suo_shu_gn_table(table1):
+    if len(table1) == 0 or "Table" not in table1[0] or len(table1[0]["Table"]) == 0:
+        return []
+    xia_xian = concept.xia_xian()
+    data2 = table1[0]["Table"]
+    gns = []
+    for item in data2:
+        if item["code"][0:5] == "SZ.30":
+            if item["jingjiazhangfu"] > xia_xian["chuang_ye_set"]:
+                gns.extend(item["suoshugainian"].slipt(";"))
+        else:
+            if item["jingjiazhangfu"] > xia_xian["zhu_set"]:
+                gns.extend(item["suoshugainian"].slipt(";"))
+
+    # 使用 Counter 统计数组中各个元素的个数
+    element_counts = Counter(gns)
+
+    # 将统计结果转换成字典
+    element_dict = dict(element_counts)
+
+    element_dict = concept.filter2(element_dict)
+
+    gnc = {}
+    for key, c in element_dict.items():
+        gn = key
+        item = {
+            "suoshugainian": gn,
+            "count": c,
+            "jingjiazhangfu": sum([item["jingjiazhangfu"] for key, item in data2.items() if gn in item["suoshugainian"] ])
+        }
+        gnc[gn] = item
+
+    return gnc
