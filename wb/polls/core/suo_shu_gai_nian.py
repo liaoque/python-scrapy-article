@@ -237,29 +237,43 @@ End Sub
 """
 
 
-def suo_shu_gai_nian(table1, data):
-    if len(table1) == 0 or "Table" not in table1[0] or len(table1[0]["Table"]) == 0:
+def suo_shu_gai_nian(data1, data2, today, yesterday):
+    if "yuan_yin" in yesterday:
         return []
+
     xia_xian = concept.xia_xian()
-    data2 = table1[0]["Table"]
     gns = []
     for item in data2:
         if item["code"][0:5] == "SZ.30" or item["code"][0:6] == "SZ.688" or item["code"][0:6] == "SZ.689":
             if item["jingjiazhangfu"] > xia_xian["chuang_ye_set"]:
-                gns.extend(item["suoshugainian"].slipt(";"))
+                gns.extend(item["suoshugainian"])
         else:
             if item["jingjiazhangfu"] > xia_xian["zhu_set"]:
-                gns.extend(item["suoshugainian"].slipt(";"))
+                gns.extend(item["suoshugainian"])
 
     gns = list(set(gns))
+    gn_dict = {}
+    for gn in gns:
+        gn_dict[gn] = {
+            "chuang_bai_ri_xin_gao": 0,
+            "chuang_bai_ri_xin_gao_yesterday": 0,
+            "power": "",
+        }
+        if gn in today["yuanyin"]["chuang_bai_ri_xin_gao_sort"]:
+            gn_dict[gn]["chuang_bai_ri_xin_gao_sort"] = len(
+                today["yuanyin"]["chuang_bai_ri_xin_gao_sort"]["gai_nian_gu_piao"])
+            gn_dict[gn]["chuang_bai_ri_xin_gao_yesterday"] = len(
+                yesterday["yuanyin"]["chuang_bai_ri_xin_gao_sort"]["gai_nian_gu_piao"])
+
+            if gn_dict[gn]["chuang_bai_ri_xin_gao_sort"] < gn_dict[gn]["chuang_bai_ri_xin_gao_yesterday"]:
+                gn_dict[gn]["power"] = "d"
+
     # 使用 Counter 统计数组中各个元素的个数
-    element_counts = Counter(gns)
-
+    # element_counts = Counter(gns)
     # 将统计结果转换成字典
-    element_dict = dict(element_counts)
+    # element_dict = dict(element_counts)
 
-    element_dict = concept.filter2(element_dict)
-
+    # element_dict = concept.filter2(element_dict)
 
     return gn
 
@@ -335,6 +349,8 @@ Sub 生成所属概念表()
     
 End Sub
 """
+
+
 # 废弃
 def suo_shu_gn_table(table1):
     if len(table1) == 0 or "Table" not in table1[0] or len(table1[0]["Table"]) == 0:
@@ -364,7 +380,8 @@ def suo_shu_gn_table(table1):
         item = {
             "suoshugainian": gn,
             "count": c,
-            "jingjiazhangfu": sum([item["jingjiazhangfu"] for key, item in data2.items() if gn in item["suoshugainian"] ])
+            "jingjiazhangfu": sum(
+                [item["jingjiazhangfu"] for key, item in data2.items() if gn in item["suoshugainian"]])
         }
         gnc[gn] = item
 

@@ -1,18 +1,18 @@
 from django.shortcuts import render
 import json
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
-from polls.core import init_data, streak_rise, bu_zhang, suo_shu_gai_nian
+from polls.core import init_data, streak_rise, bu_zhang, suo_shu_gai_nian, gn, jie_guo
 from wb.settings import DATABASES
 import time
 from pymongo import MongoClient
+import string
 
 
 def index(request):
-    # day_data = []
     # with open('file.json', 'r') as f:
-    #     day_data = json.load(f)
+    #     history_data = json.load(f)
 
     client = MongoClient(DATABASES['wb']['CLIENT']['host'],
                          DATABASES['wb']['CLIENT']['port'])  # 默认连接到 localhost 和端口 27017
@@ -21,141 +21,169 @@ def index(request):
     current_time = time.strftime("%Y%m%d", time.localtime())
     print('d' + current_time)
 
+    current_time = "20230830"
+
     # 取所有数据
     table = db['d' + current_time]  # 选择你的数据库
-    table1 = list(table.find({}, {"Table1FromJSON": 1}))
+    table1 = (table.find_one({}, {"Table1FromJSON": 1}))
+    if table1 is None:
+        raise TypeError("Table1FromJSON is empty")
+
+    table2 = (table.find_one({}, {"Table": 1}))
+    data2 = []
+    if table2:
+        data2 = table2["Table"]
+
+    history_day_table = db['history_day']
+    if len(table1) > 0:
+        history_day_data = history_day_table.find_one({"history_day": current_time})
+        if history_day_data is None:
+            history_day_data = {"history_day": current_time}
+            history_day_table.insert_one(history_day_data)
+
+    data1 = table1["Table1FromJSON"]
+    data1 = gn.gn_merge({item["code"][0:-3]: item for item in data1})
+
+    data2 = gn.gn_merge({item["code"]: item for item in data2})
 
     # 标记趋势
-    data = init_data.step1(table1)
+    data = init_data.step1(data1)
 
     # 标记炸板
-    table1 = list(table.find({}, {"JinCengZhangTing": 1}))
+    table1 = (table.find_one({}, {"JinCengZhangTing": 1}))
     data = init_data.step2(table1, data)
 
     # 标记百日新高
-    table1 = list(table.find({}, {"ChuangBaiRiXinGao": 1}))
+    table1 = (table.find_one({}, {"ChuangBaiRiXinGao": 1}))
     data = init_data.step3(table1, data)
 
     # 标记一字板
-    table1 = list(table.find({}, {"YiZiBan": 1}))
+    table1 = (table.find_one({}, {"YiZiBan": 1}))
     data = init_data.step4(table1, data)
 
     # 标记 首版
-    table1 = list(table.find({}, {"ZhuChuangZhangTing": 1}))
-    data = init_data.step5(table1, data)
-
-    table2 = list(table.find({}, {"Table": 1}))
-    table_data = init_data.step6(table2, "Table")
-
-    # 取连涨股票
-    lianzhanggupiao = streak_rise.step1(table1, data)
+    zhuchuan_table1 = (table.find_one({}, {"ZhuChuangZhangTing": 1}))
+    data = init_data.step5(zhuchuan_table1, data)
 
     # 取跌停股票
-    table1 = list(table.find({}, {"YiZiDieTing": 1}))
-    dietinggupiao = streak_rise.step2(table1, data)
+    dieting_table1 = (table.find_one({}, {"YiZiDieTing": 1}))
 
-    # 取炸板股票
-    zhabangupiao = streak_rise.step3(data)
+    lianzhang_code_page = {
+        # 取连涨股票
+        "lianzhanggupiao": streak_rise.step1(zhuchuan_table1, data),
+        # 取跌停股票
+        "dietinggupiao": streak_rise.step2(dieting_table1, data),
+        # 取炸板股票
+        "zhabangupiao": streak_rise.step3(data),
+        # 取创百日新高股票
+        "chuangbairixingao": streak_rise.step4(data),
+        # 取一字板股票
+        "yizibangupiao": streak_rise.step5(data),
+        # 取首板股票
+        "shoubangupiao": streak_rise.step5_1(data),
+    }
 
-    # 取创百日新高股票
-    chuangbairixingao = streak_rise.step4(data)
+    lianzhang_page = {
+        # 生成连涨概念 计算概念出现得次数
+        "lianzhanggainian": streak_rise.step6(lianzhang_code_page["lianzhanggupiao"]),
 
-    # 取一字板股票
-    yizibangupiao = streak_rise.step5(data)
+        # 生成跌停概念
+        "dietinggainian": streak_rise.step7(lianzhang_code_page["dietinggupiao"]),
 
-    # 取首板股票
-    shoubangupiao = streak_rise.step5_1(data)
+        # 生成炸板概念
+        "zhabangainian": streak_rise.step8(lianzhang_code_page["zhabangupiao"]),
 
-    # 生成连涨概念 计算概念出现得次数
-    lianzhanggainian = streak_rise.step6(lianzhanggupiao)
+        # 生成创百日新高概念
+        "chuangbairixingaogainnian": streak_rise.step9(lianzhang_code_page["chuangbairixingao"]),
 
-    # 生成跌停概念
-    dietinggainian = streak_rise.step7(dietinggupiao)
+        # 生成一字板概念
+        "yizibangainian": streak_rise.step10(lianzhang_code_page["yizibangupiao"]),
 
-    # 生成炸板概念
-    zhabangainian = streak_rise.step8(zhabangupiao)
-
-    # 生成创百日新高概念
-    chuangbairixingaogainnian = streak_rise.step9(chuangbairixingao)
-
-    # 生成一字板概念
-    yizibangainian = streak_rise.step10(yizibangupiao)
-
-    # 生成首板概念
-    shoubangainian = streak_rise.step11(shoubangupiao)
+        # 生成首板概念
+        "shoubangainian": streak_rise.step11(lianzhang_code_page["shoubangupiao"]),
+    }
 
     # 取涨停原因， 匹配涨停概念， 并标记最多的原因得次数
-    lianzhanggupiao = streak_rise.step12(lianzhanggupiao, lianzhanggainian)
+    lianzhang_code_page["lianzhanggupiao"] = streak_rise.step12(lianzhang_code_page["lianzhanggupiao"],
+                                                                lianzhang_page["lianzhanggainian"])
 
     # 取跌停原因
-    dietinggupiao = streak_rise.step13(dietinggupiao, dietinggainian)
+    lianzhang_code_page["dietinggupiao"] = streak_rise.step13(lianzhang_code_page["dietinggupiao"],
+                                                              lianzhang_page["dietinggainian"])
 
     # 取炸板原因
-    zhabangupiao = streak_rise.step14(zhabangupiao, zhabangainian)
+    lianzhang_code_page["zhabangupiao"] = streak_rise.step14(lianzhang_code_page["zhabangupiao"],
+                                                             lianzhang_page["zhabangainian"])
 
     # 取创百日新高原因
-    chuangbairixingao = streak_rise.step15(chuangbairixingao, chuangbairixingaogainnian)
+    lianzhang_code_page["chuangbairixingao"] = streak_rise.step15(lianzhang_code_page["chuangbairixingao"],
+                                                                  lianzhang_page["chuangbairixingaogainnian"])
 
     # 取一字板原因
-    yizibangupiao = streak_rise.step16(yizibangupiao, yizibangainian)
+    lianzhang_code_page["yizibangupiao"] = streak_rise.step16(lianzhang_code_page["yizibangupiao"],
+                                                              lianzhang_page["yizibangainian"])
 
     # 取首板原因
-    shoubangupiao = streak_rise.step17(shoubangupiao, shoubangainian)
+    lianzhang_code_page["shoubangupiao"] = streak_rise.step17(lianzhang_code_page["shoubangupiao"],
+                                                              lianzhang_page["shoubangainian"])
 
-    # 排列涨停原因，对概念计算竞价未匹配
-    lian_zhang_sort = streak_rise.step18(lianzhanggupiao, lianzhanggainian)
+    yuan_yin = {
+        # 排列涨停原因，对概念计算竞价未匹配
+        "lian_zhang_sort": streak_rise.step18(lianzhang_code_page["lianzhanggupiao"],
+                                              lianzhang_page["lianzhanggainian"]),
 
-    # 排列跌停原因
-    die_ting_sort = streak_rise.step19(dietinggupiao, dietinggainian)
+        # 排列跌停原因
+        "die_ting_sort": streak_rise.step19(lianzhang_code_page["dietinggupiao"], lianzhang_page["dietinggainian"]),
 
-    # 排列炸板原因
-    zha_ban_sort = streak_rise.step20(zhabangupiao, zhabangainian)
+        # 排列炸板原因
+        "zha_ban_sort": streak_rise.step20(lianzhang_code_page["zhabangupiao"], lianzhang_page["zhabangainian"]),
 
-    # 排列创百日新高原因
-    chuang_bai_ri_xin_gao_sort = streak_rise.step21(chuangbairixingao, chuangbairixingaogainnian)
+        # 排列创百日新高原因
+        "chuang_bai_ri_xin_gao_sort": streak_rise.step21(lianzhang_code_page["chuangbairixingao"],
+                                                         lianzhang_page["chuangbairixingaogainnian"]),
 
-    # 排列一字板原因
-    yi_zi_ban_sort = streak_rise.step22(yizibangupiao, yizibangainian)
+        # 排列一字板原因
+        "yi_zi_ban_sort": streak_rise.step22(lianzhang_code_page["yizibangupiao"], lianzhang_page["yizibangainian"]),
 
-    # 排列首板原因
-    shou_ban_sort = streak_rise.step23(shoubangupiao, shoubangainian)
-    """
-    # 排列竞涨停竞跌停， 可以当作情绪看待
-    yeastday = day_data[day_data.index(current_time) - 1]
-    yeastday_table = db['dd' + yeastday]  # 选择你的数据库
-    jin_jia_yeastday = list(yeastday_table.find({}))
-    jing_jia_sort = streak_rise.step24(yizibangupiao, dietinggupiao, jin_jia_yeastday)
+        # 排列首板原因
+        "shou_ban_sort": streak_rise.step23(lianzhang_code_page["shoubangupiao"], lianzhang_page["shoubangainian"]),
 
-    # 排列5日涨跌幅，取每个概念涨跌幅最高得
-    day_5_sort = streak_rise.step25(data)
+        # 排列竞涨停竞跌停， 可以当作情绪看待
+        "jing_jia_sort": streak_rise.step24(lianzhang_code_page["yizibangupiao"], lianzhang_code_page["dietinggupiao"]),
 
+        # 排列5日涨跌幅，取每个概念涨跌幅最高得
+        "day_5_sort": streak_rise.step25(data),
+    }
 
-    table1 = list(table.find({}, {"Table":1}))
-    data2 = suo_shu_gai_nian.suo_shu_gai_nian(table1, {
-        chuang_ye_set:0,
-        zhu_ban_set:0,
-    })
+    # 查昨原因
+    history_day_data = history_day_table.find_one({"history_day": {"$lt": current_time}}, sort=[("history_day", -1)])
+    yeasterday_data = {}
+    if history_day_data:
+        if len(history_day_data["history_day"]) == 1:
+            history_day_data["history_day"] = history_day_data["history_day"][0]
+        yeasterday_table = db['d' + history_day_data["history_day"]]  # 选择你的数据库
+        yeasterday_data = yeasterday_table.find_one({}, {"yuan_yin": 1})
+        if yeasterday_data is None:
+            yeasterday_data = {}
 
+    today_data = {
+        "yuan_yin": yuan_yin
+    }
 
-    bu_zhang2 = bu_zhang.bu_zhang(data, table_data, yesterday, yester_yesterday)
-    """
+    d = {
+        "chuang_ye_ban_gn": suo_shu_gai_nian.suo_shu_gai_nian(data1, data2, today_data, yeasterday_data),
+        "qing_xu": jie_guo.qingxu(today_data, yeasterday_data)
+    }
+
+    # 保存计算结果
+
+    # 计算情绪
 
     # table = list(table.find({}, {"Table": 1}))
     # chuang_ye_ban_gn = suo_shu_gai_nian.suo_shu_gn_table(table)
 
     client.close()
-
-    context = {
-        'latest_question_list': [
-            lian_zhang_sort,
-            die_ting_sort,
-            zha_ban_sort,
-            chuang_bai_ri_xin_gao_sort,
-            yi_zi_ban_sort,
-            shou_ban_sort,
-        ],
-    }
-    return render(request, 'polls/index.html', context)
+    return JsonResponse(d)
 
 
 def detail(request, question_id):

@@ -1,4 +1,5 @@
 import openpyxl
+from polls.core import concept
 
 """
 Sub 新合并概念()
@@ -136,6 +137,29 @@ def gn_merge(data, path="data.xlsx"):
 
         if code not in data:
             continue
-        data[code]["suoshugainian"].extend(gn.split(","))
+        if "belongtogainian" in data[code]:
+            suoshugainian = data[code]["belongtogainian"].split(";")
+            suoshuhangye = data[code]["belongtohangye"].split("-")
+            del data[code]["belongtogainian"]
+            del data[code]["belongtohangye"]
+        else:
+            suoshugainian = data[code]["suoshugainian"].split(";")
+            suoshuhangye = data[code]["suoshuhangye"].split("-")
 
+        suoshugainian2 = gn.split(",")
+        suoshugainian2.extend(suoshuhangye)
+        suoshugainian.extend(suoshugainian2)
+        data[code]["suoshugainian"] = concept.filter1(suoshugainian)
+        a = data[code]["suoshugainian"]
+        a = ["电力" if x == "电力设备" else x for x in a]
+        a = ["电力" if x == "电力物联网" else x for x in a]
+        a = ["零售" if x == "新零售" else x for x in a]
+        a = ["电力" if x == "风电" else x for x in a]
+        # a = ["电力" if x == "风电" else x for x in a]
+        a = ["国企改革" if x == "央企国资改革" else x for x in a]
+        a = ["国企改革" if x == "地方国资改革" else x for x in a]
+        a = ["新股与次新股" if x == "开板次新" else x for x in a]
+        a = ["新股与次新股" if x == "次新股" else x for x in a]
+        a = ["新股与次新股" if x == "核准制次新股" else x for x in a]
+        data[code]["suoshugainian"] = ["新股与次新股" if x == "注册制次新股" else x for x in a]
     return data

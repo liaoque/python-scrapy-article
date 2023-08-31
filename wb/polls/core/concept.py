@@ -15,11 +15,14 @@ concept2 = [
 
 
 def filter1(data):
-    return [x for x in data if x not in concept]
+    data = [s.strip() for s in data]
+    a = [x for x in data if x not in concept and x != ""]
+    return a
 
 
 def filter2(data):
-    return [x for x in data if x not in concept2]
+    data = [s.strip() for s in data]
+    return [x for x in data if x not in concept2 and x != ""]
 
 
 def xia_xian():
