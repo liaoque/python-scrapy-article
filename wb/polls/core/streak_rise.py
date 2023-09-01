@@ -1,4 +1,4 @@
-import polls.core.concept
+from polls.core import concept, gn
 
 """
 Sub 取连涨股票()
@@ -1012,7 +1012,8 @@ def step18(lianzhanggupiao, lianzhanggainian):
             "suoshugainian": gn,
             "count": count,
             "gai_nian_gu_piao": [],
-            "gai_nian_jing_jia_wei_pi_pei": 0
+            "gai_nian_jing_jia_wei_pi_pei": 0,
+            "gai_nian_feng_dan_jin_e": 0
         }
         # gainian["gai_nian_gu_piao"] = []
         join_lian_zhang = 0
@@ -1023,6 +1024,9 @@ def step18(lianzhanggupiao, lianzhanggainian):
 
         gn_item["gai_nian_jing_jia_wei_pi_pei"] = sum(
             [x['jingjiaweipipeijinetoday'] for x in gn_item["gai_nian_gu_piao"]])
+
+        gn_item["gai_nian_feng_dan_jin_e"] = sum(
+            [x['zhangtingfengdanetoday'] for x in gn_item["gai_nian_gu_piao"]])
         if join_lian_zhang == 1:
             lian_zhang_sort[gn] = gn_item
 

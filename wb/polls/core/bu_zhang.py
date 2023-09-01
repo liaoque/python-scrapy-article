@@ -1,4 +1,7 @@
+from polls.core import concept
+
 """
+
 Sub 补涨()
     Dim rng As Range
     Dim sb, zsb, h, i, imax As Integer
@@ -10,7 +13,7 @@ Sub 补涨()
     Set rng = Sheet21.Range("a:a").Find("首板")
     sb = 0 '首板行号
     If Not rng Is Nothing Then sb = rng.Row + 1
-    
+
     Set rng = Sheet21.Range("a:a").Find("昨首板")
     zsb = 0 '昨首板行号
     If Not rng Is Nothing Then zsb = rng.Row + 1
@@ -19,6 +22,15 @@ Sub 补涨()
     fd2 = 0
     maxgn = ""
     fdgn = ""
+
+    Dim sortedKeys() As Variant
+    Dim secondName As String
+
+    secondName = ""
+
+    Dim dict2 As Object
+    Set dict2 = CreateObject("Scripting.Dictionary")
+
     If sb > 0 And zsb > 0 Then
         For i = 1 To 256 Step 3
             If Sheet21.Cells(sb, i) = "" Then Exit For
@@ -32,6 +44,7 @@ Sub 补涨()
             End If
             '4.找出""昨原因"表首板里非绿的最大股票个数的概念（如果最大股票个数的概念有多个取涨停封单额最大的概念）和最大涨停封单额的概念，填入结果表的补涨里。
             If Sheet21.Cells(sb, i).Interior.ColorIndex <> 35 Then
+                dict2.Add Sheet21.Cells(sb, i), Sheet21.Cells(sb, i).End(xlDown).Row - sb - 1
                 If imax < Sheet21.Cells(sb, i).End(xlDown).Row - sb - 1 Then
                     imax = Sheet21.Cells(sb, i).End(xlDown).Row - sb - 1
                     maxgn = Sheet21.Cells(sb, i)
@@ -53,10 +66,25 @@ Sub 补涨()
                 End If
             End If
         Next
+
+         ' 遇到新股与次新股和国企改革 就找第二梯队的概念
+        If maxgn = "新股与次新股" Or maxgn = "国企改革" Then
+
+            sortedKeys = SortDictionaryByValue(dict2)
+            secondName = sortedKeys(0)
+
+            If secondName = "新股与次新股" Or secondName = "国企改革" Then
+                secondName = sortedKeys(1)
+
+            End If
+            maxgn = maxgn & ";" & secondName
+        End If
+
+        Set dict2 = Nothing '关闭字典
     End If
-    
+
     '2、在"昨原因"表找到主板，创业板，科创板中5日涨跌幅最大的股票的所属概念和首板里非绿的概念比对，找出相同的概念，
-    
+
     gn = ""
     outgn = ";"
     yzgp = "" '阈值股票名
@@ -89,7 +117,7 @@ Sub 补涨()
             Set rng = Sheet21.Range("a:a").FindNext(rng)
         Loop While Not rng Is Nothing And rng.Address <> firstAddress
     End If
-    
+
     '取出阈值股票的5日涨幅
     Sheet4.Range("H11:H12") = ""
     Set rng = Sheet2.Range("b:b").Find(yzgp)
@@ -97,7 +125,7 @@ Sub 补涨()
         Sheet4.Range("H11") = yzgp
         Sheet4.Range("H12") = rng.Offset(0, 9)
     End If
-    
+
     '3、在"table1"中找到5日涨跌幅最大的股票，这个例子是尚太科技，用这个股票的所属概念比对昨原因表里的首板的非绿的概念找出相同的概念。
     Set rng = Sheet2.Range("N:N").Find(Evaluate("max(Table1!N:N)"))
     If Not rng Is Nothing Then
@@ -123,8 +151,8 @@ Sub 补涨()
             End If
         Next
     End If
-    
-    
+
+
     'Sheet4.Range("h9") = outgn & maxgn & ";" & fdgn & ";"
     str = ";"
     arr = Split(outgn & maxgn & ";" & fdgn & ";", ";")
@@ -133,103 +161,168 @@ Sub 补涨()
             If InStr(str, ";" & arr(i) & ";") = 0 Then str = str & arr(i) & ";"
         End If
     Next
+
+    '如果当天一字板 表是空的，就昨原因里首板的所有概念里非绿的概念加入 结果表的补涨框
+    If Sheet19.Range("a2") = "" Then
+        If Not rng Is Nothing Then sb = rng.Row + 1
+        For i = 1 To 256 Step 3
+            If Sheet21.Cells(sb, i) = "" Then Exit For
+            '开始对比
+            If Sheet21.Cells(sb, i).Interior.ColorIndex <> 35 Then
+                    str = str & Sheet21.Cells(sb, i) & ";"
+            End If
+        Next
+    End If
+
+
     Sheet4.Range("h9") = str
     昨标高
 End Sub
 """
 
 
-def bu_zhang(data, table_data, yeasterday, yester_yesterday):
+def bu_zhang(data, today, yesterday, before_yesterday):
     imax = 0  # 最多概念
     maxgn = []  # 最大概念
     fd = 0  # 封单
     fd2 = 0  # 封单2
     fdgn = []  # 封单概念
     sortgn = []
-    for item2 in yeasterday["shou_ban_sort"]:
-        item2["color"] = 0
+    if len(before_yesterday["yuan_yin"]["yi_zi_ban_sort"].keys()) > 0 and len(
+            yesterday["yuan_yin"]["yi_zi_ban_sort"].keys()) > 0:
+        for gn, item in yesterday["shou_ban_sort"].items():
+            if gn in before_yesterday["shou_ban_sort"]:
+                if before_yesterday["shou_ban_sort"][gn]["gai_nian_jing_jia_wei_pi_pei"] > item[
+                    "gai_nian_jing_jia_wei_pi_pei"]:
+                    item["power"] = -1
 
-        # 标记趋势变弱
-        for item in yester_yesterday["shou_ban_sort"]:
-            if item2["suoshugainian"] == item["suoshugainian"] and item["gai_nian_jing_jia_wei_pi_pei"] > item2[
-                "gai_nian_jing_jia_wei_pi_pei"]:
-                item2["color"] = 35
+            # 趋势未变弱
+            # 根据封单的股票数，取强势的首版概念
+            # 根据封单额度，取强势的首版概念
+            if item["power"] != -1:
+                sortgn.append({"gn": gn, "c": item["count"]})
+                if imax < item["count"]:
+                    imax = item["count"]
+                    maxgn.append(gn)
+                    fd = item["gai_nian_feng_dan_jin_e"]
+                elif imax == item["count"]:
+                    if fd < item["gai_nian_feng_dan_jin_e"]:
+                        maxgn.append(gn)
+                        fd = item["gai_nian_feng_dan_jin_e"]
+                    elif fd == item["gai_nian_feng_dan_jin_e"]:
+                        maxgn.append(gn)
 
-        # 趋势未变弱
-        # 根据封单的股票数，取强势的首版概念
-        # 根据封单额度，取强势的首版概念
-        if item2["color"] != 35:
-            sortgn.append({"gn": item2["suoshugainian"], "c": len(item2["gai_nian_gu_piao"])})
-            if imax < len(item2["gai_nian_gu_piao"]):
+            if fd2 < item["gai_nian_feng_dan_jin_e"]:
+                fdgn.append(gn)
+                fd2 = item["gai_nian_feng_dan_jin_e"]
+            elif fd2 == item["gai_nian_feng_dan_jin_e"]:
+                fdgn.append(gn)
 
-                imax = len(item2["gai_nian_gu_piao"])
-                maxgn.append(item2["suoshugainian"])
-                fd = item2["jingjiaweipipeijinetoday"]
-
-            elif imax == len(item2["gai_nian_gu_piao"]):
-
-                if fd < item2["jingjiaweipipeijinetoday"]:
-                    maxgn.append(item2["suoshugainian"])
-                    fd = item2["jingjiaweipipeijinetoday"]
-                elif fd == item2["jingjiaweipipeijinetoday"]:
-                    maxgn.append(item2["suoshugainian"])
-
-        if fd2 < item2["jingjiaweipipeijinetoday"]:
-            fdgn.append(item2["suoshugainian"])
-            fd2 = item2["jingjiaweipipeijinetoday"]
-        elif fd2 == item2["jingjiaweipipeijinetoday"]:
-            fdgn.append(item2["suoshugainian"])
-
-    if "新股与次新股" in maxgn or "国企改革" in maxgn:
-        sortgn = sorted(sortgn, key=lambda x: x["c"], reverse=True)
-        ngn = sortgn[0]["gn"]
-        if "新股与次新股" == ngn or "国企改革" == ngn:
+        if "新股与次新股" in maxgn or "国企改革" in maxgn:
+            sortgn = sorted(sortgn, key=lambda x: x["c"], reverse=True)
             ngn = sortgn[1]["gn"]
-            maxgn.append(ngn)
+            if "新股与次新股" == ngn or "国企改革" == ngn:
+                ngn = sortgn[2]["gn"]
+                maxgn.append(ngn)
 
     # 5日内的最强势概念和股票
     gn = []
     outgn = []
     yzgp = ""  # 阈值股票名
-    if yeasterday["day_5_sort"]["zhu_ban"]["zhangfu5"] != -1000:
-        gn = (yeasterday["day_5_sort"]["zhu_ban"]["suoshugainian"])
-        fd = yeasterday["day_5_sort"]["zhu_ban"]["zhangfu5"]
-        yzgp = yeasterday["day_5_sort"]["zhu_ban"]["code"]
+    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"] != -1000:
+        gn = (yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["suoshugainian"])
+        fd = yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"]
+        yzgp = yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["code"]
 
-    if yeasterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"] != -1000:
-        if fd < yeasterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]:
-            fd = yeasterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]
-            gn = (yeasterday["day_5_sort"]["chuang_ye_ban"]["suoshugainian"])
-            yzgp = yeasterday["day_5_sort"]["chuang_ye_ban"]["code"]
+    if yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"] != -1000:
+        if fd < yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]:
+            fd = yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]
+            gn = (yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["suoshugainian"])
+            yzgp = yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["code"]
 
-    if yeasterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"] != -1000:
-        if fd < yeasterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]:
-            fd = yeasterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]
-            gn = (yeasterday["day_5_sort"]["ke_chuang_ban"]["suoshugainian"])
-            yzgp = yeasterday["day_5_sort"]["ke_chuang_ban"]["code"]
+    if yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"] != -1000:
+        if fd < yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]:
+            fd = yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]
+            gn = (yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["suoshugainian"])
+            yzgp = yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["code"]
 
     # 取出阈值股票的5日涨幅
-    yzcode = {}
-    for x in data:
-        if x["code"] == yzgp:
-            yzcode = x
-            break
+    yzcode = data[yzgp]
 
     # '3、在"table1"中找到5日涨跌幅最大的股票，这个例子是尚太科技，用这个股票的所属概念比对昨原因表里的首板的非绿的概念找出相同的概念。
+    max_code = data[max(data.items(), key=lambda x: x[1]["zhangfu5"])]
+    if max_code[0][0:2] == "68":
+        feng_kou = "科创板"
+    elif max_code[0][0:2] == "30":
+        feng_kou = "创业板"
+    else:
+        feng_kou = "主板"
 
-    max_code = max([x["zhangfu5"] for x in data])
     outgn.extend(max_code["suoshugainian"])
 
-    for item2 in yeasterday["shou_ban_sort"]:
+    for item2 in yesterday["shou_ban_sort"]:
         if item2["color"] == 35:
             continue
         if item2["suoshugainian"] in gn:
             outgn.append(item2["suoshugainian"])
 
+    # '如果当天一字板 表是空的，就昨原因里首板的所有概念里非绿的概念加入 结果表的补涨框
+    if len(today["yuan_yin"]["yi_zi_ban_sort"].keys()) == 0:
+        outgn.extend(yesterday["yuan_yin"]["yi_zi_ban_sort"].keys())
+
     outgn.extend(maxgn)
     outgn.extend(fdgn)
+    bu_zhang = {
+        "feng_kou": feng_kou,
+        "bu_zhang_gn": "",
+        "yz": yzcode,
+        "yz_rate": yzcode["zhangdie4thday"],
+        "gn": list(set(outgn)),
+        "zuo_biao_gao": zuo_biao_gao(yesterday)
+    }
+    return bu_zhang
+
+
+"""
+Sub 昨标高()
+    Dim rng As Range
+    Sheet4.Range("h25:h30") = ""
+    Sheet4.Range("h25:h30").Interior.Pattern = xlNone
+    
+    Set rng = Sheet21.Range("a:a").Find("主板")
+    If Not rng Is Nothing Then
+        Sheet4.Range("h25") = rng.Offset(2, 1)
+        Sheet4.Range("h26") = rng.Offset(2, 3)
+    End If
+    Set rng = Sheet21.Range("a:a").Find("创业板")
+    If Not rng Is Nothing Then
+        Sheet4.Range("h27") = rng.Offset(2, 1)
+        Sheet4.Range("h28") = rng.Offset(2, 3)
+    End If
+    Set rng = Sheet21.Range("a:a").Find("科创板")
+    If Not rng Is Nothing Then
+        Sheet4.Range("h29") = rng.Offset(2, 1)
+        Sheet4.Range("h30") = rng.Offset(2, 3)
+    End If
+    If Sheet4.Range("h26") > Sheet4.Range("h85") Then Sheet4.Range("h26").Interior.ColorIndex = 35
+    If Sheet4.Range("h28") > Sheet4.Range("h87") Then Sheet4.Range("h28").Interior.ColorIndex = 35
+End Sub
+"""
+
+
+def zuo_biao_gao(yesterday):
+    xian = concept.xia_xian()
+    power10 = 0
+    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"] > xian["10cm"]:
+        power10 = -1
+    power20 = 0
+    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"] > xian["20cm"]:
+        power20 = -1
 
     return {
-        "yzcode": yzcode,
-        "gn": list(set(outgn)),
+        "zhu_ban": yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"],
+        "chuang_ye_ban": yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"],
+        "ke_chuang_ban": yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"],
+        "power10": power10,
+        "power20": power20
     }
