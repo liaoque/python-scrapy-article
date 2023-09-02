@@ -225,3 +225,54 @@ def step5(table1, data):
             data[code]["zhangtingfengdanetoday"] = items["zhangtingfengdanetoday"]
 
     return data
+
+
+# 取异动
+def step6(table1, data):
+    if table1 is None or "YiDong" not in table1:
+        return data
+
+    data2 = table1["YiDong"]
+
+    for items in data2:
+        code = items["code"]
+        data[code]["jianguanleixingyesterday"] = ""
+        if code in data:
+            data[code]["jianguanleixingyesterday"] = items["jianguanleixingyesterday"]
+
+    return data
+
+
+# 取n10
+def step7(table1, data):
+    if table1 is None or "N10" not in table1:
+        return data
+
+    data2 = table1["N10"]
+
+    for items in data2:
+        code = items["code"]
+        data[code]["n10"] = 0
+        if code in data:
+            data[code]["n10"] = 1
+        if items["zuocengzhangting"] == "曾涨停":
+            data[code]["zuocengzhangting"] = 1
+
+    return data
+
+
+# 取n20
+def step8(table1, data):
+    if table1 is None or "N20" not in table1:
+        return data
+
+    data2 = table1["N20"]
+
+    for items in data2:
+        code = items["code"]
+        data[code]["n20"] = 0
+        if code in data:
+            data[code]["n20"] = 1
+
+    return data
+

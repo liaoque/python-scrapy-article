@@ -219,6 +219,7 @@ def bu_zhang(data, today, yesterday, before_yesterday):
                 fdgn.append(gn)
 
         if "新股与次新股" in maxgn or "国企改革" in maxgn:
+            sortgn = [item for item in sortgn if item["gn"] in ["新股与次新股", "国企改革"]]
             sortgn = sorted(sortgn, key=lambda x: x["c"], reverse=True)
             ngn = sortgn[1]["gn"]
             if "新股与次新股" == ngn or "国企改革" == ngn:
@@ -261,7 +262,7 @@ def bu_zhang(data, today, yesterday, before_yesterday):
     outgn.extend(max_code["suoshugainian"])
 
     for item2 in yesterday["shou_ban_sort"]:
-        if item2["color"] == 35:
+        if item2["power"] == -1:
             continue
         if item2["suoshugainian"] in gn:
             outgn.append(item2["suoshugainian"])
@@ -274,7 +275,6 @@ def bu_zhang(data, today, yesterday, before_yesterday):
     outgn.extend(fdgn)
     bu_zhang = {
         "feng_kou": feng_kou,
-        "bu_zhang_gn": "",
         "yz": yzcode,
         "yz_rate": yzcode["zhangdie4thday"],
         "gn": list(set(outgn)),

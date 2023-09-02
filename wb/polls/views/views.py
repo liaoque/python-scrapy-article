@@ -3,7 +3,7 @@ import json
 # Create your views here.
 from django.http import HttpResponse, JsonResponse
 
-from polls.core import init_data, streak_rise, bu_zhang, suo_shu_gai_nian, gn, jie_guo
+from polls.core import init_data, streak_rise, bu_zhang, suo_shu_gai_nian, gn, jie_guo, biao_shai_xuan
 from wb.settings import DATABASES
 import time
 from pymongo import MongoClient
@@ -64,6 +64,18 @@ def index(request):
     # 标记 首版
     zhuchuan_table1 = (table.find_one({}, {"ZhuChuangZhangTing": 1}))
     data = init_data.step5(zhuchuan_table1, data)
+
+    # 异动
+    zhuchuan_table1 = (table.find_one({}, {"YiDong": 1}))
+    data = init_data.step6(zhuchuan_table1, data)
+
+    # n10
+    zhuchuan_table1 = (table.find_one({}, {"N10": 1}))
+    data = init_data.step7(zhuchuan_table1, data)
+
+    #n20
+    zhuchuan_table1 = (table.find_one({}, {"N20": 1}))
+    data = init_data.step8(zhuchuan_table1, data)
 
     # 取跌停股票
     dieting_table1 = (table.find_one({}, {"YiZiDieTing": 1}))
@@ -156,24 +168,32 @@ def index(request):
     }
 
     # 查昨原因
-    history_day_data = history_day_table.find_one({"history_day": {"$lt": current_time}}, sort=[("history_day", -1)])
+    history_day_data = history_day_table.find_one({
+        "history_day": {"$lt": current_time}},
+        sort=[("history_day", -1)]
+    ).limit(2)
     yeasterday_data = {}
-    if history_day_data:
-        if len(history_day_data["history_day"]) == 1:
-            history_day_data["history_day"] = history_day_data["history_day"][0]
-        yeasterday_table = db['d' + history_day_data["history_day"]]  # 选择你的数据库
-        yeasterday_data = yeasterday_table.find_one({}, {"yuan_yin": 1})
-        if yeasterday_data is None:
-            yeasterday_data = {}
+    before_yesterday_data = {}
+    if len(history_day_data["history_day"]) == 1:
+        yesterday = history_day_data["history_day"][0]
+        yeasterday_data = db['d' + yesterday].find_one({}, {"yuan_yin": 1})
+        if len(history_day_data["history_day"]) == 2:
+            yesterday_day = history_day_data["history_day"][1]
+            before_yesterday_data = db['d' + yesterday_day].find_one({}, {"yuan_yin": 1})
 
     today_data = {
         "yuan_yin": yuan_yin
     }
 
+    bu_zhang_data = bu_zhang.bu_zhang(data, today_data, yeasterday_data, before_yesterday_data)
+    chuang_ye_ban_gn = suo_shu_gai_nian.suo_shu_gai_nian(data1, data2, today_data, yeasterday_data)
     d = {
-        "chuang_ye_ban_gn": suo_shu_gai_nian.suo_shu_gai_nian(data1, data2, today_data, yeasterday_data),
+        "chuang_ye_ban_gn": chuang_ye_ban_gn,
+        "bu_zhang_data": bu_zhang_data,
         "qing_xu": jie_guo.qingxu(today_data, yeasterday_data)
     }
+
+    d2 = biao_shai_xuan.biao_shai_xuan(d, data1)
 
     # 保存计算结果
 
