@@ -155,10 +155,14 @@ def biao_shai_xuan(d, data1):
     chuang_data = sorted(chuang_data, key=lambda x: x[1]["zhangdie4thday"], reverse=True)
 
     chuang_data = {key: value for key, value in chuang_data}
+    for key in chuang_data:
+        chuang_data[key]["suoshugainian"] = set(chuang_data[key]["suoshugainian"]) | set(chuang_gn)
 
     zhu_data = filter(lambda x: len([set(x[1]["suoshugainian"]) | set(zhu_gn)]) > 0, data1.items())
     zhu_data = sorted(zhu_data, key=lambda x: x[1]["zhangdie4thday"], reverse=True)
     zhu_data = {key: value for key, value in zhu_data}
+    for key in zhu_data:
+        zhu_data[key]["suoshugainian"] = set(zhu_data[key]["suoshugainian"]) | set(chuang_gn)
 
     return {
         "chuang_gn": chuang_gn,

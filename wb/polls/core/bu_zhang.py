@@ -313,16 +313,18 @@ End Sub
 def zuo_biao_gao(yesterday):
     xian = concept.xia_xian()
     power10 = 0
-    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"] > xian["10cm"]:
+    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["10cm"]:
         power10 = -1
     power20 = 0
-    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"] > xian["20cm"]:
+    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"]  > xian["20cm"]:
         power20 = -1
 
     return {
         "zhu_ban": yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"],
         "chuang_ye_ban": yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"],
         "ke_chuang_ban": yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"],
+
         "power10": power10,
-        "power20": power20
+
+        "power20": power20,
     }

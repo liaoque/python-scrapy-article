@@ -147,6 +147,7 @@ Sub 匹配概念()
     Next
     For Each gp In Range("T2_匹配[所属行业]")
         If qx = "好" Then
+            竞价量比
             If gp.Offset(0, 4) >= 0.08 And gp.Offset(0, 4) < 1 Then gp.Offset(0, 4).Interior.Color = 13551615
             If imin1 = 0 Then
                 If gp < 0 And gp.Offset(0, -1).Interior.ColorIndex <> 35 And gp.Offset(0, 4) >= 0.08 Then
@@ -313,9 +314,118 @@ Sub 匹配概念()
 End Sub
 """
 
+
 def pi_pei_gai_nian(d):
-    chuang_gn = d["chuang_gn"]
-    zhu_gn = d["zhu_gn"]
-    pass
+    chuang_data = d["chuang_data"]
+    zhu_data = d["zhu_data"]
+    qx = d["qing_xu"]
+    yzcode = d["bu_zhang"]["yz"]
+    if d["bu_zhang"]["zuo_biao_gao"]["power10"] == -1:
+        code = d["bu_zhang"]["zuo_biao_gao"]["zhu_ban"]["code"]
+        if code in zhu_data:
+            zhu_data[code]["zuo_biao_gao_power"] = -1
+        if code in chuang_data:
+            chuang_data[code]["zuo_biao_gao_power"] = -1
+
+    if d["bu_zhang"]["zuo_biao_gao"]["power20"] == -1:
+        code = d["bu_zhang"]["zuo_biao_gao"]["zhu_ban"]["code"]
+        if code in chuang_data:
+            chuang_data[code]["zuo_biao_gao_power"] = -1
+        if code in zhu_data:
+            zhu_data[code]["zuo_biao_gao_power"] = -1
+
+    # yz_rate =  d["bu_zhang"]["yz_rate"]
+    chuang_data = definedPower(chuang_data, yzcode, qx)
+    zhu_data = definedPower(zhu_data, yzcode, qx, 0)
+
+    for (key, item) in chuang_data.items():
+        if qx == 1:
+            if item["jing_jia_power"]
 
 
+
+
+def definedPower1(chuang_data, yzcode, qx, is_chuang_ye = 1):
+    for (key, item) in chuang_data.items():
+        if item["zhangdie4thday"] > yzcode["zhangdie4thday"] and \
+                item["ziyouliutongshizhiyesterday"] >= 0.08:
+            item["power-1"] = -1
+
+        #  异动次数大于等于3或者监管类型有数据或者停牌非0或今昨量比大于700或者竞价量比大于等于100或自由流通市值大于80
+        if item["yidongcishu"] >= 3 or item["jianguanleixingyesterday"] != "" or \
+                item["jingjiajinejingjialiangbi"] > 700 or \
+                item["jingjiajinechengjiaoliangbi"] >= 1 or \
+                item["ziyouliutongshizhiyesterday"] / 100000000 > 200:
+            item["power-1"] = -1
+
+        if qx == -1:
+            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["zhangdiefuqianfuquantoday"] < 0:
+                item["power-1"] = -1
+                item["power2"] = -1
+
+            if item["suoshuhangye"] == "":
+                item["power-1"] = -1
+                item["power0"] = -1
+
+            if item["lianbantianshuyesterday"] >= 2:
+                item["power-1"] = -1
+
+            if is_chuang_ye ==  1 and item["zhangdie4thday"] >= 0.2:
+                item["power-1"] = -1
+
+            # if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
+            #     item["yz_power"] = 13551615
+            #
+            #     if item["jingjiajinechengjiaoliangbi"] > ijjlb1:
+            #         ijjlb1 = item["jingjiajinechengjiaoliangbi"]
+            #
+            #     if item["jingjiajinejingjialiangbi"] > imax1:
+            #         imax1 = item["jingjiajinejingjialiangbi"]
+            #         item["yz_power"] = 13551615
+            #
+            # if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] <= 700:
+            #     item["liang_bi_power"] = 13551615
+            #     if item["jingjiajinejingjialiangbi"] > ijzlb1:
+            #         ijzlb1 = item["jingjiajinejingjialiangbi"]
+
+
+        else:
+            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
+                item["power4"] = 13551615
+            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
+                item["power5"] = 13551615
+
+
+
+
+
+
+        chuang_data[key] = item
+    return chuang_data
+
+
+def definedPower2(chuang_data, yzcode, qx, is_chuang_ye = 1):
+    imin1 = 0
+    for (key, item) in chuang_data.items():
+        if qx == 1:
+            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["zhangdiefuqianfuquantoday"] < 0:
+                item["power4"] = 13551615
+            if imin1 == 0:
+                if item["jingjiaweipipeijinetoday"] < 0 and item["power-1"] != -1 and item["jingjiajinechengjiaoliangbi"] >= 0.08:
+                    imin1 = 1
+                    item["power-1"] = 13551615
+
+            if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] <= 700:
+                item["liang_bi_power"] = 13551615
+
+        else:
+            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
+                if item["power-1"] == -1:
+                    item["power4"] = 13551615
+
+                    if item["jingjiajinechengjiaoliangbi"] > ijjlb1:
+                        ijjlb1 = item["jingjiajinechengjiaoliangbi"]
+
+                    if item["zhangdie4thday"] > imax1:
+                        imax1 = item["zhangdie4thday"]
+                        item["power5"] = 13551615

@@ -237,8 +237,10 @@ def step6(table1, data):
     for items in data2:
         code = items["code"]
         data[code]["jianguanleixingyesterday"] = ""
+        data[code]["yidongcishu"] = 0
         if code in data:
             data[code]["jianguanleixingyesterday"] = items["jianguanleixingyesterday"]
+            data[code]["yidongcishu"] = data[code]["yidongcishu"] + 1
 
     return data
 
@@ -275,4 +277,3 @@ def step8(table1, data):
             data[code]["n20"] = 1
 
     return data
-
