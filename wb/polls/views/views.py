@@ -194,8 +194,11 @@ def index(request):
     today_data = {
         "yuan_yin": yuan_yin
     }
+
+    # 创业版概念
     chuang_ye_ban_gn = suo_shu_gai_nian.suo_shu_gai_nian(data1, data2, today_data, yeasterday_data)
 
+    # 主板，创业板 数据
     bu_zhang_data = bu_zhang.bu_zhang(data, today_data, yeasterday_data, before_yesterday_data)
 
     d = {
