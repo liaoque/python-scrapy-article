@@ -148,7 +148,7 @@ End Sub
 
 def biao_shai_xuan(d, data1):
     chuang_gn = [gn for (gn, item) in d["chuang_ye_ban_gn"].items() if
-                 item["jin_jing_feng"]["power"] == 1 or item["jin_jing_feng"]["chuang_bai_ri_xin_gao"] == 1]
+                 item["jin_jing_feng"]["power"] == 1 or item["chuang_bai_ri_xin_gao"]["power"] == 1]
     zhu_gn = d["bu_zhang_data"]["gn"]
 
     chuang_data = filter(lambda x: len([set(x[1]["suoshugainian"]) | set(chuang_gn)]) > 0, data1.items())

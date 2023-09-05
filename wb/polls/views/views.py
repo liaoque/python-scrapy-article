@@ -209,13 +209,6 @@ def index(request):
     d.update(d2)
     result = pi_pei_gai_nian.pi_pei_gai_nian(d)
 
-    # 保存计算结果
-
-    # 计算情绪
-
-    # table = list(table.find({}, {"Table": 1}))
-    # chuang_ye_ban_gn = suo_shu_gai_nian.suo_shu_gn_table(table)
-
     client.close()
     return JsonResponse(result)
 

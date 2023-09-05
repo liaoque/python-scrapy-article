@@ -319,16 +319,16 @@ def pi_pei_gai_nian(d):
     chuang_data = d["chuang_data"]
     zhu_data = d["zhu_data"]
     qx = d["qing_xu"]
-    yzcode = d["bu_zhang"]["yz"]
-    if d["bu_zhang"]["zuo_biao_gao"]["power10"] == 35:
-        code = d["bu_zhang"]["zuo_biao_gao"]["zhu_ban"]["code"]
+    yzcode = d["bu_zhang_data"]["yz"]
+    if d["bu_zhang_data"]["zuo_biao_gao"]["power10"] == 35:
+        code = d["bu_zhang_data"]["zuo_biao_gao"]["zhu_ban"]["code"]
         if code in zhu_data:
             zhu_data[code]["power-1"] = 35
         if code in chuang_data:
             chuang_data[code]["power-1"] = 35
 
-    if d["bu_zhang"]["zuo_biao_gao"]["power20"] == 35:
-        code = d["bu_zhang"]["zuo_biao_gao"]["zhu_ban"]["code"]
+    if d["bu_zhang_data"]["zuo_biao_gao"]["power20"] == 35:
+        code = d["bu_zhang_data"]["zuo_biao_gao"]["zhu_ban"]["code"]
         if code in chuang_data:
             chuang_data[code]["power-1"] = 35
         if code in zhu_data:
@@ -381,6 +381,7 @@ def pi_pei_gai_nian(d):
                     zhu_data[code]["power-1"] = 13551615
 
     for (key, item) in chuang_data.items():
+
         if item["power-1"] != 35 and item["power4"] != 13551615 and item["power4"] != 3:
             chuang_data[key]["power-1"] = 36
             break
@@ -437,7 +438,7 @@ def rulebu_zhang(chuang_data):
     for (key, item) in chuang_data.items():
 
         if item["power-1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item["zhangfu120"] > 0.3 and item[
-            "zhangfu120"] < 0.8 and item["chuang_bai_ri_xin_gao"] == 1:
+            "zhangfu120"] < 0.8 and item["chuangbairixingao"] == 1:
             if item["power6"] == 38 and item["lianxuzhangtingtianshuyesterday"] > 0:
                 chuang_data[key]["power-1"] = 46
                 bu_zhang = item
@@ -447,6 +448,16 @@ def rulebu_zhang(chuang_data):
 
 def definedPower1(chuang_data, yzcode, qx, is_chuang_ye=1):
     for (key, item) in chuang_data.items():
+        item["power-1"] = 0
+        item["power2"] = 0
+        item["power0"] = 0
+        item["power4"] = 0
+        item["power5"] = 0
+        item["power6"] = 0
+        item["power7"] = 0
+        item["power8"] = 0
+        item["power9"] = 0
+        item["power10"] = 0
         if item["zhangdie4thday"] > yzcode["zhangdie4thday"] and \
                 item["jingjiajinechengjiaoliangbi"] >= 0.08:
             item["power-1"] = 35
@@ -487,6 +498,7 @@ def definedPower2(chuang_data, qx):
     imax = {'code': '', "data": 0}
     ijzlb = {'code': '', "data": 0}
     for (key, item) in chuang_data.items():
+
         if qx == 1:
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
                 item["power4"] = 13551615

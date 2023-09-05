@@ -289,8 +289,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
             gn_dict[gn]["chuang_bai_ri_xin_gao"]["today"] = today["yuan_yin"]["chuang_bai_ri_xin_gao_sort"][gn]["count"]
             if gn in yesterday["yuan_yin"]["chuang_bai_ri_xin_gao_sort"]:
                 gn_dict[gn]["chuang_bai_ri_xin_gao"]["yesterday"] = \
-                    yesterday["yuan_yin"]["chuang_bai_ri_xin_gao_sort"][gn][
-                        "count"]
+                    yesterday["yuan_yin"]["chuang_bai_ri_xin_gao_sort"][gn]["count"]
 
             # 涨停概念对应股票少于昨天的, 说明比昨天的弱
             if gn_dict[gn]["chuang_bai_ri_xin_gao"]["today"] < gn_dict[gn]["chuang_bai_ri_xin_gao"]["yesterday"]:
