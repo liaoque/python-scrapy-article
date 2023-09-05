@@ -81,6 +81,7 @@ def step1(table1, data):
     for (code, items) in data.items():
         if "jingjiaweipipeijinetoday" not in items:
             items["jingjiaweipipeijinetoday"] = 0
+
         if items["qushi"] == 1:
             items["suoshugainian"] = list(set(items["suoshugainian"]))
             lianzhanggupiao[code] = {
@@ -89,7 +90,7 @@ def step1(table1, data):
                 "suoshugainian": items["suoshugainian"],  # 概念
                 "lianxuzhangtingtianshuonehundred": items["lianxuzhangtingtianshuonehundred"],  # 25日涨停次数
                 "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],  # 未匹配金额
-                "zhangtingfengdanetoday": 0,  # 封单额
+                "zhangtingfengdanetoday": 0  # 未匹配金额
             }
 
     if len(table1) is None:
@@ -159,7 +160,7 @@ def step2(table1, data):
                 "jingjiaweipipeijinetoday": 0,
             }
 
-    if len(table1) is None:
+    if len(table1) is None or "YiZiDieTing" not in table1:
         return dietinggupiao
 
     for items in table1["YiZiDieTing"]:
@@ -272,6 +273,7 @@ def step4(data):
             "suoshugainian": items["suoshugainian"],  # 概念
             "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],
             "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"],
+            "zhangtingfengdanetoday": items["zhangtingfengdanetoday"],
         }
 
     return chuangbairixingao
@@ -327,6 +329,7 @@ def step5(data):
             "suoshugainian": items["suoshugainian"],  # 概念
             "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],
             "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"],
+            "zhangtingfengdanetoday": items["zhangtingfengdanetoday"],
         }
 
     return yiziban

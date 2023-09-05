@@ -158,6 +158,17 @@ def step1(data, fd=0):
                 if items["qushi"] == 0 and (items["higestpricetoday"] - items['shoupanjiatoday']) / items[
                     'shoupanjiatoday'] > 0.095:
                     items["qushi"] = -1
+
+        data[code]["zhaban"] = 0
+        data[code]["chuangbairixingao"] = 0
+        data[code]["jingjiaweipipeijinetoday"] = 0
+        data[code]["zhangtingfengdanetoday"] = 0
+        data[code]["yidongcishu"] = 0
+        data[code]["jianguanleixingyesterday"] = ""
+        data[code]["n10"] = 0
+        data[code]["zuocengzhangting"] = 0
+
+        data[code]["n20"] = 0
         data2[code] = items
 
     return data2
@@ -172,9 +183,8 @@ def step2(table1, data):
 
     for items in data2:
         code = items["code"][0:-3]
-        data[code]["zhaban"] = 0
-        if code in data:
-            data[code]["zhaban"] = 1
+
+        data[code]["zhaban"] = 1
 
     return data
 
@@ -188,9 +198,8 @@ def step3(table1, data):
 
     for items in data2:
         code = items["code"]
-        data[code]["chuangbairixingao"] = 0
-        if code in data:
-            data[code]["chuangbairixingao"] = 1
+
+        data[code]["chuangbairixingao"] = 1
 
     return data
 
@@ -204,9 +213,7 @@ def step4(table1, data):
 
     for items in data2:
         code = items["code"]
-        data[code]["jingjiaweipipeijinetoday"] = 0
-        if code in data:
-            data[code]["jingjiaweipipeijinetoday"] = items["jingjiaweipipeijinetoday"]
+        data[code]["jingjiaweipipeijinetoday"] = items["jingjiaweipipeijinetoday"]
 
     return data
 
@@ -220,8 +227,7 @@ def step5(table1, data):
 
     for items in data2:
         code = items["code"]
-        data[code]["zhangtingfengdanetoday"] = 0
-        if code in data and items["lianbantianshutoday"] == 1:
+        if items["lianbantianshutoday"] == 1:
             data[code]["zhangtingfengdanetoday"] = items["zhangtingfengdanetoday"]
 
     return data
@@ -235,9 +241,8 @@ def step6(table1, data):
     data2 = table1["YiDong"]
 
     for items in data2:
-        code = items["code"]
-        data[code]["jianguanleixingyesterday"] = ""
-        data[code]["yidongcishu"] = 0
+        code = items["code"][0:-3]
+
         if code in data:
             data[code]["jianguanleixingyesterday"] = items["jianguanleixingyesterday"]
             data[code]["yidongcishu"] = data[code]["yidongcishu"] + 1
@@ -253,11 +258,9 @@ def step7(table1, data):
     data2 = table1["N10"]
 
     for items in data2:
-        code = items["code"]
-        data[code]["n10"] = 0
-        if code in data:
-            data[code]["n10"] = 1
-        if items["zuocengzhangting"] == "曾涨停":
+        code = items["code"][0:-3]
+        data[code]["n10"] = 1
+        if "zuocengzhangting" in items and items["zuocengzhangting"] == "曾涨停":
             data[code]["zuocengzhangting"] = 1
 
     return data
@@ -271,9 +274,8 @@ def step8(table1, data):
     data2 = table1["N20"]
 
     for items in data2:
-        code = items["code"]
-        data[code]["n20"] = 0
-        if code in data:
-            data[code]["n20"] = 1
+        code = items["code"][0:-3]
+
+        data[code]["n20"] = 1
 
     return data

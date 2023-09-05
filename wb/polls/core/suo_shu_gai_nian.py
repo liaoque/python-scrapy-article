@@ -238,17 +238,17 @@ End Sub
 
 
 def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
-    if "yuan_yin" in yesterday:
+    if "yuan_yin" not in yesterday:
         return []
 
     xia_xian = concept.xia_xian()
     gns = []
-    for item in data2:
+    for code, item in data2.items():
         if item["code"][0:5] == "SZ.30" or item["code"][0:6] == "SZ.688" or item["code"][0:6] == "SZ.689":
-            if item["jingjiazhangfu"] > xia_xian["chuang_ye_set"]:
+            if item['jingjiazhangfutoday'] > xia_xian["chuang_ye_set"]:
                 gns.extend(item["suoshugainian"])
         else:
-            if item["jingjiazhangfu"] > xia_xian["zhu_set"]:
+            if item['jingjiazhangfutoday'] > xia_xian["zhu_set"]:
                 gns.extend(item["suoshugainian"])
 
     gns = list(set(gns))
@@ -436,7 +436,7 @@ def gai_nian_biao_shang_se(gn_dict):
     isred = 0
     for (gn, item) in gn_dict.items():
         if isred == 0:
-            imax = item["count"]
+            imax = item["jin_jing_feng"]["count"]
 
         if (item["jin_jing_feng"]["power"] != -1 and item["zhang_ting_da_rou"]["power"] != -1 and
                 item["die_ting_da_mian"]["power"] != -1 and item["jin_jing_feng"]["count"] == imax):

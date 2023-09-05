@@ -188,7 +188,7 @@ def bu_zhang(data, today, yesterday, before_yesterday):
     fd2 = 0  # 封单2
     fdgn = []  # 封单概念
     sortgn = []
-    if len(before_yesterday["yuan_yin"]["yi_zi_ban_sort"].keys()) > 0 and len(
+    if "yuan_yin" in before_yesterday and len(before_yesterday["yuan_yin"]["yi_zi_ban_sort"].keys()) > 0 and len(
             yesterday["yuan_yin"]["yi_zi_ban_sort"].keys()) > 0:
         for gn, item in yesterday["shou_ban_sort"].items():
             if gn in before_yesterday["shou_ban_sort"]:
@@ -225,33 +225,8 @@ def bu_zhang(data, today, yesterday, before_yesterday):
             if "新股与次新股" == ngn or "国企改革" == ngn:
                 ngn = sortgn[2]["gn"]
                 maxgn.append(ngn)
-
-    # 5日内的最强势概念和股票
-    gn = []
-    outgn = []
-    yzgp = ""  # 阈值股票名
-    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"] != -1000:
-        gn = (yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["suoshugainian"])
-        fd = yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"]
-        yzgp = yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["code"]
-
-    if yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"] != -1000:
-        if fd < yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]:
-            fd = yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]
-            gn = (yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["suoshugainian"])
-            yzgp = yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["code"]
-
-    if yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"] != -1000:
-        if fd < yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]:
-            fd = yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]
-            gn = (yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["suoshugainian"])
-            yzgp = yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["code"]
-
-    # 取出阈值股票的5日涨幅
-    yzcode = data[yzgp]
-
     # '3、在"table1"中找到5日涨跌幅最大的股票，这个例子是尚太科技，用这个股票的所属概念比对昨原因表里的首板的非绿的概念找出相同的概念。
-    max_code = data[max(data.items(), key=lambda x: x[1]["zhangfu5"])]
+    max_code = max(data.items(), key=lambda x: x[1]["zhangfu5"])
     if max_code[0][0:2] == "68":
         feng_kou = "科创板"
     elif max_code[0][0:2] == "30":
@@ -259,11 +234,38 @@ def bu_zhang(data, today, yesterday, before_yesterday):
     else:
         feng_kou = "主板"
 
+    max_code = data[max_code[0]]
+    # 5日内的最强势概念和股票
+    gn = []
+    outgn = []
+    yzcode = {}
+    yzgp = ""  # 阈值股票名
+    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"] != -1000:
+        gn = (yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["suoshugainian"])
+        fd = yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"]
+        yzgp = yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["code"][0:-3]
+
+    if yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"] != -1000:
+        if fd < yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]:
+            fd = yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]
+            gn = (yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["suoshugainian"])
+            yzgp = yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["code"][0:-3]
+
+    if yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"] != -1000:
+        if fd < yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]:
+            fd = yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]
+            gn = (yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["suoshugainian"])
+            yzgp = yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["code"][0:-3]
+
+    # 取出阈值股票的5日涨幅
+    yzcode = data[yzgp]
+
     outgn.extend(max_code["suoshugainian"])
 
-    for item2 in yesterday["shou_ban_sort"]:
-        if item2["power"] == -1:
+    for (code, item2) in yesterday["yuan_yin"]["shou_ban_sort"].items():
+        if "power" in item2 and item2["power"] == -1:
             continue
+
         if item2["suoshugainian"] in gn:
             outgn.append(item2["suoshugainian"])
 
@@ -316,7 +318,7 @@ def zuo_biao_gao(yesterday):
     if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["10cm"]:
         power10 = -1
     power20 = 0
-    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"]  > xian["20cm"]:
+    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["20cm"]:
         power20 = -1
 
     return {

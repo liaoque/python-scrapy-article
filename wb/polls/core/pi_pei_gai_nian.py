@@ -393,7 +393,7 @@ def pi_pei_gai_nian(d):
     sorted(zhu_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
 
     result = {
-        "buzhang": getBuZhang(chuang_data, zhu_data),
+        "bu_zhang": getbu_zhang(chuang_data, zhu_data),
         "n": getN(chuang_data, zhu_data)
     }
 
@@ -402,12 +402,12 @@ def pi_pei_gai_nian(d):
 
 def getN(chuang_data, zhu_data):
     return {
-        "chuang": nBuZhang(chuang_data),
-        "zhu": nBuZhang(zhu_data),
+        "chuang": nbu_zhang(chuang_data),
+        "zhu": nbu_zhang(zhu_data),
     }
 
 
-def nBuZhang(chuang_data):
+def nbu_zhang(chuang_data):
     rng5 = rng6 = ""
     for (key, item) in chuang_data.items():
         if item["power-1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item["zhangfu120"] > 0.3 and item[
@@ -425,24 +425,24 @@ def nBuZhang(chuang_data):
     return None
 
 
-def getBuZhang(chuang_data, zhu_data):
+def getbu_zhang(chuang_data, zhu_data):
     return {
-        "chuang": ruleBuZhang(chuang_data),
-        "zhu": ruleBuZhang(zhu_data),
+        "chuang": rulebu_zhang(chuang_data),
+        "zhu": rulebu_zhang(zhu_data),
     }
 
 
-def ruleBuZhang(chuang_data):
-    buzhang = None
+def rulebu_zhang(chuang_data):
+    bu_zhang = None
     for (key, item) in chuang_data.items():
 
         if item["power-1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item["zhangfu120"] > 0.3 and item[
             "zhangfu120"] < 0.8 and item["chuang_bai_ri_xin_gao"] == 1:
             if item["power6"] == 38 and item["lianxuzhangtingtianshuyesterday"] > 0:
                 chuang_data[key]["power-1"] = 46
-                buzhang = item
+                bu_zhang = item
                 break
-    return buzhang
+    return bu_zhang
 
 
 def definedPower1(chuang_data, yzcode, qx, is_chuang_ye=1):
