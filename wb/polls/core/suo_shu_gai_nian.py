@@ -5,8 +5,6 @@ from collections import Counter
 Sub 生成所属概念()
     Debug.Print Now & "生成所属概念"
     On Error Resume Next
-'    Application.ScreenUpdating = False
-'    t = Timer
     Dim rng As Range
     Dim dic As Object
     Dim gnstr As String
@@ -33,16 +31,9 @@ Sub 生成所属概念()
     Set dic = CreateObject("scripting.dictionary")
     If gnstr <> "" Then
         For i = LBound(arr) To UBound(arr)
-            'If InStr(nogn, ";" & arr(i) & ";") < 1 Then '去掉不要的概念
-                'If arr(i) <> "" Then
-                    If Not dic.exists(arr(i)) Then
-'                        js_cy = Evaluate("COUNTIFS(表[ [  代码] ],""SZ.30*"",表[所属概念],""*;" & arr(i) & ";*"")")
-'                        js_zb = Evaluate("SUMPRODUCT(IF(ISERROR(FIND(""SZ.30"",表[  代码])),1,0),IF(ISERROR(FIND("";" & arr(i) & ";"",表[所属概念])),0,1))")
-'                        dic(arr(i)) = Array(js_cy, js_zb)
-                        dic(arr(i)) = 1 'Evaluate("COUNTIFS(表[所属概念],""*;" & arr(i) & ";*"")")
-                    End If
-                'End If
-            'End If
+            If Not dic.Exists(arr(i)) Then
+                dic(arr(i)) = 1 'Evaluate("COUNTIFS(表[所属概念],""*;" & arr(i) & ";*"")")
+            End If
         Next
     End If
     
@@ -52,13 +43,10 @@ Sub 生成所属概念()
     Sheet4.Range("a2:g10000").Clear
     Range("创业板概念[实际流通]").NumberFormatLocal = "0.00"
     Range("创业板概念[[#Headers],[所属概念]]").Offset(1, 0).Resize(dic.Count) = Application.Transpose(dic.keys)
-    'Range("创业板概念[[#Headers],[计数]]").Offset(1, 0).Resize(dic.Count, 1) = Application.Transpose(dic.items)
 
     Set dic = Nothing '关闭字典
     
     Range("创业板概念[所属概念]").SpecialCells(4).Rows.Delete Shift:=xlShiftUp
-    'Range("创业板概念[计数]").Replace "1", "", 1 '1是完全匹配
-    'Range("创业板概念[计数]").SpecialCells(4).Rows.Delete Shift:=xlShiftUp
 
     '今百日新高输出到概念表
     Set rng = Sheet7.Range("a:a").Find("创百日新高")
@@ -68,21 +56,14 @@ Sub 生成所属概念()
     End If
     If h > 0 Then
         For Each a In Range("创业板概念[所属概念]")
-                lz = 0
-                'a.Offset(0, 2) = Evaluate("Maxifs(表1[连涨天数],表1[所属概念],""*;" & a & ";*"")")
-                Set rng = Sheet7.Rows(h).Find(a, , , 1)
-                If Not rng Is Nothing Then
-                    lz = rng.End(xlDown).Row - h - 1
-                    a.Offset(0, 1) = lz & " | " & rng.Offset(0, 1)
-                    
-                Else
-                    a.Offset(0, 1) = lz & " | 0"
-                    'a.Offset(0, 1).Interior.ColorIndex = 35 '中音数为0的绿
-                End If
-                'If a.Offset(0, 4) <= 0 Then a.Offset(0, 4).Interior.ColorIndex = 35
-                'a.Offset(0, 4) = lz '把股票个数输出到概念后的第四列
-                'If lz > 1 Then a.Offset(0, 3).Interior.ColorIndex = 35
-
+            lz = 0
+            Set rng = Sheet7.Rows(h).Find(a, , , 1)
+            If Not rng Is Nothing Then
+                lz = rng.End(xlDown).Row - h - 1
+                a.Offset(0, 1) = lz & " | " & rng.Offset(0, 1)
+            Else
+                a.Offset(0, 1) = lz & " | 0"
+            End If
         Next
     End If
        '昨百日新高输出到概念表
@@ -93,20 +74,15 @@ Sub 生成所属概念()
     End If
     If h > 0 Then
         For Each a In Range("创业板概念[所属概念]")
-                lz = 0
-                'a.Offset(0, 2) = Evaluate("Maxifs(表1[连涨天数],表1[所属概念],""*;" & a & ";*"")")
-                Set rng = Sheet21.Rows(h).Find(a, , , 1)
-                If Not rng Is Nothing Then
-                    'lz = rng.End(xlDown).Row - h - 1
-                    a.Offset(0, 1) = a.Offset(0, 1) & " | " & rng.Offset(0, 1)
-                    'If a.Offset(0, 5) > a.Offset(0, 4) Then a.Offset(0, 5).Interior.ColorIndex = 35
-                Else
-                    a.Offset(0, 1) = a.Offset(0, 1) & " | 0"
-                End If
-                arr = Split(a.Offset(0, 1), " | ")
-                If arr(1) * 1 = 0 Or arr(1) * 1 < arr(2) * 1 Then a.Offset(0, 1).Interior.ColorIndex = 35
-                'a.Offset(0, 4) = lz '把股票个数输出到概念后的第四列
-                'If lz > 1 Then a.Offset(0, 3).Interior.ColorIndex = 35
+            lz = 0
+            Set rng = Sheet21.Rows(h).Find(a, , , 1)
+            If Not rng Is Nothing Then
+                a.Offset(0, 1) = a.Offset(0, 1) & " | " & rng.Offset(0, 1)
+            Else
+                a.Offset(0, 1) = a.Offset(0, 1) & " | 0"
+            End If
+            arr = Split(a.Offset(0, 1), " | ")
+            If arr(1) * 1 = 0 Or arr(1) * 1 < arr(2) * 1 Then a.Offset(0, 1).Interior.ColorIndex = 35
         Next
     End If
     
@@ -119,21 +95,16 @@ Sub 生成所属概念()
     Sheet4.Range("d1") = "今竞封数"
     If h > 0 Then
         For Each a In Range("创业板概念[所属概念]")
-                lz = 0
-                'a.Offset(0, 2) = Evaluate("Maxifs(表1[连涨天数],表1[所属概念],""*;" & a & ";*"")")
-                Set rng = Sheet7.Rows(h).Find(a, , , 1)
-                If Not rng Is Nothing Then
-                    lz = rng.End(xlDown).Row - h - 1
-                    a.Offset(0, 3) = lz
-                    a.Offset(0, 4) = rng.Offset(0, 1)
-                Else
-                    a.Offset(0, 4) = 0
-                End If
-                If a.Offset(0, 4) <= 0 Then a.Offset(0, 4).Interior.ColorIndex = 35  '小于等于0的变绿
-                'If a.Offset(0, 4) <= 0 Then a.Offset(0, 4).Interior.ColorIndex = 35
-                'a.Offset(0, 4) = lz '把股票个数输出到概念后的第四列
-                'If lz > 1 Then a.Offset(0, 3).Interior.ColorIndex = 35
-
+            lz = 0
+            Set rng = Sheet7.Rows(h).Find(a, , , 1)
+            If Not rng Is Nothing Then
+                lz = rng.End(xlDown).Row - h - 1
+                a.Offset(0, 3) = lz
+                a.Offset(0, 4) = rng.Offset(0, 1)
+            Else
+                a.Offset(0, 4) = 0
+            End If
+            If a.Offset(0, 4) <= 0 Then a.Offset(0, 4).Interior.ColorIndex = 35  '小于等于0的变绿
         Next
     End If
     '排序
@@ -145,7 +116,6 @@ Sub 生成所属概念()
         For Each a In Range("创业板概念[所属概念]")
             If a.Offset(0, 1) > 0 Then
                 lz = 0
-                'a.Offset(0, 2) = Evaluate("Maxifs(表1[连涨天数],表1[所属概念],""*;" & a & ";*"")")
                 Set rng = Sheet7.Rows(3).Find(a, , , 1)
                 If Not rng Is Nothing Then
                     lz = rng.End(xlDown).Row - 4
@@ -166,20 +136,14 @@ Sub 生成所属概念()
     End If
     If h > 0 Then
         For Each a In Range("创业板概念[所属概念]")
-                lz = 0
-                'a.Offset(0, 2) = Evaluate("Maxifs(表1[连涨天数],表1[所属概念],""*;" & a & ";*"")")
-                Set rng = Sheet21.Rows(h).Find(a, , , 1)
-                If Not rng Is Nothing Then
-                    'lz = rng.End(xlDown).Row - h - 1
-                    If rng.Offset(0, 1) > a.Offset(0, 4) Then a.Offset(0, 4).Interior.ColorIndex = 35 '昨比今大变绿
-                    a.Offset(0, 4) = a.Offset(0, 4) & " | " & rng.Offset(0, 1)
-                    
-                Else
-                    a.Offset(0, 4) = a.Offset(0, 4) & " | 0"
-                End If
-                
-                'a.Offset(0, 4) = lz '把股票个数输出到概念后的第四列
-                'If lz > 1 Then a.Offset(0, 3).Interior.ColorIndex = 35
+            lz = 0
+            Set rng = Sheet21.Rows(h).Find(a, , , 1)
+            If Not rng Is Nothing Then
+                If rng.Offset(0, 1) > a.Offset(0, 4) Then a.Offset(0, 4).Interior.ColorIndex = 35 '昨比今大变绿
+                a.Offset(0, 4) = a.Offset(0, 4) & " | " & rng.Offset(0, 1)
+            Else
+                a.Offset(0, 4) = a.Offset(0, 4) & " | 0"
+            End If
         Next
     End If
         '计算盘中封单总和
@@ -188,12 +152,9 @@ Sub 生成所属概念()
             h = Sheet5.Range("a1").End(xlDown).Row
             Debug.Print "行数=" & h
             For Each a In Range("创业板概念[所属概念]")
-                'If a.Offset(0, 3) = 0 Then Exit For
-                'If a.Offset(0, 3) > 0 And a.Offset(0, 3).Interior.ColorIndex <> 35 And a.Offset(0, 4).Interior.ColorIndex <> 35 Then
                     a.Offset(0, 5) = Evaluate("round(SUMIFS(连涨股票!E2:E" & h & ",连涨股票!F2:F" & h & ",""*;" & a & ";*"")/100000000,2)")
                     If a.Offset(0, 5) < (Left(a.Offset(0, 4), InStr(a.Offset(0, 4), " ") - 1)) * 1 Then a.Offset(0, 5).Interior.ColorIndex = 35
                     If a.Offset(0, 5) > 0 And a.Offset(0, 5) > (Left(a.Offset(0, 4), InStr(a.Offset(0, 4), " ") - 1)) * 1 Then a.Offset(0, 4).Interior.Pattern = xlNone
-                'End If
             Next
         End If
     End If
@@ -226,9 +187,7 @@ Sub 生成所属概念()
     '计算创业板实际流通
     For Each a In Range("创业板概念[所属概念]")
         If a.Offset(0, 1).Interior.ColorIndex <> 35 Or a.Offset(0, 4).Interior.ColorIndex <> 35 Then
-            'a.Offset(0, 2) = Evaluate("round(AVERAGEIFS(表[竞价涨幅],表[所属概念],""*;" & a & ";*""),4)")
             a.Offset(0, 2) = Evaluate("round(SUMIFS(表1[昨日自由流通市值],表1[所属概念],""*;" & a & ";*"")/100000000,2)")
-            'If a.Offset(0, 2) < 9000 Then a.Offset(0, 3).Interior.ColorIndex = 35
         'Else
             'a.Offset(0, 2) = "-"
         End If
@@ -293,7 +252,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
 
             # 涨停概念对应股票少于昨天的, 说明比昨天的弱
             if gn_dict[gn]["chuang_bai_ri_xin_gao"]["today"] < gn_dict[gn]["chuang_bai_ri_xin_gao"]["yesterday"]:
-                gn_dict[gn]["chuang_bai_ri_xin_gao"]["power"] = -1
+                gn_dict[gn]["chuang_bai_ri_xin_gao"]["power"] = 35
 
         # 一字板
         # 计算一字板概念里面，每个概念对应的股票数量， 竞价未匹配数量
@@ -307,10 +266,10 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
                     "gai_nian_jing_jia_wei_pi_pei"]
             # 竞价未匹配<0 弱
             if gn_dict[gn]["jin_jing_feng"]["today"] < 0:
-                gn_dict[gn]["jin_jing_feng"]["power"] = -1
+                gn_dict[gn]["jin_jing_feng"]["power"] = 35
             # 竞价未匹配<昨天 弱
             if gn_dict[gn]["jin_jing_feng"]["today"] < gn_dict[gn]["jin_jing_feng"]["yesterday"]:
-                gn_dict[gn]["jin_jing_feng"]["power"] = -1
+                gn_dict[gn]["jin_jing_feng"]["power"] = 35
 
         # 跌停大面
         # 计算跌停概念里面，每个概念对应， 竞价未匹配数量
@@ -325,13 +284,13 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
 
             # 跌停未匹配 大于 今天的未匹配  弱
             if gn_dict[gn]["die_ting_da_mian"]["jin_jia"] > gn_dict[gn]["jin_jing_feng"]["today"]:
-                gn_dict[gn]["die_ting_da_mian"]["power"] = -1
+                gn_dict[gn]["die_ting_da_mian"]["power"] =35
 
             gn_dict[gn]["die_ting_da_mian"]["feng_dan"] = sum(
                 [x["dietingfengdane"] for x in today["yuan_yin"]["die_ting_sort"][gn]["gai_nian_gu_piao"]])
 
             if gn_dict[gn]["die_ting_da_mian"]["feng_dan"] > gn_dict[gn]["zhang_ting_da_rou"]["feng_dan"]:
-                gn_dict[gn]["die_ting_da_mian"]["feng_dan_power"] = -1
+                gn_dict[gn]["die_ting_da_mian"]["feng_dan_power"] = 35
 
         # 涨停大肉, 涨停股票数，封单金额
         if gn in today["yuan_yin"]["lian_zhang_sort"]:
@@ -339,18 +298,18 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
             gn_dict[gn]["zhang_ting_da_rou"]["jin_jia"] = today["yuan_yin"]["lian_zhang_sort"][gn][
                 "gai_nian_jing_jia_wei_pi_pei"]
             if gn_dict[gn]["zhang_ting_da_rou"]["count"] < 1:
-                gn_dict[gn]["zhang_ting_da_rou"]["power"] = -1
+                gn_dict[gn]["zhang_ting_da_rou"]["power"] = 35
 
             gn_dict[gn]["zhang_ting_da_rou"]["feng_dan"] = sum(
                 [x["zhangtingfengdanetoday"] for x in today["yuan_yin"]["lian_zhang_sort"][gn]["gai_nian_gu_piao"]])
 
             if gn_dict[gn]["zhang_ting_da_rou"]["feng_dan"] < gn_dict[gn]["jin_jing_feng"]["today"]:
-                gn_dict[gn]["zhang_ting_da_rou"]["feng_dan_power"] = -1
+                gn_dict[gn]["zhang_ting_da_rou"]["feng_dan_power"] = 35
             elif gn_dict[gn]["zhang_ting_da_rou"]["feng_dan"] > 0:
                 gn_dict[gn]["jin_jing_feng"]["power"] = 0
 
         # 创百日新高， 和 今天封单 非弱
-        if gn_dict[gn]["chuang_bai_ri_xin_gao"]["power"] != -1 and gn_dict[gn]["jin_jing_feng"]["power"] != -1:
+        if gn_dict[gn]["chuang_bai_ri_xin_gao"]["power"] != 35 and gn_dict[gn]["jin_jing_feng"]["power"] != 35:
             # 昨日流通市值
             gn_dict[gn]["liu_tong_shi_zhi"] = sum(
                 item["ziyouliutongshizhiyesterday"] for code, item in data1.items() if "suoshugainian" in item)
@@ -382,21 +341,7 @@ line1:
                 End If
             End If
         Next
-    
-    '取创业板概念最大计数里的最大实际流通
-    '改为创业板概念最大计数的都要
-    'imax = Evaluate("MAXIFS(创业板概念[实际流通],创业板概念[计数],MAX(创业板概念[计数]))")
-'    imax = Evaluate("MAX(创业板概念[计数])")
-'        Set rng1 = Range("创业板概念[计数]")
-'        Set rng = rng1.Find(imax)
-'        If Not rng Is Nothing Then
-'            firstAddress = rng.Address
-'            Do
-'                 rng.Offset(0, 1).Interior.Color = 13421823
-'                 Set rng = rng1.FindNext(rng)
-'            Loop While Not rng Is Nothing And rng.Address <> firstAddress
-'        End If
-    'imax = Evaluate("MAX(创业板概念[计数])")
+
     isred = 0
     For Each rng In Range("创业板概念[所属概念]")
         If isred = 0 Then imax = rng.Offset(0, 3).Value
@@ -419,12 +364,10 @@ line1:
             arr = Split(rng, " | ")
             If arr(0) * 1 = imax Then
                 rng.Offset(0, -1).Interior.Color = 13421823
-                'If rng.Offset(0, -3) <> "国企改革" Then isred = isred + 1
             End If
         End If
     Next
 
-    'Range("创业板概念[实际流通]").NumberFormatLocal = "0.00%"
     
 End Sub
 """
@@ -437,8 +380,8 @@ def gai_nian_biao_shang_se(gn_dict):
         if isred == 0:
             imax = item["jin_jing_feng"]["count"]
 
-        if (item["jin_jing_feng"]["power"] != -1 and item["zhang_ting_da_rou"]["power"] != -1 and
-                item["die_ting_da_mian"]["power"] != -1 and item["jin_jing_feng"]["count"] == imax):
+        if (item["jin_jing_feng"]["power"] != 35 and item["zhang_ting_da_rou"]["power"] != 35 and
+                item["die_ting_da_mian"]["power"] != 35 and item["jin_jing_feng"]["count"] == imax):
             item["jin_jing_feng"]["power"] = 1
             isred = 1
 

@@ -131,6 +131,7 @@ End Sub
 def step1(data, fd=0):
     data2 = {}
     for (code, items) in data.items():
+
         if items["zhangdiefuqianfuquantoday"] == "":
             items["zhangdiefuqianfuquantoday"] = "0"
         items["zhangdiefuqianfuquantoday"] = float(items["zhangdiefuqianfuquantoday"])

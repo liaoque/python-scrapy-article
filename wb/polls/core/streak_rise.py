@@ -158,6 +158,7 @@ def step2(table1, data):
                 "suoshugainian": items["suoshugainian"],  # 概念
                 "dietingfengdane": items["dietingfengdane"],
                 "jingjiaweipipeijinetoday": 0,
+                "zhangtingfengdanetoday": 0,
             }
 
     if len(table1) is None or "YiZiDieTing" not in table1:

@@ -137,14 +137,19 @@ def gn_merge(data, path="data.xlsx"):
 
         if code not in data:
             continue
-        if "belongtogainian" in data[code]:
-            suoshugainian = data[code]["belongtogainian"].split(";")
-            suoshuhangye = data[code]["belongtohangye"].split("-")
-            del data[code]["belongtogainian"]
-            del data[code]["belongtohangye"]
+
+        if "suoshugainian" in data[code] and isinstance(data[code]["suoshugainian"], list):
+            suoshugainian = data[code]["suoshugainian"]
+            suoshuhangye = data[code]["suoshuhangye"]
         else:
-            suoshugainian = data[code]["suoshugainian"].split(";")
-            suoshuhangye = data[code]["suoshuhangye"].split("-")
+            if "belongtogainian" in data[code]:
+                suoshugainian = data[code]["belongtogainian"].split(";")
+                suoshuhangye = data[code]["belongtohangye"].split("-")[1:2]
+                del data[code]["belongtogainian"]
+                del data[code]["belongtohangye"]
+            else:
+                suoshugainian = data[code]["suoshugainian"].split(";")
+                suoshuhangye = data[code]["suoshuhangye"].split("-")[1:2]
 
         suoshugainian2 = gn.split(",")
         suoshugainian2.extend(suoshuhangye)
@@ -161,5 +166,5 @@ def gn_merge(data, path="data.xlsx"):
         a = ["新股与次新股" if x == "开板次新" else x for x in a]
         a = ["新股与次新股" if x == "次新股" else x for x in a]
         a = ["新股与次新股" if x == "核准制次新股" else x for x in a]
-        data[code]["suoshugainian"] = ["新股与次新股" if x == "注册制次新股" else x for x in a]
+        data[code]["suoshugainian"] = list(set(["新股与次新股" if x == "注册制次新股" else x for x in a]))
     return data

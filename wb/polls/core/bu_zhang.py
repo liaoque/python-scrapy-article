@@ -181,42 +181,37 @@ End Sub
 """
 
 
-def bu_zhang(data, today, yesterday, before_yesterday):
+def bu_zhang(data, today, yesterday):
     imax = 0  # 最多概念
     maxgn = []  # 最大概念
     fd = 0  # 封单
     fd2 = 0  # 封单2
     fdgn = []  # 封单概念
     sortgn = []
-    if "yuan_yin" in before_yesterday and len(before_yesterday["yuan_yin"]["yi_zi_ban_sort"].keys()) > 0 and len(
-            yesterday["yuan_yin"]["yi_zi_ban_sort"].keys()) > 0:
-        for gn, item in yesterday["shou_ban_sort"].items():
-            if gn in before_yesterday["shou_ban_sort"]:
-                if before_yesterday["shou_ban_sort"][gn]["gai_nian_jing_jia_wei_pi_pei"] > item[
-                    "gai_nian_jing_jia_wei_pi_pei"]:
-                    item["power"] = -1
 
-            # 趋势未变弱
-            # 根据封单的股票数，取强势的首版概念
-            # 根据封单额度，取强势的首版概念
-            if item["power"] != -1:
-                sortgn.append({"gn": gn, "c": item["count"]})
-                if imax < item["count"]:
-                    imax = item["count"]
+    for gn, item in yesterday["shou_ban_sort"].items():
+
+        # 趋势未变弱
+        # 根据封单的股票数，取强势的首版概念
+        # 根据封单额度，取强势的首版概念
+        if item["power"] != 35:
+            sortgn.append({"gn": gn, "c": item["count"]})
+            if imax < item["count"]:
+                imax = item["count"]
+                maxgn.append(gn)
+                fd = item["gai_nian_feng_dan_jin_e"]
+            elif imax == item["count"]:
+                if fd < item["gai_nian_feng_dan_jin_e"]:
                     maxgn.append(gn)
                     fd = item["gai_nian_feng_dan_jin_e"]
-                elif imax == item["count"]:
-                    if fd < item["gai_nian_feng_dan_jin_e"]:
-                        maxgn.append(gn)
-                        fd = item["gai_nian_feng_dan_jin_e"]
-                    elif fd == item["gai_nian_feng_dan_jin_e"]:
-                        maxgn.append(gn)
+                elif fd == item["gai_nian_feng_dan_jin_e"]:
+                    maxgn.append(gn)
 
-            if fd2 < item["gai_nian_feng_dan_jin_e"]:
-                fdgn.append(gn)
-                fd2 = item["gai_nian_feng_dan_jin_e"]
-            elif fd2 == item["gai_nian_feng_dan_jin_e"]:
-                fdgn.append(gn)
+        if fd2 < item["gai_nian_feng_dan_jin_e"]:
+            fdgn.append(gn)
+            fd2 = item["gai_nian_feng_dan_jin_e"]
+        elif fd2 == item["gai_nian_feng_dan_jin_e"]:
+            fdgn.append(gn)
 
         if "新股与次新股" in maxgn or "国企改革" in maxgn:
             sortgn = [item for item in sortgn if item["gn"] in ["新股与次新股", "国企改革"]]
@@ -263,7 +258,7 @@ def bu_zhang(data, today, yesterday, before_yesterday):
     outgn.extend(max_code["suoshugainian"])
 
     for (code, item2) in yesterday["yuan_yin"]["shou_ban_sort"].items():
-        if "power" in item2 and item2["power"] == -1:
+        if item2["power"] == 35:
             continue
 
         if item2["suoshugainian"] in gn:
@@ -316,10 +311,10 @@ def zuo_biao_gao(yesterday):
     xian = concept.xia_xian()
     power10 = 0
     if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["10cm"]:
-        power10 = -1
+        power10 = 35
     power20 = 0
     if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["20cm"]:
-        power20 = -1
+        power20 = 35
 
     return {
         "zhu_ban": yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"],
@@ -330,3 +325,22 @@ def zuo_biao_gao(yesterday):
 
         "power20": power20,
     }
+
+
+def merge_shou_ban(yesterday, before_yesterday):
+    for gn, item in yesterday["shou_ban_sort"].items():
+        yesterday["shou_ban_sort"][gn]["power"] = 0
+
+        if "yuan_yin" not in before_yesterday:
+            continue
+
+        if len(before_yesterday["yuan_yin"]["yi_zi_ban_sort"].keys()) == 0 and len(
+                yesterday["yuan_yin"]["yi_zi_ban_sort"].keys()) == 0:
+            continue
+
+        if gn in before_yesterday["shou_ban_sort"]:
+            if before_yesterday["shou_ban_sort"][gn]["gai_nian_jing_jia_wei_pi_pei"] > item[
+                "gai_nian_jing_jia_wei_pi_pei"]:
+                yesterday["shou_ban_sort"][gn]["power"] = 35
+
+    return yesterday
