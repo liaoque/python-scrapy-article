@@ -29,6 +29,6 @@ def xia_xian():
     return {
         "chuang_ye_set": 18.99 / 100,
         "zhu_set": 9.5 / 100,
-        "10cm": 50 / 100,
-        "20cm": 70 / 100,
+        "10cm": 50 ,
+        "20cm": 70 ,
     }

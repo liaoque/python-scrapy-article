@@ -1024,6 +1024,7 @@ def step18(lianzhanggupiao, lianzhanggainian):
             "gai_nian_gu_piao": [],
             "gai_nian_jing_jia_wei_pi_pei": 0,
             "zhangfu120": 0,
+            "power": 0,
             "gai_nian_feng_dan_jin_e": 0
         }
         # gainian["gai_nian_gu_piao"] = []
@@ -1461,9 +1462,9 @@ End Sub
 
 def step25(data):
     data2 = {
-        "zhu_ban": {"zhangfu5": 0, "suoshugainian": [], "code": ""},
-        "chuang_ye_ban": {"zhangfu5": 0, "suoshugainian": [], "code": ""},
-        "ke_chuang_ban": {"zhangfu5": 0, "suoshugainian": [], "code": ""},
+        "zhu_ban": {"zhangfu5": -1000, "suoshugainian": [], "code": ""},
+        "chuang_ye_ban": {"zhangfu5": -1000, "suoshugainian": [], "code": ""},
+        "ke_chuang_ban": {"zhangfu5": -1000, "suoshugainian": [], "code": ""},
     }
 
     sorted_lian_zhang = sorted(data.items(), key=lambda x: x[1]["zhangfu5"], reverse=True)

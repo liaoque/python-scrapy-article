@@ -206,19 +206,20 @@ def index(request):
 
     # 创业版概念
     chuang_ye_ban_gn = suo_shu_gai_nian.suo_shu_gai_nian(data1, data2, today_data, yeasterday_data)
-    return JsonResponse(chuang_ye_ban_gn)
+
 
     # 补涨前，先合并昨天和前天的首版 到昨天
-    yeasterday_data = bu_zhang.merge_shou_ban(yeasterday_data, before_yesterday_data)
+    if "yuan_yin" in before_yesterday_data:
+        yeasterday_data = bu_zhang.merge_shou_ban(yeasterday_data["yuan_yin"], before_yesterday_data["yuan_yin"])
 
 
     # 主板，创业板 数据
-    bu_zhang_data = bu_zhang.bu_zhang(data, today_data, yeasterday_data)
+    bu_zhang_data = bu_zhang.bu_zhang(data, today_data["yuan_yin"], yeasterday_data["yuan_yin"])
 
     d = {
         "chuang_ye_ban_gn": chuang_ye_ban_gn,
         "bu_zhang_data": bu_zhang_data,
-        "qing_xu": jie_guo.qingxu(today_data, yeasterday_data)
+        "qing_xu": jie_guo.qingxu(today_data["yuan_yin"], yeasterday_data["yuan_yin"])
     }
 
     d2 = biao_shai_xuan.biao_shai_xuan(d, data1)

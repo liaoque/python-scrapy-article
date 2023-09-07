@@ -190,11 +190,11 @@ def bu_zhang(data, today, yesterday):
     sortgn = []
 
     for gn, item in yesterday["shou_ban_sort"].items():
-
+        break
         # 趋势未变弱
         # 根据封单的股票数，取强势的首版概念
         # 根据封单额度，取强势的首版概念
-        if item["power"] != 35:
+        if "power" not in item or item["power"] != 35:
             sortgn.append({"gn": gn, "c": item["count"]})
             if imax < item["count"]:
                 imax = item["count"]
@@ -235,38 +235,39 @@ def bu_zhang(data, today, yesterday):
     outgn = []
     yzcode = {}
     yzgp = ""  # 阈值股票名
-    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"] != -1000:
-        gn = (yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["suoshugainian"])
-        fd = yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"]
-        yzgp = yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["code"][0:-3]
+    if yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"] != -1000:
+        gn = (yesterday["day_5_sort"]["zhu_ban"]["suoshugainian"])
+        fd = yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"]
+        yzgp = yesterday["day_5_sort"]["zhu_ban"]["code"][0:-3]
 
-    if yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"] != -1000:
-        if fd < yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]:
-            fd = yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]
-            gn = (yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["suoshugainian"])
-            yzgp = yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"]["code"][0:-3]
+    if yesterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"] != -1000:
+        if fd < yesterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]:
+            fd = yesterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]
+            gn = (yesterday["day_5_sort"]["chuang_ye_ban"]["suoshugainian"])
+            yzgp = yesterday["day_5_sort"]["chuang_ye_ban"]["code"][0:-3]
 
-    if yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"] != -1000:
-        if fd < yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]:
-            fd = yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]
-            gn = (yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["suoshugainian"])
-            yzgp = yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"]["code"][0:-3]
+    if yesterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"] != -1000:
+        if fd < yesterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]:
+            fd = yesterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]
+            gn = (yesterday["day_5_sort"]["ke_chuang_ban"]["suoshugainian"])
+            yzgp = yesterday["day_5_sort"]["ke_chuang_ban"]["code"][0:-3]
 
     # 取出阈值股票的5日涨幅
     yzcode = data[yzgp]
 
-    outgn.extend(max_code["suoshugainian"])
+    gn.extend(max_code["suoshugainian"])
 
-    for (code, item2) in yesterday["yuan_yin"]["shou_ban_sort"].items():
-        if item2["power"] == 35:
+    for (code, item2) in yesterday["shou_ban_sort"].items():
+
+        if "power" in item2 and item2["power"] == 35:
             continue
-
         if item2["suoshugainian"] in gn:
             outgn.append(item2["suoshugainian"])
 
-    # '如果当天一字板 表是空的，就昨原因里首板的所有概念里非绿的概念加入 结果表的补涨框
-    if len(today["yuan_yin"]["yi_zi_ban_sort"].keys()) == 0:
-        outgn.extend(yesterday["yuan_yin"]["yi_zi_ban_sort"].keys())
+
+    # '如果当天一字板 表是空的，就昨原因里首板的所有概念里非绿的概念加入 结果表的补涨框    if len(today["yi_zi_ban_sort"].keys()) == 0:
+    if len(today["yi_zi_ban_sort"].keys()) == 0:
+        outgn.extend(yesterday["yi_zi_ban_sort"].keys())
 
     outgn.extend(maxgn)
     outgn.extend(fdgn)
@@ -310,16 +311,16 @@ End Sub
 def zuo_biao_gao(yesterday):
     xian = concept.xia_xian()
     power10 = 0
-    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["10cm"]:
+    if yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["10cm"]:
         power10 = 35
     power20 = 0
-    if yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["20cm"]:
+    if yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["20cm"]:
         power20 = 35
 
     return {
-        "zhu_ban": yesterday["yuan_yin"]["day_5_sort"]["zhu_ban"],
-        "chuang_ye_ban": yesterday["yuan_yin"]["day_5_sort"]["chuang_ye_ban"],
-        "ke_chuang_ban": yesterday["yuan_yin"]["day_5_sort"]["ke_chuang_ban"],
+        "zhu_ban": yesterday["day_5_sort"]["zhu_ban"],
+        "chuang_ye_ban": yesterday["day_5_sort"]["chuang_ye_ban"],
+        "ke_chuang_ban": yesterday["day_5_sort"]["ke_chuang_ban"],
 
         "power10": power10,
 
@@ -334,8 +335,8 @@ def merge_shou_ban(yesterday, before_yesterday):
         if "yuan_yin" not in before_yesterday:
             continue
 
-        if len(before_yesterday["yuan_yin"]["yi_zi_ban_sort"].keys()) == 0 and len(
-                yesterday["yuan_yin"]["yi_zi_ban_sort"].keys()) == 0:
+        if len(before_yesterday["yi_zi_ban_sort"].keys()) == 0 and len(
+                yesterday["yi_zi_ban_sort"].keys()) == 0:
             continue
 
         if gn in before_yesterday["shou_ban_sort"]:
