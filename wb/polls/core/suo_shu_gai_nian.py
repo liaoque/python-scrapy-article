@@ -215,6 +215,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
     for gn in gns:
         gn_dict[gn] = {
             "chuang_bai_ri_xin_gao": {
+                "count": 0,
                 "today": 0,
                 "yesterday": 0,
                 "power": 0,
@@ -224,95 +225,116 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
             "jin_jing_feng": {
                 "today": 0,
                 "yesterday": 0,
+                "power": 0,
+            },
+            "jin_jing_feng_count": {
                 "count": 0,
                 "power": 0,
             },
             "zhang_ting_da_rou": {
-                "wei_pi_pei": 0,
                 "power": 0,
-                "feng_dan_power": 0,
-                "feng_dan": 0,
+                "count": 0,
             },
             "die_ting_da_mian": {
-                "jin_jia": 0,
+                "today": 0,
                 "power": 0,
-                "feng_dan_power": 0,
+            },
+            "pan_zhong": {
+                "power": 0,
                 "feng_dan": 0,
             },
+            "pan_zhong_die": {
+                "power": 0,
+                "feng_dan": 0,
+            }
 
         }
-
+        # ------------------------------------
         # 创百日新高
         # 计算创百日新高里面，每个概念对应的股票数量
-        if gn in today["yuan_yin"]["chuang_bai_ri_xin_gao_sort"]:
-            gn_dict[gn]["chuang_bai_ri_xin_gao"]["today"] = today["yuan_yin"]["chuang_bai_ri_xin_gao_sort"][gn]["count"]
-            if gn in yesterday["yuan_yin"]["chuang_bai_ri_xin_gao_sort"]:
-                gn_dict[gn]["chuang_bai_ri_xin_gao"]["yesterday"] = \
-                    yesterday["yuan_yin"]["chuang_bai_ri_xin_gao_sort"][gn]["count"]
+        chuang_bai_ri_xin_gao = gn_dict[gn]["chuang_bai_ri_xin_gao"]
+        chuang_bai_ri_xin_gao_sort = today["yuan_yin"]["chuang_bai_ri_xin_gao_sort"]
+        if gn in chuang_bai_ri_xin_gao_sort:
+            chuang_bai_ri_xin_gao["count"] = chuang_bai_ri_xin_gao_sort[gn]["count"]
+            chuang_bai_ri_xin_gao["today"] = chuang_bai_ri_xin_gao_sort[gn]["gai_nian_jing_jia_wei_pi_pei"]
 
-            # 涨停概念对应股票少于昨天的, 说明比昨天的弱
-            if gn_dict[gn]["chuang_bai_ri_xin_gao"]["today"] < gn_dict[gn]["chuang_bai_ri_xin_gao"]["yesterday"]:
-                gn_dict[gn]["chuang_bai_ri_xin_gao"]["power"] = 35
+        if gn in yesterday["yuan_yin"]["chuang_bai_ri_xin_gao_sort"]:
+            chuang_bai_ri_xin_gao["yesterday"] = \
+                yesterday["yuan_yin"]["chuang_bai_ri_xin_gao_sort"][gn]["gai_nian_jing_jia_wei_pi_pei"]
+
+        # 涨停概念对应股票少于昨天的, 说明比昨天的弱
+        if chuang_bai_ri_xin_gao["today"] == 0 or chuang_bai_ri_xin_gao["today"] < chuang_bai_ri_xin_gao["yesterday"]:
+            chuang_bai_ri_xin_gao["power"] = 35
+        gn_dict[gn]["chuang_bai_ri_xin_gao"] = chuang_bai_ri_xin_gao
+        # ------------------------------------
 
         # 一字板
         # 计算一字板概念里面，每个概念对应的股票数量， 竞价未匹配数量
-        if gn in today["yuan_yin"]["yi_zi_ban_sort"]:
-            gn_dict[gn]["jin_jing_feng"]["today"] = today["yuan_yin"]["yi_zi_ban_sort"][gn][
-                "gai_nian_jing_jia_wei_pi_pei"]
+        jin_jing_feng = gn_dict[gn]["jin_jing_feng"]
+        yi_zi_ban_sort = today["yuan_yin"]["yi_zi_ban_sort"]
+        yi_zi_ban_sort_yesterday = yesterday["yuan_yin"]["yi_zi_ban_sort"]
+        if gn in yi_zi_ban_sort:
+            jin_jing_feng["today"] = yi_zi_ban_sort[gn]["gai_nian_jing_jia_wei_pi_pei"]
+            gn_dict[gn]["jin_jing_feng_count"]["count"] = yi_zi_ban_sort[gn]["count"]
 
-            gn_dict[gn]["jin_jing_feng"]["count"] = today["yuan_yin"]["yi_zi_ban_sort"][gn]["count"]
-            if gn in yesterday["yuan_yin"]["yi_zi_ban_sort"]:
-                gn_dict[gn]["jin_jing_feng"]["yesterday"] = yesterday["yuan_yin"]["yi_zi_ban_sort"][gn][
-                    "gai_nian_jing_jia_wei_pi_pei"]
             # 竞价未匹配<0 弱
-            if gn_dict[gn]["jin_jing_feng"]["today"] < 0:
-                gn_dict[gn]["jin_jing_feng"]["power"] = 35
-            # 竞价未匹配<昨天 弱
-            if gn_dict[gn]["jin_jing_feng"]["today"] < gn_dict[gn]["jin_jing_feng"]["yesterday"]:
-                gn_dict[gn]["jin_jing_feng"]["power"] = 35
+        if jin_jing_feng["today"] <= 0:
+            jin_jing_feng["power"] = 35
 
+        if gn in yi_zi_ban_sort_yesterday:
+            jin_jing_feng["yesterday"] = yi_zi_ban_sort_yesterday[gn][
+                "gai_nian_jing_jia_wei_pi_pei"]
+        # 竞价未匹配<昨天 弱
+        if jin_jing_feng["today"] < jin_jing_feng["yesterday"]:
+            jin_jing_feng["power"] = 35
+        gn_dict[gn]["jin_jing_feng"] = jin_jing_feng
+        # ------------------------------------
         # 跌停大面
         # 计算跌停概念里面，每个概念对应， 竞价未匹配数量
         if gn in today["yuan_yin"]["die_ting_sort"]:
-            gn_dict[gn]["die_ting_da_mian"]["jin_jia"] = today["yuan_yin"]["die_ting_sort"][gn][
+            gn_dict[gn]["die_ting_da_mian"]["today"] = today["yuan_yin"]["die_ting_sort"][gn][
                 "gai_nian_jing_jia_wei_pi_pei"]
 
-            if gn_dict[gn]["die_ting_da_mian"]["jin_jia"] > 0:
-                gn_dict[gn]["die_ting_da_mian"]["jin_jia"] = 0
+            if gn_dict[gn]["die_ting_da_mian"]["today"] > 0:
+                gn_dict[gn]["die_ting_da_mian"]["today"] = 0
             else:
-                gn_dict[gn]["die_ting_da_mian"]["jin_jia"] = abs(gn_dict[gn]["die_ting_da_mian"]["jin_jia"])
+                gn_dict[gn]["die_ting_da_mian"]["today"] = abs(gn_dict[gn]["die_ting_da_mian"]["today"])
 
             # 跌停未匹配 大于 今天的未匹配  弱
-            if gn_dict[gn]["die_ting_da_mian"]["jin_jia"] > gn_dict[gn]["jin_jing_feng"]["today"]:
-                gn_dict[gn]["die_ting_da_mian"]["power"] =35
+            if gn_dict[gn]["die_ting_da_mian"]["today"] > gn_dict[gn]["jin_jing_feng"]["today"]:
+                gn_dict[gn]["die_ting_da_mian"]["power"] = 35
 
-            gn_dict[gn]["die_ting_da_mian"]["feng_dan"] = sum(
-                [x["dietingfengdane"] for x in today["yuan_yin"]["die_ting_sort"][gn]["gai_nian_gu_piao"]])
+        # ------------------------------------
+        pan_zhong = gn_dict[gn]["pan_zhong"]
+        pan_zhong_die = gn_dict[gn]["pan_zhong_die"]
+        if fd == 1 and len(today["yuan_yin"]["lian_zhang_sort"]) > 0:
+            if gn in today["yuan_yin"]["lian_zhang_sort"]:
 
-            if gn_dict[gn]["die_ting_da_mian"]["feng_dan"] > gn_dict[gn]["zhang_ting_da_rou"]["feng_dan"]:
-                gn_dict[gn]["die_ting_da_mian"]["feng_dan_power"] = 35
+                # 盘中 涨停次数 < 1, 弱： execl : 298行
+                gn_dict[gn]["zhang_ting_da_rou"]["count"] = today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
+                if gn_dict[gn]["zhang_ting_da_rou"]["count"] < 1:
+                    gn_dict[gn]["zhang_ting_da_rou"]["power"] = 35
 
-        # 涨停大肉, 涨停股票数，封单金额
-        if gn in today["yuan_yin"]["lian_zhang_sort"]:
-            gn_dict[gn]["zhang_ting_da_rou"]["count"] = today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
-            gn_dict[gn]["zhang_ting_da_rou"]["jin_jia"] = today["yuan_yin"]["lian_zhang_sort"][gn][
-                "gai_nian_jing_jia_wei_pi_pei"]
-            if gn_dict[gn]["zhang_ting_da_rou"]["count"] < 1:
-                gn_dict[gn]["zhang_ting_da_rou"]["power"] = 35
+                # 取盘中封单总额，对比今天的竞价 execl 346
+                pan_zhong["feng_dan"] = sum(
+                    [x["zhangtingfengdanetoday"] for x in today["yuan_yin"]["lian_zhang_sort"][gn]["gai_nian_gu_piao"]])
+                if pan_zhong["feng_dan"] < gn_dict[gn]["jin_jing_feng"]["today"]:
+                    pan_zhong["power"] = 35
+                elif pan_zhong["feng_dan"] > 0 and pan_zhong["feng_dan"] > gn_dict[gn]["jin_jing_feng"]["today"]:
+                    pan_zhong["power"] = 0
 
-            gn_dict[gn]["zhang_ting_da_rou"]["feng_dan"] = sum(
-                [x["zhangtingfengdanetoday"] for x in today["yuan_yin"]["lian_zhang_sort"][gn]["gai_nian_gu_piao"]])
-
-            if gn_dict[gn]["zhang_ting_da_rou"]["feng_dan"] < gn_dict[gn]["jin_jing_feng"]["today"]:
-                gn_dict[gn]["zhang_ting_da_rou"]["feng_dan_power"] = 35
-            elif gn_dict[gn]["zhang_ting_da_rou"]["feng_dan"] > 0:
-                gn_dict[gn]["jin_jing_feng"]["power"] = 0
+            # execl 365
+            if gn in today["yuan_yin"]["die_ting_sort"]:
+                pan_zhong_die["feng_dan"] = sum(
+                    [x["zhangtingfengdanetoday"] for x in today["yuan_yin"]["die_ting_sort"][gn]["gai_nian_gu_piao"]])
+                if pan_zhong_die["feng_dan"] > pan_zhong["feng_dan"]:
+                    pan_zhong_die["power"] = 35
 
         # 创百日新高， 和 今天封单 非弱
-        if gn_dict[gn]["chuang_bai_ri_xin_gao"]["power"] != 35 and gn_dict[gn]["jin_jing_feng"]["power"] != 35:
+        if gn_dict[gn]["chuang_bai_ri_xin_gao"]["power"] != 35 or gn_dict[gn]["jin_jing_feng"]["power"] != 35:
             # 昨日流通市值
             gn_dict[gn]["liu_tong_shi_zhi"] = sum(
-                item["ziyouliutongshizhiyesterday"] for code, item in data1.items() if "suoshugainian" in item)
+                item["ziyouliutongshizhiyesterday"] for code, item in data1.items() if gn in item["suoshugainian"])
 
     return gai_nian_biao_shang_se(gn_dict)
 
@@ -378,14 +400,16 @@ def gai_nian_biao_shang_se(gn_dict):
     isred = 0
     for (gn, item) in gn_dict.items():
         if isred == 0:
-            imax = item["jin_jing_feng"]["count"]
+            imax = item["jin_jing_feng_count"]["count"]
 
         if (item["jin_jing_feng"]["power"] != 35 and item["zhang_ting_da_rou"]["power"] != 35 and
-                item["die_ting_da_mian"]["power"] != 35 and item["jin_jing_feng"]["count"] == imax):
-            item["jin_jing_feng"]["power"] = 1
+                item["die_ting_da_mian"]["power"] != 35 and item["jin_jing_feng_count"]["count"] == imax):
+            item["jin_jing_feng"]["power"] = 13421823
             isred = 1
 
     # 找到百日新高最大的， 然后power 改成1
-    maxd = max(gn_dict.items(), key=lambda x: x[1]["chuang_bai_ri_xin_gao"]["today"])
-    gn_dict[maxd[0]]["chuang_bai_ri_xin_gao"]["power"] = 1
+    maxd = max(gn_dict.items(),
+               key=lambda x: 0 if x[1]["chuang_bai_ri_xin_gao"]["power"] == 35 else x[1]["chuang_bai_ri_xin_gao"][
+                   "today"])
+    gn_dict[maxd[0]]["chuang_bai_ri_xin_gao"]["power"] = 13421823
     return gn_dict

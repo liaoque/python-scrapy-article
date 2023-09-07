@@ -90,7 +90,8 @@ def step1(table1, data):
                 "suoshugainian": items["suoshugainian"],  # 概念
                 "lianxuzhangtingtianshuonehundred": items["lianxuzhangtingtianshuonehundred"],  # 25日涨停次数
                 "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],  # 未匹配金额
-                "zhangtingfengdanetoday": 0  # 未匹配金额
+                "zhangtingfengdanetoday": 0,  # 未匹配金额
+                "zhangfu120": items["zhangfu120"],
             }
 
     if len(table1) is None:
@@ -159,6 +160,7 @@ def step2(table1, data):
                 "dietingfengdane": items["dietingfengdane"],
                 "jingjiaweipipeijinetoday": 0,
                 "zhangtingfengdanetoday": 0,
+                "zhangfu120": items["zhangfu120"],
             }
 
     if len(table1) is None or "YiZiDieTing" not in table1:
@@ -220,6 +222,7 @@ def step3(data):
             "suoshugainian": items["suoshugainian"],  # 概念
             "zhangdiefuqianfuquantoday": items["zhangdiefuqianfuquantoday"],
             "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"],
+            "zhangfu120": items["zhangfu120"],
         }
 
     return zhabangupiao
@@ -275,6 +278,7 @@ def step4(data):
             "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],
             "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"],
             "zhangtingfengdanetoday": items["zhangtingfengdanetoday"],
+            "zhangfu120": items["zhangfu120"],
         }
 
     return chuangbairixingao
@@ -331,6 +335,7 @@ def step5(data):
             "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],
             "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"],
             "zhangtingfengdanetoday": items["zhangtingfengdanetoday"],
+            "zhangfu120": items["zhangfu120"],
         }
 
     return yiziban
@@ -385,6 +390,7 @@ def step5_1(data):
             "suoshugainian": items["suoshugainian"],  # 概念
             "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],
             "zhangtingfengdanetoday": items["zhangtingfengdanetoday"],
+            "zhangfu120": items["zhangfu120"],
         }
 
     return shoubangupiao
@@ -1014,9 +1020,10 @@ def step18(lianzhanggupiao, lianzhanggainian):
     for (gn, count) in lianzhanggainian.items():
         gn_item = {
             "suoshugainian": gn,
-            "count": count,
+            "count": 0,
             "gai_nian_gu_piao": [],
             "gai_nian_jing_jia_wei_pi_pei": 0,
+            "zhangfu120": 0,
             "gai_nian_feng_dan_jin_e": 0
         }
         # gainian["gai_nian_gu_piao"] = []
@@ -1026,11 +1033,15 @@ def step18(lianzhanggupiao, lianzhanggainian):
                 gn_item["gai_nian_gu_piao"].append(item)
                 join_lian_zhang = 1
 
+        gn_item["count"] = len(gn_item["gai_nian_gu_piao"])
         gn_item["gai_nian_jing_jia_wei_pi_pei"] = sum(
             [x['jingjiaweipipeijinetoday'] for x in gn_item["gai_nian_gu_piao"]])
 
         gn_item["gai_nian_feng_dan_jin_e"] = sum(
             [x['zhangtingfengdanetoday'] for x in gn_item["gai_nian_gu_piao"]])
+
+        gn_item["zhangfu120"] = sum(
+            [x['zhangfu120'] for x in gn_item["gai_nian_gu_piao"] if "zhangfu120" in x])
         if join_lian_zhang == 1:
             lian_zhang_sort[gn] = gn_item
 
@@ -1458,15 +1469,16 @@ def step25(data):
     sorted_lian_zhang = sorted(data.items(), key=lambda x: x[1]["zhangfu5"], reverse=True)
     data = dict(sorted_lian_zhang)
     for (code, item) in data.items():
-        if item["code"][2:4] != '68' and item["code"][2:4] != '30':
+        prefix = code[0:2]
+        if prefix != '68' and prefix != '30':
             if data2["zhu_ban"]["code"] == "":
                 data2["zhu_ban"] = item
 
-        elif item["code"][2:4] == '30':
+        elif prefix == '30':
             if data2["chuang_ye_ban"]["code"] == "":
                 data2["chuang_ye_ban"] = item
 
-        elif item["code"][2:4] == '68':
+        elif prefix == '68':
             if data2["ke_chuang_ban"]["code"] == "":
                 data2["ke_chuang_ban"] = item
         if data2["zhu_ban"]["code"] != "" and data2["chuang_ye_ban"]["code"] != "" and data2["ke_chuang_ban"][

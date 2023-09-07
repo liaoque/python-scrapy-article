@@ -127,35 +127,39 @@ def gn_merge(data, path="data.xlsx"):
     # 选择工作表（可以根据工作表名称或索引来选择）
     sheet = workbook['Table3']
 
-    # 遍历行
+    data2 = {}
     for row in sheet.iter_rows(min_row=1, values_only=True):
         code = row[0]
         if code == "代码":
             continue
+        data2[code] = row
 
-        gn = row[2]
-
-        if code not in data:
-            continue
-
-        if "suoshugainian" in data[code] and isinstance(data[code]["suoshugainian"], list):
-            suoshugainian = data[code]["suoshugainian"]
-            suoshuhangye = data[code]["suoshuhangye"]
+    # 遍历行
+    for (code, item) in data.items():
+        if "suoshugainian" in item and isinstance(item["suoshugainian"], list):
+            suoshugainian = item["suoshugainian"]
+            suoshuhangye = item["suoshuhangye"]
         else:
-            if "belongtogainian" in data[code]:
-                suoshugainian = data[code]["belongtogainian"].split(";")
-                suoshuhangye = data[code]["belongtohangye"].split("-")[1:2]
-                del data[code]["belongtogainian"]
-                del data[code]["belongtohangye"]
-            else:
-                suoshugainian = data[code]["suoshugainian"].split(";")
-                suoshuhangye = data[code]["suoshuhangye"].split("-")[1:2]
 
-        suoshugainian2 = gn.split(",")
-        suoshugainian2.extend(suoshuhangye)
-        suoshugainian.extend(suoshugainian2)
-        data[code]["suoshugainian"] = concept.filter1(suoshugainian)
-        a = data[code]["suoshugainian"]
+            if "belongtogainian" in item:
+                suoshugainian = item["belongtogainian"].split(";")
+                suoshuhangye = item["belongtohangye"].split("-")[1:2]
+                del item["belongtogainian"]
+                del item["belongtohangye"]
+            else:
+                suoshugainian = item["suoshugainian"].split(";")
+                suoshuhangye = item["suoshuhangye"].split("-")[1:2]
+
+
+        if code  in data2:
+            gn = data2[code][2]
+            suoshugainian2 = gn.split(",")
+            suoshugainian2.extend(suoshuhangye)
+            suoshugainian.extend(suoshugainian2)
+
+
+        item["suoshugainian"] = concept.filter1(suoshugainian)
+        a = item["suoshugainian"]
         a = ["电力" if x == "电力设备" else x for x in a]
         a = ["电力" if x == "电力物联网" else x for x in a]
         a = ["零售" if x == "新零售" else x for x in a]
@@ -166,5 +170,8 @@ def gn_merge(data, path="data.xlsx"):
         a = ["新股与次新股" if x == "开板次新" else x for x in a]
         a = ["新股与次新股" if x == "次新股" else x for x in a]
         a = ["新股与次新股" if x == "核准制次新股" else x for x in a]
-        data[code]["suoshugainian"] = list(set(["新股与次新股" if x == "注册制次新股" else x for x in a]))
+        item["suoshugainian"] = list(set(["新股与次新股" if x == "注册制次新股" else x for x in a]))
+
+        data[code] = item
+
     return data

@@ -21,7 +21,7 @@ def index(request):
     current_time = time.strftime("%Y%m%d", time.localtime())
     print('d' + current_time)
 
-    current_time = "20230831"
+    current_time = "20230901"
 
     # 取所有数据
     table = db['d' + current_time]  # 选择你的数据库
@@ -94,7 +94,7 @@ def index(request):
         # 取首板股票
         "shoubangupiao": streak_rise.step5_1(data),
     }
-    return JsonResponse(lianzhang_code_page["shoubangupiao"])
+
     lianzhang_page = {
         # 生成连涨概念 计算概念出现得次数
         "lianzhanggainian": streak_rise.step6(lianzhang_code_page["lianzhanggupiao"]),
@@ -173,13 +173,13 @@ def index(request):
     history_day_data = list(history_day_data)
     yeasterday_data = {}
     before_yesterday_data = {}
-    if len(history_day_data) == 1:
-        yesterday = history_day_data[0]["history_day"][0]
+    if len(history_day_data) >= 1:
+        yesterday = history_day_data[0]["history_day"]
         yeasterday_data = db['d' + yesterday].find_one({}, {"yuan_yin": 1})
     if len(history_day_data) == 2:
-        yesterday_day = history_day_data[1]["history_day"][0]
+        yesterday_day = history_day_data[1]["history_day"]
         before_yesterday_data = db['d' + yesterday_day].find_one({}, {"yuan_yin": 1})
-    return JsonResponse(yuan_yin)
+
     if "yuan_yin" not in yeasterday_data:
         j = list(data.values())
         table.update_one({"_id": table1["_id"]}, {
@@ -195,14 +195,15 @@ def index(request):
         "yuan_yin": yuan_yin
     }
 
-    j = list(data.values())
-    table.update_one({"_id": table1["_id"]}, {
-        "$set": {
-            "Table1FromJSON": j,
-            "yuan_yin": yuan_yin,
-        }
-    })
-    client.close()
+    # j = list(data.values())
+    # table.update_one({"_id": table1["_id"]}, {
+    #     "$set": {
+    #         "Table1FromJSON": j,
+    #         "yuan_yin": yuan_yin,
+    #     }
+    # })
+    # client.close()
+
     # 创业版概念
     chuang_ye_ban_gn = suo_shu_gai_nian.suo_shu_gai_nian(data1, data2, today_data, yeasterday_data)
     return JsonResponse(chuang_ye_ban_gn)
