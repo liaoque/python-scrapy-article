@@ -137,6 +137,7 @@ def step1(data, fd=0):
         items["zhangdiefuqianfuquantoday"] = float(items["zhangdiefuqianfuquantoday"])
         items["lowestpricetoday"] = float(items["lowestpricetoday"])
         items["higestpricetoday"] = float(items["higestpricetoday"])
+        items["lianxuzhangtingtianshuyesterday"] = 0
         items["qushi"] = 0
         if fd == 0:
             # 竞价涨幅
@@ -245,7 +246,9 @@ def step6(table1, data):
         code = items["code"][0:-3]
 
         if code in data:
-            data[code]["jianguanleixingyesterday"] = items["jianguanleixingyesterday"]
+            if data[code]["jianguanleixingyesterday"]  == "":
+                data[code]["jianguanleixingyesterday"] = items["jianguanleixingyesterday"]
+            data[code]["lianxuzhangtingtianshuyesterday"] = items["lianxuzhangtingtianshuyesterday"]
             data[code]["yidongcishu"] = data[code]["yidongcishu"] + 1
 
     return data

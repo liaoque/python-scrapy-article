@@ -318,6 +318,8 @@ End Sub
 def pi_pei_gai_nian(d):
     chuang_data = d["chuang_data"]
     zhu_data = d["zhu_data"]
+
+    # execl:1004
     qx = d["qing_xu"]
     yzcode = d["bu_zhang_data"]["yz"]
     if d["bu_zhang_data"]["zuo_biao_gao"]["power10"] == 35:
@@ -334,12 +336,17 @@ def pi_pei_gai_nian(d):
         if code in zhu_data:
             zhu_data[code]["power-1"] = 35
 
-    # yz_rate =  d["bu_zhang"]["yz_rate"]
+    # execl 1013
     chuang_data = definedPower1(chuang_data, yzcode, qx)
     zhu_data = definedPower1(zhu_data, yzcode, qx, 0)
 
+    # execl 1055
     chuang_data_s = definedPower2(chuang_data, qx)
+    chuang_data = chuang_data_s["data"]
+
+    # execl 1105
     zhu_data_s = definedPower2(zhu_data, qx)
+    zhu_data = zhu_data_s["data"]
 
     if qx == 1:
         if chuang_data_s["imin"] == 0:
@@ -363,8 +370,10 @@ def pi_pei_gai_nian(d):
         if chuang_data_s["ijzlb"]["code"] != "":
             code = chuang_data_s["ijzlb"]["code"]
             chuang_data[code]["power5"] = 3
+
+
             if chuang_data[code]["power-1"] != 35:
-                if chuang_data[code]["power5"] >= 0.08 and \
+                if chuang_data[code]["jingjiajinechengjiaoliangbi"] >= 0.08 and \
                         chuang_data[code]["jingjiajinechengjiaoliangbi"] < 1:
                     chuang_data[code]["power-1"] = 13551615
 
@@ -376,12 +385,11 @@ def pi_pei_gai_nian(d):
             code = zhu_data_s["ijzlb"]["code"]
             zhu_data[code]["power5"] = 3
             if zhu_data[code]["power-1"] != 35:
-                if zhu_data[code]["power5"] >= 0.08 and \
+                if zhu_data[code]["jingjiajinechengjiaoliangbi"] >= 0.08 and \
                         zhu_data[code]["jingjiajinechengjiaoliangbi"] < 1:
                     zhu_data[code]["power-1"] = 13551615
 
     for (key, item) in chuang_data.items():
-
         if item["power-1"] != 35 and item["power4"] != 13551615 and item["power4"] != 3:
             chuang_data[key]["power-1"] = 36
             break
@@ -389,6 +397,7 @@ def pi_pei_gai_nian(d):
     for (key, item) in zhu_data.items():
         if item["power-1"] != 35 and item["power4"] != 13551615 and item["power4"] != 3:
             zhu_data[key]["power-1"] = 36
+            break
 
     sorted(chuang_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
     sorted(zhu_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
@@ -420,8 +429,10 @@ def nbu_zhang(chuang_data):
                 break
 
     if rng6 != "":
+        print(rng6)
         return chuang_data[rng6]
     elif rng5 != "":
+        print(rng5)
         return chuang_data[rng5]
     return None
 
@@ -448,6 +459,8 @@ def rulebu_zhang(chuang_data):
 
 def definedPower1(chuang_data, yzcode, qx, is_chuang_ye=1):
     for (key, item) in chuang_data.items():
+        if key == "001368":
+            print(key)
         item["power-1"] = 0
         item["power2"] = 0
         item["power0"] = 0
@@ -459,7 +472,7 @@ def definedPower1(chuang_data, yzcode, qx, is_chuang_ye=1):
         item["power9"] = 0
         item["power10"] = 0
         if item["zhangdie4thday"] > yzcode["zhangdie4thday"] and \
-                item["jingjiajinechengjiaoliangbi"] >= 0.08:
+                item["jingjiajinechengjiaoliangbi"] >= 0.08 :
             item["power-1"] = 35
 
         #  异动次数大于等于3或者监管类型有数据或者停牌非0或今昨量比大于700或者竞价量比大于等于100或自由流通市值大于80
@@ -470,7 +483,7 @@ def definedPower1(chuang_data, yzcode, qx, is_chuang_ye=1):
             item["power-1"] = 35
 
         if qx == -1:
-            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["zhangdiefuqianfuquantoday"] < 0:
+            if item["jingjiajinechengjiaoliangbi"] >= 0.08  and item["zhangdiefuqianfuquantoday"] < 0:
                 item["power-1"] = 35
                 item["power2"] = 35
 
@@ -481,38 +494,39 @@ def definedPower1(chuang_data, yzcode, qx, is_chuang_ye=1):
             if item["lianxuzhangtingtianshuyesterday"] >= 2:
                 item["power-1"] = 35
 
-            if is_chuang_ye == 1 and item["zhangdie4thday"] >= 0.2:
+            if is_chuang_ye == 1 and item["zhangdie4thday"] >= 0.2 * 100:
                 item["power-1"] = 35
         else:
-            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
+            if item["jingjiajinechengjiaoliangbi"] >= 0.08  and item["jingjiajinechengjiaoliangbi"] < 1:
                 item["power4"] = 13551615
             if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] < 700:
                 item["power5"] = 13551615
         chuang_data[key] = item
     return chuang_data
 
-
+# JingJiaJinEChengJiaoLiangBi      float64 ` column:"竞价量比;type=float"`
+# JingJiaJinEJingJiaLiangBi        float64 ` column:"今昨量比;type=float"`
 def definedPower2(chuang_data, qx):
     imin = 0
     ijjlb = {'code': '', "data": 0}
     imax = {'code': '', "data": 0}
     ijzlb = {'code': '', "data": 0}
     for (key, item) in chuang_data.items():
-
+        if key == "001368":
+            print(key)
         if qx == 1:
-            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
+            if item["jingjiajinechengjiaoliangbi"] >= 0.08  and item["jingjiajinechengjiaoliangbi"] < 1  :
                 item["power4"] = 13551615
             if imin == 0:
                 if item["jingjiaweipipeijinetoday"] < 0 and item["power-1"] != 35 and item[
-                    "jingjiajinechengjiaoliangbi"] >= 0.08:
+                    "jingjiajinechengjiaoliangbi"] >= 0.08 :
                     imin = 1
                     item["power-1"] = 13551615
 
             if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] <= 700:
                 item["power5"] = 13551615
-
         else:
-            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
+            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1  :
                 if item["power-1"] != 35:
                     item["power4"] = 13551615
 
@@ -523,16 +537,18 @@ def definedPower2(chuang_data, qx):
                     if item["zhangdie4thday"] > imax["data"]:
                         imax["data"] = item["zhangdie4thday"]
                         imax["code"] = key
+                        item["power-1"] = 13551615
 
             if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] <= 700:
                 item["power5"] = 13551615
                 if item["jingjiajinejingjialiangbi"] > ijzlb["data"]:
                     ijzlb["data"] = item["jingjiajinejingjialiangbi"]
                     ijzlb["code"] = key
-
+        chuang_data[key] = item
     return {
         "imin": imin,
         "ijjlb": ijjlb,
         "imax": imax,
         "ijzlb": ijzlb,
+        "data": chuang_data,
     }

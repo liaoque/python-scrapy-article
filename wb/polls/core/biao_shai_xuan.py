@@ -151,19 +151,19 @@ def biao_shai_xuan(d, data1):
                  item["jin_jing_feng"]["power"] == 13421823 or item["chuang_bai_ri_xin_gao"]["power"] == 13421823]
     gn.extend(d["bu_zhang_data"]["gn"])
 
-
-    chuang_data = filter(lambda x: len([set(x[1]["suoshugainian"]) | set(gn)]) > 0 and x[0][0:2] == '30', data1.items())
+    chuang_data = filter(lambda x: len(set(x[1]["suoshugainian"]) & set(gn)) > 0 and x[0][0:2] == '30', data1.items())
     chuang_data = sorted(chuang_data, key=lambda x: x[1]["zhangdie4thday"], reverse=True)
 
+    #936
     chuang_data = {key: value for key, value in chuang_data}
     for key in chuang_data:
-        chuang_data[key]["suoshugainian"] = set(chuang_data[key]["suoshugainian"]) | set(gn)
+        chuang_data[key]["suoshugainian"] = set(chuang_data[key]["suoshugainian"]) & set(gn)
 
-    zhu_data = filter(lambda x: len([set(x[1]["suoshugainian"]) | set(gn)]) > 0 and x[0][0:2] != '30' and x[0][0:2] != '68', data1.items())
+    zhu_data = filter(lambda x: len(set(x[1]["suoshugainian"]) & set(gn)) > 0 and x[0][0:2] != '30' and x[0][0:2] != '68', data1.items())
     zhu_data = sorted(zhu_data, key=lambda x: x[1]["zhangdie4thday"], reverse=True)
     zhu_data = {key: value for key, value in zhu_data}
     for key in zhu_data:
-        zhu_data[key]["suoshugainian"] = set(zhu_data[key]["suoshugainian"]) | set(gn)
+        zhu_data[key]["suoshugainian"] = set(zhu_data[key]["suoshugainian"]) & set(gn)
 
     return {
         "chuang_data": chuang_data,
