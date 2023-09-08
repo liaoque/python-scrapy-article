@@ -21,7 +21,7 @@ def index(request):
     current_time = time.strftime("%Y%m%d", time.localtime())
     print('d' + current_time)
 
-    current_time = "20230901"
+    current_time = "20230904"
 
     # 取所有数据
     table = db['d' + current_time]  # 选择你的数据库
@@ -210,7 +210,7 @@ def index(request):
 
     # 补涨前，先合并昨天和前天的首版 到昨天
     if "yuan_yin" in before_yesterday_data:
-        yeasterday_data = bu_zhang.merge_shou_ban(yeasterday_data["yuan_yin"], before_yesterday_data["yuan_yin"])
+        yeasterday_data["yuan_yin"] = bu_zhang.merge_shou_ban(yeasterday_data["yuan_yin"], before_yesterday_data["yuan_yin"])
 
 
     # 主板，创业板 数据

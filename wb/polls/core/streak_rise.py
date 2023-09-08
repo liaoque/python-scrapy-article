@@ -324,7 +324,7 @@ def step5(data):
     yiziban = {}
 
     for (code, items) in data.items():
-        if "jingjiaweipipeijinetoday" not in items or items["jingjiaweipipeijinetoday"] <= 0:
+        if "jingjiaweipipeijinetoday" not in items or items["jingjiaweipipeijinetoday"] == 0:
             continue
 
         items["suoshugainian"] = list(set(items["suoshugainian"]))
@@ -380,7 +380,7 @@ End Sub
 def step5_1(data):
     shoubangupiao = {}
     for (code, items) in data.items():
-        if "zhangtingfengdanetoday" not in items or items["zhangtingfengdanetoday"] <= 0:
+        if "zhangtingfengdanetoday" not in items or items["zhangtingfengdanetoday"] == 0:
             continue
 
         items["suoshugainian"] = list(set(items["suoshugainian"]))

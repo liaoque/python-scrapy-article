@@ -404,7 +404,7 @@ def gai_nian_biao_shang_se(gn_dict):
 
         if (item["jin_jing_feng"]["power"] != 35 and item["zhang_ting_da_rou"]["power"] != 35 and
                 item["die_ting_da_mian"]["power"] != 35 and item["jin_jing_feng_count"]["count"] == imax):
-            item["jin_jing_feng"]["power"] = 13421823
+            item["jin_jing_feng_count"]["power"] = 13421823
             isred = 1
 
     # 找到百日新高最大的， 然后power 改成1
