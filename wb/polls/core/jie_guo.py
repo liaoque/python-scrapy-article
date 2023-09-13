@@ -1,10 +1,10 @@
 # 返回 -1差，  1 好， 0平
 def qingxu(today, yeastday):
-    if "yuan_yin" not in yeastday or "jing_jia_sort" not in yeastday["yuan_yin"]:
+    if "jing_jia_sort" not in yeastday:
         return -1
 
-    jin_jia_yeastday = yeastday["yuan_yin"]["jing_jia_sort"]
-    jin_jia = today["yuan_yin"]["jing_jia_sort"]
+    jin_jia_yeastday = yeastday["jing_jia_sort"]
+    jin_jia = today["jing_jia_sort"]
     qing_xu = 0
     if jin_jia_yeastday['die_ting'] > 0:
         if jin_jia['die_ting'] > jin_jia_yeastday['die_ting']:

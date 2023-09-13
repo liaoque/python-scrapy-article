@@ -356,7 +356,7 @@ def pi_pei_gai_nian(d):
                     item["power-1"] = 13551615
                     break
 
-        if zhu_data["imin"] == 0:
+        if zhu_data_s["imin"] == 0:
             for (key, item) in zhu_data.items():
                 if item["power-1"] != 35 and item["jingjiaweipipeijinetoday"] == 0 and item[
                     "jingjiajinechengjiaoliangbi"] > 0.08:
