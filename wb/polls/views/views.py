@@ -227,7 +227,7 @@ def index(request):
     d.update(d2)
     result = pi_pei_gai_nian.pi_pei_gai_nian(d)
 
-    client.close()
+    # client.close()
     return JsonResponse(result)
 
 
