@@ -358,8 +358,6 @@ def pi_pei_gai_nian(d):
 
         if zhu_data_s["imin"] == 0:
             for (key, item) in zhu_data.items():
-                if key == "600186":
-                    print(key)
                 if item["power-1"] != 35 and item["jingjiaweipipeijinetoday"] == 0 and item[
                     "jingjiajinechengjiaoliangbi"] > 0.08:
                     item["power-1"] = 13551615
@@ -396,8 +394,6 @@ def pi_pei_gai_nian(d):
             break
 
     for (key, item) in zhu_data.items():
-        if key == "600186":
-            print(key)
         if item["power-1"] != 35 and item["power4"] != 13551615 and item["power4"] != 3:
             zhu_data[key]["power-1"] = 36
             break
@@ -461,8 +457,6 @@ def rulebu_zhang(chuang_data):
 
 def definedPower1(chuang_data, yzcode, qx, is_chuang_ye=1):
     for (key, item) in chuang_data.items():
-        if key == "001368":
-            print(key)
         item["power-1"] = 0
         item["power2"] = 0
         item["power0"] = 0
@@ -524,8 +518,6 @@ def definedPower2(chuang_data, qx):
     imax = {'code': '', "data": 0}
     ijzlb = {'code': '', "data": 0}
     for (key, item) in chuang_data.items():
-        if key == "001368":
-            print(key)
         if qx == 1:
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
                 item["power4"] = 13551615
