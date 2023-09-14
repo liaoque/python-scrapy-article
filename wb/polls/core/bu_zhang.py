@@ -190,7 +190,6 @@ def bu_zhang(data, today, yesterday):
     sortgn = []
 
     for gn, item in yesterday["shou_ban_sort"].items():
-        break
         # 趋势未变弱
         # 根据封单的股票数，取强势的首版概念
         # 根据封单额度，取强势的首版概念

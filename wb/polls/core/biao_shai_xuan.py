@@ -148,10 +148,12 @@ End Sub
 
 def biao_shai_xuan(d, data1):
     gn = [gn for (gn, item) in d["chuang_ye_ban_gn"].items() if
-                 item["jin_jing_feng"]["power"] == 13421823 or item["chuang_bai_ri_xin_gao"]["power"] == 13421823]
+                 item["jin_jing_feng_count"]["power"] == 13421823 or item["chuang_bai_ri_xin_gao"]["power"] == 13421823]
     gn.extend(d["bu_zhang_data"]["gn"])
 
+
     chuang_data = filter(lambda x: len(set(x[1]["suoshugainian"]) & set(gn)) > 0 and x[0][0:2] == '30', data1.items())
+   # chuang_data = sorted(chuang_data, key=lambda x: x[0], reverse=False)
     chuang_data = sorted(chuang_data, key=lambda x: x[1]["zhangdie4thday"], reverse=True)
 
     #936

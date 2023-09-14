@@ -264,8 +264,9 @@ def step7(table1, data):
     for items in data2:
         code = items["code"][0:-3]
         data[code]["n10"] = 1
+        data[code]["n"] = 1
         if "zuocengzhangting" in items and items["zuocengzhangting"] == "曾涨停":
-            data[code]["zuocengzhangting"] = 1
+            data[code]["N_zuocengzhangting"] = 1
 
     return data
 
@@ -281,5 +282,8 @@ def step8(table1, data):
         code = items["code"][0:-3]
 
         data[code]["n20"] = 1
+        data[code]["n"] = 1
 
+        if "zuidazhangfu" in items and items["zuidazhangfu"] > 0:
+            data[code]["N_zuidazhangfu"] = items["zuidazhangfu"]
     return data
