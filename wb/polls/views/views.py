@@ -195,14 +195,14 @@ def index(request):
         "yuan_yin": yuan_yin
     }
 
-    # j = list(data.values())
-    # table.update_one({"_id": table1["_id"]}, {
-    #     "$set": {
-    #         "Table1FromJSON": j,
-    #         "yuan_yin": yuan_yin,
-    #     }
-    # })
-    # client.close()
+    j = list(data.values())
+    table.update_one({"_id": table1["_id"]}, {
+        "$set": {
+            "Table1FromJSON": j,
+            "yuan_yin": yuan_yin,
+        }
+    })
+    client.close()
 
     # 创业版概念
     chuang_ye_ban_gn = suo_shu_gai_nian.suo_shu_gai_nian(data1, data2, today_data, yeasterday_data)
