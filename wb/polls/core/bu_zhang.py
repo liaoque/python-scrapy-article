@@ -197,18 +197,21 @@ def bu_zhang(data, today, yesterday):
             sortgn.append({"gn": gn, "c": item["count"]})
             if imax < item["count"]:
                 imax = item["count"]
+                maxgn = []
                 maxgn.append(gn)
                 fd = item["gai_nian_feng_dan_jin_e"]
             elif imax == item["count"]:
                 if fd < item["gai_nian_feng_dan_jin_e"]:
+                    maxgn = []
                     maxgn.append(gn)
                     fd = item["gai_nian_feng_dan_jin_e"]
                 elif fd == item["gai_nian_feng_dan_jin_e"]:
                     maxgn.append(gn)
 
-        if fd2 < item["gai_nian_feng_dan_jin_e"]:
-            fdgn.append(gn)
-            fd2 = item["gai_nian_feng_dan_jin_e"]
+            if fd2 < item["gai_nian_feng_dan_jin_e"]:
+                fdgn = []
+                fdgn.append(gn)
+                fd2 = item["gai_nian_feng_dan_jin_e"]
         elif fd2 == item["gai_nian_feng_dan_jin_e"]:
             fdgn.append(gn)
 
@@ -329,18 +332,19 @@ def zuo_biao_gao(yesterday):
 
 def merge_shou_ban(yesterday, before_yesterday):
     for gn, item in yesterday["shou_ban_sort"].items():
+        if gn == "华为":
+            print(gn)
         yesterday["shou_ban_sort"][gn]["power"] = 0
-
-        if "yuan_yin" not in before_yesterday:
-            continue
 
         if len(before_yesterday["yi_zi_ban_sort"].keys()) == 0 and len(
                 yesterday["yi_zi_ban_sort"].keys()) == 0:
             continue
 
-        if gn in before_yesterday["shou_ban_sort"]:
-            if before_yesterday["shou_ban_sort"][gn]["gai_nian_jing_jia_wei_pi_pei"] > item[
-                "gai_nian_jing_jia_wei_pi_pei"]:
-                yesterday["shou_ban_sort"][gn]["power"] = 35
+        if gn not in before_yesterday["shou_ban_sort"]:
+            continue
+
+        if before_yesterday["shou_ban_sort"][gn]["gai_nian_feng_dan_jin_e"] > item[
+            "gai_nian_feng_dan_jin_e"]:
+            yesterday["shou_ban_sort"][gn]["power"] = 35
 
     return yesterday

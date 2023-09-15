@@ -138,7 +138,7 @@ def gn_merge(data, path="data.xlsx"):
     for (code, item) in data.items():
         if "suoshugainian" in item and isinstance(item["suoshugainian"], list):
             suoshugainian = item["suoshugainian"]
-            suoshuhangye = item["suoshuhangye"]
+            suoshuhangye = item["suoshuhangye"].split("-")[1:2]
         else:
 
             if "belongtogainian" in item:
@@ -170,6 +170,7 @@ def gn_merge(data, path="data.xlsx"):
         a = ["新股与次新股" if x == "开板次新" else x for x in a]
         a = ["新股与次新股" if x == "次新股" else x for x in a]
         a = ["新股与次新股" if x == "核准制次新股" else x for x in a]
+        a = [x.replace("概念", "") if x.find("概念") > 0 else x for x in a]
         item["suoshugainian"] = list(set(["新股与次新股" if x == "注册制次新股" else x for x in a]))
 
         data[code] = item

@@ -21,7 +21,7 @@ def index(request):
     current_time = time.strftime("%Y%m%d", time.localtime())
     print('d' + current_time)
 
-    current_time = "20230904"
+    current_time = "20230905"
 
     # 取所有数据
     table = db['d' + current_time]  # 选择你的数据库
@@ -207,9 +207,9 @@ def index(request):
     # 创业版概念
     chuang_ye_ban_gn = suo_shu_gai_nian.suo_shu_gai_nian(data1, data2, today_data, yeasterday_data)
 
-
+    a= chuang_ye_ban_gn["专精特新"]
     # 补涨前，先合并昨天和前天的首版 到昨天
-    if "yuan_yin" in before_yesterday_data:
+    if "yuan_yin" in before_yesterday_data and "yuan_yin" in yeasterday_data:
         yeasterday_data["yuan_yin"] = bu_zhang.merge_shou_ban(yeasterday_data["yuan_yin"], before_yesterday_data["yuan_yin"])
 
 

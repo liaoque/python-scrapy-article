@@ -398,9 +398,6 @@ def pi_pei_gai_nian(d):
             zhu_data[key]["power-1"] = 36
             break
 
-    sorted(chuang_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
-    sorted(zhu_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
-
     result = {
         "bu_zhang": getbu_zhang(chuang_data, zhu_data),
         "n": getN(chuang_data, zhu_data)
@@ -410,6 +407,10 @@ def pi_pei_gai_nian(d):
 
 
 def getN(chuang_data, zhu_data):
+    tmp = sorted(chuang_data.items(), key=lambda x: x[1]["zhangdie4thday"], reverse=True)
+    chuang_data = dict(tmp)
+    tmp = sorted(zhu_data.items(), key=lambda x: x[1]["zhangdie4thday"], reverse=True)
+    zhu_data = dict(tmp)
     return {
         "chuang": nbu_zhang(chuang_data),
         "zhu": nbu_zhang(zhu_data),
@@ -437,6 +438,10 @@ def nbu_zhang(chuang_data):
 
 
 def getbu_zhang(chuang_data, zhu_data):
+    tmp = sorted(chuang_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
+    chuang_data = dict(tmp)
+    tmp = sorted(zhu_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
+    zhu_data = dict(tmp)
     return {
         "chuang": rulebu_zhang(chuang_data),
         "zhu": rulebu_zhang(zhu_data),
@@ -446,6 +451,8 @@ def getbu_zhang(chuang_data, zhu_data):
 def rulebu_zhang(chuang_data):
     bu_zhang = None
     for (key, item) in chuang_data.items():
+        if key == "000766":
+            print(key)
         if item["power-1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item["zhangfu120"] > 25 and item[
             "zhangfu120"] < 80 and item["chuangbairixingao"] == 1:
             if item["power6"] == 38 or item['lianbantianshuyesterday'] > 0:
@@ -466,8 +473,9 @@ def definedPower1(chuang_data, yzcode, qx, is_chuang_ye=1):
         item["power7"] = 0
         item["power8"] = 0
         item["power9"] = 0
-        item["power10"] = 0 # 代表N
-
+        item["power10"] = 0  # 代表N
+        if key == "000766":
+            print(key)
         # 符合n 且 昨日曾涨停 == 1
         if "n" in item and item["n"] == 1:
             item["power10"] = 37
@@ -496,7 +504,7 @@ def definedPower1(chuang_data, yzcode, qx, is_chuang_ye=1):
                 item["power-1"] = 35
                 item["power0"] = 35
 
-            if item["lianxuzhangtingtianshuyesterday"] >= 2:
+            if item["lianxuzhangtingtianshuyesterday"] > 2:
                 item["power-1"] = 35
 
             if is_chuang_ye == 1 and item["zhangdie4thday"] >= 0.2 * 100:

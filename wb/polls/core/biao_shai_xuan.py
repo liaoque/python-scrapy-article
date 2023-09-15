@@ -159,6 +159,8 @@ def biao_shai_xuan(d, data1):
     #936
     chuang_data = {key: value for key, value in chuang_data}
     for key in chuang_data:
+        if key == "600186":
+            print(key)
         chuang_data[key]["suoshugainian"] = list(set(chuang_data[key]["suoshugainian"]) & set(gn))
 
     zhu_data = filter(lambda x: len(set(x[1]["suoshugainian"]) & set(gn)) > 0 and x[0][0:2] != '30' and x[0][0:2] != '68', data1.items())

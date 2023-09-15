@@ -763,6 +763,8 @@ End Sub
 def step12(lianzhanggupiao, lianzhanggainian):
     lianzhanggupiao2 = {}
     for (code, items) in lianzhanggupiao.items():
+        if code == "002362":
+            print("002362")
         items["yuanyin"] = []
         items["cishu"] = 0
         for (gn, count) in lianzhanggainian.items():
