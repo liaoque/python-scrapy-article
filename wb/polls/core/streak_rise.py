@@ -167,7 +167,7 @@ def step2(table1, data):
         return dietinggupiao
 
     for items in table1["YiZiDieTing"]:
-        code = items["code"]
+        code = items["code"][0:-3]
         if code in dietinggupiao:
             dietinggupiao[code]["jingjiaweipipeijinetoday"] = items["jingjiaweipipeijine"]
 
@@ -1382,7 +1382,9 @@ End Sub
 def step24(yizibangupiao, dietinggupiao):
     jin_jia = {
         "zhang_ting": sum([x['jingjiaweipipeijinetoday'] for (code, x) in yizibangupiao.items()]),
+        "zhang_ting_count":len(yizibangupiao.items()),
         "die_ting": sum([x['jingjiaweipipeijinetoday'] for (code, x) in dietinggupiao.items()]),
+        "die_ting_count": len(dietinggupiao.items()),
         "qing_xu": 0,
     }
     return jin_jia

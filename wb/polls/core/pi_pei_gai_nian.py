@@ -474,7 +474,7 @@ def definedPower1(chuang_data, yzcode, qx, is_chuang_ye=1):
         item["power8"] = 0
         item["power9"] = 0
         item["power10"] = 0  # 代表N
-        if key == "000766":
+        if key == "300807":
             print(key)
         # 符合n 且 昨日曾涨停 == 1
         if "n" in item and item["n"] == 1:
