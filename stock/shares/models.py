@@ -23,6 +23,7 @@ from .model.shares_industry_season import SharesIndustrySeason
 from .model.shares_date import SharesDate
 from .model.shares_date import SharesDate
 from .model.shares_hours import SharesHours
+from .model.shares_weeks import SharesWeeks
 from .model.shares_kdj_hours import SharesKdjHours
 from .model.shares_date_listen import SharesDateListen
 from .model.shares_buys import SharesBuys
