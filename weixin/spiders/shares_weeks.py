@@ -12,7 +12,7 @@ import time
 
 
 class Shares(scrapy.Spider):
-    name = 'shares_hours'
+    name = 'shares_weeks'
     allowed_domains = ['.eastmoney.com']
     start_urls = []
     headers = {
