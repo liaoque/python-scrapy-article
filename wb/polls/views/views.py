@@ -18,10 +18,12 @@ def index(request):
                          DATABASES['wb']['CLIENT']['port'])  # 默认连接到 localhost 和端口 27017
     db = client['wb']  # 选择你的数据库
     current_timestamp = time.time()
-    current_time = time.strftime("%Y%m%d", time.localtime())
-    print('d' + current_time)
+    #current_time = time.strftime("%Y%m%d", time.localtime())
+    #print('d' + current_time)
 
-    current_time = "20230905"
+    current_time = request.GET.get('current_time')
+    if current_time is None or current_time == "":
+        return JsonResponse({"error":"current_time must"})
 
     # 取所有数据
     table = db['d' + current_time]  # 选择你的数据库
@@ -207,7 +209,7 @@ def index(request):
     # 创业版概念
     chuang_ye_ban_gn = suo_shu_gai_nian.suo_shu_gai_nian(data1, data2, today_data, yeasterday_data)
 
-    a= chuang_ye_ban_gn["专精特新"]
+#    a= chuang_ye_ban_gn["专精特新"]
     # 补涨前，先合并昨天和前天的首版 到昨天
     if "yuan_yin" in before_yesterday_data and "yuan_yin" in yeasterday_data:
         yeasterday_data["yuan_yin"] = bu_zhang.merge_shou_ban(yeasterday_data["yuan_yin"], before_yesterday_data["yuan_yin"])
@@ -228,6 +230,7 @@ def index(request):
     result = pi_pei_gai_nian.pi_pei_gai_nian(d)
 
     # client.close()
+    result["qing_xu"] = d["qing_xu"]
     return JsonResponse(result)
 
 
