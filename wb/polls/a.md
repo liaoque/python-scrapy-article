@@ -16,7 +16,7 @@ Sub 主线()
     Dim nogn As String
     Dim arr() As String
     
-    nogn2 = Sheet4.Range("h39")
+    nogn2 [admin.py](admin.py)= Sheet4[admin.py](admin.py).Range("h39")
     
     Sheet25.Cells.Clear
     
