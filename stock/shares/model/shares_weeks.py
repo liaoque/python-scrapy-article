@@ -19,4 +19,4 @@ class SharesWeeks(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.name
+        return self.name + datetime.strftime(self.date_as,'%Y-%m-%d %H:%i:%s')

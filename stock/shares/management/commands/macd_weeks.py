@@ -9,7 +9,6 @@ import talib
 import sys
 
 
-
 class Command(BaseCommand):
     help = '计算各种指标'
 
@@ -33,14 +32,14 @@ class Command(BaseCommand):
             code = item.code
             # 数据不存在
             itemList = item.sharesweeks_set.all()
-            print(str(len(itemList)) +"---")
+
             if len(itemList) == 0:
                 continue
             # 计算kdj
             macdDIFF1, macdDEA1, macd1 = self.talib_Macd(itemList)
             i = 0
             if len(macd1) > 10:
-                i = len(macd1) -10
+                i = len(macd1) - 10
             while i < len(macd1):
                 date_as = itemList[i].date_as
                 sharesKdjList = SharesWeekMacds.objects.filter(code_id=code, date_as=date_as)
