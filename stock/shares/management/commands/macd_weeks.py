@@ -32,7 +32,7 @@ class Command(BaseCommand):
             # 写过了
             code = item.code
             # 数据不存在
-            itemList = item.shares_weeks_set.all()
+            itemList = item.sharesweeks_set.all()
             print(str(len(itemList)) +"---")
             if len(itemList) == 0:
                 continue
