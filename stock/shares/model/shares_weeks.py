@@ -12,11 +12,11 @@ class SharesWeeks(models.Model):
     p_max = models.IntegerField(default=0)
     p_start = models.IntegerField(default=0)
     p_end = models.IntegerField(default=0)
-    date_as = models.DateTimeField()
+    date_as = models.DateField()
 
     class Meta:
         db_table = "mc_shares_weeks"
         # abstract = True
 
     def __str__(self):
-        return self.name + ":" + datetime.strftime(self.date_as,'%Y-%m-%d %H:%i:%s')
+        return self.name + datetime.strftime(self.date_as,'%Y-%m-%d %H:%i:%s')

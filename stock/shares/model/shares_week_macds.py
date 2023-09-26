@@ -11,11 +11,11 @@ class SharesWeekMacds(models.Model):
     diff = models.FloatField(default=0)
     dea = models.FloatField(default=0)
     cycle_type = models.IntegerField(default=0, help_text='1.26,12,9')
-    date_as = models.DateTimeField()
+    date_as = models.DateField()
 
     class Meta:
         db_table = "mc_shares_macd_weeks"
         # abstract = True
 
     def __str__(self):
-        return self.code_id + ":" + datetime.strftime(self.date_as,'%Y-%m-%d %H:%i:%s')
+        return self.code_id
