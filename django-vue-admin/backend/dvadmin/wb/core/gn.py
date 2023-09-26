@@ -1,5 +1,5 @@
 import openpyxl
-from devadmin.wb.core import concept
+from dvadmin.wb.core import concept
 
 """
 Sub 新合并概念()

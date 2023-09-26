@@ -55,10 +55,10 @@ INSTALLED_APPS = [
     "django_filters",
     "corsheaders",  # 注册跨域app
     'rest_framework_simplejwt.token_blacklist',
-    "dvadmin.system",
     "drf_yasg",
     "captcha",
     'channels',
+    "dvadmin.system",
 ]
 
 MIDDLEWARE = [

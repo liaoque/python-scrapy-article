@@ -1,4 +1,4 @@
-from devadmin.wb.core import concept, gn
+from dvadmin.wb.core import concept, gn
 
 """
 Sub 增加前后分号()

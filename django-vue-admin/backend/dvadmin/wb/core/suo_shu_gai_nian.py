@@ -1,4 +1,4 @@
-from devadmin.wb.core import concept, gn
+from dvadmin.wb.core import concept, gn
 from collections import Counter
 
 """

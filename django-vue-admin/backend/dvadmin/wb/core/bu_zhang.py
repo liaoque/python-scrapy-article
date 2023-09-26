@@ -1,4 +1,4 @@
-from devadmin.wb.core import concept
+from dvadmin.wb.core import concept
 
 """
 
