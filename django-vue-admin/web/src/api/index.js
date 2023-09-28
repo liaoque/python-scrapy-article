@@ -5,6 +5,7 @@ import * as tools from './tools'
 
 const files = require.context('./modules', true, /\.api\.js$/)
 const generators = files.keys().map(key => files(key).default)
+console.log(files, generators)
 
 export default assign({}, ...map(generators, generator => generator({
   service,

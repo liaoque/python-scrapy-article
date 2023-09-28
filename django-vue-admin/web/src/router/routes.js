@@ -60,6 +60,14 @@ const frameIn = [{
       name: 'redirect',
       hidden: true,
       component: _import('system/function/redirect')
+    },
+    {
+      path: 'yuan_yin',
+      name: 'yuan_yin',
+      meta: {
+        auth: true
+      },
+      component: _import('wb/yuan_yin/index')
     }
   ]
 }]
