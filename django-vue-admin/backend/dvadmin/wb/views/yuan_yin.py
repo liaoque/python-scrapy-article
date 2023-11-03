@@ -40,6 +40,7 @@ class YuanYinView(View):
         return JsonResponse({"data": table2["yuan_yin"]})
 
     def convert(self, data):
+        return  [ item for key, item in data.items()]
         return [
             {key: [{"code": it2["code"]} for it2 in it] if key == "gai_nian_gu_piao" else it for key, it in
              item.items()} for key, item in data.items()

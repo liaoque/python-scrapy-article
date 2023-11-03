@@ -76,31 +76,21 @@ End Sub
 
 
 # 取连涨股票
-def step1(table1, data):
+def lian_zhang_gu_piao(data):
     lianzhanggupiao = {}
     for (code, items) in data.items():
-        if "jingjiaweipipeijinetoday" not in items:
-            items["jingjiaweipipeijinetoday"] = 0
-
-        if items["qushi"] == 1:
-            items["suoshugainian"] = list(set(items["suoshugainian"]))
-            lianzhanggupiao[code] = {
-                "code": items["code"],
-                "briefname": items["briefname"],
-                "suoshugainian": items["suoshugainian"],  # 概念
-                "lianxuzhangtingtianshuonehundred": items["lianxuzhangtingtianshuonehundred"],  # 25日涨停次数
-                "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],  # 未匹配金额
-                "zhangtingfengdanetoday": 0,  # 未匹配金额
-                "zhangfu120": items["zhangfu120"],
-            }
-
-    if len(table1) is None:
-        return lianzhanggupiao
-
-    for items in table1["ZhuChuangZhangTing"]:
-        code = items["code"]
-        if code in lianzhanggupiao:
-            lianzhanggupiao[code]["zhangtingfengdanetoday"] = items["zhangtingfengdanetoday"]
+        if items["qushi"] != 1:
+            continue
+        items["suoshugainian"] = list(set(items["suoshugainian"]))
+        lianzhanggupiao[code] = {
+            "code": items["code"],
+            "briefname": items["briefname"],
+            "suoshugainian": items["suoshugainian"],  # 概念
+            "lianxuzhangtingtianshuonehundred": items["lianxuzhangtingtianshuonehundred"],  # 25日涨停次数
+            "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],  # 未匹配金额
+            "zhangtingfengdanetoday": items["zhangtingfengdanetoday"],  # 未匹配金额
+            "zhangfu120": items["zhangfu120"],
+        }
 
     return lianzhanggupiao
 
@@ -148,7 +138,7 @@ Sub 取跌停股票()
 """
 
 
-def step2(table1, data):
+def die_ting_gu_piao(table1, data):
     dietinggupiao = {}
     for (code, items) in data.items():
         if items["qushi"] == -1:
@@ -158,18 +148,10 @@ def step2(table1, data):
                 "briefname": items["briefname"],
                 "suoshugainian": items["suoshugainian"],  # 概念
                 "dietingfengdane": items["dietingfengdane"],
-                "jingjiaweipipeijinetoday": 0,
+                "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],
                 "zhangtingfengdanetoday": 0,
                 "zhangfu120": items["zhangfu120"],
             }
-
-    if len(table1) is None or "YiZiDieTing" not in table1:
-        return dietinggupiao
-
-    for items in table1["YiZiDieTing"]:
-        code = items["code"][0:-3]
-        if code in dietinggupiao:
-            dietinggupiao[code]["jingjiaweipipeijinetoday"] = items["jingjiaweipipeijine"]
 
     return dietinggupiao
 
@@ -210,10 +192,10 @@ End Sub
 """
 
 
-def step3(data):
+def zha_ban_gu_piao(data):
     zhabangupiao = {}
     for (code, items) in data.items():
-        if "zhaban" not in items or items["zhaban"] != 1:
+        if items["zha_ban"] != 1:
             continue
         items["suoshugainian"] = list(set(items["suoshugainian"]))
         zhabangupiao[code] = {
@@ -265,10 +247,10 @@ End Sub
 """
 
 
-def step4(data):
+def bai_ri_xin_gao_gu_piao(data):
     chuangbairixingao = {}
     for (code, items) in data.items():
-        if "chuangbairixingao" not in items or items["chuangbairixingao"] != 1:
+        if items["chuang_bai_ri_xin_gao"] != 1:
             continue
         items["suoshugainian"] = list(set(items["suoshugainian"]))
         chuangbairixingao[code] = {
@@ -320,11 +302,11 @@ End Sub
 """
 
 
-def step5(data):
+def yi_zi_ban_gu_piao(data):
     yiziban = {}
 
     for (code, items) in data.items():
-        if "jingjiaweipipeijinetoday" not in items or items["jingjiaweipipeijinetoday"] == 0:
+        if items["yi_zi_ban"] != 1:
             continue
 
         items["suoshugainian"] = list(set(items["suoshugainian"]))
@@ -377,10 +359,10 @@ End Sub
 """
 
 
-def step5_1(data):
+def shou_ban_gu_piao(data):
     shoubangupiao = {}
     for (code, items) in data.items():
-        if "zhangtingfengdanetoday" not in items or items["zhangtingfengdanetoday"] == 0:
+        if items["shou_ban"] == 0:
             continue
 
         items["suoshugainian"] = list(set(items["suoshugainian"]))
@@ -452,21 +434,16 @@ End Sub
 
 
 def step6(data):
-    lianzhanggainian = {}
-    for (code, items) in data.items():
-        if "suoshugainian" not in items:
-            continue
-        for item in items["suoshugainian"]:
-            if item not in lianzhanggainian:
-                lianzhanggainian[item] = 1
-            else:
-                lianzhanggainian[item] = lianzhanggainian[item] + 1
 
+    suoshugainian = [suoshugainian for item in data.items() for suoshugainian in item["suoshugainian"]]
+    unique_suoshugainian = list(set(suoshugainian))
+    lianzhanggainian = { gn: suoshugainian.count(gn) for gn in unique_suoshugainian }
     sorted_lian_zhang = sorted(lianzhanggainian.items(), key=lambda x: x[1], reverse=True)
     lianzhanggainian = dict(sorted_lian_zhang)
-
     return lianzhanggainian
 
+def lian_zhang_gai_nian(data):
+    return step6(data)
 
 """
 Sub 生成跌停概念()
@@ -515,7 +492,7 @@ End Sub
 """
 
 
-def step7(data):
+def die_ting_gai_nian(data):
     return step6(data)
 
 
@@ -566,7 +543,7 @@ End Sub
 """
 
 
-def step8(data):
+def zha_ban_gai_nian(data):
     return step6(data)
 
 
@@ -617,7 +594,7 @@ End Sub
 """
 
 
-def step9(data):
+def chuang_bai_ri_xin_gao_gai_nian(data):
     return step6(data)
 
 
@@ -668,7 +645,7 @@ End Sub
 """
 
 
-def step10(data):
+def yi_zi_ban_gai_nian(data):
     return step6(data)
 
 
@@ -719,7 +696,7 @@ End Sub
 """
 
 
-def step11(data):
+def shou_ban_gai_nian(data):
     return step6(data)
 
 
@@ -763,8 +740,6 @@ End Sub
 def step12(lianzhanggupiao, lianzhanggainian):
     lianzhanggupiao2 = {}
     for (code, items) in lianzhanggupiao.items():
-        if code == "002362":
-            print("002362")
         items["yuanyin"] = []
         items["cishu"] = 0
         for (gn, count) in lianzhanggainian.items():
@@ -778,6 +753,8 @@ def step12(lianzhanggupiao, lianzhanggainian):
         lianzhanggupiao2[code] = items
     return lianzhanggupiao2
 
+def zhang_ting_shi_pei_gu_piao(lianzhanggupiao, lianzhanggainian):
+    return step12(lianzhanggupiao, lianzhanggainian)
 
 """
 Sub 取跌停原因()
@@ -812,7 +789,7 @@ End Sub
 """
 
 
-def step13(dietinggupiao, dietinggainian):
+def die_ting_shi_pei_gu_piao(dietinggupiao, dietinggainian):
     return step12(dietinggupiao, dietinggainian)
 
 
@@ -849,7 +826,7 @@ End Sub
 """
 
 
-def step14(zhabangupiao, zhabangainian):
+def zha_ban_shi_pei_gu_piao(zhabangupiao, zhabangainian):
     return step12(zhabangupiao, zhabangainian)
 
 
@@ -887,7 +864,7 @@ End Sub
 """
 
 
-def step15(chuangbairixingao, chuangbairixingaogainnian):
+def chuang_bai_ri_xin_gao_shi_pei_gai_nian(chuangbairixingao, chuangbairixingaogainnian):
     return step12(chuangbairixingao, chuangbairixingaogainnian)
 
 
@@ -924,7 +901,7 @@ End Sub
 """
 
 
-def step16(yizibangupiao, yizibangainian):
+def yi_zi_ban_shi_pei_gu_piao(yizibangupiao, yizibangainian):
     return step12(yizibangupiao, yizibangainian)
 
 
@@ -961,7 +938,7 @@ End Sub
 """
 
 
-def step17(shoubangupiao, shoubangainian):
+def shou_ban_shi_pei_gu_piao(shoubangupiao, shoubangainian):
     return step12(shoubangupiao, shoubangainian)
 
 
@@ -1017,14 +994,14 @@ End Sub
 """
 
 
-def step18(lianzhanggupiao, lianzhanggainian):
+def zhang_ting_yuan_yin(lianzhanggupiao, lianzhanggainian):
     lian_zhang_sort = {}
     for (gn, count) in lianzhanggainian.items():
         gn_item = {
-            "suoshugainian": gn,
-            "count": 0,
-            "gai_nian_gu_piao": [],
-            "gai_nian_jing_jia_wei_pi_pei": 0,
+            "suoshugainian": gn,       #概念
+            "count": 0,               # 含有该概念股票数量
+            "gai_nian_gu_piao": [],  # 含有该概念的股票
+            "gai_nian_jing_jia_wei_pi_pei": 0, # 竞价未匹配
             "zhangfu120": 0,
             "power": 0,
             "gai_nian_feng_dan_jin_e": 0
@@ -1105,8 +1082,9 @@ Sub 排列跌停原因()
 End Sub
 """
 
-
-def step19(dietinggupiao, dietinggainian):
+def step18(dietinggupiao, dietinggainian):
+    return zhang_ting_yuan_yin(dietinggupiao, dietinggainian)
+def die_ting_yuan_yin(dietinggupiao, dietinggainian):
     return step18(dietinggupiao, dietinggainian)
 
 
@@ -1161,7 +1139,7 @@ End Sub
 """
 
 
-def step20(zhabangupiao, zhabangainian):
+def zha_ban_yuan_yin(zhabangupiao, zhabangainian):
     return step18(zhabangupiao, zhabangainian)
 
 
@@ -1217,7 +1195,7 @@ End Sub
 """
 
 
-def step21(chuangbairixingao, chuangbairixingaogainnian):
+def chuang_bai_ri_xin_gao_yuan_yin(chuangbairixingao, chuangbairixingaogainnian):
     return step18(chuangbairixingao, chuangbairixingaogainnian)
 
 
@@ -1273,7 +1251,7 @@ End Sub
 """
 
 
-def step22(yizibangupiao, yizibangainian):
+def yi_zi_ban_yuan_yin(yizibangupiao, yizibangainian):
     return step18(yizibangupiao, yizibangainian)
 
 
@@ -1329,7 +1307,7 @@ End Sub
 """
 
 
-def step23(shoubangupiao, shoubangainian):
+def shou_ban_yuan_yin(shoubangupiao, shoubangainian):
     return step18(shoubangupiao, shoubangainian)
 
 
@@ -1379,10 +1357,10 @@ End Sub
 """
 
 
-def step24(yizibangupiao, dietinggupiao):
+def jing_jia_info(yizibangupiao, dietinggupiao):
     jin_jia = {
         "zhang_ting": sum([x['jingjiaweipipeijinetoday'] for (code, x) in yizibangupiao.items()]),
-        "zhang_ting_count":len(yizibangupiao.items()),
+        "zhang_ting_count": len(yizibangupiao.items()),
         "die_ting": sum([x['jingjiaweipipeijinetoday'] for (code, x) in dietinggupiao.items()]),
         "die_ting_count": len(dietinggupiao.items()),
         "qing_xu": 0,
@@ -1464,7 +1442,7 @@ End Sub
 """
 
 
-def step25(data):
+def max_zhang_fu5_gu_piao(data):
     data2 = {
         "zhu_ban": {"zhangfu5": -1000, "suoshugainian": [], "code": ""},
         "chuang_ye_ban": {"zhangfu5": -1000, "suoshugainian": [], "code": ""},

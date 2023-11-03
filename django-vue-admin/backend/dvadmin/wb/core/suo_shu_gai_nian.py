@@ -214,6 +214,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
     gn_dict = {}
     for gn in gns:
         gn_dict[gn] = {
+            "suoshugainian":gn,
             "chuang_bai_ri_xin_gao": {
                 "count": 0,
                 "today": 0,
