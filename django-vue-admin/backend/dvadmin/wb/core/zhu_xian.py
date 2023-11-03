@@ -150,7 +150,8 @@ End Sub
 概念2： 次数
 """
 def zhuxian(data):
-    suoshugainian = [item['suoshugainian'] for item in data if item['zhuxianyuan'] == 1]
-    suoshugainian = [it for item in suoshugainian for it in item ]
+    data2 = data.items()
+    suoshugainian = [item['suoshugainian'] for item in data2 if item['zhuxianyuan'] == 1]
+    suoshugainian = [it for item in suoshugainian for it in item]
     unique_array = list(set(suoshugainian))
     return {it: suoshugainian.count(it) for it in unique_array}

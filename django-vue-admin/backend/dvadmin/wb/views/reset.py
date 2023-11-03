@@ -171,6 +171,8 @@ class ResetView(View):
 
             # 排列5日涨跌幅，取每个概念涨跌幅最高得
             "day_5_sort": streak_rise.max_zhang_fu5_gu_piao(data),
+            
+            "zhu_xian": zhu_xian.zhuxian(data)
         }
 
         # 查昨原因
@@ -212,8 +214,6 @@ class ResetView(View):
             }
         })
         self.client.close()
-
-        zhu_xian.zhuxian(j)
 
         # 创业版概念
         chuang_ye_ban_gn = suo_shu_gai_nian.suo_shu_gai_nian(data1, data2, today_data, yeasterday_data)
