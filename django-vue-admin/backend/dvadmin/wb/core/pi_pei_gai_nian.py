@@ -322,80 +322,80 @@ def pi_pei_gai_nian(d):
     # execl:1004
     qx = d["qing_xu"]
     yzcode = d["bu_zhang_data"]["yz"]
-    if d["bu_zhang_data"]["zuo_biao_gao"]["power10"] == 35:
+    if d["bu_zhang_data"]["zuo_biao_gao"]["color10"] == 35:
         code = d["bu_zhang_data"]["zuo_biao_gao"]["zhu_ban"]["code"]
         if code in zhu_data:
-            zhu_data[code]["power-1"] = 35
+            zhu_data[code]["color-1"] = 35
         if code in chuang_data:
-            chuang_data[code]["power-1"] = 35
+            chuang_data[code]["color-1"] = 35
 
-    if d["bu_zhang_data"]["zuo_biao_gao"]["power20"] == 35:
+    if d["bu_zhang_data"]["zuo_biao_gao"]["color20"] == 35:
         code = d["bu_zhang_data"]["zuo_biao_gao"]["zhu_ban"]["code"]
         if code in chuang_data:
-            chuang_data[code]["power-1"] = 35
+            chuang_data[code]["color-1"] = 35
         if code in zhu_data:
-            zhu_data[code]["power-1"] = 35
+            zhu_data[code]["color-1"] = 35
 
     # execl 1013
-    chuang_data = definedPower1(chuang_data, yzcode, qx)
-    zhu_data = definedPower1(zhu_data, yzcode, qx, 0)
+    chuang_data = definedcolor1(chuang_data, yzcode, qx)
+    zhu_data = definedcolor1(zhu_data, yzcode, qx, 0)
 
     # execl 1055
-    chuang_data_s = definedPower2(chuang_data, qx)
+    chuang_data_s = definedcolor2(chuang_data, qx)
     chuang_data = chuang_data_s["data"]
 
     # execl 1105
-    zhu_data_s = definedPower2(zhu_data, qx)
+    zhu_data_s = definedcolor2(zhu_data, qx)
     zhu_data = zhu_data_s["data"]
 
     if qx == 1:
         if chuang_data_s["imin"] == 0:
             for (key, item) in chuang_data.items():
-                if item["power-1"] != 35 and item["jingjiaweipipeijinetoday"] == 0 and item[
+                if item["color-1"] != 35 and item["jingjiaweipipeijinetoday"] == 0 and item[
                     "jingjiajinechengjiaoliangbi"] >= 0.08:
-                    item["power-1"] = 13551615
+                    item["color-1"] = 13551615
                     break
 
         if zhu_data_s["imin"] == 0:
             for (key, item) in zhu_data.items():
-                if item["power-1"] != 35 and item["jingjiaweipipeijinetoday"] == 0 and item[
+                if item["color-1"] != 35 and item["jingjiaweipipeijinetoday"] == 0 and item[
                     "jingjiajinechengjiaoliangbi"] > 0.08:
-                    item["power-1"] = 13551615
+                    item["color-1"] = 13551615
                     break
     else:
         if chuang_data_s["ijjlb"]["code"] != "":
             code = chuang_data_s["ijjlb"]["code"]
-            chuang_data[code]["power4"] = 3
+            chuang_data[code]["color4"] = 3
 
         if chuang_data_s["ijzlb"]["code"] != "":
             code = chuang_data_s["ijzlb"]["code"]
-            chuang_data[code]["power5"] = 3
+            chuang_data[code]["color5"] = 3
 
-            if chuang_data[code]["power-1"] != 35:
+            if chuang_data[code]["color-1"] != 35:
                 if chuang_data[code]["jingjiajinechengjiaoliangbi"] >= 0.08 and \
                         chuang_data[code]["jingjiajinechengjiaoliangbi"] < 1:
-                    chuang_data[code]["power-1"] = 13551615
+                    chuang_data[code]["color-1"] = 13551615
 
         if zhu_data_s["ijjlb"]["code"] != "":
             code = zhu_data_s["ijjlb"]["code"]
-            zhu_data[code]["power4"] = 3
+            zhu_data[code]["color4"] = 3
 
         if zhu_data_s["ijzlb"]["code"] != "":
             code = zhu_data_s["ijzlb"]["code"]
-            zhu_data[code]["power5"] = 3
-            if zhu_data[code]["power-1"] != 35:
+            zhu_data[code]["color5"] = 3
+            if zhu_data[code]["color-1"] != 35:
                 if zhu_data[code]["jingjiajinechengjiaoliangbi"] >= 0.08 and \
                         zhu_data[code]["jingjiajinechengjiaoliangbi"] < 1:
-                    zhu_data[code]["power-1"] = 13551615
+                    zhu_data[code]["color-1"] = 13551615
 
     for (key, item) in chuang_data.items():
-        if item["power-1"] != 35 and item["power4"] != 13551615 and item["power4"] != 3:
-            chuang_data[key]["power-1"] = 36
+        if item["color-1"] != 35 and item["color4"] != 13551615 and item["color4"] != 3:
+            chuang_data[key]["color-1"] = 36
             break
 
     for (key, item) in zhu_data.items():
-        if item["power-1"] != 35 and item["power4"] != 13551615 and item["power4"] != 3:
-            zhu_data[key]["power-1"] = 36
+        if item["color-1"] != 35 and item["color4"] != 13551615 and item["color4"] != 3:
+            zhu_data[key]["color-1"] = 36
             break
 
     result = {
@@ -420,11 +420,11 @@ def getN(chuang_data, zhu_data):
 def nbu_zhang(chuang_data):
     rng5 = rng6 = ""
     for (key, item) in chuang_data.items():
-        if item["power-1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item[
-            "zhangfu120"] < 80 and item["power10"] == 37:
+        if item["color-1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item[
+            "zhangfu120"] < 80 and item["color10"] == 37:
             if rng5 == "":
                 rng5 = key
-            if item["power6"] == 38 or item["lianbantianshuyesterday"] > 0:
+            if item["color6"] == 38 or item["lianbantianshuyesterday"] > 0:
                 rng6 = key
                 break
 
@@ -453,74 +453,74 @@ def rulebu_zhang(chuang_data):
     for (key, item) in chuang_data.items():
         if key == "000766":
             print(key)
-        if item["power-1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item["zhangfu120"] > 25 and item[
+        if item["color-1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item["zhangfu120"] > 25 and item[
             "zhangfu120"] < 80 and item["chuangbairixingao"] == 1:
-            if item["power6"] == 38 or item['lianbantianshuyesterday'] > 0:
-                chuang_data[key]["power-1"] = 46
+            if item["color6"] == 38 or item['lianbantianshuyesterday'] > 0:
+                chuang_data[key]["color-1"] = 46
                 bu_zhang = item
                 break
     return bu_zhang
 
 
-def definedPower1(chuang_data, yzcode, qx, is_chuang_ye=1):
+def definedcolor1(chuang_data, yzcode, qx, is_chuang_ye=1):
     for (key, item) in chuang_data.items():
-        item["power-1"] = 0
-        item["power2"] = 0
-        item["power0"] = 0
-        item["power4"] = 0
-        item["power5"] = 0
-        item["power6"] = 0
-        item["power7"] = 0
-        item["power8"] = 0
-        item["power9"] = 0
-        item["power10"] = 0  # 代表N
+        item["color-1"] = 0
+        item["color2"] = 0
+        item["color0"] = 0
+        item["color4"] = 0
+        item["color5"] = 0
+        item["color6"] = 0
+        item["color7"] = 0
+        item["color8"] = 0
+        item["color9"] = 0
+        item["color10"] = 0  # 代表N
         if key == "300807":
             print(key)
         # 符合n 且 昨日曾涨停 == 1
         if "n" in item and item["n"] == 1:
-            item["power10"] = 37
+            item["color10"] = 37
             if "N_zuidazhangfu" in item and item["N_zuidazhangfu"] > 0:
-                item["power6"] = 38
+                item["color6"] = 38
             if "N_zuocengzhangting" in item and item["N_zuocengzhangting"] == 1:
-                item["power6"] = 38
+                item["color6"] = 38
 
         if item["zhangdie4thday"] > yzcode["zhangdie4thday"] and \
                 item["jingjiajinechengjiaoliangbi"] >= 0.08:
-            item["power-1"] = 35
+            item["color-1"] = 35
 
         #  异动次数大于等于3或者监管类型有数据或者停牌非0或今昨量比大于700或者竞价量比大于等于100或自由流通市值大于80
         if item["yidongcishu"] >= 3 or item["jianguanleixingyesterday"] != "" or \
                 item["jingjiajinejingjialiangbi"] > 700 or \
                 item["jingjiajinechengjiaoliangbi"] >= 1 or \
                 (item["ziyouliutongshizhiyesterday"] / 100000000 > 200 and is_chuang_ye != 1):
-            item["power-1"] = 35
+            item["color-1"] = 35
 
         if qx == -1:
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["zhangdiefuqianfuquantoday"] < 0:
-                item["power-1"] = 35
-                item["power2"] = 35
+                item["color-1"] = 35
+                item["color2"] = 35
 
             if item["ziyouliutongshizhiyesterday"] == 0:
-                item["power-1"] = 35
-                item["power0"] = 35
+                item["color-1"] = 35
+                item["color0"] = 35
 
             if item["lianxuzhangtingtianshuyesterday"] > 2:
-                item["power-1"] = 35
+                item["color-1"] = 35
 
             if is_chuang_ye == 1 and item["zhangdie4thday"] >= 0.2 * 100:
-                item["power-1"] = 35
+                item["color-1"] = 35
         else:
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
-                item["power4"] = 13551615
+                item["color4"] = 13551615
             if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] < 700:
-                item["power5"] = 13551615
+                item["color5"] = 13551615
         chuang_data[key] = item
     return chuang_data
 
 
 # JingJiaJinEChengJiaoLiangBi      float64 ` column:"竞价量比;type=float"`
 # JingJiaJinEJingJiaLiangBi        float64 ` column:"今昨量比;type=float"`
-def definedPower2(chuang_data, qx):
+def definedcolor2(chuang_data, qx):
     imin = 0
     ijjlb = {'code': '', "data": 0}
     imax = {'code': '', "data": 0}
@@ -528,19 +528,19 @@ def definedPower2(chuang_data, qx):
     for (key, item) in chuang_data.items():
         if qx == 1:
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
-                item["power4"] = 13551615
+                item["color4"] = 13551615
             if imin == 0:
-                if item["jingjiaweipipeijinetoday"] < 0 and item["power-1"] != 35 and item[
+                if item["jingjiaweipipeijinetoday"] < 0 and item["color-1"] != 35 and item[
                     "jingjiajinechengjiaoliangbi"] >= 0.08:
                     imin = 1
-                    item["power-1"] = 13551615
+                    item["color-1"] = 13551615
 
             if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] <= 700:
-                item["power5"] = 13551615
+                item["color5"] = 13551615
         else:
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
-                if item["power-1"] != 35:
-                    item["power4"] = 13551615
+                if item["color-1"] != 35:
+                    item["color4"] = 13551615
 
                     if item["jingjiajinechengjiaoliangbi"] > ijjlb["data"]:
                         ijjlb["data"] = item["jingjiajinechengjiaoliangbi"]
@@ -549,10 +549,10 @@ def definedPower2(chuang_data, qx):
                     if item["zhangdie4thday"] > imax["data"]:
                         imax["data"] = item["zhangdie4thday"]
                         imax["code"] = key
-                        item["power-1"] = 13551615
+                        item["color-1"] = 13551615
 
             if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] <= 700:
-                item["power5"] = 13551615
+                item["color5"] = 13551615
                 if item["jingjiajinejingjialiangbi"] > ijzlb["data"]:
                     ijzlb["data"] = item["jingjiajinejingjialiangbi"]
                     ijzlb["code"] = key

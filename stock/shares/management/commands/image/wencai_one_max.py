@@ -51,15 +51,21 @@ json_data = read_json_file("data.json")
 concepts_sorted2 = {}
 x = []
 tomorrow_concept = []
+tomorrow_concept3 = {}
 for key, value in json_data.items():
     if key >= start and key <= end:
         concepts_sorted2[key] = value
         for iem in value:
-            if (len(hot) == 0 or  iem["concept"] in hot):
+            if (len(hot) == 0 or iem["concept"] in hot):
                 tomorrow_concept.append(iem["concept"])
+                if iem["concept"] not in tomorrow_concept3:
+                    tomorrow_concept3[iem["concept"]] = 0
+                tomorrow_concept3[iem["concept"]] = tomorrow_concept3[iem["concept"]] + len(iem["codes"])
         x.append(key)
 
-tomorrow_concept = list(set(tomorrow_concept))
+tomorrow_concept3 = sorted(tomorrow_concept3.items(), key=lambda x: x[1])
+tomorrow_concept = list(dict(tomorrow_concept3).keys())
+
 
 for concept in tomorrow_concept:
     d = []
@@ -70,6 +76,7 @@ for concept in tomorrow_concept:
             if key2["concept"] == concept:
                 d[i] = len(key2["codes"])
         i = i + 1
+    print(concept)
     plt.plot(x, d, label=concept)
 
 # 显示图例

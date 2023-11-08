@@ -193,7 +193,7 @@ def bu_zhang(data, today, yesterday):
         # 趋势未变弱
         # 根据封单的股票数，取强势的首版概念
         # 根据封单额度，取强势的首版概念
-        if "power" not in item or item["power"] != 35:
+        if "color" not in item or item["color"] != 35:
             sortgn.append({"gn": gn, "c": item["count"]})
             if imax < item["count"]:
                 imax = item["count"]
@@ -261,7 +261,7 @@ def bu_zhang(data, today, yesterday):
 
     for (code, item2) in yesterday["shou_ban_sort"].items():
 
-        if "power" in item2 and item2["power"] == 35:
+        if "color" in item2 and item2["color"] == 35:
             continue
         if item2["suoshugainian"] in gn:
             outgn.append(item2["suoshugainian"])
@@ -312,21 +312,21 @@ End Sub
 
 def zuo_biao_gao(yesterday):
     xian = concept.xia_xian()
-    power10 = 0
+    color10 = 0
     if yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["10cm"]:
-        power10 = 35
-    power20 = 0
+        color10 = 35
+    color20 = 0
     if yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["20cm"]:
-        power20 = 35
+        color20 = 35
 
     return {
         "zhu_ban": yesterday["day_5_sort"]["zhu_ban"],
         "chuang_ye_ban": yesterday["day_5_sort"]["chuang_ye_ban"],
         "ke_chuang_ban": yesterday["day_5_sort"]["ke_chuang_ban"],
 
-        "power10": power10,
+        "color10": color10,
 
-        "power20": power20,
+        "color20": color20,
     }
 
 
@@ -334,7 +334,7 @@ def merge_shou_ban(yesterday, before_yesterday):
     for gn, item in yesterday["shou_ban_sort"].items():
         if gn == "华为":
             print(gn)
-        yesterday["shou_ban_sort"][gn]["power"] = 0
+        yesterday["shou_ban_sort"][gn]["color"] = 0
 
         if len(before_yesterday["yi_zi_ban_sort"].keys()) == 0 and len(
                 yesterday["yi_zi_ban_sort"].keys()) == 0:
@@ -345,6 +345,6 @@ def merge_shou_ban(yesterday, before_yesterday):
 
         if before_yesterday["shou_ban_sort"][gn]["gai_nian_feng_dan_jin_e"] > item[
             "gai_nian_feng_dan_jin_e"]:
-            yesterday["shou_ban_sort"][gn]["power"] = 35
+            yesterday["shou_ban_sort"][gn]["color"] = 35
 
     return yesterday

@@ -200,14 +200,15 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
     if "yuan_yin" not in yesterday:
         return []
 
+    # 遍历竞价涨幅表，取涨跌幅大于 设置值的股票 的所属概念
     xia_xian = concept.xia_xian()
     gns = []
     for code, item in data2.items():
         if item["code"][0:5] == "SZ.30" or item["code"][0:6] == "SZ.688" or item["code"][0:6] == "SZ.689":
-            if item['jingjiazhangfutoday'] > xia_xian["chuang_ye_set"]:
+            if item['zhangdiefuqianfuquantoday'] > xia_xian["chuang_ye_set"]:
                 gns.extend(item["suoshugainian"])
         else:
-            if item['jingjiazhangfutoday'] > xia_xian["zhu_set"]:
+            if item['zhangdiefuqianfuquantoday'] > xia_xian["zhu_set"]:
                 gns.extend(item["suoshugainian"])
 
     gns = list(set(gns))
@@ -219,33 +220,37 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
                 "count": 0,
                 "today": 0,
                 "yesterday": 0,
-                "power": 0,
+                "color": 0,
             },
             "liu_tong_shi_zhi": 0,
 
             "jin_jing_feng": {
                 "today": 0,
                 "yesterday": 0,
-                "power": 0,
+                "color": 0,
             },
             "jin_jing_feng_count": {
                 "count": 0,
-                "power": 0,
+                "color": 0,
+            },
+            "zhang_ting_da_rou_count": {
+                "count": 0,
+                "color": 0,
             },
             "zhang_ting_da_rou": {
-                "power": 0,
+                "color": 0,
                 "count": 0,
             },
             "die_ting_da_mian": {
                 "today": 0,
-                "power": 0,
+                "color": 0,
             },
             "pan_zhong": {
-                "power": 0,
+                "color": 0,
                 "feng_dan": 0,
             },
             "pan_zhong_die": {
-                "power": 0,
+                "color": 0,
                 "feng_dan": 0,
             }
 
@@ -265,7 +270,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
 
         # 涨停概念对应股票少于昨天的, 说明比昨天的弱
         if chuang_bai_ri_xin_gao["today"] == 0 or chuang_bai_ri_xin_gao["today"] < chuang_bai_ri_xin_gao["yesterday"]:
-            chuang_bai_ri_xin_gao["power"] = 35
+            chuang_bai_ri_xin_gao["color"] = 35
         gn_dict[gn]["chuang_bai_ri_xin_gao"] = chuang_bai_ri_xin_gao
         # ------------------------------------
 
@@ -279,16 +284,26 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
             gn_dict[gn]["jin_jing_feng_count"]["count"] = yi_zi_ban_sort[gn]["count"]
 
             # 竞价未匹配<0 弱
-        if jin_jing_feng["today"] <= 0:
-            jin_jing_feng["power"] = 35
+        if jin_jing_feng["today"] <= 0 and gn_dict[gn]["jin_jing_feng_count"]["count"] >0:
+            jin_jing_feng["color"] = 35
+
+        # 封单开的时候才有，这里直接算了
+        zhang_ting_da_rou = today["yuan_yin"]["zhang_ting_da_rou"]
+        if gn in zhang_ting_da_rou:
+            gn_dict[gn]["zhang_ting_da_rou_count"]["count"] = zhang_ting_da_rou[gn]["count"]
+            if gn_dict[gn]["zhang_ting_da_rou_count"]["count"] < 1:
+                gn_dict[gn]["zhang_ting_da_rou_count"]["color"] = 35
+
 
         if gn in yi_zi_ban_sort_yesterday:
             jin_jing_feng["yesterday"] = yi_zi_ban_sort_yesterday[gn][
                 "gai_nian_jing_jia_wei_pi_pei"]
-        # 竞价未匹配<昨天 弱
-        if jin_jing_feng["today"] < jin_jing_feng["yesterday"]:
-            jin_jing_feng["power"] = 35
+            # 竞价未匹配<昨天 弱
+            if jin_jing_feng["today"] < jin_jing_feng["yesterday"] and gn_dict[gn]["jin_jing_feng_count"]["count"] >0 :
+                jin_jing_feng["color"] = 35
         gn_dict[gn]["jin_jing_feng"] = jin_jing_feng
+
+
         # ------------------------------------
         # 跌停大面
         # 计算跌停概念里面，每个概念对应， 竞价未匹配数量
@@ -303,7 +318,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
 
             # 跌停未匹配 大于 今天的未匹配  弱
             if gn_dict[gn]["die_ting_da_mian"]["today"] > gn_dict[gn]["jin_jing_feng"]["today"]:
-                gn_dict[gn]["die_ting_da_mian"]["power"] = 35
+                gn_dict[gn]["die_ting_da_mian"]["color"] = 35
 
         # ------------------------------------
         pan_zhong = gn_dict[gn]["pan_zhong"]
@@ -314,25 +329,25 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
                 # 盘中 涨停次数 < 1, 弱： execl : 298行
                 gn_dict[gn]["zhang_ting_da_rou"]["count"] = today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
                 if gn_dict[gn]["zhang_ting_da_rou"]["count"] < 1:
-                    gn_dict[gn]["zhang_ting_da_rou"]["power"] = 35
+                    gn_dict[gn]["zhang_ting_da_rou"]["color"] = 35
 
                 # 取盘中封单总额，对比今天的竞价 execl 346
                 pan_zhong["feng_dan"] = sum(
                     [x["zhangtingfengdanetoday"] for x in today["yuan_yin"]["lian_zhang_sort"][gn]["gai_nian_gu_piao"]])
                 if pan_zhong["feng_dan"] < gn_dict[gn]["jin_jing_feng"]["today"]:
-                    pan_zhong["power"] = 35
+                    pan_zhong["color"] = 35
                 elif pan_zhong["feng_dan"] > 0 and pan_zhong["feng_dan"] > gn_dict[gn]["jin_jing_feng"]["today"]:
-                    pan_zhong["power"] = 0
+                    pan_zhong["color"] = 0
 
             # execl 365
             if gn in today["yuan_yin"]["die_ting_sort"]:
                 pan_zhong_die["feng_dan"] = sum(
                     [x["zhangtingfengdanetoday"] for x in today["yuan_yin"]["die_ting_sort"][gn]["gai_nian_gu_piao"]])
                 if pan_zhong_die["feng_dan"] > pan_zhong["feng_dan"]:
-                    pan_zhong_die["power"] = 35
+                    pan_zhong_die["color"] = 35
 
         # 创百日新高， 和 今天封单 非弱
-        if gn_dict[gn]["chuang_bai_ri_xin_gao"]["power"] != 35 or gn_dict[gn]["jin_jing_feng"]["power"] != 35:
+        if gn_dict[gn]["chuang_bai_ri_xin_gao"]["color"] != 35 or gn_dict[gn]["jin_jing_feng"]["color"] != 35:
             # 昨日流通市值
             gn_dict[gn]["liu_tong_shi_zhi"] = sum(
                 item["ziyouliutongshizhiyesterday"] for code, item in data1.items() if gn in item["suoshugainian"])
@@ -403,14 +418,14 @@ def gai_nian_biao_shang_se(gn_dict):
         if isred == 0:
             imax = item["jin_jing_feng_count"]["count"]
 
-        if (item["jin_jing_feng"]["power"] != 35 and item["zhang_ting_da_rou"]["power"] != 35 and
-                item["die_ting_da_mian"]["power"] != 35 and item["jin_jing_feng_count"]["count"] == imax):
-            item["jin_jing_feng_count"]["power"] = 13421823
+        if (item["jin_jing_feng"]["color"] != 35 and item["zhang_ting_da_rou"]["color"] != 35 and
+                item["die_ting_da_mian"]["color"] != 35 and item["jin_jing_feng_count"]["count"] == imax):
+            item["jin_jing_feng_count"]["color"] = 13421823
             isred = 1
 
-    # 找到百日新高最大的， 然后power 改成1
+    # 找到百日新高最大的， 然后color 改成1
     maxd = max(gn_dict.items(),
-               key=lambda x: 0 if x[1]["chuang_bai_ri_xin_gao"]["power"] == 35 else x[1]["chuang_bai_ri_xin_gao"][
+               key=lambda x: 0 if x[1]["chuang_bai_ri_xin_gao"]["color"] == 35 else x[1]["chuang_bai_ri_xin_gao"][
                    "today"])
-    gn_dict[maxd[0]]["chuang_bai_ri_xin_gao"]["power"] = 13421823
+    gn_dict[maxd[0]]["chuang_bai_ri_xin_gao"]["color"] = 13421823
     return gn_dict

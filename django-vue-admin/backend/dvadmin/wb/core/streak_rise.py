@@ -1003,7 +1003,7 @@ def zhang_ting_yuan_yin(lianzhanggupiao, lianzhanggainian):
             "gai_nian_gu_piao": [],  # 含有该概念的股票
             "gai_nian_jing_jia_wei_pi_pei": 0, # 竞价未匹配
             "zhangfu120": 0,
-            "power": 0,
+            "color": 0,
             "gai_nian_feng_dan_jin_e": 0
         }
         # gainian["gai_nian_gu_piao"] = []
