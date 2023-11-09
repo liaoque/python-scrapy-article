@@ -294,7 +294,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
             if gn_dict[gn]["zhang_ting_da_rou_count"]["count"] < 1:
                 gn_dict[gn]["zhang_ting_da_rou_count"]["color"] = 35
 
-
+        # 昨天一字板
         if gn in yi_zi_ban_sort_yesterday:
             jin_jing_feng["yesterday"] = yi_zi_ban_sort_yesterday[gn][
                 "gai_nian_jing_jia_wei_pi_pei"]
@@ -302,6 +302,16 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
             if jin_jing_feng["today"] < jin_jing_feng["yesterday"] and gn_dict[gn]["jin_jing_feng_count"]["count"] >0 :
                 jin_jing_feng["color"] = 35
         gn_dict[gn]["jin_jing_feng"] = jin_jing_feng
+
+        # 涨停大肉
+        yi_zi_ban_sort_yesterday = yesterday["yuan_yin"]["yi_zi_ban_sort"]
+        if gn in yi_zi_ban_sort_yesterday:
+            jin_jing_feng["yesterday"] = yi_zi_ban_sort_yesterday[gn][
+                "gai_nian_jing_jia_wei_pi_pei"]
+            # 竞价未匹配<昨天 弱
+            if jin_jing_feng["today"] < jin_jing_feng["yesterday"] and gn_dict[gn]["jin_jing_feng_count"]["count"] >0 :
+                jin_jing_feng["color"] = 35
+
 
 
         # ------------------------------------
