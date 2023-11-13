@@ -226,7 +226,7 @@ class ResetView(View):
                                                                   before_yesterday_data["yuan_yin"])
 
         # 主板，创业板 数据
-        bu_zhang_data = bu_zhang.bu_zhang(data, today_data["yuan_yin"], yeasterday_data["yuan_yin"])
+        bu_zhang_data = bu_zhang.bu_zhang(data, chuang_ye_ban_gn,  today_data["yuan_yin"], yeasterday_data["yuan_yin"])
 
         d = {
             "chuang_ye_ban_gn": chuang_ye_ban_gn,

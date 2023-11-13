@@ -181,11 +181,9 @@ End Sub
 """
 
 
-def bu_zhang(data, today, yesterday):
+def bu_zhang(data, chuang_ye_ban_gn, today, yesterday, fd):
     imax = 0  # 最多概念
     maxgn = []  # 最大概念
-    fd = 0  # 封单
-    fd2 = 0  # 封单2
     fdgn = []  # 封单概念
     sortgn = []
 
@@ -195,43 +193,34 @@ def bu_zhang(data, today, yesterday):
         # 根据封单额度，取强势的首版概念
         if "color" not in item or item["color"] != 35:
             sortgn.append({"gn": gn, "c": item["count"]})
-            if imax < item["count"]:
-                imax = item["count"]
-                maxgn = []
-                maxgn.append(gn)
-                fd = item["gai_nian_feng_dan_jin_e"]
-            elif imax == item["count"]:
-                if fd < item["gai_nian_feng_dan_jin_e"]:
-                    maxgn = []
-                    maxgn.append(gn)
-                    fd = item["gai_nian_feng_dan_jin_e"]
-                elif fd == item["gai_nian_feng_dan_jin_e"]:
-                    maxgn.append(gn)
+            # if imax < item["count"]:
+            #     imax = item["count"]
+            #     maxgn = []
+            #     maxgn.append(gn)
+            #     fd = item["gai_nian_feng_dan_jin_e"]
+            # elif imax == item["count"]:
+            #     if fd < item["gai_nian_feng_dan_jin_e"]:
+            #         maxgn = []
+            #         maxgn.append(gn)
+            #         fd = item["gai_nian_feng_dan_jin_e"]
+            #     elif fd == item["gai_nian_feng_dan_jin_e"]:
+            #         maxgn.append(gn)
+            #
+            # if fd2 < item["gai_nian_feng_dan_jin_e"]:
+            #     fdgn = []
+            #     fdgn.append(gn)
+            #     fd2 = item["gai_nian_feng_dan_jin_e"]
+        # elif fd2 == item["gai_nian_feng_dan_jin_e"]:
+        #     fdgn.append(gn)
 
-            if fd2 < item["gai_nian_feng_dan_jin_e"]:
-                fdgn = []
-                fdgn.append(gn)
-                fd2 = item["gai_nian_feng_dan_jin_e"]
-        elif fd2 == item["gai_nian_feng_dan_jin_e"]:
-            fdgn.append(gn)
+        # if "新股与次新股" in maxgn or "国企改革" in maxgn:
+        #     sortgn = [item for item in sortgn if item["gn"] in ["新股与次新股", "国企改革"]]
+        #     sortgn = sorted(sortgn, key=lambda x: x["c"], reverse=True)
+        #     ngn = sortgn[1]["gn"]
+        #     if "新股与次新股" == ngn or "国企改革" == ngn:
+        #         ngn = sortgn[2]["gn"]
+        #         maxgn.append(ngn)
 
-        if "新股与次新股" in maxgn or "国企改革" in maxgn:
-            sortgn = [item for item in sortgn if item["gn"] in ["新股与次新股", "国企改革"]]
-            sortgn = sorted(sortgn, key=lambda x: x["c"], reverse=True)
-            ngn = sortgn[1]["gn"]
-            if "新股与次新股" == ngn or "国企改革" == ngn:
-                ngn = sortgn[2]["gn"]
-                maxgn.append(ngn)
-    # '3、在"table1"中找到5日涨跌幅最大的股票，这个例子是尚太科技，用这个股票的所属概念比对昨原因表里的首板的非绿的概念找出相同的概念。
-    max_code = max(data.items(), key=lambda x: x[1]["zhangfu5"])
-    if max_code[0][0:2] == "68":
-        feng_kou = "科创板"
-    elif max_code[0][0:2] == "30":
-        feng_kou = "创业板"
-    else:
-        feng_kou = "主板"
-
-    max_code = data[max_code[0]]
     # 5日内的最强势概念和股票
     gn = []
     outgn = []
@@ -254,18 +243,88 @@ def bu_zhang(data, today, yesterday):
             gn = (yesterday["day_5_sort"]["ke_chuang_ban"]["suoshugainian"])
             yzgp = yesterday["day_5_sort"]["ke_chuang_ban"]["code"][0:-3]
 
+    # 连涨股票
+    # zhu_chuang_zhang_ting = filter( lambda x: x[1]["zhu_chuang_zhang_ting"] == 1, data.items())
+    # zhu_chuang_zhang_ting = sorted(zhu_chuang_zhang_ting, key=lambda x: x[1]["lianbantianshutoday"], reverse=True)
+    # zhu_lianban = zhu_chuang_zhang_ting[0]
+
+    code_data = data[""]
+    lian_ban_code = {
+        "code": "",
+        "lianbantianshu": 0,
+        "lianbantianshu_coloer": 35,
+        "zhangdiefu_coloer": 0,
+    }
+
+    # 连板股票 h10 - h11
+    data2 = sorted(data.items(), key=lambda x: (x[1]["zhangdie4thday"], x[1]["LianXuZhangTingTianShu"]), reverse=True)
+    if fd == 1:
+        data2 = sorted(data2, key=lambda x: (x[1]["lianbantianshu"]),
+                       reverse=True)
+
+        if code_data["lianbantianshutoday"] == data2[0]["lianbantianshutoday"]:
+            lian_ban_code["code"] = data2[1]["code"]
+            lian_ban_code["lianbantianshu"] = data2[1]["lianbantianshutoday"]
+        else:
+            lian_ban_code["code"] = data2[0]["code"]
+            lian_ban_code["lianbantianshu"] = data2[0]["lianbantianshutoday"]
+
+    else:
+        if code_data["lianbantianshutoday"] == data2[0]["lianbantianshuyesterday"]:
+            lian_ban_code["code"] = data2[1]["code"]
+            lian_ban_code["lianbantianshu"] = data2[1]["lianbantianshuyesterday"]
+        else:
+            lian_ban_code["code"] = data2[0]["code"]
+            lian_ban_code["lianbantianshu"] = data2[0]["lianbantianshuyesterday"]
+
+    if lian_ban_code["lianbantianshu"] > 4:
+        lian_ban_code["lianbantianshu_coloer"] = 35
+
+    if lian_ban_code["code"] in data:
+        if fd == 1:
+            if data[lian_ban_code["code"]]["zhangdiefuqianfuquantoday"] < -0.04: lian_ban_code["zhangdiefu_coloer"] = 35
+        else:
+            if data[lian_ban_code["code"]]["jingjiazhangfutoday"] < -0.04: lian_ban_code["zhangdiefu_coloer"] = 35
+
+    # 120日涨跌幅 H12
+    data2 = sorted(data.items(), key=lambda x: (x[1]["zhangdie4thday"]), reverse=True)
+    lian_ban_code120 = {
+        "code": data2[0]["code"],
+        "zhangfu120": data2[0]["zhangfu120"],
+        "zhangfu120_color": 0,
+    }
+    if data2[0]["zhangdie4thday"] < 0.2:
+        lian_ban_code120["zhangfu120_color"] = 35
+
+    # 賽里斯
+    data2 = filter(lambda x: x[1]["zhangfu5"] > 0 and x[1]["ziyouliutongshizhiyesterday"] > 100 * 10000 * 10000, data2)
+    zhong_jun = {
+        "code": data2[0]["code"],
+    }
+
+    # '3、在"table1"中找到5日涨跌幅最大的股票，这个例子是尚太科技，用这个股票的所属概念比对昨原因表里的首板的非绿的概念找出相同的概念。
+    max_code = max(data.items(), key=lambda x: x[1]["zhangfu5"])
+    # if max_code[0][0:2] == "68":
+    #     feng_kou = "科创板"
+    # elif max_code[0][0:2] == "30":
+    #     feng_kou = "创业板"
+    # else:
+    #     feng_kou = "主板"
+
+    max_code = data[max_code[0]]
+
     # 取出阈值股票的5日涨幅
-    yzcode = data[yzgp]
+    # yzcode = data[yzgp]
+    yzcode = {"name": "", "zhangdie4thday": 0}
 
     gn.extend(max_code["suoshugainian"])
 
+    # 昨首版非綠的概念
     for (code, item2) in yesterday["shou_ban_sort"].items():
-
         if "color" in item2 and item2["color"] == 35:
             continue
         if item2["suoshugainian"] in gn:
             outgn.append(item2["suoshugainian"])
-
 
     # '如果当天一字板 表是空的，就昨原因里首板的所有概念里非绿的概念加入 结果表的补涨框    if len(today["yi_zi_ban_sort"].keys()) == 0:
     if len(today["yi_zi_ban_sort"].keys()) == 0:
@@ -273,11 +332,38 @@ def bu_zhang(data, today, yesterday):
 
     outgn.extend(maxgn)
     outgn.extend(fdgn)
+
+    outgn = list(set(outgn))
+
+    #outgn = filter(lambda x:x[1] in chuang_ye_ban_gn, outgn)
+
+    gn = []
+    # Offset(0, 4).Interior.ColorIndex <> 35
+    # gn.Offset(0, 5).Interior.ColorIndex <> 35
+    # gn.Offset(0, 6).Interior.ColorIndex <> 35
+    for (key, item) in outgn:
+        if item not in chuang_ye_ban_gn:
+            gn.append(item)
+        else:
+            if fd ==1:
+               if chuang_ye_ban_gn[item]["jin_jing_feng"]["color"] !=35 and \
+                   chuang_ye_ban_gn[item]["pan_zhong"]["color"] != 35 and \
+                   chuang_ye_ban_gn[item]["pan_zhong_die"]["color"] != 35 :
+                   gn.append(item)
+            else:
+                if chuang_ye_ban_gn[item]["jin_jing_feng"]["color"] != 35 and \
+                    chuang_ye_ban_gn[item][""]["color"] != 35:
+                    gn.append(item)
+
+
     bu_zhang = {
-        "feng_kou": feng_kou,
+        "lian_ban_code": lian_ban_code,
+        "lian_ban_code120": lian_ban_code120,
+        "zhong_jun": zhong_jun,
+        "feng_kou": "feng_kou",
         "yz": yzcode,
         "yz_rate": yzcode["zhangdie4thday"],
-        "gn": list(set(outgn)),
+        "gn": outgn,
         "zuo_biao_gao": zuo_biao_gao(yesterday)
     }
     return bu_zhang

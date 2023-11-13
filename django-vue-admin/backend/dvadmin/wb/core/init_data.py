@@ -236,14 +236,21 @@ def tag_shou_ban(table1, data):
     for item in data:
         code = item["code"]
         data[code]["zhangtingfengdanetoday"] = 0
+        data[code]["zhu_chuang_zhang_ting"] = 0
         data[code]["shou_ban"] = 0
+        # data[code]["lianbantianshuyesterday"] = 0
+        data[code]["lianbantianshutoday"] = 0
 
     data2 = table1["ZhuChuangZhangTing"]
     for items in data2:
         code = items["code"]
         if code not in data:
             continue
+        data[code]["zhu_chuang_zhang_ting"] = 1
+        data[code]["lian_ban_tian_shu"] = items["code"]
         data[code]["zhangtingfengdanetoday"] = items["zhangtingfengdanetoday"]
+        data[code]["lianbantianshuyesterday"] = items["lianbantianshuyesterday"]
+        data[code]["lianbantianshutoday"] = items["lianbantianshutoday"]
         if items["lianbantianshutoday"] != 1:
             continue
         data[code]["shou_ban"] = 1
