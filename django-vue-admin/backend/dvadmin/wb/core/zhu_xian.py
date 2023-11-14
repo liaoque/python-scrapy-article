@@ -149,9 +149,17 @@ End Sub
 概念1： 次数
 概念2： 次数
 """
+
+
 def zhuxian(data):
     data2 = data.items()
-    suoshugainian = [item['suoshugainian'] for item in data2 if item['zhuxianyuan'] == 1]
+    suoshugainian = [item['suoshugainian'] for item in data2 if item['zhu_xian_yuan'] == 1]
     suoshugainian = [it for item in suoshugainian for it in item]
     unique_array = list(set(suoshugainian))
-    return {it: suoshugainian.count(it) for it in unique_array}
+
+    unique_array = [{
+        'gn': it,
+        'c': suoshugainian.count(it)
+    } for it in unique_array]
+    # data = sorted(data, key=lambda x: x['count'], reverse=True)
+    return sorted(unique_array, key=lambda x: x[1]['c'], reverse=True)

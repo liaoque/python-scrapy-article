@@ -216,7 +216,7 @@ class ResetView(View):
 
 
 
-        # 创业版概念
+        # 创业版概念， 生成所属概念
         chuang_ye_ban_gn = suo_shu_gai_nian.suo_shu_gai_nian(data1, data2, today_data, yeasterday_data)
 
         #    a= chuang_ye_ban_gn["专精特新"]
@@ -230,13 +230,16 @@ class ResetView(View):
 
         d = {
             "chuang_ye_ban_gn": chuang_ye_ban_gn,
+            "zhu_xian": yuan_yin["zhu_xian"],
             "bu_zhang_data": bu_zhang_data,
             "qing_xu": jie_guo.qingxu(today_data["yuan_yin"], yeasterday_data["yuan_yin"])
         }
 
         d2 = biao_shai_xuan.biao_shai_xuan(d, data1)
+        d["chuang_data"] = d2["chuang_data"]
+        d["zhu_data"] = d2["zhu_data"]
 
-        d.update(d2)
+        # d.update(d2)
         result = pi_pei_gai_nian.pi_pei_gai_nian(d)
 
         # self.client.close()
