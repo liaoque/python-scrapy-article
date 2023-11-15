@@ -1,3 +1,5 @@
+from dvadmin.wb.config import code_config
+
 """
 Sub 匹配概念()
     Debug.Print Now & "匹配概念"
@@ -315,13 +317,80 @@ End Sub
 """
 
 
+def setColor3Purple(chuang_data):
+    tmp = sorted(chuang_data.items(), key=lambda x: x[1]["zhangdie4thday"], reverse=True)
+    chuang_data = dict(tmp)
+
+    rng5 = None
+    for (key, item) in chuang_data.items():
+        if item["color1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item["color10"] == 37:
+            if rng5 is None:
+                rng5 = item
+            if item["color8"] != 38 and item["zuo_ri_lian_ban_tian_shu"] > 0:
+                item["color3"] = 29
+                return chuang_data
+    rng5["color3"] = 29
+    return chuang_data
+
+
+def setColor1Orange(chuang_data):
+    tmp = sorted(chuang_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
+    chuang_data = dict(tmp)
+    for (key, item) in chuang_data.items():
+        if item["color1"] != 35 and item["jingjiaweipipeijinetoday"] < 0 and item["chuang_bai_ri_xin_gao"] > 0 and item[
+            "color10"] == 37:
+            item["color0"] = 46
+            break
+    return chuang_data
+
+
+def setColor1Yellow(chuang_data):
+    # 破20日均线
+    tmp = sorted(chuang_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
+    chuang_data = dict(tmp)
+    for (key, item) in chuang_data.items():
+        if item["zhangdiefuqianfuquantoday"] > 0 and item[
+            "po20"] < 0:
+            item["color1"] = 36
+            break
+    return chuang_data
+
+
+def setColor1Pink(chuang_data):
+    for (key, item) in chuang_data.items():
+        if item["color1"] != 35 and item["jingjiaweipipeijinetoday"] == 0 and item[
+            "jingjiajinechengjiaoliangbi"] >= 0.08:
+            item["color1"] = 13551615
+            break
+    return chuang_data
+
+
+def setColor6Red(chuang_data_s, chuang_data):
+    code = chuang_data_s["max_jingjiajinechengjiaoliangbi"]["code"]
+    chuang_data[code]["color6"] = 3
+    return chuang_data
+
+
+def setColor7Red(chuang_data_s, chuang_data):
+    if chuang_data_s["max_jingjiajinejingjialiangbi"]["code"] != "":
+        code = chuang_data_s["max_jingjiajinejingjialiangbi"]["code"]
+        chuang_data[code]["color7"] = 3
+
+        if chuang_data[code]["color1"] != 35:
+            if chuang_data[code]["jingjiajinechengjiaoliangbi"] >= 0.08 and \
+                    chuang_data[code]["jingjiajinechengjiaoliangbi"] < 1:
+                chuang_data[code]["color1"] = 13551615
+    return chuang_data
+
+
 def pi_pei_gai_nian(d):
     chuang_data = d["chuang_data"]
     zhu_data = d["zhu_data"]
 
     # execl:1004
     qx = d["qing_xu"]
-    yzcode = d["bu_zhang_data"]["yz"]
+    # yzcode = d["bu_zhang_data"]["yz"]
+    bu_zhang_data = d["bu_zhang_data"]
     # 昨标高
     # if d["bu_zhang_data"]["zuo_biao_gao"]["color10"] == 35:
     #     code = d["bu_zhang_data"]["zuo_biao_gao"]["zhu_ban"]["code"]
@@ -338,8 +407,8 @@ def pi_pei_gai_nian(d):
     #         zhu_data[code]["color1"] = 35
 
     # execl 1013
-    chuang_data = definedcolor1(chuang_data, yzcode, qx)
-    zhu_data = definedcolor1(zhu_data, yzcode, qx, 0)
+    chuang_data = definedcolor1(chuang_data, bu_zhang_data, qx)
+    zhu_data = definedcolor1(zhu_data, bu_zhang_data, qx, 0)
 
     # execl 1055
     chuang_data_s = definedcolor2(chuang_data, qx)
@@ -351,53 +420,35 @@ def pi_pei_gai_nian(d):
 
     if qx == 1:
         if chuang_data_s["imin"] == 0:
-            for (key, item) in chuang_data.items():
-                if item["color1"] != 35 and item["jingjiaweipipeijinetoday"] == 0 and item[
-                    "jingjiajinechengjiaoliangbi"] >= 0.08:
-                    item["color1"] = 13551615
-                    break
+            chuang_data = setColor1Pink(chuang_data)
 
         if zhu_data_s["imin"] == 0:
-            for (key, item) in zhu_data.items():
-                if item["color1"] != 35 and item["jingjiaweipipeijinetoday"] == 0 and item[
-                    "jingjiajinechengjiaoliangbi"] > 0.08:
-                    item["color1"] = 13551615
-                    break
+            zhu_data = setColor1Pink(zhu_data)
     else:
-        if chuang_data_s["ijjlb"]["code"] != "":
-            code = chuang_data_s["ijjlb"]["code"]
-            chuang_data[code]["color4"] = 3
+        chuang_data = setColor6Red(chuang_data_s, chuang_data)
+        chuang_data = setColor7Red(chuang_data_s, chuang_data)
 
-        if chuang_data_s["ijzlb"]["code"] != "":
-            code = chuang_data_s["ijzlb"]["code"]
-            chuang_data[code]["color5"] = 3
+        zhu_data = setColor6Red(zhu_data_s, zhu_data)
+        zhu_data = setColor7Red(zhu_data_s, zhu_data)
 
-            if chuang_data[code]["color1"] != 35:
-                if chuang_data[code]["jingjiajinechengjiaoliangbi"] >= 0.08 and \
-                        chuang_data[code]["jingjiajinechengjiaoliangbi"] < 1:
-                    chuang_data[code]["color1"] = 13551615
+    chuang_data = setColor1Yellow(chuang_data)
+    zhu_data = setColor1Yellow(zhu_data)
 
-        if zhu_data_s["ijjlb"]["code"] != "":
-            code = zhu_data_s["ijjlb"]["code"]
-            zhu_data[code]["color4"] = 3
+    chuang_data = setColor1Orange(chuang_data)
+    zhu_data = setColor1Orange(zhu_data)
 
-        if zhu_data_s["ijzlb"]["code"] != "":
-            code = zhu_data_s["ijzlb"]["code"]
-            zhu_data[code]["color5"] = 3
-            if zhu_data[code]["color1"] != 35:
-                if zhu_data[code]["jingjiajinechengjiaoliangbi"] >= 0.08 and \
-                        zhu_data[code]["jingjiajinechengjiaoliangbi"] < 1:
-                    zhu_data[code]["color1"] = 13551615
-
-    for (key, item) in chuang_data.items():
-        if item["color1"] != 35 and item["color4"] != 13551615 and item["color4"] != 3:
-            chuang_data[key]["color1"] = 36
-            break
-
-    for (key, item) in zhu_data.items():
-        if item["color1"] != 35 and item["color4"] != 13551615 and item["color4"] != 3:
-            zhu_data[key]["color1"] = 36
-            break
+    chuang_data = setColor3Purple(chuang_data)
+    zhu_data = setColor3Purple(zhu_data)
+    #
+    # for (key, item) in chuang_data.items():
+    #     if item["color1"] != 35 and item["color4"] != 13551615 and item["color4"] != 3:
+    #         chuang_data[key]["color1"] = 36
+    #         break
+    #
+    # for (key, item) in zhu_data.items():
+    #     if item["color1"] != 35 and item["color4"] != 13551615 and item["color4"] != 3:
+    #         zhu_data[key]["color1"] = 36
+    #         break
 
     result = {
         "bu_zhang": getbu_zhang(chuang_data, zhu_data),
@@ -463,11 +514,12 @@ def rulebu_zhang(chuang_data):
     return bu_zhang
 
 
-def definedcolor1(chuang_data, yzcode, qx, is_chuang_ye=1):
+def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
     for (key, item) in chuang_data.items():
+        item["color0"] = 0
         item["color1"] = 0
         item["color2"] = 0
-        item["color0"] = 0
+        item["color3"] = 0
         item["color4"] = 0
         item["color5"] = 0
         item["color6"] = 0
@@ -487,33 +539,45 @@ def definedcolor1(chuang_data, yzcode, qx, is_chuang_ye=1):
         # if item["zhangdie4thday"] > yzcode["zhangdie4thday"] and \
         #         item["jingjiajinechengjiaoliangbi"] >= 0.08:
         #     item["color1"] = 35
+        xia_xian = code_config.CodeConfig().getCodeConfig()
 
-        #  异动次数大于等于3或者监管类型有数据或者停牌非0或今昨量比大于700或者竞价量比大于等于100或自由流通市值大于80
-        if item["yidongcishu"] >= 3 or item["jianguanleixingyesterday"] != "" or \
+        # 异动次数大于等于3 且异动是开的情况下 且 创百日新高 == 1
+        if item["yidongcishu"] >= 3 and xia_xian["yd"] == 1 and item["chuang_bai_ri_xin_gao"] == 0:
+            item["color1"] = 35
+
+        #  监管类型有数据或者停牌非0或今昨量比大于700或者竞价量比大于等于100或 自由流通市值大于100且不符合塞力斯概念 H13
+        if item["jianguanleixingyesterday"] != "" or \
                 item["jingjiajinejingjialiangbi"] > 700 or \
                 item["jingjiajinechengjiaoliangbi"] >= 1 or \
-                (item["ziyouliutongshizhiyesterday"] / 100000000 > 200 and is_chuang_ye != 1):
+                (item["ziyouliutongshizhiyesterday"] / 100000000 > 100 and item["code"] !=
+                 bu_zhang_data["zhong_jun"]["code"]):
             item["color1"] = 35
 
         if qx == -1:
-            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["zhangdiefuqianfuquantoday"] < 0:
+            if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["zhangdiefuqianfuquantoday"] < 0 and item["code"] != \
+                    bu_zhang_data["lianbantianshu"]["code"]:
+                item["color1"] = 35
+                item["color4"] = 35
+
+            if item["jingjiaweipipeijinetoday"] == 0:
                 item["color1"] = 35
                 item["color2"] = 35
 
-            if item["ziyouliutongshizhiyesterday"] == 0:
-                item["color1"] = 35
-                item["color0"] = 35
-
             if item["lianxuzhangtingtianshuyesterday"] > 2:
-                item["color1"] = 35
+                if is_chuang_ye == 1:
+                    item["color1"] = 35
+                elif item["lianxuzhangtingtianshuyesterday"] < bu_zhang_data["lian_ban_code"]["lianbantianshu"]:
+                    #  连板天数 < 最大连板天数
+                    item["color1"] = 35
 
-            if is_chuang_ye == 1 and item["zhangdie4thday"] >= 0.2 * 100:
+            # 创业板情绪差原来是4日涨跌幅大于20%就绿改成4日涨跌幅大于100%
+            if is_chuang_ye == 1 and item["zhangdie4thday"] >= 1 * 100:
                 item["color1"] = 35
         else:
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
-                item["color4"] = 13551615
+                item["color6"] = 13551615
             if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] < 700:
-                item["color5"] = 13551615
+                item["color7"] = 13551615
         chuang_data[key] = item
     return chuang_data
 
@@ -522,45 +586,55 @@ def definedcolor1(chuang_data, yzcode, qx, is_chuang_ye=1):
 # JingJiaJinEJingJiaLiangBi        float64 ` column:"今昨量比;type=float"`
 def definedcolor2(chuang_data, qx):
     imin = 0
-    ijjlb = {'code': '', "data": 0}
-    imax = {'code': '', "data": 0}
-    ijzlb = {'code': '', "data": 0}
+    # 最大竞价量比 ijjlb
+    max_jingjiajinechengjiaoliangbi = {'code': '', "data": 0}
+    # 四日最大涨跌幅 imax
+    max_zhangdie4thday = {'code': '', "data": 0}
+    # 最大今昨量比 ijzlb
+    max_jingjiajinejingjialiangbi = {'code': '', "data": 0}
     for (key, item) in chuang_data.items():
         if qx == 1:
+            #  竞价量比 > 0.08 and 竞价量比 < 1 粉色
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
-                item["color4"] = 13551615
+                item["color6"] = 13551615
             if imin == 0:
+                # 竞价未匹配 < 0 and 名字不是绿色 and 竞价量比 > 0.08
                 if item["jingjiaweipipeijinetoday"] < 0 and item["color1"] != 35 and item[
                     "jingjiajinechengjiaoliangbi"] >= 0.08:
                     imin = 1
                     item["color1"] = 13551615
-
+            # 今昨量比 > 100 and 今昨量比 <= 700 粉色
             if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] <= 700:
-                item["color5"] = 13551615
+                item["color7"] = 13551615
         else:
+            # 竞价量比 > 0.08 and 竞价量比 < 1
+            # 颜色不是绿色 粉色
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
                 if item["color1"] != 35:
-                    item["color4"] = 13551615
+                    item["color6"] = 13551615
 
-                    if item["jingjiajinechengjiaoliangbi"] > ijjlb["data"]:
-                        ijjlb["data"] = item["jingjiajinechengjiaoliangbi"]
-                        ijjlb["code"] = key
+                    # 竞价量比
+                    if item["jingjiajinechengjiaoliangbi"] > max_jingjiajinechengjiaoliangbi["data"]:
+                        max_jingjiajinechengjiaoliangbi["data"] = item["jingjiajinechengjiaoliangbi"]
+                        max_jingjiajinechengjiaoliangbi["code"] = item["code"]
 
-                    if item["zhangdie4thday"] > imax["data"]:
-                        imax["data"] = item["zhangdie4thday"]
-                        imax["code"] = key
+                    # 四日最大涨跌幅
+                    if item["zhangdie4thday"] > max_zhangdie4thday["data"]:
+                        max_zhangdie4thday["data"] = item["zhangdie4thday"]
+                        max_zhangdie4thday["code"] = item["code"]
                         item["color1"] = 13551615
 
+            # 今昨量比 > 100 and 今昨量比 <= 700 粉色
             if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] <= 700:
-                item["color5"] = 13551615
-                if item["jingjiajinejingjialiangbi"] > ijzlb["data"]:
-                    ijzlb["data"] = item["jingjiajinejingjialiangbi"]
-                    ijzlb["code"] = key
+                item["color7"] = 13551615
+                if item["jingjiajinejingjialiangbi"] > max_jingjiajinejingjialiangbi["data"]:
+                    max_jingjiajinejingjialiangbi["data"] = item["jingjiajinejingjialiangbi"]
+                    max_jingjiajinejingjialiangbi["code"] = item["code"]
         chuang_data[key] = item
     return {
         "imin": imin,
-        "ijjlb": ijjlb,
-        "imax": imax,
-        "ijzlb": ijzlb,
+        "max_jingjiajinechengjiaoliangbi": max_jingjiajinechengjiaoliangbi,
+        "max_zhangdie4thday": max_zhangdie4thday,
+        "max_jingjiajinejingjialiangbi": max_jingjiajinejingjialiangbi,
         "data": chuang_data,
     }

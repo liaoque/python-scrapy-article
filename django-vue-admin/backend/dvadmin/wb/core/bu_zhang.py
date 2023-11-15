@@ -1,4 +1,5 @@
 from dvadmin.wb.core import concept
+from dvadmin.wb.config import code_config
 
 """
 
@@ -397,7 +398,7 @@ End Sub
 
 
 def zuo_biao_gao(yesterday):
-    xian = concept.xia_xian()
+    xian = code_config.CodeConfig().getCodeConfig()
     color10 = 0
     if yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["10cm"]:
         color10 = 35

@@ -1,5 +1,6 @@
 from dvadmin.wb.core import concept, gn
 from collections import Counter
+from dvadmin.wb.config import code_config
 
 """
 Sub 生成所属概念()
@@ -201,7 +202,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
         return []
 
     # 遍历竞价涨幅表，取涨跌幅大于 设置值的股票 的所属概念
-    xia_xian = concept.xia_xian()
+    xia_xian = code_config.CodeConfig().getCodeConfig()
     gns = []
     for code, item in data2.items():
         if item["code"][0:5] == "SZ.30" or item["code"][0:6] == "SZ.688" or item["code"][0:6] == "SZ.689":
