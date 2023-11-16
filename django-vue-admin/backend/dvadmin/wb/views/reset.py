@@ -68,6 +68,7 @@ class ResetView(View):
             "N10": 1,
             "N20": 1,
             "YiZiDieTing": 1,
+            "ZhuXianYuan": 1,
         }))
         data = init_data.tag_all(table1, data)
 
@@ -176,8 +177,7 @@ class ResetView(View):
 
         # 查昨原因
         history_day_data = history_day_table.find({"history_day": {"$lt": current_time}},
-                                                  sort=[("history_day", -1)]).limit(
-            2)
+                                                  sort=[("history_day", -1)]).limit(2)
         history_day_data = list(history_day_data)
         yeasterday_data = {}
         before_yesterday_data = {}
@@ -189,10 +189,9 @@ class ResetView(View):
             before_yesterday_data = self.db['d' + yesterday_day].find_one({}, {"yuan_yin": 1})
 
         if "yuan_yin" not in yeasterday_data:
-            j = list(data.values())
             table.update_one({"_id": table1["_id"]}, {
                 "$set": {
-                    "Table1FromJSON": j,
+                    # "Table1FromJSON": j,
                     # "Table": data2.values(),
                     "yuan_yin": yuan_yin,
                 }
@@ -204,10 +203,10 @@ class ResetView(View):
             "yuan_yin": yuan_yin
         }
 
-        j = list(data.values())
+        # j = list(data.values())
         table.update_one({"_id": table1["_id"]}, {
             "$set": {
-                "Table1FromJSON": j,
+                # "Table1FromJSON": j,
                 # "Table": data2.values(),
                 "yuan_yin": yuan_yin,
             }

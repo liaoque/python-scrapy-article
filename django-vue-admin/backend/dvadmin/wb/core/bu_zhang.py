@@ -1,6 +1,5 @@
 from dvadmin.wb.core import concept
 from dvadmin.wb.config import code_config
-
 """
 
 Sub 补涨()
@@ -182,12 +181,13 @@ End Sub
 """
 
 
-def bu_zhang(data, chuang_ye_ban_gn, today, yesterday, fd):
+def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
     imax = 0  # 最多概念
     maxgn = []  # 最大概念
     fdgn = []  # 封单概念
     sortgn = []
-
+    xia_xian = code_config.CodeConfig().getCodeConfig()
+    fd = xia_xian["fd"]
     for gn, item in yesterday["shou_ban_sort"].items():
         # 趋势未变弱
         # 根据封单的股票数，取强势的首版概念
@@ -227,20 +227,21 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday, fd):
     outgn = []
     yzcode = {}
     yzgp = ""  # 阈值股票名
+    zhangfu5 = 0
     if yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"] != -1000:
         gn = (yesterday["day_5_sort"]["zhu_ban"]["suoshugainian"])
-        fd = yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"]
+        zhangfu5 = yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"]
         yzgp = yesterday["day_5_sort"]["zhu_ban"]["code"][0:-3]
 
     if yesterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"] != -1000:
-        if fd < yesterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]:
-            fd = yesterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]
+        if zhangfu5 < yesterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]:
+            zhangfu5 = yesterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"]
             gn = (yesterday["day_5_sort"]["chuang_ye_ban"]["suoshugainian"])
             yzgp = yesterday["day_5_sort"]["chuang_ye_ban"]["code"][0:-3]
 
     if yesterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"] != -1000:
-        if fd < yesterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]:
-            fd = yesterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]
+        if zhangfu5 < yesterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]:
+            zhangfu5 = yesterday["day_5_sort"]["ke_chuang_ban"]["zhangfu5"]
             gn = (yesterday["day_5_sort"]["ke_chuang_ban"]["suoshugainian"])
             yzgp = yesterday["day_5_sort"]["ke_chuang_ban"]["code"][0:-3]
 
@@ -249,7 +250,7 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday, fd):
     # zhu_chuang_zhang_ting = sorted(zhu_chuang_zhang_ting, key=lambda x: x[1]["lianbantianshutoday"], reverse=True)
     # zhu_lianban = zhu_chuang_zhang_ting[0]
 
-    code_data = data[""]
+    # code_data = data[""]
     lian_ban_code = {
         "code": "",
         "lianbantianshu": 0,

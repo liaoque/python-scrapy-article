@@ -1,4 +1,5 @@
 from dvadmin.wb.core import concept, gn
+from dvadmin.wb.utils import gp
 
 """
 Sub 增加前后分号()
@@ -176,19 +177,19 @@ def tag_all(table1, data):
 
 
 def tag_zha_ban(table1, data):
+    for code, item in data.items():
+        data[code]["zha_ban"] = 0
+
     if "JinCengZhangTing" not in table1:
         return data
 
-    for item in data:
-        code = item["code"]
-        data[code]["zha_ban"] = 0
-
     data2 = table1["JinCengZhangTing"]
     for items in data2:
-        code = items["code"][0:-3]
-        if code not in data:
+
+        code2 = gp.getCode(items["code"])
+        if code2 not in data:
             continue
-        data[code]["zha_ban"] = 1
+        data[code2]["zha_ban"] = 1
     return data
 
 
@@ -196,13 +197,12 @@ def tag_chuang_bai_ri_xin_gao(table1, data):
     if "ChuangBaiRiXinGao" not in table1:
         return data
 
-    for item in data:
-        code = item["code"]
+    for code, item in data.items():
         data[code]["chuang_bai_ri_xin_gao"] = 0
 
     data2 = table1["ChuangBaiRiXinGao"]
     for items in data2:
-        code = items["code"][0:-3]
+        code = gp.getCode(items["code"])
         if code not in data:
             continue
         data[code]["chuang_bai_ri_xin_gao"] = 1
@@ -213,14 +213,13 @@ def tag_yi_zi_ban(table1, data):
     if "YiZiBan" not in table1:
         return data
 
-    for item in data:
-        code = item["code"]
+    for code, item in data.items():
         data[code]["jingjiaweipipeijinetoday"] = 0
         data[code]["yi_zi_ban"] = 1
 
     data2 = table1["YiZiBan"]
     for items in data2:
-        code = items["code"][0:-3]
+        code = gp.getCode(items["code"])
         if code not in data:
             continue
         data[code]["jingjiaweipipeijinetoday"] = items["jingjiaweipipeijinetoday"]
@@ -233,8 +232,7 @@ def tag_shou_ban(table1, data):
     if "ZhuChuangZhangTing" not in table1:
         return data
 
-    for item in data:
-        code = item["code"]
+    for code, item in data.items():
         data[code]["zhangtingfengdanetoday"] = 0
         data[code]["zhu_chuang_zhang_ting"] = 0
         data[code]["shou_ban"] = 0
@@ -243,12 +241,12 @@ def tag_shou_ban(table1, data):
 
     data2 = table1["ZhuChuangZhangTing"]
     for items in data2:
-        code = items["code"]
+        code = gp.getCode(items["code"])
         if code not in data:
             continue
         data[code]["zhu_chuang_zhang_ting"] = 1
         data[code]["lian_ban_tian_shu"] = items["code"]
-        data[code]["zhangtingfengdanetoday"] = items["zhangtingfengdanetoday"]
+        data[code]["zhangtingfengdanetoday"] = float(items["zhangtingfengdanetoday"])
         data[code]["lianbantianshuyesterday"] = items["lianbantianshuyesterday"]
         data[code]["lianbantianshutoday"] = items["lianbantianshutoday"]
         if items["lianbantianshutoday"] != 1:
@@ -263,8 +261,7 @@ def tag_yi_dong(table1, data):
     if "YiDong" not in table1:
         return data
 
-    for item in data:
-        code = item["code"]
+    for code, item in data.items():
         data[code]["jianguanleixingyesterday"] = ""
         data[code]["lianxuzhangtingtianshuyesterday"] = 0
         data[code]["yidongcishu"] = 0
@@ -273,7 +270,7 @@ def tag_yi_dong(table1, data):
     data2 = table1["YiDong"]
 
     for items in data2:
-        code = items["code"][0:-3]
+        code = gp.getCode(items["code"])
         if code not in data:
             continue
         data[code]["jianguanleixingyesterday"] = items["jianguanleixingyesterday"]
@@ -289,15 +286,14 @@ def tag_yi_zi_die_ting(table1, data):
     if "YiZiDieTing" not in table1:
         return data
 
-    for item in data:
-        code = item["code"]
+    for code, item in data.items():
         data[code]["jingjiaweipipeijinetoday"] = 0
         data[code]["yi_zi_die_ting"] = 0
 
     data2 = table1["YiZiDieTing"]
 
     for items in data2:
-        code = items["code"][0:-3]
+        code = gp.getCode(items["code"])
         if code not in data:
             continue
         data[code]["jingjiaweipipeijinetoday"] = items["jingjiaweipipeijinetoday"]
@@ -311,15 +307,14 @@ def tag_n10(table1, data):
     if "N10" not in table1:
         return data
 
-    for item in data:
-        code = item["code"]
+    for code, item in data.items():
         data[code]["n"] = 0
         data[code]["N_zuocengzhangting"] = 0
 
     data2 = table1["N10"]
 
     for items in data2:
-        code = items["code"][0:-3]
+        code = gp.getCode(items["code"])
         if code not in data:
             continue
         data[code]["n"] = 1
@@ -334,15 +329,14 @@ def tag_n20(table1, data):
     if "N20" not in table1:
         return data
 
-    for item in data:
-        code = item["code"]
+    for code, item in data.items():
         data[code]["n"] = 0
         data[code]["N_zuidazhangfu"] = 0
 
     data2 = table1["N20"]
 
     for items in data2:
-        code = items["code"][0:-3]
+        code = gp.getCode(items["code"])
         if code not in data:
             continue
         data[code]["n"] = 1
@@ -356,8 +350,7 @@ def tag_zhu_xian_yuan(table1, data):
     if "ZhuXianYuan" not in table1:
         return data
 
-    for item in data:
-        code = item["code"]
+    for code, item in data.items():
         data[code]["n"] = 0
         data[code]["zhu_xian_yuan"] = 0
         data[code]["z_zhangfu10"] = 0
@@ -366,7 +359,7 @@ def tag_zhu_xian_yuan(table1, data):
     data2 = table1["ZhuXianYuan"]
 
     for items in data2:
-        code = items["code"][0:-3]
+        code = gp.getCode(items["code"])
         if code in data:
             data[code]["zhu_xian_yuan"] = 1
             if "zhangfu10" in items and items["zhangfu10"] > 0:

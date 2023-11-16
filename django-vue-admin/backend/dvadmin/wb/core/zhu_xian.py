@@ -153,7 +153,7 @@ End Sub
 
 def zhuxian(data):
     data2 = data.items()
-    suoshugainian = [item['suoshugainian'] for item in data2 if item['zhu_xian_yuan'] == 1]
+    suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['zhu_xian_yuan'] == 1]
     suoshugainian = [it for item in suoshugainian for it in item]
     unique_array = list(set(suoshugainian))
 
@@ -162,4 +162,5 @@ def zhuxian(data):
         'c': suoshugainian.count(it)
     } for it in unique_array]
     # data = sorted(data, key=lambda x: x['count'], reverse=True)
-    return sorted(unique_array, key=lambda x: x[1]['c'], reverse=True)
+    unique_array = sorted(unique_array, key=lambda x: x['c'], reverse=True)
+    return unique_array

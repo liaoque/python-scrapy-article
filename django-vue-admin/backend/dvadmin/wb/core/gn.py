@@ -150,13 +150,11 @@ def gn_merge(data, path="data.xlsx"):
                 suoshugainian = item["suoshugainian"].split(";")
                 suoshuhangye = item["suoshuhangye"].split("-")[1:2]
 
-
-        if code  in data2:
+        if code in data2:
             gn = data2[code][2]
             suoshugainian2 = gn.split(",")
             suoshugainian2.extend(suoshuhangye)
             suoshugainian.extend(suoshugainian2)
-
 
         item["suoshugainian"] = concept.filter1(suoshugainian)
         a = item["suoshugainian"]
@@ -173,6 +171,28 @@ def gn_merge(data, path="data.xlsx"):
         a = [x.replace("概念", "") if x.find("概念") > 0 else x for x in a]
         item["suoshugainian"] = list(set(["新股与次新股" if x == "注册制次新股" else x for x in a]))
 
+        # item['zhangtingfengdanetoday'] = float(item['zhangtingfengdanetoday'])
+
+        setFloatValue(item, "dietingfengdane")
+        setFloatValue(item, "zhangdiefuqianfuquantoday")
+        setFloatValue(item, "higestpricetoday")
+        setFloatValue(item, "shoupanjiatoday")
+        setFloatValue(item, "lowestpricetoday")
+        setFloatValue(item, "chengjiaoeyesterday")
+
         data[code] = item
 
     return data
+
+
+def setFloatValue(item, name):
+    if name not in item:
+        item[name] = 0
+        return item
+
+    if item[name] is None:
+        item[name] = 0
+        return item
+
+    item[name] = float(item[name])
+    return item

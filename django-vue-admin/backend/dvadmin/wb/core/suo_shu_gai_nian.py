@@ -214,6 +214,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
 
     gns = list(set(gns))
     gn_dict = {}
+    fd = xia_xian['fd']
     for gn in gns:
         gn_dict[gn] = {
             "suoshugainian": gn,
@@ -249,45 +250,56 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
         # ------------------------------------
         # 创百日新高
         # 计算创百日新高里面，每个概念对应的股票数量
-        gn_dict = createChuangBaiRiXinGao(gn_dict, today, yesterday)
+        gn_dict = createChuangBaiRiXinGao(gn_dict, gn, today, yesterday)
         # ------------------------------------
 
         # 一字板
         # 计算一字板概念里面，每个概念对应的股票数量， 竞价未匹配数量
-        gn_dict = createJinJingFeng(gn_dict, today, yesterday)
+        gn_dict = createJinJingFeng(gn_dict, gn, today, yesterday)
 
         # 封单开， 计算盘中涨停股票数
         gn_dict = createZhangTingDaRou(gn_dict, today, fd)
 
         # ------------------------------------
         # 取盘中封单总额，对比今天的竞价
-        if fd == 1:
-            gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] = today["yuan_yin"]["lian_zhang_sort"][gn][
-                "gai_nian_feng_dan_jin_e"]
-            if gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] < gn_dict[gn]["jin_jing_feng"]["today"]:
-                gn_dict[gn]["pan_zhong"]["color"] = 35
-            if 0 < gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] < gn_dict[gn]["jin_jing_feng"]["today"]:
-                gn_dict[gn]["jin_jing_feng"]["color"] = 35
+        gn_dict = createPanZhong(gn_dict, gn, today, fd)
 
         # ------------------------------------
         # 跌停大面
         # 计算跌停概念里面，每个概念对应， 竞价未匹配数量
-        gn_dict = create_dieting(gn_dict, today, fd)
+        gn_dict = create_dieting(gn_dict, gn, today, fd)
 
     return gai_nian_biao_shang_se(gn_dict)
 
 
-def createZhangTingDaRou(gn_dict, today, fd):
-    if fd == 1 and len(today["yuan_yin"]["lian_zhang_sort"]) > 0:
-        if gn in today["yuan_yin"]["lian_zhang_sort"]:
-            # 盘中 涨停次数 < 1, 弱： execl : 298行
-            gn_dict[gn]["shuliang"]["zhang_ting_da_rou"] = today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
-            if gn_dict[gn]["shuliang"]["zhang_ting_da_rou"] < 1:
-                gn_dict[gn]["shuliang"]["zhang_ting_da_rou"] = 35
+def createPanZhong(gn_dict, gn, today, fd):
+    if fd == 0:
+        return gn_dict
+    if gn not in today["yuan_yin"]["lian_zhang_sort"]:
+        return gn_dict
+    gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] = today["yuan_yin"]["lian_zhang_sort"][gn][
+        "gai_nian_feng_dan_jin_e"]
+    if gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] < gn_dict[gn]["jin_jing_feng"]["today"]:
+        gn_dict[gn]["pan_zhong"]["color"] = 35
+    if 0 < gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] < gn_dict[gn]["jin_jing_feng"]["today"]:
+        gn_dict[gn]["jin_jing_feng"]["color"] = 35
     return gn_dict
 
 
-def createJinJingFeng(gn_dict, today, yesterday):
+def createZhangTingDaRou(gn_dict, today, fd):
+    if fd == 0 or len(today["yuan_yin"]["lian_zhang_sort"]) == 0:
+        return gn_dict
+
+    if gn in today["yuan_yin"]["lian_zhang_sort"]:
+        # 盘中 涨停次数 < 1, 弱： execl : 298行
+        gn_dict[gn]["shuliang"]["zhang_ting_da_rou"] = today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
+        if gn_dict[gn]["shuliang"]["zhang_ting_da_rou"] < 1:
+            gn_dict[gn]["shuliang"]["color"] = 35
+
+    return gn_dict
+
+
+def createJinJingFeng(gn_dict, gn, today, yesterday):
     jin_jing_feng = gn_dict[gn]["jin_jing_feng"]
     yi_zi_ban_sort = today["yuan_yin"]["yi_zi_ban_sort"]
     yi_zi_ban_sort_yesterday = yesterday["yuan_yin"]["yi_zi_ban_sort"]
@@ -295,7 +307,7 @@ def createJinJingFeng(gn_dict, today, yesterday):
         jin_jing_feng["today"] = yi_zi_ban_sort[gn]["gai_nian_jing_jia_wei_pi_pei"]
         gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] = yi_zi_ban_sort[gn]["count"]
 
-        # 竞价未匹配<0 弱
+    # 竞价未匹配<0 弱
     if jin_jing_feng["today"] <= 0 and gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] > 0:
         jin_jing_feng["color"] = 35
 
@@ -322,7 +334,9 @@ def createJinJingFeng(gn_dict, today, yesterday):
     return gn_dict
 
 
-def createChuangBaiRiXinGao(gn_dict, today, yesterday):
+def createChuangBaiRiXinGao(gn_dict, gn, today, yesterday):
+
+
     chuang_bai_ri_xin_gao = gn_dict[gn]["chuang_bai_ri_xin_gao"]
     chuang_bai_ri_xin_gao_sort = today["yuan_yin"]["chuang_bai_ri_xin_gao_sort"]
     if gn in chuang_bai_ri_xin_gao_sort:
@@ -345,7 +359,10 @@ def createChuangBaiRiXinGao(gn_dict, today, yesterday):
 """
 
 
-def create_dieting(gn_dict, today, fd):
+def create_dieting(gn_dict, gn, today, fd):
+    if gn not in today["yuan_yin"]["die_ting_sort"]:
+        return gn_dict
+
     if fd == 1:
         gn_dict[gn]["die_ting"]["feng_dan_jin_e"] = today["yuan_yin"]["die_ting_sort"][gn][
             "gai_nian_feng_dan_jin_e"]
@@ -378,11 +395,11 @@ def gai_nian_biao_shang_se(gn_dict):
     # 今竞封的数量最大的
     for (gn, item) in gn_dict.items():
         if isred == 0:
-            imax = item["jin_jing_feng_count"]["count"]
+            imax = item["shu_liang"]["jin_jing_feng_count"]
 
-        if (item["jin_jing_feng"]["color"] != 35 and item["zhang_ting_da_rou"]["color"] != 35 and
-                item["die_ting_da_mian"]["color"] != 35 and item["jin_jing_feng_count"]["count"] == imax):
-            item["jin_jing_feng_count"]["color"] = 13421823
+        if (item["jin_jing_feng"]["color"] != 35 and item["pan_zhong"]["color"] != 35 and
+                item["die_ting"]["color"] != 35 and item["shu_liang"]["jin_jing_feng_count"] == imax):
+            item["shu_liang"]["color"] = 13421823
             isred = 1
         gn_dict[gn] = item
 
@@ -390,7 +407,7 @@ def gai_nian_biao_shang_se(gn_dict):
     maxd = max(gn_dict.items(),
                key=lambda x: 0 if x[1]["chuang_bai_ri_xin_gao"]["color"] == 35 else x[1]["chuang_bai_ri_xin_gao"][
                    "count"])
-    if imax < maxd:
+    if imax < maxd[1]["chuang_bai_ri_xin_gao"]["count"]:
         imax = maxd
 
     # 数量最大的概念标记粉色

@@ -435,7 +435,7 @@ End Sub
 
 def step6(data):
 
-    suoshugainian = [suoshugainian for item in data.items() for suoshugainian in item["suoshugainian"]]
+    suoshugainian = [suoshugainian for (code, item) in data.items() for suoshugainian in item["suoshugainian"]]
     unique_suoshugainian = list(set(suoshugainian))
     lianzhanggainian = { gn: suoshugainian.count(gn) for gn in unique_suoshugainian }
     sorted_lian_zhang = sorted(lianzhanggainian.items(), key=lambda x: x[1], reverse=True)
