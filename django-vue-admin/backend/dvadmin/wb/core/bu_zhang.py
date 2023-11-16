@@ -1,5 +1,6 @@
 from dvadmin.wb.core import concept
 from dvadmin.wb.config import code_config
+
 """
 
 Sub 补涨()
@@ -250,34 +251,10 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
     # zhu_chuang_zhang_ting = sorted(zhu_chuang_zhang_ting, key=lambda x: x[1]["lianbantianshutoday"], reverse=True)
     # zhu_lianban = zhu_chuang_zhang_ting[0]
 
-    # code_data = data[""]
-    lian_ban_code = {
-        "code": "",
-        "lianbantianshu": 0,
-        "lianbantianshu_coloer": 35,
-        "zhangdiefu_coloer": 0,
-    }
-
+    lian_xu_duo_ri_yi_zi_ban = [data[gp]["lianbantianshutoday"] for gp in xia_xian["lian_xu_duo_ri_yi_zi_ban"]]
     # 连板股票 h10 - h11
-    data2 = sorted(data.items(), key=lambda x: (x[1]["zhangdie4thday"], x[1]["LianXuZhangTingTianShu"]), reverse=True)
-    if fd == 1:
-        data2 = sorted(data2, key=lambda x: (x[1]["lianbantianshu"]),
-                       reverse=True)
-
-        if code_data["lianbantianshutoday"] == data2[0]["lianbantianshutoday"]:
-            lian_ban_code["code"] = data2[1]["code"]
-            lian_ban_code["lianbantianshu"] = data2[1]["lianbantianshutoday"]
-        else:
-            lian_ban_code["code"] = data2[0]["code"]
-            lian_ban_code["lianbantianshu"] = data2[0]["lianbantianshutoday"]
-
-    else:
-        if code_data["lianbantianshutoday"] == data2[0]["lianbantianshuyesterday"]:
-            lian_ban_code["code"] = data2[1]["code"]
-            lian_ban_code["lianbantianshu"] = data2[1]["lianbantianshuyesterday"]
-        else:
-            lian_ban_code["code"] = data2[0]["code"]
-            lian_ban_code["lianbantianshu"] = data2[0]["lianbantianshuyesterday"]
+    data2 = sorted(data.items(), key=lambda x: (x[1]["zhangdie4thday"], x[1]["lianbantianshutoday"]), reverse=True)
+    lian_ban_code = getLianBanGuPiao(data2, lian_xu_duo_ri_yi_zi_ban, fd)
 
     if lian_ban_code["lianbantianshu"] > 4:
         lian_ban_code["lianbantianshu_coloer"] = 35
@@ -291,17 +268,20 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
     # 120日涨跌幅 H12
     data2 = sorted(data.items(), key=lambda x: (x[1]["zhangdie4thday"]), reverse=True)
     lian_ban_code120 = {
-        "code": data2[0]["code"],
-        "zhangfu120": data2[0]["zhangfu120"],
+        "code": data2[0][1]["code"],
+        "zhangfu120": data2[0][1]["zhangfu120"],
         "zhangfu120_color": 0,
     }
-    if data2[0]["zhangdie4thday"] < 0.2:
+    if data2[0][1]["zhangdie4thday"] < 0.2:
         lian_ban_code120["zhangfu120_color"] = 35
 
     # 賽里斯
-    data2 = filter(lambda x: x[1]["zhangfu5"] > 0 and x[1]["ziyouliutongshizhiyesterday"] > 100 * 10000 * 10000, data2)
+    data2 = filter(lambda x: x[1]["zhangfu5"] > 0 and x[1]["ziyouliutongshizhiyesterday"] > 100 * 10000 * 10000,
+                   data2)
+    data2 = list(data2)
+
     zhong_jun = {
-        "code": data2[0]["code"],
+        "code": data2[0][0],
     }
 
     # '3、在"table1"中找到5日涨跌幅最大的股票，这个例子是尚太科技，用这个股票的所属概念比对昨原因表里的首板的非绿的概念找出相同的概念。
@@ -337,26 +317,25 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
 
     outgn = list(set(outgn))
 
-    #outgn = filter(lambda x:x[1] in chuang_ye_ban_gn, outgn)
+    # outgn = filter(lambda x:x[1] in chuang_ye_ban_gn, outgn)
 
     gn = []
     # Offset(0, 4).Interior.ColorIndex <> 35
     # gn.Offset(0, 5).Interior.ColorIndex <> 35
     # gn.Offset(0, 6).Interior.ColorIndex <> 35
-    for (key, item) in outgn:
-        if item not in chuang_ye_ban_gn:
+    for (item) in outgn:
+        if item not in chuang_ye_ban_gn.keys():
             gn.append(item)
         else:
-            if fd ==1:
-               if chuang_ye_ban_gn[item]["jin_jing_feng"]["color"] !=35 and \
-                   chuang_ye_ban_gn[item]["pan_zhong"]["color"] != 35 and \
-                   chuang_ye_ban_gn[item]["pan_zhong_die"]["color"] != 35 :
-                   gn.append(item)
+            if fd == 1:
+                if chuang_ye_ban_gn[item]["jin_jing_feng"]["color"] != 35 and \
+                        chuang_ye_ban_gn[item]["pan_zhong"]["color"] != 35 and \
+                        chuang_ye_ban_gn[item]["die_ting"]["color"] != 35:
+                    gn.append(item)
             else:
                 if chuang_ye_ban_gn[item]["jin_jing_feng"]["color"] != 35 and \
-                    chuang_ye_ban_gn[item][""]["color"] != 35:
+                        chuang_ye_ban_gn[item]["die_ting"]["color"] != 35:
                     gn.append(item)
-
 
     bu_zhang = {
         "lian_ban_code": lian_ban_code,
@@ -369,6 +348,37 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
         "zuo_biao_gao": zuo_biao_gao(yesterday)
     }
     return bu_zhang
+
+
+"""
+找连板股票
+"""
+
+
+def getLianBanGuPiao(data2, lian_xu_duo_ri_yi_zi_ban, fd):
+    lian_ban_code = {
+        "code": "",
+        "lianbantianshu": 0,
+        "lianbantianshu_coloer": 35,
+        "zhangdiefu_coloer": 0,
+    }
+    if fd == 1:
+        data2 = sorted(data2, key=lambda x: (x[1]['lianbantianshutoday']),
+                       reverse=True)
+        for index, item in data2:
+            if item["lianbantianshutoday"] in lian_xu_duo_ri_yi_zi_ban:
+                continue
+            lian_ban_code["code"] = item["code"]
+            lian_ban_code["lianbantianshu"] = item["lianbantianshutoday"]
+            break
+    else:
+        for index, item in data2:
+            if item["lianxuzhangtingtianshuyesterday"] in lian_xu_duo_ri_yi_zi_ban:
+                continue
+            lian_ban_code["code"] = item["code"]
+            lian_ban_code["lianbantianshu"] = item['lianxuzhangtingtianshuyesterday']
+            break
+    return lian_ban_code
 
 
 """
@@ -404,7 +414,7 @@ def zuo_biao_gao(yesterday):
     if yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["10cm"]:
         color10 = 35
     color20 = 0
-    if yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["20cm"]:
+    if yesterday["day_5_sort"]["chuang_ye_ban"]["zhangfu5"] > xian["20cm"]:
         color20 = 35
 
     return {

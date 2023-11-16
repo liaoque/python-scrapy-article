@@ -148,7 +148,7 @@ End Sub
 
 def biao_shai_xuan(d, data1):
     gn = [gn for (gn, item) in d["chuang_ye_ban_gn"].items() if
-          item["jin_jing_feng_count"]["color"] == 13421823 or item["chuang_bai_ri_xin_gao"]["color"] == 13421823]
+          item["shu_liang"]["color"] == 13421823 or item["chuang_bai_ri_xin_gao"]["color"] == 13421823]
 
     for gn2 in d["bu_zhang_data"]["gn"]:
         if gn2 in d["chuang_ye_ban_gn"]:
@@ -161,9 +161,9 @@ def biao_shai_xuan(d, data1):
     i = 0
     gn3 = []
     while i < 5:
-        if data1["zhu_xian"][i]['gn'] not in gn:
+        if d["zhu_xian"][i]['gn'] not in gn:
             continue
-        gn3.append(data1["zhu_xian"][i]['gn'])
+        gn3.append(d["zhu_xian"][i]['gn'])
         i += 1
 
     # gn = [gn for (gn, item) in d["chuang_ye_ban_gn"].items() if

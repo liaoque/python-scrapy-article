@@ -14,4 +14,5 @@ class CodeConfig:
             "20cm": 70,
             "fd": 1,
             "yd": 1,
+            "lian_xu_duo_ri_yi_zi_ban": [],
         }
