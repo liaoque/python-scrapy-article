@@ -161,10 +161,11 @@ def biao_shai_xuan(d, data1):
     i = 0
     gn3 = []
     while i < 5:
+        i += 1
         if d["zhu_xian"][i]['gn'] not in gn:
             continue
         gn3.append(d["zhu_xian"][i]['gn'])
-        i += 1
+
 
     # gn = [gn for (gn, item) in d["chuang_ye_ban_gn"].items() if
     #              item["jin_jing_feng_count"]["color"] == 13421823 or item["chuang_bai_ri_xin_gao"]["color"] == 13421823]
@@ -177,18 +178,19 @@ def biao_shai_xuan(d, data1):
     # T1 数据
     chuang_data = filter(lambda x: len(set(x[1]["suoshugainian"]) & set(gn3)) > 0 and x[0][0:2] == '30', data1.items())
     chuang_data = sorted(chuang_data, key=lambda x: x[1]["zhangdie4thday"], reverse=True)
-    chuang_data = {key: value for key, value in chuang_data}
-    for key in chuang_data:
-        chuang_data[key]["suoshugainian"] = list(set(chuang_data[key]["suoshugainian"]) & set(gn3))
+    # chuang_data = list(chuang_data)
+    # chuang_data = {key: value for key, value in chuang_data}
+    for key,item in chuang_data:
+        item["suoshugainian"] = list(set(item["suoshugainian"]) & set(gn3))
 
     # T2 数据
     zhu_data = filter(
         lambda x: len(set(x[1]["suoshugainian"]) & set(gn)) > 0 and x[0][0:2] != '30' and x[0][0:2] != '68',
         data1.items())
     zhu_data = sorted(zhu_data, key=lambda x: x[1]["zhangdie4thday"], reverse=True)
-    zhu_data = {key: value for key, value in zhu_data}
-    for key in zhu_data:
-        zhu_data[key]["suoshugainian"] = list(set(zhu_data[key]["suoshugainian"]) & set(gn))
+    # zhu_data = {key: value for key, value in zhu_data}
+    for key,item  in zhu_data:
+        item["suoshugainian"] = list(set(item["suoshugainian"]) & set(gn))
 
     return {
         "chuang_data": chuang_data,
