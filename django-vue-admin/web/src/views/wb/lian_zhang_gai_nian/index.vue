@@ -32,13 +32,6 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
-      other: {
-        jing_zhang_ting: null,
-        jing_die_ting: null,
-        zhu_ban: null,
-        chuang_ye_ban: null,
-        ke_chuang_ban: null
-      },
       nav: [
         {
           name: '涨停大肉',
@@ -57,8 +50,12 @@ export default {
           table: 'JinJingFeng'
         },
         {
-          name: '首版',
+          name: '首板',
           table: 'ShouBan'
+        },
+        {
+          name: '炸板',
+          table: 'ZhaBan'
         }
       ]
     }
@@ -68,6 +65,7 @@ export default {
     DieTingDaMian: () => import('./die_ting_da_mian.vue'), // 这里填写实际的组件路径
     ChuangBaiRiXinGao: () => import('./chuang_bai_ri_xin_gao.vue'), // 这里填写实际的组件路径
     JinJingFeng: () => import('./jin_jing_feng.vue'), // 这里填写实际的组件路径
+    ZhaBan: () => import('./zha_ban.vue'), // 这里填写实际的组件路径
     ShouBan: () => import('./shou_ban.vue') // 这里填写实际的组件路径
   },
   methods: {
