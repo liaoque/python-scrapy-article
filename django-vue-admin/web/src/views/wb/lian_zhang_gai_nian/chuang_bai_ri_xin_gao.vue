@@ -1,18 +1,8 @@
 <template>
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="code" label="代码" width="180">
+    <el-table-column prop="code" label="概念" width="180">
     </el-table-column>
-    <el-table-column prop="name" label="名称" width="180">
-    </el-table-column>
-    <el-table-column prop="name" label="概念" width="180">
-    </el-table-column>
-    <el-table-column prop="name" label="价未匹配金额" width="180">
-    </el-table-column>
-    <el-table-column prop="name" label="实际流通市值" width="180">
-    </el-table-column>
-    <el-table-column prop="name" label="创百日新高原因" width="180">
-    </el-table-column>
-    <el-table-column prop="name" label="创百日新高" width="180">
+    <el-table-column prop="name" label="创百日新高股票数" width="180">
     </el-table-column>
   </el-table>
 </template>

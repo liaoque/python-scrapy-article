@@ -1,18 +1,8 @@
 <template>
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="code" label="代码" width="180">
+    <el-table-column prop="code" label="概念" width="180">
     </el-table-column>
-    <el-table-column prop="name" label="名称" width="180">
-    </el-table-column>
-    <el-table-column prop="name" label="概念" width="180">
-    </el-table-column>
-    <el-table-column prop="name" label="价未匹配金额" width="180">
-    </el-table-column>
-    <el-table-column prop="name" label="停封单额" width="180">
-    </el-table-column>
-    <el-table-column prop="name" label="停大面原因" width="180">
-    </el-table-column>
-    <el-table-column prop="name" label="停大面数" width="180">
+    <el-table-column prop="name" label="跌停大面股票数" width="180">
     </el-table-column>
   </el-table>
 </template>

@@ -3,21 +3,11 @@
     <template slot="header">涨停原因</template>
     <d2-container type="card">
       <el-row>
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane
-            :key="index"
-            v-for="(item, index) in nav"
-            :label="item.name"
-            :name="item.key"
-          >
-
-              <component :is="item.table"></component>
-
-          </el-tab-pane>
-          <!-- <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
-              <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
-              <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane> -->
-        </el-tabs>
+        <el-col :span="4"  :key="index"  v-for="(item, index) in nav">
+          <div class="grid-content bg-purple">
+            <component :is="item.table"></component>
+          </div>
+        </el-col>
       </el-row>
     </d2-container>
   </d2-container>
