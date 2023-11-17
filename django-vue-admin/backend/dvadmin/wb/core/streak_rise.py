@@ -138,7 +138,7 @@ Sub 取跌停股票()
 """
 
 
-def die_ting_gu_piao(table1, data):
+def die_ting_gu_piao(data):
     dietinggupiao = {}
     for (code, items) in data.items():
         if items["qushi"] == -1:
@@ -434,16 +434,17 @@ End Sub
 
 
 def step6(data):
-
     suoshugainian = [suoshugainian for (code, item) in data.items() for suoshugainian in item["suoshugainian"]]
     unique_suoshugainian = list(set(suoshugainian))
-    lianzhanggainian = { gn: suoshugainian.count(gn) for gn in unique_suoshugainian }
+    lianzhanggainian = {gn: suoshugainian.count(gn) for gn in unique_suoshugainian}
     sorted_lian_zhang = sorted(lianzhanggainian.items(), key=lambda x: x[1], reverse=True)
     lianzhanggainian = dict(sorted_lian_zhang)
     return lianzhanggainian
 
+
 def lian_zhang_gai_nian(data):
     return step6(data)
+
 
 """
 Sub 生成跌停概念()
@@ -753,8 +754,10 @@ def step12(lianzhanggupiao, lianzhanggainian):
         lianzhanggupiao2[code] = items
     return lianzhanggupiao2
 
+
 def zhang_ting_shi_pei_gu_piao(lianzhanggupiao, lianzhanggainian):
     return step12(lianzhanggupiao, lianzhanggainian)
+
 
 """
 Sub 取跌停原因()
@@ -998,10 +1001,10 @@ def zhang_ting_yuan_yin(lianzhanggupiao, lianzhanggainian):
     lian_zhang_sort = {}
     for (gn, count) in lianzhanggainian.items():
         gn_item = {
-            "suoshugainian": gn,       #概念
-            "count": 0,               # 含有该概念股票数量
+            "suoshugainian": gn,  # 概念
+            "count": 0,  # 含有该概念股票数量
             "gai_nian_gu_piao": [],  # 含有该概念的股票
-            "gai_nian_jing_jia_wei_pi_pei": 0, # 竞价未匹配
+            "gai_nian_jing_jia_wei_pi_pei": 0,  # 竞价未匹配
             "zhangfu120": 0,
             "color": 0,
             "gai_nian_feng_dan_jin_e": 0
@@ -1082,8 +1085,11 @@ Sub 排列跌停原因()
 End Sub
 """
 
+
 def step18(dietinggupiao, dietinggainian):
     return zhang_ting_yuan_yin(dietinggupiao, dietinggainian)
+
+
 def die_ting_yuan_yin(dietinggupiao, dietinggainian):
     return step18(dietinggupiao, dietinggainian)
 
