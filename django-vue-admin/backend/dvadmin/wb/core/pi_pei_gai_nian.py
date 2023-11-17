@@ -318,25 +318,26 @@ End Sub
 
 
 def setColor3Purple(chuang_data):
-    tmp = sorted(chuang_data.items(), key=lambda x: x[1]["zhangdie4thday"], reverse=True)
-    chuang_data = dict(tmp)
+    chuang_data = sorted(chuang_data, key=lambda x: x[1]["zhangdie4thday"], reverse=True)
+    # chuang_data = dict(tmp)
 
     rng5 = None
-    for (key, item) in chuang_data.items():
+    for (key, item) in chuang_data:
         if item["color1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item["color10"] == 37:
             if rng5 is None:
                 rng5 = item
             if item["color8"] != 38 and item["zuo_ri_lian_ban_tian_shu"] > 0:
                 item["color3"] = 29
                 return chuang_data
-    rng5["color3"] = 29
+    if rng5 is not None:
+        rng5["color3"] = 29
     return chuang_data
 
 
 def setColor1Orange(chuang_data):
-    tmp = sorted(chuang_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
-    chuang_data = dict(tmp)
-    for (key, item) in chuang_data.items():
+    chuang_data = sorted(chuang_data, key=lambda x: x[1]["zhangfu120"], reverse=True)
+    # chuang_data = dict(tmp)
+    for (key, item) in chuang_data:
         if item["color1"] != 35 and item["jingjiaweipipeijinetoday"] < 0 and item["chuang_bai_ri_xin_gao"] > 0 and item[
             "color10"] == 37:
             item["color0"] = 46
@@ -346,9 +347,9 @@ def setColor1Orange(chuang_data):
 
 def setColor1Yellow(chuang_data):
     # 破20日均线
-    tmp = sorted(chuang_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
-    chuang_data = dict(tmp)
-    for (key, item) in chuang_data.items():
+    chuang_data = sorted(chuang_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
+    # chuang_data = dict(tmp)
+    for (key, item) in chuang_data:
         if item["zhangdiefuqianfuquantoday"] > 0 and item[
             "po20"] < 0:
             item["color1"] = 36
@@ -367,13 +368,15 @@ def setColor1Pink(chuang_data):
 
 def setColor6Red(chuang_data_s, chuang_data):
     code = chuang_data_s["max_jingjiajinechengjiaoliangbi"]["code"]
+    if code == "":
+        return chuang_data
     chuang_data[code]["color6"] = 3
     return chuang_data
 
 
 def setColor7Red(chuang_data_s, chuang_data):
-    if chuang_data_s["max_jingjiajinejingjialiangbi"]["code"] != "":
-        code = chuang_data_s["max_jingjiajinejingjialiangbi"]["code"]
+    code = chuang_data_s["max_jingjiajinejingjialiangbi"]["code"]
+    if code != "":
         chuang_data[code]["color7"] = 3
 
         if chuang_data[code]["color1"] != 35:
@@ -418,6 +421,8 @@ def pi_pei_gai_nian(d):
     zhu_data_s = definedcolor2(zhu_data, qx)
     zhu_data = zhu_data_s["data"]
 
+    chuang_data = {code: item for (code, item) in chuang_data}
+    zhu_data = {code: item for (code, item) in zhu_data}
     if qx == 1:
         if chuang_data_s["imin"] == 0:
             chuang_data = setColor1Pink(chuang_data)
@@ -440,7 +445,7 @@ def pi_pei_gai_nian(d):
     chuang_data = setColor3Purple(chuang_data)
     zhu_data = setColor3Purple(zhu_data)
     #
-    # for (key, item) in chuang_data.items():
+    # for (key, item) in chuang_data:
     #     if item["color1"] != 35 and item["color4"] != 13551615 and item["color4"] != 3:
     #         chuang_data[key]["color1"] = 36
     #         break
@@ -451,71 +456,16 @@ def pi_pei_gai_nian(d):
     #         break
 
     result = {
-        "bu_zhang": getbu_zhang(chuang_data, zhu_data),
-        "n": getN(chuang_data, zhu_data)
+        "chuang_data": [item for code, item in chuang_data],
+        "zhu_data": [item for code, item in zhu_data],
     }
 
     return result
 
 
-def getN(chuang_data, zhu_data):
-    tmp = sorted(chuang_data.items(), key=lambda x: x[1]["zhangdie4thday"], reverse=True)
-    chuang_data = dict(tmp)
-    tmp = sorted(zhu_data.items(), key=lambda x: x[1]["zhangdie4thday"], reverse=True)
-    zhu_data = dict(tmp)
-    return {
-        "chuang": nbu_zhang(chuang_data),
-        "zhu": nbu_zhang(zhu_data),
-    }
-
-
-def nbu_zhang(chuang_data):
-    rng5 = rng6 = ""
-    for (key, item) in chuang_data.items():
-        if item["color1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item[
-            "zhangfu120"] < 80 and item["color10"] == 37:
-            if rng5 == "":
-                rng5 = key
-            if item["color6"] == 38 or item["lianbantianshuyesterday"] > 0:
-                rng6 = key
-                break
-
-    if rng6 != "":
-        print(rng6)
-        return chuang_data[rng6]
-    elif rng5 != "":
-        print(rng5)
-        return chuang_data[rng5]
-    return None
-
-
-def getbu_zhang(chuang_data, zhu_data):
-    tmp = sorted(chuang_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
-    chuang_data = dict(tmp)
-    tmp = sorted(zhu_data.items(), key=lambda x: x[1]["zhangfu120"], reverse=True)
-    zhu_data = dict(tmp)
-    return {
-        "chuang": rulebu_zhang(chuang_data),
-        "zhu": rulebu_zhang(zhu_data),
-    }
-
-
-def rulebu_zhang(chuang_data):
-    bu_zhang = None
-    for (key, item) in chuang_data.items():
-        if key == "000766":
-            print(key)
-        if item["color1"] != 35 and item["jingjiaweipipeijinetoday"] <= 0 and item["zhangfu120"] > 25 and item[
-            "zhangfu120"] < 80 and item["chuangbairixingao"] == 1:
-            if item["color6"] == 38 or item['lianbantianshuyesterday'] > 0:
-                chuang_data[key]["color1"] = 46
-                bu_zhang = item
-                break
-    return bu_zhang
-
 
 def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
-    for (key, item) in chuang_data.items():
+    for (key, item) in chuang_data:
         item["color0"] = 0
         item["color1"] = 0
         item["color2"] = 0
@@ -555,7 +505,7 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
 
         if qx == -1:
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["zhangdiefuqianfuquantoday"] < 0 and item["code"] != \
-                    bu_zhang_data["lianbantianshu"]["code"]:
+                    bu_zhang_data["lian_ban_code"]["code"]:
                 item["color1"] = 35
                 item["color4"] = 35
 
@@ -578,7 +528,6 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
                 item["color6"] = 13551615
             if item["jingjiajinejingjialiangbi"] >= 100 and item["jingjiajinejingjialiangbi"] < 700:
                 item["color7"] = 13551615
-        chuang_data[key] = item
     return chuang_data
 
 
@@ -592,7 +541,7 @@ def definedcolor2(chuang_data, qx):
     max_zhangdie4thday = {'code': '', "data": 0}
     # 最大今昨量比 ijzlb
     max_jingjiajinejingjialiangbi = {'code': '', "data": 0}
-    for (key, item) in chuang_data.items():
+    for (code, item) in chuang_data:
         if qx == 1:
             #  竞价量比 > 0.08 and 竞价量比 < 1 粉色
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
@@ -616,12 +565,12 @@ def definedcolor2(chuang_data, qx):
                     # 竞价量比
                     if item["jingjiajinechengjiaoliangbi"] > max_jingjiajinechengjiaoliangbi["data"]:
                         max_jingjiajinechengjiaoliangbi["data"] = item["jingjiajinechengjiaoliangbi"]
-                        max_jingjiajinechengjiaoliangbi["code"] = item["code"]
+                        max_jingjiajinechengjiaoliangbi["code"] = code
 
                     # 四日最大涨跌幅
                     if item["zhangdie4thday"] > max_zhangdie4thday["data"]:
                         max_zhangdie4thday["data"] = item["zhangdie4thday"]
-                        max_zhangdie4thday["code"] = item["code"]
+                        max_zhangdie4thday["code"] = code
                         item["color1"] = 13551615
 
             # 今昨量比 > 100 and 今昨量比 <= 700 粉色
@@ -629,8 +578,8 @@ def definedcolor2(chuang_data, qx):
                 item["color7"] = 13551615
                 if item["jingjiajinejingjialiangbi"] > max_jingjiajinejingjialiangbi["data"]:
                     max_jingjiajinejingjialiangbi["data"] = item["jingjiajinejingjialiangbi"]
-                    max_jingjiajinejingjialiangbi["code"] = item["code"]
-        chuang_data[key] = item
+                    max_jingjiajinejingjialiangbi["code"] = code
+        # chuang_data[key] = item
     return {
         "imin": imin,
         "max_jingjiajinechengjiaoliangbi": max_jingjiajinechengjiaoliangbi,

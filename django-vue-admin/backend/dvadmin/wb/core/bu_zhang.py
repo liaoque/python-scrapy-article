@@ -430,8 +430,6 @@ def zuo_biao_gao(yesterday):
 
 def merge_shou_ban(yesterday, before_yesterday):
     for gn, item in yesterday["shou_ban_sort"].items():
-        if gn == "华为":
-            print(gn)
         yesterday["shou_ban_sort"][gn]["color"] = 0
 
         if len(before_yesterday["yi_zi_ban_sort"].keys()) == 0 and len(
