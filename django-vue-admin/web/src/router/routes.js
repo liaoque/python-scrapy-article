@@ -68,6 +68,22 @@ const frameIn = [{
         auth: true
       },
       component: _import('wb/yuan_yin/index')
+    },
+    {
+      path: 'lian_zhang_gu_piao',
+      name: 'lian_zhang_gu_piao',
+      meta: {
+        auth: true
+      },
+      component: _import('wb/lian_zhang_gu_piao/index')
+    },
+    {
+      path: 'lian_zhang_gai_nian',
+      name: 'lian_zhang_gai_nian',
+      meta: {
+        auth: true
+      },
+      component: _import('wb/lian_zhang_gai_nian/index')
     }
   ]
 }]
