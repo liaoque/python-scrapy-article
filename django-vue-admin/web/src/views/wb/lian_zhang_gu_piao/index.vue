@@ -39,6 +39,11 @@ export default {
           data: []
         },
         {
+          name: '炸板',
+          table: 'ZhaBan',
+          data: []
+        },
+        {
           name: '创百日新高',
           table: 'ChuangBaiRiXinGao',
           data: []
@@ -51,11 +56,6 @@ export default {
         {
           name: '首板',
           table: 'ShouBan',
-          data: []
-        },
-        {
-          name: '炸板',
-          table: 'ZhaBan',
           data: []
         }
       ]
@@ -78,43 +78,45 @@ export default {
       api.GetLianZhangGuPiao().then(function (params) {
         // console.log(111222,  [...params.chuangbairixingao])
         self.nav[0].data = params.lianzhanggupiao.map(item => {
-          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
-          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 10000 / 10000).toFixed(2)
           item.zhangfu120 = (item.zhangfu120).toFixed(2)
 
           return item
         })
         // console.log(self.nav[0].data)
         self.nav[1].data = params.dietinggupiao
-        self.nav[2].data = params.chuangbairixingao.map(item => {
-          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
-          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
-          item.ziyouliutongshizhiyesterday = (item.ziyouliutongshizhiyesterday / 1000 / 1000).toFixed(2)
+        self.nav[2].data = params.zhabangupiao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 10000 / 10000).toFixed(2)
           item.zhangfu120 = (item.zhangfu120).toFixed(2)
 
           return item
         })
-        self.nav[3].data = params.shoubangupiao.map(item => {
-          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
-          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+        self.nav[3].data = params.chuangbairixingao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 10000 / 10000).toFixed(2)
+          item.ziyouliutongshizhiyesterday = (item.ziyouliutongshizhiyesterday / 10000 / 10000).toFixed(2)
           item.zhangfu120 = (item.zhangfu120).toFixed(2)
 
           return item
         })
+
         self.nav[4].data = params.yizibangupiao.map(item => {
-          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
-          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+          item.ziyouliutongshizhiyesterday = (item.ziyouliutongshizhiyesterday / 10000 / 10000).toFixed(2)
           item.zhangfu120 = (item.zhangfu120).toFixed(2)
 
           return item
         })
-        self.nav[5].data = params.zhabangupiao.map(item => {
-          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
-          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+        self.nav[5].data = params.shoubangupiao.map(item => {
+          item.ziyouliutongshizhiyesterday = (item.ziyouliutongshizhiyesterday / 10000 / 10000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 10000 / 10000).toFixed(2)
           item.zhangfu120 = (item.zhangfu120).toFixed(2)
 
           return item
         })
+
         // self.nav[6].data = params.zhabangupiao
 
         console.log(params)

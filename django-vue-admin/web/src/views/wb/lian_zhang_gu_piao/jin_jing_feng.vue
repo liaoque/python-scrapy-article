@@ -4,10 +4,6 @@
     </el-table-column>
     <el-table-column prop="briefname" label="名字" width="180" >
     </el-table-column>
-    <el-table-column prop="jingjiaweipipeijinetoday" label="竞价未匹配金额" sortable>
-    </el-table-column>
-    <el-table-column prop="lianxuzhangtingtianshuonehundred" label="连续涨停天数" sortable>
-    </el-table-column>
     <el-table-column label="所属概念" >
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
@@ -18,9 +14,22 @@
         </el-popover>
       </template>
     </el-table-column>
-    <el-table-column prop="zhangfu120" label="120日涨跌幅" sortable>
+    <el-table-column prop="jingjiaweipipeijinetoday" label="竞价未匹配金额" sortable>
     </el-table-column>
-    <el-table-column prop="zhangtingfengdanetoday" label="涨停封单金额" sortable>
+    <el-table-column prop="ziyouliutongshizhiyesterday" label="实际流通" sortable>
+    </el-table-column>
+
+    <el-table-column  label="今竞封原因" sortable>
+      <template slot-scope="scope">
+        <el-popover trigger="hover" placement="top">
+          <el-tag disable-transitions :key="index" v-for="(gainian, index) in scope.row.yuanyin">{{gainian}}</el-tag>
+          <div slot="reference" class="name-wrapper">
+            <el-tag size="medium">{{ scope.row.yuanyin.join(",").slice(0, 10) }}</el-tag>
+          </div>
+        </el-popover>
+      </template>
+    </el-table-column>
+    <el-table-column prop="cishu" label="今竞封数量" sortable>
     </el-table-column>
   </el-table>
 </template>
