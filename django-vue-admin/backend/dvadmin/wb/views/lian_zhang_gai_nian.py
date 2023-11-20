@@ -77,10 +77,11 @@ class LianZhangGiNian(View):
 
         lianzhang_code_page = yuan_yin_data.getLianZhangGuPiao(data)
         yuan_yin = yuan_yin_data.getLianZhangGiNian(lianzhang_code_page)
-        yuan_yin['lianzhanggainian'] = [{gianian:key, c: item} for key, item in yuan_yin['lianzhanggainian'].items()]
-        yuan_yin['dietinggainian'] = [{gianian:key, c: item} for key, item in yuan_yin['dietinggainian'].items()]
-        yuan_yin['zhabangainian'] = [{gianian:key, c: item} for key, item in yuan_yin['zhabangainian'].items()]
-        yuan_yin['chuangbairixingaogainnian'] = [{gianian:key, c: item} for key, item in yuan_yin['chuangbairixingaogainnian'].items()]
-        yuan_yin['yizibangainian'] = [{gianian:key, c: item} for key, item in yuan_yin['yizibangainian'].items()]
-        yuan_yin['shoubangainian'] = [{gianian:key, c: item} for key, item in yuan_yin['shoubangainian'].items()]
+        yuan_yin['lianzhanggainian'] = [{"gianian":key, "c": item} for key, item in yuan_yin['lianzhanggainian'].items()]
+        yuan_yin['dietinggainian'] = [{"gianian":key, "c": item} for key, item in yuan_yin['dietinggainian'].items()]
+        yuan_yin['zhabangainian'] = [{"gianian":key, "c": item} for key, item in yuan_yin['zhabangainian'].items()]
+        yuan_yin['chuangbairixingaogainnian'] = [{"gianian":key, "c": item} for key, item in yuan_yin['chuangbairixingaogainnian'].items()]
+        yuan_yin['yizibangainian'] = [{"gianian":key, "c": item} for key, item in yuan_yin['yizibangainian'].items()]
+        yuan_yin['shoubangainian'] = [{"gianian":key, "c": item} for key, item in yuan_yin['shoubangainian'].items()]
+
         return JsonResponse(yuan_yin)
