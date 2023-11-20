@@ -77,8 +77,8 @@ export default {
         // console.log(self.nav[0].data)
         self.nav[1].data = params.dietinggainian
         self.nav[2].data = params.chuangbairixingaogainnian
-        self.nav[3].data = params.shoubangainian
-        self.nav[4].data = params.yizibangainian
+        self.nav[3].data = params.yizibangainian
+        self.nav[4].data = params.shoubangainian
         self.nav[5].data = params.zhabangainian
       })
       return crudOptions(this)

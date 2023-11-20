@@ -52,10 +52,10 @@ export function GetCascadeData () {
   })
 }
 
-export function GetLianZhangGaiNian () {
+export function GetResult () {
   return request({
-    url: '/api/wb/lian_zhang_gai_nian?current_time=20231117',
+    url: '/api/wb/result?current_time=20230913',
     method: 'get',
-    data: { current_time: '20231117' }
+    data: { current_time: '20230913' }
   })
 }
