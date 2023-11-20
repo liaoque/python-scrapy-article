@@ -1,6 +1,6 @@
 <template>
   <d2-container :class="{ 'page-compact': crud.pageOptions.compact }">
-    <template slot="header">涨停原因</template>
+    <template slot="header">连涨股票</template>
     <d2-container type="card">
       <el-row>
         <el-tabs>

@@ -1,6 +1,6 @@
 <template>
   <d2-container :class="{ 'page-compact': crud.pageOptions.compact }">
-    <template slot="header">涨停原因</template>
+    <template slot="header">涨停概念</template>
     <d2-container type="card">
       <el-row>
         <el-col :span="4"  :key="index"  v-for="(item, index) in nav">
@@ -60,11 +60,48 @@ export default {
   },
   methods: {
     getData (query) {
-      return api.GetYuanYin(query)
+      return api.GetLianZhangGaiNian(query)
     },
     getCrudOptions () {
-      api.GetYuanYin().then(function (params) {
-        console.log(params)
+      api.GetLianZhangGaiNian().then(function (params) {
+        self.nav[0].data = params.lianzhanggupiao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+        // console.log(self.nav[0].data)
+        self.nav[1].data = params.dietinggupiao
+        self.nav[2].data = params.chuangbairixingao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.ziyouliutongshizhiyesterday = (item.ziyouliutongshizhiyesterday / 1000 / 1000).toFixed(2)
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+        self.nav[3].data = params.shoubangupiao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+        self.nav[4].data = params.yizibangupiao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+        self.nav[5].data = params.zhabangupiao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
       })
       return crudOptions(this)
     },
