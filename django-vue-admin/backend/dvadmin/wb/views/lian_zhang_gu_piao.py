@@ -76,4 +76,11 @@ class LianZhangGuPiao(View):
         # dieting_table1 = (table.find_one({}, {"YiZiDieTing": 1}))
 
         yuan_yin = yuan_yin_data.getLianZhangGuPiao(data)
+        yuan_yin.chuangbairixingao = [item for key, item in yuan_yin.chuangbairixingao]
+        yuan_yin.dietinggupiao = [item for key, item in yuan_yin.dietinggupiao]
+        yuan_yin.lianzhanggupiao = [item for key, item in yuan_yin.lianzhanggupiao]
+        yuan_yin.shoubangupiao = [item for key, item in yuan_yin.shoubangupiao]
+        yuan_yin.shoubangupiao = [item for key, item in yuan_yin.shoubangupiao]
+        yuan_yin.yizibangupiao = [item for key, item in yuan_yin.yizibangupiao]
+        yuan_yin.zhabangupiao = [item for key, item in yuan_yin.zhabangupiao]
         return JsonResponse(yuan_yin)
