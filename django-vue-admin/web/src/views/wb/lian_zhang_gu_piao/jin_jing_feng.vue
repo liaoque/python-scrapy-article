@@ -1,36 +1,42 @@
 <template>
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="date" label="日期" width="180">
+    <el-table-column prop="code" label="代码" width="180" sortable>
     </el-table-column>
-    <el-table-column prop="name" label="姓名" width="180">
+    <el-table-column prop="briefname" label="名字" width="180" >
     </el-table-column>
-    <el-table-column prop="address" label="地址">
+    <el-table-column prop="jingjiaweipipeijinetoday" label="竞价未匹配金额" sortable>
+    </el-table-column>
+    <el-table-column prop="lianxuzhangtingtianshuonehundred" label="连续涨停天数" sortable>
+    </el-table-column>
+    <el-table-column label="所属概念" >
+      <template slot-scope="scope">
+        <el-popover trigger="hover" placement="top">
+          <el-tag disable-transitions :key="index" v-for="(gainian, index) in scope.row.suoshugainian">{{gainian}}</el-tag>
+          <div slot="reference" class="name-wrapper">
+            <el-tag size="medium">{{ scope.row.suoshugainian.join(",").slice(0, 10) }}</el-tag>
+          </div>
+        </el-popover>
+      </template>
+    </el-table-column>
+    <el-table-column prop="zhangfu120" label="120日涨跌幅" sortable>
+    </el-table-column>
+    <el-table-column prop="zhangtingfengdanetoday" label="涨停封单金额" sortable>
     </el-table-column>
   </el-table>
 </template>
 
 <script>
 export default {
+  props: [
+    'tableData'
+  ],
   data () {
     return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎3',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
     }
+  },
+  created () {
+    // props 会暴露到 `this` 上
+    console.log(this.tableData)
   }
 }
 </script>

@@ -3,15 +3,10 @@
     <template slot="header">涨停原因</template>
     <d2-container type="card">
       <el-row>
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane
-            :key="index"
-            v-for="(item, index) in nav"
-            :label="item.name"
-            :name="item.key"
-          >
+        <el-tabs>
+          <el-tab-pane :key="index" v-for="(item, index) in nav" :label="item.name" :name="item.key">
 
-              <component :is="item.table"></component>
+            <component :is="item.table" :table-data="item.data"></component>
 
           </el-tab-pane>
           <!-- <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
@@ -35,27 +30,33 @@ export default {
       nav: [
         {
           name: '涨停大肉',
-          table: 'ZhangTingDaRou'
+          table: 'ZhangTingDaRou',
+          data: []
         },
         {
           name: '跌停大面',
-          table: 'DieTingDaMian'
+          table: 'DieTingDaMian',
+          data: []
         },
         {
           name: '创百日新高',
-          table: 'ChuangBaiRiXinGao'
+          table: 'ChuangBaiRiXinGao',
+          data: []
         },
         {
           name: '今竟封',
-          table: 'JinJingFeng'
+          table: 'JinJingFeng',
+          data: []
         },
         {
           name: '首板',
-          table: 'ShouBan'
+          table: 'ShouBan',
+          data: []
         },
         {
           name: '炸板',
-          table: 'ZhaBan'
+          table: 'ZhaBan',
+          data: []
         }
       ]
     }
@@ -70,10 +71,52 @@ export default {
   },
   methods: {
     getData (query) {
-      return api.GetYuanYin(query)
+      return api.GetLianZhangGuPiao(query)
     },
     getCrudOptions () {
-      api.GetYuanYin().then(function (params) {
+      const self = this
+      api.GetLianZhangGuPiao().then(function (params) {
+        // console.log(111222,  [...params.chuangbairixingao])
+        self.nav[0].data = params.lianzhanggupiao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+        // console.log(self.nav[0].data)
+        self.nav[1].data = params.dietinggupiao
+        self.nav[2].data = params.chuangbairixingao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.ziyouliutongshizhiyesterday = (item.ziyouliutongshizhiyesterday / 1000 / 1000).toFixed(2)
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+        self.nav[3].data = params.shoubangupiao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+        self.nav[4].data = params.yizibangupiao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+        self.nav[5].data = params.zhabangupiao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 1000 / 1000).toFixed(2)
+          item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 1000 / 1000).toFixed(2)
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+        // self.nav[6].data = params.zhabangupiao
+
         console.log(params)
       })
       return crudOptions(this)

@@ -52,9 +52,9 @@ export function GetCascadeData () {
   })
 }
 
-export function GetYuanYin () {
+export function GetLianZhangGuPiao () {
   return request({
-    url: '/api/wb/?current_time=20230913',
+    url: '/api/wb/lian_zhang_gu_piao?current_time=20231116',
     method: 'get',
     data: { current_time: '20230913' }
   })
