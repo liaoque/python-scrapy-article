@@ -1,10 +1,8 @@
 from dvadmin.wb.core import init_data, streak_rise, bu_zhang, suo_shu_gai_nian, pi_pei_gai_nian, gn, jie_guo, \
     biao_shai_xuan, zhu_xian
 
-
-def getYuanYin(data):
-    # 标记涨停和跌停， 炸板， 创百日新高， 一字板， 首板， N10, N20
-    lianzhang_code_page = {
+def getLianZhangGuPiao(data):
+    return {
         # 取连涨股票
         "lianzhanggupiao": streak_rise.lian_zhang_gu_piao(data),
         # 取跌停股票
@@ -19,7 +17,9 @@ def getYuanYin(data):
         "shoubangupiao": streak_rise.shou_ban_gu_piao(data),
     }
 
-    lianzhang_page = {
+
+def getLianZhangGiNian(lianzhang_code_page):
+    return {
         # 生成连涨概念 计算概念出现得次数
         "lianzhanggainian": streak_rise.lian_zhang_gai_nian(lianzhang_code_page["lianzhanggupiao"]),
 
@@ -39,6 +39,12 @@ def getYuanYin(data):
         # 生成首板概念
         "shoubangainian": streak_rise.shou_ban_gai_nian(lianzhang_code_page["shoubangupiao"]),
     }
+
+def getYuanYin(data):
+    # 标记涨停和跌停， 炸板， 创百日新高， 一字板， 首板， N10, N20
+    lianzhang_code_page = getLianZhangGuPiao(data)
+
+    lianzhang_page = getLianZhangGiNian(lianzhang_code_page)
 
     # 取涨停原因， 匹配涨停概念， 并标记最多的原因得次数
     lianzhang_code_page["lianzhanggupiao"] = streak_rise.zhang_ting_shi_pei_gu_piao(
