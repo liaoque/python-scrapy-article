@@ -372,6 +372,7 @@ def shou_ban_gu_piao(data):
             "suoshugainian": items["suoshugainian"],  # 概念
             "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],
             "zhangtingfengdanetoday": items["zhangtingfengdanetoday"],
+            "ziyouliutongshizhiyesterday": items["ziyouliutongshizhiyesterday"],
             "zhangfu120": items["zhangfu120"],
         }
 

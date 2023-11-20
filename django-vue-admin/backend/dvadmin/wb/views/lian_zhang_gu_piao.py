@@ -76,6 +76,23 @@ class LianZhangGuPiao(View):
         # dieting_table1 = (table.find_one({}, {"YiZiDieTing": 1}))
 
         yuan_yin = yuan_yin_data.getLianZhangGuPiao(data)
+        yuan_yin1 = yuan_yin_data.getLianZhangGiNian(yuan_yin)
+        yuan_yin["lianzhanggupiao"] = streak_rise.zhang_ting_shi_pei_gu_piao(
+            yuan_yin["lianzhanggupiao"],
+            yuan_yin1["lianzhanggainian"])
+
+        yuan_yin["chuangbairixingao"] = streak_rise.chuang_bai_ri_xin_gao_shi_pei_gai_nian(
+            yuan_yin["chuangbairixingao"],
+            yuan_yin1["chuangbairixingaogainnian"])
+        # 取一字板原因
+        yuan_yin["yizibangupiao"] = streak_rise.yi_zi_ban_shi_pei_gu_piao(
+            yuan_yin["yizibangupiao"],
+            yuan_yin1["yizibangainian"])
+
+        # 取首板原因
+        yuan_yin["shoubangupiao"] = streak_rise.shou_ban_shi_pei_gu_piao(
+            yuan_yin["shoubangupiao"],
+            yuan_yin1["shoubangainian"])
         yuan_yin['chuangbairixingao'] = [item for key, item in yuan_yin['chuangbairixingao'].items()]
         yuan_yin['dietinggupiao'] = [item for key, item in yuan_yin['dietinggupiao'].items()]
         yuan_yin['lianzhanggupiao'] = [item for key, item in yuan_yin['lianzhanggupiao'].items()]

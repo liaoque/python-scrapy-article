@@ -215,7 +215,7 @@ def tag_yi_zi_ban(table1, data):
 
     for code, item in data.items():
         data[code]["jingjiaweipipeijinetoday"] = 0
-        data[code]["yi_zi_ban"] = 1
+        data[code]["yi_zi_ban"] = 0
 
     data2 = table1["YiZiBan"]
     for items in data2:
