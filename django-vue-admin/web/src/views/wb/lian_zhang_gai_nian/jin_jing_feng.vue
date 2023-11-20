@@ -1,8 +1,8 @@
 <template>
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="gianian" label="概念" width="180">
+    <el-table-column prop="gianian" label="概念" >
     </el-table-column>
-    <el-table-column prop="c" label="一字板股票数" width="180">
+    <el-table-column prop="c" label="一字板数" >
     </el-table-column>
   </el-table>
 </template>
