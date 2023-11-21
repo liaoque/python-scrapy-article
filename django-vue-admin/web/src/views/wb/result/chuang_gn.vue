@@ -8,41 +8,35 @@
     </el-table-column>
     <el-table-column label="今昨百日新高" sortable sort-by="chuang_bai_ri_xin_gao.count" width="180">
       <template slot-scope="scope">
-
         <span :class="{ 'el-button--success': scope.row.chuang_bai_ri_xin_gao.color == 35 }">{{
           scope.row.jin_zuo_bai_ri_xin_gao }}</span>
       </template>
     </el-table-column>
     <el-table-column sortable sort-by="liu_tong_shi_zhi" label="实际流通">
       <template slot-scope="scope">
-
-        <span>{{ scope.row.liu_tong_shi_zhi_s }}</span>
+        <span>{{ scope.row.liu_tong_shi_zhi }}</span>
       </template>
     </el-table-column>
-    <el-table-column sortable sort-by="jin_jing_feng.today" label="今竞封数">
+    <el-table-column sortable sort-by="shu_liang.value" label="今竞封数">
       <template slot-scope="scope">
-
-        <span :class="{ 'el-button--danger': scope.row.jin_jing_feng.color == 13421823 }">{{ scope.row.jin_jing_feng.count
+        <span :class="{ 'el-button--danger': scope.row.shu_liang.color == 13421823 }">{{ scope.row.shu_liang.value
         }}</span>
       </template>
     </el-table-column>
     <el-table-column sortable sort-by="jin_jing_feng.today" label="今竞封">
       <template slot-scope="scope">
-
         <span :class="{ 'el-button--success': scope.row.jin_jing_feng.color == 35 }">{{ scope.row.jin_zuo_jin_jing_feng
         }}</span>
       </template>
     </el-table-column>
-    <el-table-column sortable sort-by="pan_zhong.feng_dan" label="盘中封单总和">
+    <el-table-column sortable sort-by="pan_zhong.feng_dan_jin_e" label="盘中封单总和">
       <template slot-scope="scope">
-
-        <span :class="{ 'el-button--success': scope.row.pan_zhong.color == 35 }">{{ scope.row.pan_zhong.feng_dan }}</span>
+        <span :class="{ 'el-button--success': scope.row.pan_zhong.color == 35 }">{{ scope.row.pan_zhong.feng_dan_jin_e }}</span>
       </template>
     </el-table-column>
-    <el-table-column sortable sort-by="die_ting.today" label="跌停未匹配">
+    <el-table-column sortable sort-by="die_ting.value" label="跌停未匹配">
       <template slot-scope="scope">
-
-        <span :class="{ 'el-button--success': scope.row.die_ting.color == 35 }">{{ scope.row.die_ting.today }}</span>
+        <span :class="{ 'el-button--success': scope.row.die_ting.color == 35 }">{{ scope.row.die_ting.value }}</span>
       </template>
     </el-table-column>
   </el-table>

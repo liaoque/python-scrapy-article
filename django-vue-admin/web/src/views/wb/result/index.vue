@@ -2,20 +2,20 @@
   <d2-container>
     <el-row>
       <el-col :span="2">
-        情绪:
+        情绪: <el-tag size="medium" v-if="qx==1">好</el-tag>  <el-tag size="medium" v-if="qx==-1">坏</el-tag>
       </el-col>
       <el-col :span="2">
-        补涨:
+        补涨: 
       </el-col>
       <el-col :span="2">
         阈值:
       </el-col>
-      <el-col :span="2">
+      <!-- <el-col :span="2">
         昨标高:
       </el-col>
       <el-col :span="2">
         风口:
-      </el-col>
+      </el-col> -->
       <el-col :span="2">
         炸板率:
       </el-col>
@@ -81,6 +81,7 @@ export default {
   },
   data () {
     return {
+      fd: 0,
       activeName: 'first',
       pickerOptions: {
         value: '',
@@ -123,21 +124,37 @@ export default {
       const self = this
       api.GetResult().then(function (params) {
         self.plan.chuang_ye_ban_gai_nian = params.chuang_ye_ban_gn.map((item) => {
+          // 今昨百日新高
           let today = (Math.ceil(item.chuang_bai_ri_xin_gao.today / 1000000) / 100).toFixed(2)
           let yeasterday = (Math.ceil(item.chuang_bai_ri_xin_gao.yesterday / 1000000) / 100).toFixed(2)
           item.jin_zuo_bai_ri_xin_gao = item.chuang_bai_ri_xin_gao.count + '|' + today + '|' + yeasterday
 
-          today = (Math.ceil(item.jin_jing_feng.today / 1000000) / 100).toFixed(2)
-          yeasterday = (Math.ceil(item.jin_jing_feng.yesterday / 1000000) / 100).toFixed(2)
-          item.jin_zuo_jin_jing_feng = today + '|' + yeasterday
-
-          item.liu_tong_shi_zhi_s = (Math.ceil(item.liu_tong_shi_zhi / 1000000) / 100).toFixed(2)
+          // 实际流通市值
+          item.liu_tong_shi_zhi = (Math.ceil(item.liu_tong_shi_zhi / 1000000) / 100).toFixed(2)
           item.die_ting.feng_dan_jin_e = (Math.ceil(item.die_ting.feng_dan_jin_e / 1000000) / 100).toFixed(2)
           item.die_ting.jing_jia_wei_pi_pei = (Math.ceil(item.die_ting.jing_jia_wei_pi_pei / 1000000) / 100).toFixed(2)
+
+          // 今竟封数 ，跌停未匹配
+          if (self.fd === 1) {
+            item.shu_liang.value = item.shu_liang.zhang_ting_da_rou
+            item.die_ting.value = item.shu_liang.feng_dan_jin_e || 0
+            item.pan_zhong.feng_dan_jin_e = 0
+          } else {
+            item.shu_liang.value = item.shu_liang.jin_jing_feng_count
+            item.die_ting.value = item.shu_liang.jing_jia_wei_pi_pei || 0
+            item.pan_zhong.feng_dan_jin_e = (Math.ceil(item.pan_zhong.feng_dan_jin_e / 1000000) / 100).toFixed(2)
+          }
+
+          // 今竟封数 ，跌停未匹配
+          today = (Math.ceil(item.jin_jing_feng.today / 1000000) / 100).toFixed(2)
+          yeasterday = (Math.ceil(item.jin_jing_feng.yesterday / 1000000) / 100).toFixed(2)
+          const yesterdayFengDan = (Math.ceil(item.jin_jing_feng.yesterday_fengdan / 1000000) / 100).toFixed(2)
+          item.jin_zuo_jin_jing_feng = today + '|' + yeasterday + '|' + yesterdayFengDan
+
           return item
         }).sort((a, b) => {
-          if (a.shu_liang.jin_jing_feng_count > b.shu_liang.jin_jing_feng_count) { return -1 }
-          if (a.shu_liang.jin_jing_feng_count < b.shu_liang.jin_jing_feng_count) { return 1 }
+          if (a.shu_liang.value > b.shu_liang.value) { return -1 }
+          if (a.shu_liang.value < b.shu_liang.value) { return 1 }
           return 0
         })
         console.log(self.plan.chuang_ye_ban_gai_nian)
