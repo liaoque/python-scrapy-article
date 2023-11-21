@@ -122,23 +122,25 @@ export default {
     getCrudOptions () {
       const self = this
       api.GetResult().then(function (params) {
-        // self.plan.chuang_ye_ban_gai_nian = params.data.chuang_ye_ban_gn.map((item) => {
-        //   let today = (Math.ceil(item.chuang_bai_ri_xin_gao.today / 1000000) / 100).toFixed(2)
-        //   let yeasterday = (Math.ceil(item.chuang_bai_ri_xin_gao.yesterday / 1000000) / 100).toFixed(2)
-        //   item.jin_zuo_bai_ri_xin_gao = item.chuang_bai_ri_xin_gao.count + '|' + today + '|' + yeasterday
+        self.plan.chuang_ye_ban_gai_nian = params.chuang_ye_ban_gn.map((item) => {
+          let today = (Math.ceil(item.chuang_bai_ri_xin_gao.today / 1000000) / 100).toFixed(2)
+          let yeasterday = (Math.ceil(item.chuang_bai_ri_xin_gao.yesterday / 1000000) / 100).toFixed(2)
+          item.jin_zuo_bai_ri_xin_gao = item.chuang_bai_ri_xin_gao.count + '|' + today + '|' + yeasterday
 
-        //   today = (Math.ceil(item.jin_jing_feng.today / 1000000) / 100).toFixed(2)
-        //   yeasterday = (Math.ceil(item.jin_jing_feng.yesterday / 1000000) / 100).toFixed(2)
-        //   item.jin_zuo_jin_jing_feng = today + '|' + yeasterday
+          today = (Math.ceil(item.jin_jing_feng.today / 1000000) / 100).toFixed(2)
+          yeasterday = (Math.ceil(item.jin_jing_feng.yesterday / 1000000) / 100).toFixed(2)
+          item.jin_zuo_jin_jing_feng = today + '|' + yeasterday
 
-        //   item.liu_tong_shi_zhi_s = (Math.ceil(item.liu_tong_shi_zhi / 1000000) / 100).toFixed(2)
-        //   item.die_ting_da_mian.today = (Math.ceil(item.die_ting_da_mian.today / 1000000) / 100).toFixed(2)
-        //   return item
-        // }).sort((a, b) => {
-        //   if (a.jin_jing_feng_count.count > b.jin_jing_feng_count.count) { return -1 }
-        //   if (a.jin_jing_feng_count.count < b.jin_jing_feng_count.count) { return 1 }
-        //   return 0
-        // })
+          item.liu_tong_shi_zhi_s = (Math.ceil(item.liu_tong_shi_zhi / 1000000) / 100).toFixed(2)
+          item.die_ting.feng_dan_jin_e = (Math.ceil(item.die_ting.feng_dan_jin_e / 1000000) / 100).toFixed(2)
+          item.die_ting.jing_jia_wei_pi_pei = (Math.ceil(item.die_ting.jing_jia_wei_pi_pei / 1000000) / 100).toFixed(2)
+          return item
+        }).sort((a, b) => {
+          if (a.shu_liang.jin_jing_feng_count > b.shu_liang.jin_jing_feng_count) { return -1 }
+          if (a.shu_liang.jin_jing_feng_count < b.shu_liang.jin_jing_feng_count) { return 1 }
+          return 0
+        })
+        console.log(self.plan.chuang_ye_ban_gai_nian)
 
         self.plan.zhu_ban = params.zhu_data.map((item) => {
           self.codeMap.zhu[item.code] = item
