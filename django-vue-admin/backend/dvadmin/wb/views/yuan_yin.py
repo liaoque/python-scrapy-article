@@ -87,7 +87,6 @@ class YuanYinView(View):
         yuan_yin['yi_zi_ban_sort'] = [{"gianian": key, "c": item} for key, item in
                                         yuan_yin['yi_zi_ban_sort'].items()]
 
-
-
+        yuan_yin['yi_zi_ban_sort'] = yuan_yin['zhu_xian'][0:100]
 
         return JsonResponse(yuan_yin)
