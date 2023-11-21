@@ -1,5 +1,6 @@
 from dvadmin.wb.core import concept, gn
 from dvadmin.wb.utils import gp
+from dvadmin.wb.config import code_config
 
 """
 Sub 增加前后分号()
@@ -129,8 +130,10 @@ End Sub
 """
 
 
-def tag_zhangting_dieting(data, fd=0):
+def tag_zhangting_dieting(data):
     data2 = {}
+    xia_xian = code_config.CodeConfig().getCodeConfig()
+    fd = xia_xian['fd']
     for (code, items) in data.items():
 
         items["qushi"] = 0
