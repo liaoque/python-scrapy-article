@@ -76,4 +76,18 @@ class YuanYinView(View):
         # dieting_table1 = (table.find_one({}, {"YiZiDieTing": 1}))
 
         yuan_yin = yuan_yin_data.getYuanYin(data)
+        yuan_yin['chuang_bai_ri_xin_gao_sort'] = [{"gianian": key, "c": item} for key, item in
+                                        yuan_yin['chuang_bai_ri_xin_gao_sort'].items()]
+        yuan_yin['die_ting_sort'] = [{"gianian": key, "c": item} for key, item in
+                                        yuan_yin['die_ting_sort'].items()]
+        yuan_yin['lian_zhang_sort'] = [{"gianian": key, "c": item} for key, item in
+                                        yuan_yin['lian_zhang_sort'].items()]
+        yuan_yin['shou_ban_sort'] = [{"gianian": key, "c": item} for key, item in
+                                        yuan_yin['shou_ban_sort'].items()]
+        yuan_yin['yi_zi_ban_sort'] = [{"gianian": key, "c": item} for key, item in
+                                        yuan_yin['yi_zi_ban_sort'].items()]
+
+
+
+
         return JsonResponse(yuan_yin)
