@@ -78,8 +78,7 @@ class YuanYinView(View):
         yuan_yin = yuan_yin_data.getYuanYin(data)
         yuan_yin['chuang_bai_ri_xin_gao_sort'] = [item for key, item in
                                                   yuan_yin['chuang_bai_ri_xin_gao_sort'].items()]
-        yuan_yin['die_ting_sort'] = [item for key, item in
-                                     yuan_yin['die_ting_sort'].items()]
+        yuan_yin['die_ting_sort'] = [item for key, item in yuan_yin['die_ting_sort'].items()]
         yuan_yin['lian_zhang_sort'] = [item for key, item in
                                        yuan_yin['lian_zhang_sort'].items()]
         yuan_yin['shou_ban_sort'] = [item for key, item in
@@ -88,5 +87,5 @@ class YuanYinView(View):
                                       yuan_yin['yi_zi_ban_sort'].items()]
 
         yuan_yin['zhu_xian'] = yuan_yin['zhu_xian'][0:100]
-
+        self.client.close()
         return JsonResponse(yuan_yin)

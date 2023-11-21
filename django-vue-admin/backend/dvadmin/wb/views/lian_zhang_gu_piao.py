@@ -105,4 +105,5 @@ class LianZhangGuPiao(View):
         #
         # yuan_yin.yizibangupiao = [item for key, item in yuan_yin.yizibangupiao]
         # yuan_yin.zhabangupiao = [item for key, item in yuan_yin.zhabangupiao]
+        self.client.close()
         return JsonResponse(yuan_yin)

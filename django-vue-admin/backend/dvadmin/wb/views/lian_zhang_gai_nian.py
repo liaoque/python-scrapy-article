@@ -83,5 +83,5 @@ class LianZhangGiNian(View):
         yuan_yin['chuangbairixingaogainnian'] = [{"gianian":key, "c": item} for key, item in yuan_yin['chuangbairixingaogainnian'].items()]
         yuan_yin['yizibangainian'] = [{"gianian":key, "c": item} for key, item in yuan_yin['yizibangainian'].items()]
         yuan_yin['shoubangainian'] = [{"gianian":key, "c": item} for key, item in yuan_yin['shoubangainian'].items()]
-
+        self.client.close()
         return JsonResponse(yuan_yin)

@@ -141,7 +141,7 @@ class ResetView(View):
         # d.update(d2)
         result = pi_pei_gai_nian.pi_pei_gai_nian(d)
 
-        # self.client.close()
-        result["chuang_ye_ban_gn"] = d["chuang_ye_ban_gn"]
+        self.client.close()
+        result["chuang_ye_ban_gn"] = [item for key, item in d['chuang_ye_ban_gn'].items()]
         result["qing_xu"] = d["qing_xu"]
         return JsonResponse(result)
