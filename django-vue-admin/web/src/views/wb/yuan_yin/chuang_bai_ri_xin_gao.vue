@@ -1,41 +1,30 @@
 <template>
-  <d2-container>
-    <template slot="header">{{ header.gn }} - {{ header.je }}</template>
-    <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="date" label="名称" width="180">
-      </el-table-column>
-      <el-table-column prop="name" label="竞价未匹配" width="180">
-      </el-table-column>
-    </el-table>
-  </d2-container>
+  <el-table :data="tableData" style="width: 100%">
+    <el-table-column type="expand">
+      <template slot-scope="props">
+        <el-form label-position="left" inline class="demo-table-expand">
+          <el-form-item ::key="index" v-for="(item, index) in props.row.gai_nian_gu_piao" :label="item.briefname" :name="item.code">
+            <span>{{ item.jingjiaweipipeijinetoday  }}</span>
+          </el-form-item>
+        </el-form>
+      </template>
+    </el-table-column>
+    <el-table-column prop="suoshugainian" label="名称" width="180">
+    </el-table-column>
+    <el-table-column prop="gai_nian_jing_jia_wei_pi_pei" label="竞价未匹配" width="180">
+    </el-table-column>
+  </el-table>
 </template>
 
 <script>
 export default {
-  data () {
-    return {
-      header: {
-        gn: '',
-        je: ''
-      },
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎4',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
-    }
-  }
+props: [
+'tableData'
+],
+data () {
+return {
+
+}
+}
 }
 </script>

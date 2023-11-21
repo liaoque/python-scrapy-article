@@ -3,15 +3,10 @@
     <template slot="header">涨停原因</template>
     <d2-container type="card">
       <el-row>
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane
-            :key="index"
-            v-for="(item, index) in nav"
-            :label="item.name"
-            :name="item.key"
-          >
+        <el-tabs >
+          <el-tab-pane :key="index" v-for="(item, index) in nav" :label="item.name" :name="item.key">
 
-              <component :is="item.table"></component>
+            <component :is="item.table" :table-data="item.data"></component>
 
           </el-tab-pane>
           <!-- <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
@@ -42,23 +37,28 @@ export default {
       nav: [
         {
           name: '涨停大肉',
-          table: 'ZhangTingDaRou'
+          table: 'ZhangTingDaRou',
+          data: []
         },
         {
           name: '跌停大面',
-          table: 'DieTingDaMian'
+          table: 'DieTingDaMian',
+          data: []
         },
         {
           name: '创百日新高',
-          table: 'ChuangBaiRiXinGao'
+          table: 'ChuangBaiRiXinGao',
+          data: []
         },
         {
           name: '今竟封',
-          table: 'JinJingFeng'
+          table: 'JinJingFeng',
+          data: []
         },
         {
           name: '首版',
-          table: 'ShouBan'
+          table: 'ShouBan',
+          data: []
         }
       ]
     }
@@ -75,8 +75,57 @@ export default {
       return api.GetYuanYin(query)
     },
     getCrudOptions () {
+      const self = this
       api.GetYuanYin().then(function (params) {
-        console.log(params)
+        self.nav[0].data = params.lian_zhang_sort.map(item => {
+          item.gai_nian_jing_jia_wei_pi_pei = (item.gai_nian_jing_jia_wei_pi_pei / 10000 / 10000).toFixed(2)
+          item.gai_nian_feng_dan_jin_e = (item.gai_nian_feng_dan_jin_e / 10000 / 10000).toFixed(2)
+          item.gai_nian_gu_piao =item.gai_nian_gu_piao.map(item=>{
+            item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+            return item
+          })
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+        // console.log(self.nav[0].data)
+        self.nav[1].data = params.die_ting_sort
+
+        self.nav[2].data = params.chuang_bai_ri_xin_gao_sort.map(item => {
+          item.gai_nian_jing_jia_wei_pi_pei = (item.gai_nian_jing_jia_wei_pi_pei / 10000 / 10000).toFixed(2)
+          item.gai_nian_feng_dan_jin_e = (item.gai_nian_feng_dan_jin_e / 10000 / 10000).toFixed(2)
+          item.gai_nian_gu_piao =item.gai_nian_gu_piao.map(item=>{
+            item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+            return item
+          })
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+
+        self.nav[3].data = params.yi_zi_ban_sort.map(item => {
+          item.gai_nian_jing_jia_wei_pi_pei = (item.gai_nian_jing_jia_wei_pi_pei / 10000 / 10000).toFixed(2)
+          item.gai_nian_feng_dan_jin_e = (item.gai_nian_feng_dan_jin_e / 10000 / 10000).toFixed(2)
+          item.gai_nian_gu_piao =item.gai_nian_gu_piao.map(item=>{
+            item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+            return item
+          })
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
+
+        self.nav[4].data = params.shou_ban_sort.map(item => {
+          item.gai_nian_jing_jia_wei_pi_pei = (item.gai_nian_jing_jia_wei_pi_pei / 10000 / 10000).toFixed(2)
+          item.gai_nian_feng_dan_jin_e = (item.gai_nian_feng_dan_jin_e / 10000 / 10000).toFixed(2)
+          item.gai_nian_gu_piao =item.gai_nian_gu_piao.map(item=>{
+            item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+            return item
+          })
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
       })
       return crudOptions(this)
     },
