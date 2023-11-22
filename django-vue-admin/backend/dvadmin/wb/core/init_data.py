@@ -220,7 +220,7 @@ def tag_yi_die_ting(table1, data):
         code = gp.getCode(items["code"])
         if code not in data:
             continue
-        data[code]["jingjiaweipipeijinetoday"] = items["jingjiaweipipeijinetoday"]
+        data[code]["jingjiaweipipeijinetoday"] = items["jingjiaweipipeijine"]
 
     return data
 
