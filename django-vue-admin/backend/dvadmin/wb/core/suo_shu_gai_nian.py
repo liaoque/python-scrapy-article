@@ -295,9 +295,9 @@ def createZhangTingDaRou(gn_dict, today, fd):
 
     if gn in today["yuan_yin"]["lian_zhang_sort"]:
         # 盘中 涨停次数 < 1, 弱： execl : 298行
-        gn_dict[gn]["shuliang"]["value"] = gn_dict[gn]["shuliang"]["zhang_ting_da_rou"] = today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
-        if gn_dict[gn]["shuliang"]["zhang_ting_da_rou"] < 1:
-            gn_dict[gn]["shuliang"]["color"] = 35
+        gn_dict[gn]["shu_liang"]["value"] = gn_dict[gn]["shu_liang"]["zhang_ting_da_rou"] = today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
+        if gn_dict[gn]["shu_liang"]["zhang_ting_da_rou"] < 1:
+            gn_dict[gn]["shu_liang"]["color"] = 35
 
     return gn_dict
 
@@ -413,12 +413,12 @@ def gai_nian_biao_shang_se(gn_dict):
     maxd = max(gn_dict.items(),
                key=lambda x: 0 if x[1]["chuang_bai_ri_xin_gao"]["color"] == 35 else x[1]["chuang_bai_ri_xin_gao"][
                    "count"])
-    if imax < maxd[1]["chuang_bai_ri_xin_gao"]["count"]:
-        imax = maxd
+    if imax[1]["shu_liang"]["value"] < maxd[1]["chuang_bai_ri_xin_gao"]["count"]:
+        imax[1]["shu_liang"]["value"] = maxd[1]["chuang_bai_ri_xin_gao"]["count"]
 
     # 数量最大的概念标记粉色
     for (gn, item) in gn_dict.items():
-        if item["chuang_bai_ri_xin_gao"]["count"] != imax or item["chuang_bai_ri_xin_gao"]["color"]== 35:
+        if item["chuang_bai_ri_xin_gao"]["count"] != imax[1]["shu_liang"]["value"] or item["chuang_bai_ri_xin_gao"]["color"]== 35:
             continue
         # 粉色
         gn_dict[gn]["chuang_bai_ri_xin_gao"]["color"] = 13421823
