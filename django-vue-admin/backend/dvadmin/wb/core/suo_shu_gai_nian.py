@@ -295,7 +295,7 @@ def createZhangTingDaRou(gn_dict, today, fd):
 
     if gn in today["yuan_yin"]["lian_zhang_sort"]:
         # 盘中 涨停次数 < 1, 弱： execl : 298行
-        gn_dict[gn]["shuliang"]["zhang_ting_da_rou"] = today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
+        gn_dict[gn]["shuliang"]["value"] = gn_dict[gn]["shuliang"]["zhang_ting_da_rou"] = today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
         if gn_dict[gn]["shuliang"]["zhang_ting_da_rou"] < 1:
             gn_dict[gn]["shuliang"]["color"] = 35
 
@@ -308,7 +308,7 @@ def createJinJingFeng(gn_dict, gn, today, yesterday):
     yi_zi_ban_sort_yesterday = yesterday["yuan_yin"]["yi_zi_ban_sort"]
     if gn in yi_zi_ban_sort:
         jin_jing_feng["today"] = yi_zi_ban_sort[gn]["gai_nian_jing_jia_wei_pi_pei"]
-        gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] = yi_zi_ban_sort[gn]["count"]
+        gn_dict[gn]["shu_liang"]["value"] = gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] = yi_zi_ban_sort[gn]["count"]
 
     # 竞价未匹配<0 弱
     if jin_jing_feng["today"] <= 0 and gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] > 0:
@@ -394,18 +394,19 @@ def create_dieting(gn_dict, gn, today, fd):
 
 
 def gai_nian_biao_shang_se(gn_dict):
-    imax = 0
-    isred = 0
+    # imax = 0
+    # isred = 0
 
+    imax = max(gn_dict.items(),   key=lambda x:  x[1]["shu_liang"]["value"] )
     # 今竞封的数量最大的
     for (gn, item) in gn_dict.items():
-        if isred == 0:
-            imax = item["shu_liang"]["jin_jing_feng_count"]
+        # if isred == 0:
+        #     imax = item["shu_liang"]["value"]
 
         if (item["jin_jing_feng"]["color"] != 35 and item["pan_zhong"]["color"] != 35 and
-                item["die_ting"]["color"] != 35 and item["shu_liang"]["jin_jing_feng_count"] == imax):
+                item["die_ting"]["color"] != 35 and item["shu_liang"]["jin_jing_feng_count"] == imax[1]["shu_liang"]["value"]):
             item["shu_liang"]["color"] = 13421823
-            isred = 1
+            # isred = 1
         gn_dict[gn] = item
 
     # 找到百日新高数量最大的， 且不是绿色的概念
