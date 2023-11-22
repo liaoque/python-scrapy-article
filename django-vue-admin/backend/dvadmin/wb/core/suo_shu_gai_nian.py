@@ -228,6 +228,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
             "shu_liang": {
                 "zhang_ting_da_rou": 0,
                 "jin_jing_feng_count": 0,
+                "value":0,
                 "color": 0,
             },
             "jin_jing_feng": {
@@ -242,6 +243,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
             },
             "die_ting": {
                 "color": 0,
+                "value": 0,
                 "feng_dan_jin_e": 0,
                 "jing_jia_wei_pi_pei": 0,
             }
@@ -412,7 +414,7 @@ def gai_nian_biao_shang_se(gn_dict):
 
     # 数量最大的概念标记粉色
     for (gn, item) in gn_dict.items():
-        if item["chuang_bai_ri_xin_gao"]["count"] != imax:
+        if item["chuang_bai_ri_xin_gao"]["count"] != imax and item["chuang_bai_ri_xin_gao"]["color"]!= 35:
             continue
         # 粉色
         gn_dict[gn]["chuang_bai_ri_xin_gao"]["color"] = 13421823
