@@ -6,9 +6,9 @@
         <el-tag type="info">竞跌停{{ other.jing_die_ting }}</el-tag>
       </p>
       <p>
-        <el-tag>【主板】({{ other.zhu_ban.code }}){{ other.zhu_ban.briefname }}【5日涨跌幅】{{ other.zhu_ban.zhangfu5.toFixed(2) }}</el-tag>
-        <el-tag>【创业板】({{ other.chuang_ye_ban.code }}){{ other.chuang_ye_ban.briefname }}【5日涨跌幅】{{ other.chuang_ye_ban.zhangfu5.toFixed(2) }}</el-tag>
-        <el-tag>【科创板】({{ other.ke_chuang_ban.code }}){{ other.ke_chuang_ban.briefname }}【5日涨跌幅】{{ other.ke_chuang_ban.zhangfu5.toFixed(2) }}</el-tag>
+        <el-tag v-if="other.zhu_ban">【主板】({{ other.zhu_ban.code }}){{ other.zhu_ban.briefname }}【5日涨跌幅】{{ other.zhu_ban.zhangfu5.toFixed(2) }}</el-tag>
+        <el-tag v-if="other.chuang_ye_ban">【创业板】({{ other.chuang_ye_ban.code }}){{ other.chuang_ye_ban.briefname }}【5日涨跌幅】{{ other.chuang_ye_ban.zhangfu5.toFixed(2) }}</el-tag>
+        <el-tag v-if="other.ke_chuang_ban">【科创板】({{ other.ke_chuang_ban.code }}){{ other.ke_chuang_ban.briefname }}【5日涨跌幅】{{ other.ke_chuang_ban.zhangfu5.toFixed(2) }}</el-tag>
       </p>
     </template>
     <d2-container type="card">
