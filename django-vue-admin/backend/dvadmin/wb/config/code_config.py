@@ -8,8 +8,8 @@ class CodeConfig:
 
     def getCodeConfig(self):
         return {
-            "chuang_ye_set": 18.99 / 100,
-            "zhu_set": 9.5 / 100,
+            "chuang_ye_set": 18.99 ,
+            "zhu_set": 9.5 ,
             "10cm": 50,
             "20cm": 70,
             "fd": 0,
