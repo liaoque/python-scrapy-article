@@ -434,7 +434,7 @@ def merge_shou_ban(yesterday, before_yesterday):
 
         if len(before_yesterday["yi_zi_ban_sort"].keys()) == 0 and len(
                 yesterday["yi_zi_ban_sort"].keys()) == 0:
-            continue
+            break
 
         if gn not in before_yesterday["shou_ban_sort"]:
             continue
