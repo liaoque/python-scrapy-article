@@ -414,7 +414,7 @@ def gai_nian_biao_shang_se(gn_dict):
 
     # 数量最大的概念标记粉色
     for (gn, item) in gn_dict.items():
-        if item["chuang_bai_ri_xin_gao"]["count"] != imax and item["chuang_bai_ri_xin_gao"]["color"]!= 35:
+        if item["chuang_bai_ri_xin_gao"]["count"] != imax or item["chuang_bai_ri_xin_gao"]["color"]== 35:
             continue
         # 粉色
         gn_dict[gn]["chuang_bai_ri_xin_gao"]["color"] = 13421823
