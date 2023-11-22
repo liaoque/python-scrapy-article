@@ -82,6 +82,7 @@ export default {
   data () {
     return {
       fd: 0,
+      qx:0,
       activeName: 'first',
       pickerOptions: {
         value: '',
@@ -123,6 +124,7 @@ export default {
     getCrudOptions () {
       const self = this
       api.GetResult().then(function (params) {
+        self.qx = params.qing_xu
         self.plan.chuang_ye_ban_gai_nian = params.chuang_ye_ban_gn.map((item) => {
           // 今昨百日新高
           let today = (Math.ceil(item.chuang_bai_ri_xin_gao.today / 1000000) / 100).toFixed(2)

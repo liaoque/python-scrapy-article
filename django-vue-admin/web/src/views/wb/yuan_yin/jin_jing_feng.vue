@@ -3,8 +3,9 @@
     <el-table-column type="expand">
       <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
-          <el-form-item ::key="index" v-for="(item, index) in props.row.gai_nian_gu_piao" :label="item.briefname" :name="item.code">
-            <span>{{ item.jingjiaweipipeijinetoday  }}</span>
+          <el-form-item ::key="index" v-for="(item, index) in props.row.gai_nian_gu_piao" :label="item.briefname"
+            :name="item.code">
+            <span>{{ item.jingjiaweipipeijinetoday }}</span>
           </el-form-item>
         </el-form>
       </template>
@@ -18,13 +19,13 @@
 
 <script>
 export default {
-props: [
-'tableData'
-],
-data () {
-return {
+  props: [
+    'tableData'
+  ],
+  data() {
+    return {
 
-}
-}
+    }
+  }
 }
 </script>

@@ -7,13 +7,7 @@
       </p>
       <p>
         <el-tag>【主板】({{ other.zhu_ban.code }}){{ other.zhu_ban.briefname }}【5日涨跌幅】{{ other.zhu_ban.zhangfu5.toFixed(2) }}</el-tag>
-
-      </p>
-      <p>
         <el-tag>【创业板】({{ other.chuang_ye_ban.code }}){{ other.chuang_ye_ban.briefname }}【5日涨跌幅】{{ other.chuang_ye_ban.zhangfu5.toFixed(2) }}</el-tag>
-
-      </p>
-      <p>
         <el-tag>【科创板】({{ other.ke_chuang_ban.code }}){{ other.ke_chuang_ban.briefname }}【5日涨跌幅】{{ other.ke_chuang_ban.zhangfu5.toFixed(2) }}</el-tag>
       </p>
     </template>
@@ -88,8 +82,8 @@ export default {
     getCrudOptions () {
       const self = this
       api.GetYuanYin().then(function (params) {
-        self.other.jing_zhang_ting = params.jing_jia_sort.zhang_ting.toFixed(2)
-        self.other.jing_die_ting = params.jing_jia_sort.die_ting.toFixed(2)
+        self.other.jing_zhang_ting = (params.jing_jia_sort.zhang_ting / 10000 / 10000).toFixed(2)
+        self.other.jing_die_ting = (params.jing_jia_sort.die_ting / 10000 / 10000).toFixed(2)
         self.other.zhu_ban = params.day_5_sort.zhu_ban
         self.other.chuang_ye_ban = params.day_5_sort.chuang_ye_ban
         self.other.ke_chuang_ban = params.day_5_sort.ke_chuang_ban
@@ -106,7 +100,17 @@ export default {
           return item
         })
         // console.log(self.nav[0].data)
-        self.nav[1].data = params.die_ting_sort
+        self.nav[1].data = params.die_ting_sort.map(item => {
+          item.gai_nian_jing_jia_wei_pi_pei = (item.gai_nian_jing_jia_wei_pi_pei / 10000 / 10000).toFixed(2)
+
+          item.gai_nian_gu_piao = item.gai_nian_gu_piao.map(item => {
+            item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+            return item
+          })
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
 
         self.nav[2].data = params.chuang_bai_ri_xin_gao_sort.map(item => {
           item.gai_nian_jing_jia_wei_pi_pei = (item.gai_nian_jing_jia_wei_pi_pei / 10000 / 10000).toFixed(2)
@@ -136,7 +140,7 @@ export default {
           item.gai_nian_jing_jia_wei_pi_pei = (item.gai_nian_jing_jia_wei_pi_pei / 10000 / 10000).toFixed(2)
           item.gai_nian_feng_dan_jin_e = (item.gai_nian_feng_dan_jin_e / 10000 / 10000).toFixed(2)
           item.gai_nian_gu_piao = item.gai_nian_gu_piao.map(item => {
-            item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+            item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 10000 / 10000).toFixed(2)
             return item
           })
           item.zhangfu120 = (item.zhangfu120).toFixed(2)
