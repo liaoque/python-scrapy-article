@@ -143,7 +143,6 @@ export default {
           item.gai_nian_gu_piao = item.gai_nian_gu_piao.map(item => {
             item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 10000 / 10000).toFixed(2)
             item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
-            item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 10000 / 10000).toFixed(2)
             return item
           })
           item.zhangfu120 = (item.zhangfu120).toFixed(2)
