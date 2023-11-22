@@ -99,6 +99,7 @@ export default {
           item.gai_nian_feng_dan_jin_e = (item.gai_nian_feng_dan_jin_e / 10000 / 10000).toFixed(2)
           item.gai_nian_gu_piao = item.gai_nian_gu_piao.map(item => {
             item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+            item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 10000 / 10000).toFixed(2)
             return item
           })
           item.zhangfu120 = (item.zhangfu120).toFixed(2)
@@ -137,6 +138,7 @@ export default {
           item.gai_nian_feng_dan_jin_e = (item.gai_nian_feng_dan_jin_e / 10000 / 10000).toFixed(2)
           item.gai_nian_gu_piao = item.gai_nian_gu_piao.map(item => {
             item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+            item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 10000 / 10000).toFixed(2)
             return item
           })
           item.zhangfu120 = (item.zhangfu120).toFixed(2)

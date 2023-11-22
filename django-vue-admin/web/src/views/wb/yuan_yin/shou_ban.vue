@@ -4,14 +4,14 @@
       <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
           <el-form-item ::key="index" v-for="(item, index) in props.row.gai_nian_gu_piao" :label="item.briefname" :name="item.code">
-            <span>{{ item.jingjiaweipipeijinetoday  }}</span>
+            <span>{{ item.zhangtingfengdanetoday  }}</span>
           </el-form-item>
         </el-form>
       </template>
     </el-table-column>
     <el-table-column prop="suoshugainian" label="名称" width="180">
     </el-table-column>
-    <el-table-column prop="gai_nian_jing_jia_wei_pi_pei" label="竞价未匹配" width="180">
+    <el-table-column prop="gai_nian_feng_dan_jin_e" label="竞价未匹配(封单金额)" width="180">
     </el-table-column>
   </el-table>
 </template>
