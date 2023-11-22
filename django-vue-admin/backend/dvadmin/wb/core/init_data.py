@@ -1,5 +1,6 @@
 from dvadmin.wb.core import concept, gn
 from dvadmin.wb.utils import gp
+from dvadmin.wb.config import code_config
 
 """
 Sub 增加前后分号()
@@ -129,8 +130,10 @@ End Sub
 """
 
 
-def tag_zhangting_dieting(data, fd=0):
+def tag_zhangting_dieting(data):
     data2 = {}
+    xia_xian = code_config.CodeConfig().getCodeConfig()
+    fd = xia_xian['fd']
     for (code, items) in data.items():
 
         items["qushi"] = 0
@@ -167,6 +170,7 @@ def tag_all(table1, data):
     data = tag_zha_ban(table1, data)
     data = tag_chuang_bai_ri_xin_gao(table1, data)
     data = tag_yi_zi_ban(table1, data)
+    data = tag_yi_die_ting(table1, data)
     data = tag_shou_ban(table1, data)
     data = tag_yi_dong(table1, data)
     data = tag_n10(table1, data)
@@ -208,6 +212,17 @@ def tag_chuang_bai_ri_xin_gao(table1, data):
         data[code]["chuang_bai_ri_xin_gao"] = 1
     return data
 
+def tag_yi_die_ting(table1, data):
+    if "YiZiDieTing" not in table1:
+        return data
+    data2 = table1["YiZiDieTing"]
+    for items in data2:
+        code = gp.getCode(items["code"])
+        if code not in data:
+            continue
+        data[code]["jingjiaweipipeijinetoday"] = items["jingjiaweipipeijine"]
+
+    return data
 
 def tag_yi_zi_ban(table1, data):
     if "YiZiBan" not in table1:

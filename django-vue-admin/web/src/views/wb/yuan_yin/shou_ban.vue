@@ -11,20 +11,20 @@
     </el-table-column>
     <el-table-column prop="suoshugainian" label="名称" width="180">
     </el-table-column>
-    <el-table-column prop="gai_nian_feng_dan_jin_e" label="竞价未匹配(封单金额)" width="180">
+    <el-table-column prop="gai_nian_feng_dan_jin_e" label="竞价未匹配" width="180">
     </el-table-column>
   </el-table>
 </template>
 
 <script>
 export default {
-props: [
-'tableData'
-],
-data () {
-return {
+  props: [
+    'tableData'
+  ],
+  data () {
+    return {
 
-}
-}
+    }
+  }
 }
 </script>
