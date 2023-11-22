@@ -190,7 +190,7 @@ def setFloatValue(item, name):
         item[name] = 0
         return item
 
-    if item[name] is None:
+    if item[name] is None or item[name] == "" :
         item[name] = 0
         return item
 
