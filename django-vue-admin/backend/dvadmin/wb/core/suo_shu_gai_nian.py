@@ -249,6 +249,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
             }
 
         }
+
         # ------------------------------------
         # 创百日新高
         # 计算创百日新高里面，每个概念对应的股票数量
@@ -320,7 +321,7 @@ def createJinJingFeng(gn_dict, gn, today, yesterday):
         # 竞价未匹配<昨天 弱
         if jin_jing_feng["today"] < jin_jing_feng["yesterday"] and gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] > 0:
             jin_jing_feng["color"] = 35
-    gn_dict[gn]["jin_jing_feng"] = jin_jing_feng
+    # gn_dict[gn]["jin_jing_feng"] = jin_jing_feng
 
     # 涨停大肉
     lian_zhang_sort_yesterday = yesterday["yuan_yin"]["lian_zhang_sort"]

@@ -151,8 +151,8 @@ def biao_shai_xuan(d, data1):
           item["shu_liang"]["color"] == 13421823 or item["chuang_bai_ri_xin_gao"]["color"] == 13421823]
 
     for gn2 in d["bu_zhang_data"]["gn"]:
-        if gn2 in d["chuang_ye_ban_gn"]:
-            d["chuang_ye_ban_gn"][gn2]["jin_jing_feng"]["color"] = 35
+        if gn2 in d["chuang_ye_ban_gn"] and d["chuang_ye_ban_gn"][gn2]["jin_jing_feng"]["color"] == 35:
+
             continue
         gn.append(gn2)
 
