@@ -362,15 +362,17 @@ def createChuangBaiRiXinGao(gn_dict, gn, today, yesterday):
 
 
 def create_dieting(gn_dict, gn, today, fd):
-    if gn not in today["yuan_yin"]["die_ting_sort"]:
-        return gn_dict
-
     if fd == 1:
-        gn_dict[gn]["die_ting"]["feng_dan_jin_e"] = today["yuan_yin"]["die_ting_sort"][gn][
-            "gai_nian_feng_dan_jin_e"]
+        if gn in today["yuan_yin"]["die_ting_sort"]:
+            gn_dict[gn]["die_ting"]["feng_dan_jin_e"] = today["yuan_yin"]["die_ting_sort"][gn][
+                "gai_nian_feng_dan_jin_e"]
+
     else:
-        jing_jia_wei_pi_pei = today["yuan_yin"]["die_ting_sort"][gn][
-            "gai_nian_jing_jia_wei_pi_pei"]
+        jing_jia_wei_pi_pei = 0
+        if gn in today["yuan_yin"]["die_ting_sort"]:
+            jing_jia_wei_pi_pei = today["yuan_yin"]["die_ting_sort"][gn][
+                "gai_nian_jing_jia_wei_pi_pei"]
+
         if jing_jia_wei_pi_pei > 0:
             jing_jia_wei_pi_pei = 0
         elif jing_jia_wei_pi_pei < 0:
