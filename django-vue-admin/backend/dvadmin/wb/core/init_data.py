@@ -390,7 +390,7 @@ def tag_n20(table1, data):
         # 昨日最大涨幅
         data[code]["N_zuidazhangfu"] = items["zuidazhangfu"]
         # 前日涨停
-        if items["N_beforeyesterdaytop"] != "":
+        if items["beforeyesterdaytop"] != "":
             data[code]["N_beforeyesterdaytop"] = 1
 
         # 前日最大涨幅
