@@ -334,7 +334,7 @@ def setColor3Purple(chuang_data):
     return chuang_data
 
 
-def setColor1Orange(chuang_data):
+def setColorOrange(chuang_data):
     chuang_data = sorted(chuang_data, key=lambda x: x[1]["zhangfu120"], reverse=True)
     # chuang_data = dict(tmp)
     for (key, item) in chuang_data:
@@ -424,13 +424,17 @@ def pi_pei_gai_nian(d):
     chuang_data = {code: item for (code, item) in chuang_data}
     zhu_data = {code: item for (code, item) in zhu_data}
     if qx == 1:
+        # 对应
+        #   If gp = "" And gp.Offset(0, -1).Interior.ColorIndex <> 35 And gp.Offset(0, 4) >= 0.08 Then
         if chuang_data_s["imin"] == 0:
             chuang_data = setColor1Pink(chuang_data)
 
         if zhu_data_s["imin"] == 0:
             zhu_data = setColor1Pink(zhu_data)
     else:
+        #  If gp = ijjlb1 Then
         chuang_data = setColor6Red(chuang_data_s, chuang_data)
+        # If gp.Offset(0, 1) = ijzlb1 Then
         chuang_data = setColor7Red(chuang_data_s, chuang_data)
 
         zhu_data = setColor6Red(zhu_data_s, zhu_data)
@@ -439,8 +443,8 @@ def pi_pei_gai_nian(d):
     chuang_data = setColor1Yellow(chuang_data)
     zhu_data = setColor1Yellow(zhu_data)
 
-    chuang_data = setColor1Orange(chuang_data)
-    zhu_data = setColor1Orange(zhu_data)
+    chuang_data = setColorOrange(chuang_data)
+    zhu_data = setColorOrange(zhu_data)
 
     chuang_data = setColor3Purple(chuang_data)
     zhu_data = setColor3Purple(zhu_data)
@@ -463,20 +467,22 @@ def pi_pei_gai_nian(d):
     return result
 
 
-
 def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
     for (key, item) in chuang_data:
-        item["color0"] = 0
-        item["color1"] = 0
-        item["color2"] = 0
-        item["color3"] = 0
-        item["color4"] = 0
-        item["color5"] = 0
-        item["color6"] = 0
-        item["color7"] = 0
-        item["color8"] = 0
-        item["color9"] = 0
-        item["color10"] = 0  # 代表N
+        item["color0"] = 0  # 代码
+        item["color1"] = 0  # 名称
+        item["color2"] = 0  # 竞价未匹配
+        item["color3"] = 0  # 所属概念
+        item["color4"] = 0  # 涨跌幅
+        item["color5"] = 0  # 4日涨跌幅
+        item["color6"] = 0  # 竞价量比
+        item["color7"] = 0  # 今昨量比
+        # item["color8"] = 0  # 昨日连板天数
+        item["color9"] = 0  # 120日涨跌幅
+        item["color10"] = 0  # 异动次数
+        item["color11"] = 0  # 监管
+        # item["color12"] = 0  # 创百日新高
+        # item["color13"] = 0  # 代表N
 
         # # 符合n 且 昨日曾涨停 == 1
         # if "n" in item and item["n"] == 1:
@@ -499,7 +505,7 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
         if item["jianguanleixingyesterday"] != "" or \
                 item["jingjiajinejingjialiangbi"] > 700 or \
                 item["jingjiajinechengjiaoliangbi"] >= 1 or \
-                (item["ziyouliutongshizhiyesterday"] / 100000000 > 100 and item["code"] !=
+                (item["ziyouliutongshizhiyesterday"] / 10000 / 10000 > 100 and item["code"] !=
                  bu_zhang_data["zhong_jun"]["code"]):
             item["color1"] = 35
 

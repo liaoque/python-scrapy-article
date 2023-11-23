@@ -400,13 +400,9 @@ def gai_nian_biao_shang_se(gn_dict):
     imax = max(gn_dict.items(),   key=lambda x:  x[1]["shu_liang"]["value"] )
     # 今竞封的数量最大的
     for (gn, item) in gn_dict.items():
-        # if isred == 0:
-        #     imax = item["shu_liang"]["value"]
-
         if (item["jin_jing_feng"]["color"] != 35 and item["pan_zhong"]["color"] != 35 and
                 item["die_ting"]["color"] != 35 and item["shu_liang"]["jin_jing_feng_count"] == imax[1]["shu_liang"]["value"]):
             item["shu_liang"]["color"] = 13421823
-            # isred = 1
         gn_dict[gn] = item
 
     # 找到百日新高数量最大的， 且不是绿色的概念

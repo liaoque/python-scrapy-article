@@ -149,6 +149,4 @@ class ResetView(View):
         result["chuang_ye_ban_gn"] = [item for key, item in d['chuang_ye_ban_gn'].items()]
         result["qing_xu"] = d["qing_xu"]
 
-
-
         return JsonResponse(result)

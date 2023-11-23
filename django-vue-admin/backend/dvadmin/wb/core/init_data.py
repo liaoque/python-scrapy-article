@@ -290,7 +290,10 @@ def tag_yi_dong(table1, data):
             continue
         data[code]["jianguanleixingyesterday"] = items["jianguanleixingyesterday"]
         data[code]["lianxuzhangtingtianshuyesterday"] = items["lianxuzhangtingtianshuyesterday"]
-        data[code]["yidongcishu"] = data[code]["yidongcishu"] + 1
+
+        if "连续" in items["qujianyidongleixing"]:
+            data[code]["yidongcishu"] = 1
+
         data[code]["yi_dong"] = 1
 
     return data
@@ -324,7 +327,12 @@ def tag_n10(table1, data):
 
     for code, item in data.items():
         data[code]["n"] = 0
+        data[code]["N_zhangtingcishu"] = 0
+        data[code]["N_qujianzhangtingcishu"] = 0
         data[code]["N_zuocengzhangting"] = 0
+        data[code]["N_beforeyesterdaytop"] = 0
+        data[code]["N_beforeyesterdaycengzhangting"] = 0
+        data[code]["N_lianbancishu"] = 0
 
     data2 = table1["N10"]
 
@@ -333,8 +341,24 @@ def tag_n10(table1, data):
         if code not in data:
             continue
         data[code]["n"] = 1
-        if "zuocengzhangting" in items and items["zuocengzhangting"] == "曾涨停":
+        # 涨停次数
+        data[code]["N_zhangtingcishu"] = items["zhangtingcishu"]
+        # 曾涨停次数
+        data[code]["N_qujianzhangtingcishu"] = items["qujianzhangtingcishu"]
+
+        # 昨曾涨停
+        if "zuocengzhangting" in items and items["zuocengzhangting"] != "":
             data[code]["N_zuocengzhangting"] = 1
+
+        # 前日涨停
+        if "beforeyesterdaytop" in items and items["beforeyesterdaytop"] != "":
+            data[code]["N_beforeyesterdaytop"] = 1
+
+        # 前日曾涨停
+        if "beforeyesterdaycengzhangting" in items and items["beforeyesterdaycengzhangting"] != "":
+            data[code]["N_beforeyesterdaycengzhangting"] = 1
+        # 连板次数
+        data[code]["N_lianbancishu"] = items["lianbancishu"]
 
     return data
 
@@ -347,6 +371,12 @@ def tag_n20(table1, data):
     for code, item in data.items():
         data[code]["n"] = 0
         data[code]["N_zuidazhangfu"] = 0
+        data[code]["N_zuocengzhangting"] = 0
+        # data[code]["N_qujianzhangtingcishu"] = 0
+        data[code]["N_zuidazhangfu"] = 0
+        # data[code]["N_beforeyesterdaytop"] = 0
+        # data[code]["N_maxzhangfu"] = 0
+        # data[code]["N_lianbancishu"] = 0
 
     data2 = table1["N20"]
 
@@ -355,6 +385,18 @@ def tag_n20(table1, data):
         if code not in data:
             continue
         data[code]["n"] = 1
+        # 最大涨幅满足条件次数
+        data[code]["N_qujianzhangtingcishu"] = items["qujianzhangtingcishu"]
+        # 昨日最大涨幅
+        data[code]["N_zuidazhangfu"] = items["zuidazhangfu"]
+        # 前日涨停
+        if items["N_beforeyesterdaytop"] != "":
+            data[code]["N_beforeyesterdaytop"] = 1
+
+        # 前日最大涨幅
+        data[code]["N_maxzhangfu"] = items["maxzhangfu"]
+        # 连板次数
+        data[code]["N_lianbancishu"] = items["lianbancishu"]
         if "zuidazhangfu" in items and items["zuidazhangfu"] > 0:
             data[code]["N_zuidazhangfu"] = items["zuidazhangfu"]
 
