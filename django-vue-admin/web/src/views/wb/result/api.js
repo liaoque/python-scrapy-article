@@ -54,7 +54,7 @@ export function GetCascadeData () {
 
 export function GetResult () {
   return request({
-    url: '/api/wb/reset?current_time=20231117',
+    url: '/api/wb/reset?current_time=20231122',
     method: 'get',
     data: { current_time: '20230913' }
   })

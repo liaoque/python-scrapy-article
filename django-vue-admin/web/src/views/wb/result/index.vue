@@ -147,7 +147,7 @@ export default {
             item.pan_zhong.feng_dan_jin_e = (Math.ceil(item.pan_zhong.feng_dan_jin_e / 1000000) / 100).toFixed(2)
           }
 
-          // 今竟封数 ，跌停未匹配
+          // 今竟封，跌停未匹配
           today = (Math.ceil(item.jin_jing_feng.today / 1000000) / 100).toFixed(2)
           yeasterday = (Math.ceil(item.jin_jing_feng.yesterday / 1000000) / 100).toFixed(2)
           const yesterdayFengDan = (Math.ceil(item.jin_jing_feng.yesterday_fengdan / 1000000) / 100).toFixed(2)

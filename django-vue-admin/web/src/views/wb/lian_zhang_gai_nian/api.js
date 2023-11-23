@@ -54,7 +54,7 @@ export function GetCascadeData () {
 
 export function GetLianZhangGaiNian () {
   return request({
-    url: '/api/wb/lian_zhang_gai_nian?current_time=20231117',
+    url: '/api/wb/lian_zhang_gai_nian?current_time=20231122',
     method: 'get',
     data: { current_time: '20231117' }
   })
