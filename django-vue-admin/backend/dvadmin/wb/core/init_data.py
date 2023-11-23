@@ -369,7 +369,7 @@ def tag_n20(table1, data):
         return data
 
     for code, item in data.items():
-        data[code]["n"] = 0
+        # data[code]["n"] = 0
         data[code]["N_zuidazhangfu"] = 0
         data[code]["N_zuocengzhangting"] = 0
         # data[code]["N_qujianzhangtingcishu"] = 0
@@ -408,7 +408,7 @@ def tag_zhu_xian_yuan(table1, data):
         return data
 
     for code, item in data.items():
-        data[code]["n"] = 0
+        # data[code]["n"] = 0
         data[code]["zhu_xian_yuan"] = 0
         data[code]["z_zhangfu10"] = 0
         data[code]["z_zhangfu30"] = 0
