@@ -2,17 +2,17 @@
   <div>
     <el-table :cell-class-name="cellClassName" :data="data.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
       style="width: 100%">
-      <el-table-column prop="code" sortable sort-by="code" label="代码">
+      <el-table-column prop="code" sortable sort-by="color0" label="代码">
       </el-table-column>
-      <el-table-column prop="briefname" label="名称">
+      <el-table-column prop="briefname" label="名称" sortable sort-by="color1">
       </el-table-column>
-      <el-table-column prop="jingjiajinetoday_s" sortable sort-by="jingjiajinetoday" label="竞价未匹配">
+      <el-table-column prop="jingjiajinetoday_s" sortable sort-by="color2" label="竞价未匹配">
       </el-table-column>
-      <el-table-column sortable sort-by="suoshugainian" label="所属概念">
+      <el-table-column sortable sort-by="color3" label="所属概念">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <el-tag disable-transitions :key="index"
-              v-for="(gainian, index) in scope.row.suoshugainian">{{ gainian }}</el-tag>
+            <el-tag disable-transitions :key="index" v-for="(gainian, index) in scope.row.suoshugainian">{{ gainian
+            }}</el-tag>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">{{ scope.row.suoshugainian.join(",").slice(0, 10) }}</el-tag>
             </div>
@@ -20,25 +20,25 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="zhangdiefuqianfuquantoday_s" sortable sort-by="zhangdiefuqianfuquantoday" label="涨跌幅">
+      <el-table-column prop="zhangdiefuqianfuquantoday_s" sortable sort-by="color4" label="涨跌幅">
       </el-table-column>
-      <el-table-column prop="zhangdie4thday_s" sortable sort-by="zhangdie4thday" label="4日涨跌">
+      <el-table-column prop="zhangdie4thday_s" sortable sort-by="color5" label="4日涨跌">
       </el-table-column>
-      <el-table-column prop="jingjiajinechengjiaoliangbi_s" sortable sort-by="jingjiajinechengjiaoliangbi" label="竞价量比">
+      <el-table-column prop="jingjiajinechengjiaoliangbi_s" sortable sort-by="color6" label="竞价量比">
       </el-table-column>
-      <el-table-column prop="jingjiajinechengjiaoliangbi_s" sortable sort-by="jingjiajinechengjiaoliangbi" label="今昨量比">
+      <el-table-column prop="jingjiajinechengjiaoliangbi_s" sortable sort-by="color7" label="今昨量比">
       </el-table-column>
-      <el-table-column prop="lianbantianshuyesterday" sortable sort-by="lianbantianshuyesterday" label="昨日连板天数">
+      <el-table-column prop="lianbantianshuyesterday" sortable sort-by="color8" label="昨日连板">
       </el-table-column>
-      <el-table-column prop="zhangfu120_s" sortable sort-by="zhangfu120" label="120日涨跌">
+      <el-table-column prop="zhangfu120_s" sortable sort-by="color9" label="120日涨跌">
       </el-table-column>
-      <el-table-column prop="yidongcishu" sortable sort-by="yidongcishu" label="异动">
+      <el-table-column prop="yidongcishu" sortable sort-by="color10" label="异动">
       </el-table-column>
-      <el-table-column prop="jianguanleixingyesterday" sortable sort-by="jianguanleixingyesterday" label="监管">
+      <el-table-column prop="jianguanleixingyesterday" sortable sort-by="color11" label="监管">
       </el-table-column>
-      <el-table-column prop="chuangbairixingao" sortable sort-by="chuangbairixingao" label="创百日新高">
+      <el-table-column prop="chuang_bai_ri_xin_gao" sortable sort-by="chuang_bai_ri_xin_gao" label="创百日新高">
       </el-table-column>
-      <el-table-column prop="ziyouliutongshizhiyesterday_s" sortable sort-by="ziyouliutongshizhiyesterday" label="流通市值">
+      <el-table-column prop="ziyouliutongshizhiyesterday_s" sortable sort-by="color13" label="流通市值">
       </el-table-column>
     </el-table>
     <div class="block">
@@ -56,7 +56,7 @@ export default {
     data: [],
     codeMap: {}
   },
-  data () {
+  data() {
     return {
       currentPage: 1, // 当前页码
       pageSize: 50 // 每页的数据条数
@@ -64,27 +64,29 @@ export default {
   },
   methods: {
     // 每页条数改变时触发 选择一页显示多少行
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.currentPage = 1
       this.pageSize = val
     },
     // 当前页改变时触发 跳转其他页
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.currentPage = val
     },
-    cellClassName (row) {
+    cellClassName(row) {
       const key = 'color' + row.columnIndex
+      // console.log(row)
       // '    紫色 29 橘色 46 黄色 36 绿色 35 红色 3  粉色 13551615
-      if (parseInt(row.row[key]) === 35) {
-        return 'el-button--success'
+      let d = {
+        "35": 'el-button--success',
+        "46": 'el-button--46',
+        "36": 'el-button--36',
+        "13551615": 'el-button--13551615',
+        "29": 'el-button--29',
+        "37": 'el-button--37',
+        "3": 'el-button--3',
       }
-      if (row.columnIndex === 0 && parseInt(row.row[key]) === 46) {
-        return 'el-button--46'
-      } else if (row.columnIndex === 1 && parseInt(row.row[key]) === 36) {
-        return 'el-button--36'
-      } else if (row.columnIndex === 2 && parseInt(row.row[key]) === 29) {
-        return 'el-button--29'
-      }
+
+      return d[row.row[key]]
     }
   }
 }
@@ -94,13 +96,34 @@ export default {
 .el-table {
   font-size: 10px;
 }
-.el-button--29{
-  
+
+.el-button--29 {
+  color: #FFF;
+  background-color: purple;
 }
-.el-button--36{
-  
+
+.el-button--36 {
+  color: blue;
+  background-color: yellow;
 }
-.el-button--46{
-  
+
+.el-button--46 {
+  color: #FFF;
+  background-color: orange;
+}
+
+.el-button--3 {
+  color: #FFF;
+  background-color: red;
+}
+
+.el-button--13551615 {
+  color: #FFF;
+  background-color: pink;
+}
+
+.el-button--37 {
+  color: #FFF;
+  background-color: blue;
 }
 </style>

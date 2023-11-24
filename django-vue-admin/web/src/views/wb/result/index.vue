@@ -159,7 +159,7 @@ export default {
           if (a.shu_liang.value < b.shu_liang.value) { return 1 }
           return 0
         })
-        console.log(self.plan.chuang_ye_ban_gai_nian)
+        // console.log(self.plan.chuang_ye_ban_gai_nian)
 
         self.plan.zhu_ban = params.zhu_data.map((item) => {
           self.codeMap.zhu[item.code] = item
