@@ -223,4 +223,5 @@ def biao_shai_xuan(d, data1):
     return {
         "chuang_data": chuang_data,
         "zhu_data": zhu_data,
+        "biao_shai_xuan": gn3,
     }
