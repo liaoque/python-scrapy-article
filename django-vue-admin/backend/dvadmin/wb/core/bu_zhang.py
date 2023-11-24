@@ -409,6 +409,7 @@ End Sub
 
 
 def zuo_biao_gao(yesterday):
+    return {}
     xian = code_config.CodeConfig().getCodeConfig()
     color10 = 0
     if yesterday["day_5_sort"]["zhu_ban"]["zhangfu5"] > xian["10cm"]:
