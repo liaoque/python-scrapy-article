@@ -150,4 +150,5 @@ class ResetView(View):
         result["qing_xu"] = d["qing_xu"]
         result["bu_zhang"] = d["bu_zhang_data"]
         result["biao_shai_xuan"] = d2["biao_shai_xuan"]
+        result["gn"] = d2["gn"]
         return JsonResponse(result)

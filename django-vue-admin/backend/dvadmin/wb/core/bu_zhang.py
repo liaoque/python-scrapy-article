@@ -298,22 +298,18 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
     # 取出阈值股票的5日涨幅
     # yzcode = data[yzgp]
     yzcode = {"name": "", "zhangdie4thday": 0}
-
     gn.extend(max_code["suoshugainian"])
-
-    # 昨首版非綠的概念
-    for (code, item2) in yesterday["shou_ban_sort"].items():
-        if "color" in item2 and item2["color"] == 35:
-            continue
-        if item2["suoshugainian"] in gn:
-            outgn.append(item2["suoshugainian"])
-
-    # '如果当天一字板 表是空的，就昨原因里首板的所有概念里非绿的概念加入 结果表的补涨框    if len(today["yi_zi_ban_sort"].keys()) == 0:
-    if len(today["yi_zi_ban_sort"].keys()) == 0:
-        outgn.extend(yesterday["yi_zi_ban_sort"].keys())
 
     outgn.extend(maxgn)
     outgn.extend(fdgn)
+
+    # 昨首版非綠的概念
+    # ，就昨原因里首板的所有概念里非绿的概念加入 结果表的补涨
+    for (code, item2) in yesterday["shou_ban_sort"].items():
+        if "color" in item2 and item2["color"] == 35:
+            continue
+        # if item2["suoshugainian"] in gn:
+        outgn.append(item2["suoshugainian"])
 
     outgn = list(set(outgn))
 
@@ -344,7 +340,7 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
         "feng_kou": "feng_kou",
         "yz": yzcode,
         "yz_rate": yzcode["zhangdie4thday"],
-        "gn": outgn,
+        "gn": gn,
         "zuo_biao_gao": zuo_biao_gao(yesterday)
     }
     return bu_zhang
