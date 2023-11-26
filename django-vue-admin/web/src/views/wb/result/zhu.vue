@@ -26,9 +26,9 @@
       </el-table-column>
       <el-table-column prop="jingjiajinechengjiaoliangbi_s" sortable sort-by="color6" label="竞价量比">
       </el-table-column>
-      <el-table-column prop="jingjiajinechengjiaoliangbi_s" sortable sort-by="color7" label="今昨量比">
+      <el-table-column prop="jingjiajinejingjialiangbi_s" sortable sort-by="color7" label="今昨量比">
       </el-table-column>
-      <el-table-column prop="lianbantianshuyesterday" sortable sort-by="color8" label="昨日连板">
+      <el-table-column prop="lianbantianshuyesterday" sortable sort-by="lianbantianshuyesterday" label="昨日连板">
       </el-table-column>
       <el-table-column prop="zhangfu120_s" sortable sort-by="color9" label="120日涨跌">
       </el-table-column>
@@ -36,7 +36,7 @@
       </el-table-column>
       <el-table-column prop="jianguanleixingyesterday" sortable sort-by="color11" label="监管">
       </el-table-column>
-      <el-table-column prop="chuang_bai_ri_xin_gao" sortable sort-by="chuang_bai_ri_xin_gao" label="创百日新高">
+      <el-table-column prop="chuang_bai_ri_xin_gao" sortable sort-by="color12" label="创百日新高">
       </el-table-column>
       <el-table-column prop="ziyouliutongshizhiyesterday_s" sortable sort-by="color13" label="流通市值">
       </el-table-column>
@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       currentPage: 1, // 当前页码
-      pageSize: 50 // 每页的数据条数
+      pageSize: 500 // 每页的数据条数
     }
   },
   methods: {
