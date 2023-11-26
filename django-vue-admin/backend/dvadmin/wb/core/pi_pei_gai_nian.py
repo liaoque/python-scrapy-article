@@ -527,7 +527,7 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
                     item["color1"] = 35
 
             # 创业板情绪差原来是4日涨跌幅大于20%就绿改成4日涨跌幅大于100%
-            if is_chuang_ye == 1 and item["zhangdie4thday"] >= 1 * 100:
+            if is_chuang_ye == 1 and item["zhangdie4thday"] >= 1 :
                 item["color1"] = 35
         else:
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:

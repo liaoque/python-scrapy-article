@@ -292,7 +292,7 @@ def tag_yi_dong(table1, data):
         data[code]["lianxuzhangtingtianshuyesterday"] = items["lianxuzhangtingtianshuyesterday"]
 
         if "连续" in items["qujianyidongleixing"]:
-            data[code]["yidongcishu"] = 1
+            data[code]["yidongcishu"] += 1
 
         data[code]["yi_dong"] = 1
 
