@@ -515,9 +515,9 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
                 item["color1"] = 35
                 item["color4"] = 35
 
-            if item["jingjiaweipipeijinetoday"] == 0:
-                item["color1"] = 35
-                item["color2"] = 35
+            # if item["jingjiaweipipeijinetoday"] == 0:
+            #     item["color1"] = 35
+            #     item["color2"] = 35
 
             if item["lianxuzhangtingtianshuyesterday"] > 2:
                 if is_chuang_ye == 1:
