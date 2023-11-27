@@ -323,7 +323,7 @@ def setColor3Purple(chuang_data):
 
     rng5 = None
     for (key, item) in chuang_data:
-        if item["color1"] != 35 and  item["color10"] == 37:
+        if item["color1"] != 35 and  item["color12"] == 37:
             if rng5 is None:
                 rng5 = item
             if item["color8"] != 38 and item["zuo_ri_lian_ban_tian_shu"] > 0:
