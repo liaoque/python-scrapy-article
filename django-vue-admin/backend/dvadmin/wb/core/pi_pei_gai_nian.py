@@ -505,7 +505,7 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
         if item["jianguanleixingyesterday"] != "" or \
                 item["jingjiajinejingjialiangbi"] > 700 or \
                 item["jingjiajinechengjiaoliangbi"] >= 1 or \
-                (is_chuang_ye == 1 and item["ziyouliutongshizhiyesterday"] / 10000 / 10000 > 100 and item["code"] !=
+                (is_chuang_ye != 1 and item["ziyouliutongshizhiyesterday"] / 10000 / 10000 > 100 and item["code"] !=
                  bu_zhang_data["zhong_jun"]["code"]):
             item["color1"] = 35
 
