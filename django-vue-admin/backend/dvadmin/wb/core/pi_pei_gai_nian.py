@@ -339,7 +339,7 @@ def setColorOrange(chuang_data):
     # chuang_data = dict(tmp)
     for (key, item) in chuang_data:
         if item["color1"] != 35 and  item["chuang_bai_ri_xin_gao"] > 0 and item[
-            "color10"] == 37:
+            "color12"] == 37:
             item["color0"] = 46
             break
     return chuang_data
