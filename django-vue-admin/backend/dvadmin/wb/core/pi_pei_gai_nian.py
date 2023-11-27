@@ -497,10 +497,6 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
         #     item["color1"] = 35
         xia_xian = code_config.CodeConfig().getCodeConfig()
 
-        if "301236" == key:
-            print(key)
-            pass
-
         # 异动次数大于等于3 且异动是开的情况下 且 创百日新高 == 1
         if item["yidongcishu"] >= 3 and xia_xian["yd"] == 1 and item["chuang_bai_ri_xin_gao"] == 0:
             item["color1"] = 35
@@ -509,7 +505,7 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
         if item["jianguanleixingyesterday"] != "" or \
                 item["jingjiajinejingjialiangbi"] > 700 or \
                 item["jingjiajinechengjiaoliangbi"] >= 1 or \
-                (item["ziyouliutongshizhiyesterday"] / 10000 / 10000 > 100 and item["code"] !=
+                (is_chuang_ye == 1 and item["ziyouliutongshizhiyesterday"] / 10000 / 10000 > 100 and item["code"] !=
                  bu_zhang_data["zhong_jun"]["code"]):
             item["color1"] = 35
 
