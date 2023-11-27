@@ -273,14 +273,15 @@ def tag_shou_ban(table1, data):
 
 # 取异动
 def tag_yi_dong(table1, data):
-    if "YiDong" not in table1:
-        return data
 
     for code, item in data.items():
         data[code]["jianguanleixingyesterday"] = ""
         data[code]["lianxuzhangtingtianshuyesterday"] = 0
         data[code]["yidongcishu"] = 0
         data[code]["yi_dong"] = 0
+
+    if "YiDong" not in table1:
+        return data
 
     data2 = table1["YiDong"]
 
@@ -322,8 +323,7 @@ def tag_yi_zi_die_ting(table1, data):
 
 # 取n10
 def tag_n10(table1, data):
-    if "N10" not in table1:
-        return data
+
 
     for code, item in data.items():
         data[code]["n"] = 0
@@ -333,7 +333,8 @@ def tag_n10(table1, data):
         data[code]["N_beforeyesterdaytop"] = 0
         data[code]["N_beforeyesterdaycengzhangting"] = 0
         data[code]["N_lianbancishu"] = 0
-
+    if "N10" not in table1:
+        return data
     data2 = table1["N10"]
 
     for items in data2:
@@ -365,8 +366,7 @@ def tag_n10(table1, data):
 
 # 取n20
 def tag_n20(table1, data):
-    if "N20" not in table1:
-        return data
+
 
     for code, item in data.items():
         # data[code]["n"] = 0
@@ -377,6 +377,9 @@ def tag_n20(table1, data):
         # data[code]["N_beforeyesterdaytop"] = 0
         # data[code]["N_maxzhangfu"] = 0
         # data[code]["N_lianbancishu"] = 0
+
+    if "N20" not in table1:
+        return data
 
     data2 = table1["N20"]
 
