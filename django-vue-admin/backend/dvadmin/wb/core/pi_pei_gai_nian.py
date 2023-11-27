@@ -359,7 +359,7 @@ def setColor1Yellow(chuang_data):
 
 def setColor1Pink(chuang_data):
     for (key, item) in chuang_data.items():
-        if item["color1"] != 35 and item["jingjiaweipipeijinetoday"] == 0 and item[
+        if item["color1"] != 35 and item[
             "jingjiajinechengjiaoliangbi"] >= 0.08:
             item["color1"] = 13551615
             break
@@ -554,8 +554,7 @@ def definedcolor2(chuang_data, qx):
                 item["color6"] = 13551615
             if imin == 0:
                 # 竞价未匹配 < 0 and 名字不是绿色 and 竞价量比 > 0.08
-                if item["jingjiaweipipeijinetoday"] < 0 and item["color1"] != 35 and item[
-                    "jingjiajinechengjiaoliangbi"] >= 0.08:
+                if  item["color1"] != 35 and item["jingjiajinechengjiaoliangbi"] >= 0.08:
                     imin = 1
                     item["color1"] = 13551615
             # 今昨量比 > 100 and 今昨量比 <= 700 粉色
