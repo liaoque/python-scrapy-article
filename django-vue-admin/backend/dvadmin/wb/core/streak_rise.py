@@ -1008,7 +1008,8 @@ def zhang_ting_yuan_yin(lianzhanggupiao, lianzhanggainian):
             "gai_nian_jing_jia_wei_pi_pei": 0,  # 竞价未匹配
             "zhangfu120": 0,
             "color": 0,
-            "gai_nian_feng_dan_jin_e": 0
+            "gai_nian_feng_dan_jin_e": 0,
+            "gai_nian_die_ting_feng_dan_jin_e": 0,
         }
         # gainian["gai_nian_gu_piao"] = []
         join_lian_zhang = 0
@@ -1023,6 +1024,9 @@ def zhang_ting_yuan_yin(lianzhanggupiao, lianzhanggainian):
 
         gn_item["gai_nian_feng_dan_jin_e"] = sum(
             [x['zhangtingfengdanetoday'] for x in gn_item["gai_nian_gu_piao"]])
+
+        gn_item["gai_nian_die_ting_feng_dan_jin_e"] = sum(
+            [x['dietingfengdane'] for x in gn_item["gai_nian_gu_piao"] if 'dietingfengdane' in x])
 
         gn_item["zhangfu120"] = sum(
             [x['zhangfu120'] for x in gn_item["gai_nian_gu_piao"] if "zhangfu120" in x])

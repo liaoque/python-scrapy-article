@@ -366,7 +366,7 @@ def create_dieting(gn_dict, gn, today, fd):
     if fd == 1:
         if gn in today["yuan_yin"]["die_ting_sort"]:
             gn_dict[gn]["die_ting"]["feng_dan_jin_e"] = today["yuan_yin"]["die_ting_sort"][gn][
-                "gai_nian_feng_dan_jin_e"]
+                "gai_nian_die_ting_feng_dan_jin_e"]
 
     else:
         jing_jia_wei_pi_pei = 0
