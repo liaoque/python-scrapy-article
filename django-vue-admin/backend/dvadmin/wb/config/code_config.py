@@ -12,7 +12,7 @@ class CodeConfig:
             "zhu_set": 9.5 ,
             "10cm": 50,
             "20cm": 70,
-            "fd": 0,
+            "fd": 1,
             "yd": 0,
             "lian_xu_duo_ri_yi_zi_ban": [],
         }

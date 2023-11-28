@@ -261,7 +261,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
         gn_dict = createJinJingFeng(gn_dict, gn, today, yesterday)
 
         # 封单开， 计算盘中涨停股票数
-        gn_dict = createZhangTingDaRou(gn_dict, today, fd)
+        gn_dict = createZhangTingDaRou(gn_dict, gn, today, fd)
 
         # ------------------------------------
         # 取盘中封单总额，对比今天的竞价
@@ -289,7 +289,7 @@ def createPanZhong(gn_dict, gn, today, fd):
     return gn_dict
 
 
-def createZhangTingDaRou(gn_dict, today, fd):
+def createZhangTingDaRou(gn_dict, gn, today, fd):
     if fd == 0 or len(today["yuan_yin"]["lian_zhang_sort"]) == 0:
         return gn_dict
 
