@@ -228,7 +228,7 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
             "shu_liang": {
                 "zhang_ting_da_rou": 0,
                 "jin_jing_feng_count": 0,
-                "value":0,
+                "value": 0,
                 "color": 0,
             },
             "jin_jing_feng": {
@@ -295,7 +295,8 @@ def createZhangTingDaRou(gn_dict, gn, today, fd):
 
     if gn in today["yuan_yin"]["lian_zhang_sort"]:
         # 盘中 涨停次数 < 1, 弱： execl : 298行
-        gn_dict[gn]["shu_liang"]["value"] = gn_dict[gn]["shu_liang"]["zhang_ting_da_rou"] = today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
+        gn_dict[gn]["shu_liang"]["value"] = gn_dict[gn]["shu_liang"]["zhang_ting_da_rou"] = \
+        today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
         if gn_dict[gn]["shu_liang"]["zhang_ting_da_rou"] < 1:
             gn_dict[gn]["shu_liang"]["color"] = 35
 
@@ -308,7 +309,8 @@ def createJinJingFeng(gn_dict, gn, today, yesterday):
     yi_zi_ban_sort_yesterday = yesterday["yuan_yin"]["yi_zi_ban_sort"]
     if gn in yi_zi_ban_sort:
         jin_jing_feng["today"] = yi_zi_ban_sort[gn]["gai_nian_jing_jia_wei_pi_pei"]
-        gn_dict[gn]["shu_liang"]["value"] = gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] = yi_zi_ban_sort[gn]["count"]
+        gn_dict[gn]["shu_liang"]["value"] = gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] = yi_zi_ban_sort[gn][
+            "count"]
 
     # 竞价未匹配<0 弱
     if jin_jing_feng["today"] <= 0 and gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] > 0:
@@ -338,8 +340,6 @@ def createJinJingFeng(gn_dict, gn, today, yesterday):
 
 
 def createChuangBaiRiXinGao(gn_dict, gn, today, yesterday):
-
-
     chuang_bai_ri_xin_gao = gn_dict[gn]["chuang_bai_ri_xin_gao"]
     chuang_bai_ri_xin_gao_sort = today["yuan_yin"]["chuang_bai_ri_xin_gao_sort"]
     if gn in chuang_bai_ri_xin_gao_sort:
@@ -365,7 +365,8 @@ def createChuangBaiRiXinGao(gn_dict, gn, today, yesterday):
 def create_dieting(gn_dict, gn, today, fd):
     if fd == 1:
         if gn in today["yuan_yin"]["die_ting_sort"]:
-            gn_dict[gn]["die_ting"]["feng_dan_jin_e"] = today["yuan_yin"]["die_ting_sort"][gn][
+            gn_dict[gn]["die_ting"]["value"] = gn_dict[gn]["die_ting"]["feng_dan_jin_e"] = \
+            today["yuan_yin"]["die_ting_sort"][gn][
                 "gai_nian_die_ting_feng_dan_jin_e"]
 
     else:
@@ -379,7 +380,7 @@ def create_dieting(gn_dict, gn, today, fd):
         elif jing_jia_wei_pi_pei < 0:
             jing_jia_wei_pi_pei = abs(jing_jia_wei_pi_pei)
 
-        gn_dict[gn]["die_ting"]["jing_jia_wei_pi_pei"] = jing_jia_wei_pi_pei
+        gn_dict[gn]["die_ting"]["value"] = gn_dict[gn]["die_ting"]["jing_jia_wei_pi_pei"] = jing_jia_wei_pi_pei
         if gn_dict[gn]["die_ting"]["jing_jia_wei_pi_pei"] > gn_dict[gn]["jin_jing_feng"]["today"]:
             gn_dict[gn]["die_ting"]["color"] = 35
 
@@ -397,11 +398,12 @@ def gai_nian_biao_shang_se(gn_dict):
     # imax = 0
     # isred = 0
 
-    imax = max(gn_dict.items(),   key=lambda x:  x[1]["shu_liang"]["value"] )
+    imax = max(gn_dict.items(), key=lambda x: x[1]["shu_liang"]["value"])
     # 今竞封的数量最大的
     for (gn, item) in gn_dict.items():
         if (item["jin_jing_feng"]["color"] != 35 and item["pan_zhong"]["color"] != 35 and
-                item["die_ting"]["color"] != 35 and item["shu_liang"]["jin_jing_feng_count"] == imax[1]["shu_liang"]["value"]):
+                item["die_ting"]["color"] != 35 and item["shu_liang"]["jin_jing_feng_count"] == imax[1]["shu_liang"][
+                    "value"]):
             item["shu_liang"]["color"] = 13421823
         gn_dict[gn] = item
 
@@ -414,7 +416,8 @@ def gai_nian_biao_shang_se(gn_dict):
 
     # 数量最大的概念标记粉色
     for (gn, item) in gn_dict.items():
-        if item["chuang_bai_ri_xin_gao"]["count"] != imax[1]["shu_liang"]["value"] or item["chuang_bai_ri_xin_gao"]["color"]== 35:
+        if item["chuang_bai_ri_xin_gao"]["count"] != imax[1]["shu_liang"]["value"] or item["chuang_bai_ri_xin_gao"][
+            "color"] == 35:
             continue
         # 粉色
         gn_dict[gn]["chuang_bai_ri_xin_gao"]["color"] = 13421823
