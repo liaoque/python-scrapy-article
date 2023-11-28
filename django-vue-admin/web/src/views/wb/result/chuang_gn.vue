@@ -17,7 +17,7 @@
         <span>{{ scope.row.liu_tong_shi_zhi }}</span>
       </template>
     </el-table-column>
-    <el-table-column sortable sort-by="shu_liang.value" label="今竞封数">
+    <el-table-column sortable sort-by="shu_liang.value" :label="titles.jinjinfengshu">
       <template slot-scope="scope">
         <span :class="{ 'el-button--danger': scope.row.shu_liang.color == 13421823 }">{{ scope.row.shu_liang.value
         }}</span>
@@ -34,7 +34,7 @@
         <span :class="{ 'el-button--success': scope.row.pan_zhong.color == 35 }">{{ scope.row.pan_zhong.feng_dan_jin_e }}</span>
       </template>
     </el-table-column>
-    <el-table-column sortable sort-by="die_ting.value" label="跌停未匹配">
+    <el-table-column sortable sort-by="die_ting.value" :label="titles.dietingweipipei" >
       <template slot-scope="scope">
         <span :class="{ 'el-button--success': scope.row.die_ting.color == 35 }">{{ scope.row.die_ting.value }}</span>
       </template>
@@ -46,7 +46,8 @@
 export default {
   name: 'chuang_gn',
   props: {
-    data: []
+    data: [],
+    titles: {},
   }
 }
 </script>

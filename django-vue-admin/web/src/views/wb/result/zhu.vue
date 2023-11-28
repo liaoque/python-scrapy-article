@@ -8,7 +8,7 @@
       </el-table-column>
       <el-table-column prop="jingjiajinetoday_s" sortable sort-by="color2" label="竞价未匹配">
       </el-table-column>
-      <el-table-column sortable sort-by="color3" label="所属概念">
+      <el-table-column sortable sort-by="color3" label="概念">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <el-tag disable-transitions :key="index" v-for="(gainian, index) in scope.row.suoshugainian">{{ gainian
@@ -22,15 +22,15 @@
 
       <el-table-column prop="zhangdiefuqianfuquantoday_s" sortable sort-by="color4" label="涨跌幅">
       </el-table-column>
-      <el-table-column prop="zhangdie4thday_s" sortable sort-by="color5" label="4日涨跌">
+      <el-table-column prop="zhangdie4thday_s" sortable sort-by="color5" label="4日">
       </el-table-column>
       <el-table-column prop="jingjiajinechengjiaoliangbi_s" sortable sort-by="color6" label="竞价量比">
       </el-table-column>
       <el-table-column prop="jingjiajinejingjialiangbi_s" sortable sort-by="color7" label="今昨量比">
       </el-table-column>
-      <el-table-column prop="lianbantianshuyesterday" sortable sort-by="lianbantianshuyesterday" label="昨日连板">
+      <el-table-column prop="lianbantianshuyesterday" sortable sort-by="color8" label="昨日连板">
       </el-table-column>
-      <el-table-column prop="zhangfu120_s" sortable sort-by="color9" label="120日涨跌">
+      <el-table-column prop="zhangfu120_s" sortable sort-by="color9" label="120日">
       </el-table-column>
       <el-table-column prop="yidongcishu" sortable sort-by="color10" label="异动">
       </el-table-column>
@@ -83,6 +83,7 @@ export default {
         "13551615": 'el-button--13551615',
         "29": 'el-button--29',
         "37": 'el-button--37',
+        "38": 'el-button--38',
         "3": 'el-button--3',
       }
 
@@ -125,5 +126,10 @@ export default {
 .el-button--37 {
   color: #FFF;
   background-color: blue;
+}
+
+.el-button--38 {
+  color: #FFF;
+  background-color: pink;
 }
 </style>
