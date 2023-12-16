@@ -284,7 +284,7 @@ def createPanZhong(gn_dict, gn, today, fd):
         "gai_nian_feng_dan_jin_e"]
     if gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] < gn_dict[gn]["jin_jing_feng"]["today"]:
         gn_dict[gn]["pan_zhong"]["color"] = 35
-    if 0 < gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] < gn_dict[gn]["jin_jing_feng"]["today"]:
+    if 0 < gn_dict[gn]["jin_jing_feng"]["today"]  < gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"]:
         gn_dict[gn]["jin_jing_feng"]["color"] = 0
     return gn_dict
 
