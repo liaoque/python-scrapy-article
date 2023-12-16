@@ -402,7 +402,7 @@ def gai_nian_biao_shang_se(gn_dict):
     # 今竞封的数量最大的
     for (gn, item) in gn_dict.items():
         if (item["jin_jing_feng"]["color"] != 35 and item["pan_zhong"]["color"] != 35 and
-                item["die_ting"]["color"] != 35 and item["shu_liang"]["jin_jing_feng_count"] == imax[1]["shu_liang"][
+                item["die_ting"]["color"] != 35 and item["shu_liang"]["value"] == imax[1]["shu_liang"][
                     "value"]):
             item["shu_liang"]["color"] = 13421823
         gn_dict[gn] = item
