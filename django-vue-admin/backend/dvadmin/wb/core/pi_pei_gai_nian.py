@@ -326,7 +326,7 @@ def setColor3Purple(chuang_data):
         if item["color1"] != 35 and  item["color12"] == 37:
             if rng5 is None:
                 rng5 = item
-            if item["color8"] == 38 and item["lianbantianshuyesterday"] > 0:
+            if item["color8"] == 38 or item["lianbantianshuyesterday"] > 0:
                 item["color3"] = 29
                 return chuang_data
     if rng5 is not None:
