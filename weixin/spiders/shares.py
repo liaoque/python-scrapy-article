@@ -82,6 +82,8 @@ class Shares(scrapy.Spider):
             item_loader.add_value("p_range", res[7])
             item_loader.add_value("buy_count", res[5])
             item_loader.add_value("buy_sum", res[6])
+            item_loader.add_value("master_buy_sum", 0)
+            item_loader.add_value("master_buy_sell", 0)
             item_loader.add_value("date_as", res[0])
             yield item_loader.load_item()
         pass
