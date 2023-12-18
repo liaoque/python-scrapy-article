@@ -2,11 +2,9 @@
   <d2-container>
     <el-row>
       <el-col :span="2">
-        情绪: <el-tag size="medium" v-if="qx == 1">好</el-tag> <el-tag size="medium" v-if="qx == -1">坏</el-tag>
+        情绪: <el-tag size="medium" v-if="qx == 1">好</el-tag> <el-tag size="medium" v-if="qx == -1">差</el-tag>
       </el-col>
-      <el-col :span="2">
-        补涨:
-      </el-col>
+      
       <el-col :span="2">
         阈值:
       </el-col>
@@ -17,31 +15,34 @@
         风口:
       </el-col> -->
       <el-col :span="2">
-        炸板率:
+        炸板率: {{ other.zha_ban_lv }}
       </el-col>
       <el-col :span="2">
-        竞涨停:
+        竞涨停: {{ other.jing_zhang_ting }}
       </el-col>
       <el-col :span="2">
-        竞跌停:
+        竞跌停: {{ other.jing_die_ting }}
       </el-col>
       <el-col :span="2">
-        收涨停:
+        收涨停: {{ other.shou_zhang_ting }}
       </el-col>
       <el-col :span="2">
-        收跌停:
+        收跌停: {{ other.shou_die_ting }}
       </el-col>
       <el-col :span="2">
-        竞上涨:
+        竞上涨: {{ other.jing_shang_zhang }}
       </el-col>
       <el-col :span="2">
-        竞下跌:
+        竞下跌: {{ other.jing_xia_die }}
       </el-col>
       <el-col :span="2">
-        收上涨:
+        收上涨: {{ other.shou_shang_zhang }}
       </el-col>
       <el-col :span="2">
-        收下跌:
+        收下跌: {{ other.shou_xia_die }}
+      </el-col>
+      <el-col :span="24">
+        补涨: {{ bu_zhang.gn.join(",") }}
       </el-col>
     </el-row>
 
@@ -83,6 +84,18 @@ export default {
     return {
       fd: 1,
       qx: 0,
+      other: {
+        zha_ban_lv: 0,
+        jing_zhang_ting: 0,
+        jing_die_ting: 0,
+        shou_zhang_ting: 0,
+        shou_die_ting: 0,
+        jing_shang_zhang: 0,
+        jing_xia_die: 0,
+        shou_shang_zhang: 0,
+        shou_xia_die: 0
+      },
+      bu_zhang:{},
       titles: {
         jinjinfengshu: '今竞封',
         dietingweipipei: '跌停未匹配'
@@ -133,6 +146,7 @@ export default {
       }
       api.GetResult().then(function (params) {
         self.qx = params.qing_xu
+        self.bu_zhang = params.bu_zhang
         self.plan.chuang_ye_ban_gai_nian = params.chuang_ye_ban_gn.map((item) => {
           // 今昨百日新高
           let today = (Math.ceil(item.chuang_bai_ri_xin_gao.today / 1000000) / 100).toFixed(2)
