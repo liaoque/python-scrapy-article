@@ -162,7 +162,7 @@ class ResetView(View):
         shou_shang_zhang = len(list(filter(lambda x: x[1].zhangdiefuqianfuquantoday > 0, data1.items())))
         shou_xia_die = len(list(filter(lambda x: x[1].zhangdiefuqianfuquantoday < 0, data1.items())))
         result["other"] = {
-            "zha_ban_lv": zha_ban / zhu_chuang_zhang_ting,
+            "zha_ban_lv": round(zha_ban / zhu_chuang_zhang_ting * 100, 2)  ,
             "jing_zhang_ting": jing_zhang_ting,
             "jing_die_ting": yi_zi_die_ting,
             "shou_zhang_ting": zhu_chuang_zhang_ting,
