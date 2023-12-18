@@ -81,7 +81,7 @@ export default {
   },
   data() {
     return {
-      fd: 1,
+      fd: 0,
       qx: 0,
       titles: {
         jinjinfengshu: '今竞封',
@@ -171,7 +171,7 @@ export default {
 
         self.plan.zhu_ban = params.zhu_data.map((item) => {
           self.codeMap.zhu[item.code] = item
-          item.jingjiajinetoday_s = (Math.ceil(item.jingjiajinetoday / 1000000) / 100).toFixed(2)
+          item.jingjiajinetoday_s = (Math.ceil(item.jingjiaweipipeijinetoday / 1000000) / 100).toFixed(2)
           item.zhangtingfengdanetoday_s = (Math.ceil(item.zhangtingfengdanetoday / 1000000) / 100).toFixed(2)
           item.zhangfu5_s = (Math.ceil(item.zhangfu5 * 100) / 100).toFixed(2)
           item.zhangdie4thday_s = (item.zhangdie4thday * 100).toFixed(2)
@@ -190,15 +190,15 @@ export default {
 
         self.plan.chuang_ye_ban = params.chuang_data.map((item) => {
           self.codeMap.chuang[item.code] = item
-          item.jingjiajinetoday_s = (Math.ceil(item.jingjiajinetoday / 1000000) / 100).toFixed(2)
+          item.jingjiajinetoday_s = (Math.ceil(item.jingjiaweipipeijinetoday / 1000000) / 100).toFixed(2)
           item.zhangtingfengdanetoday_s = (Math.ceil(item.zhangtingfengdanetoday / 1000000) / 100).toFixed(2)
           item.zhangfu5_s = (Math.ceil(item.zhangfu5 * 100) / 100).toFixed(2)
-          item.zhangdie4thday_s = (Math.ceil(item.zhangdie4thday * 100) / 100).toFixed(2)
-          item.zhangfu120_s = (Math.ceil(item.zhangfu120 * 100) / 100).toFixed(2)
-          item.jingjiajinechengjiaoliangbi_s = (Math.ceil(item.jingjiajinechengjiaoliangbi * 100)).toFixed(2) + '%'
+          item.zhangdie4thday_s = ((item.zhangdie4thday * 100) ).toFixed(2)
+          item.zhangfu120_s = ((item.zhangfu120 * 100) ).toFixed(2)
+          item.jingjiajinechengjiaoliangbi_s = (item.jingjiajinechengjiaoliangbi * 100).toFixed(2)
           item.ziyouliutongshizhiyesterday_s = (Math.ceil(item.ziyouliutongshizhiyesterday / 1000000) / 100).toFixed(2)
-          item.zhangdiefuqianfuquantoday_s = (Math.ceil(item.zhangdiefuqianfuquantoday * 100) / 100).toFixed(2) + '%'
-          item.jingjiajinejingjialiangbi_s = (Math.ceil(item.jingjiajinejingjialiangbi * 100) / 100).toFixed(2) + '%'
+          item.zhangdiefuqianfuquantoday_s = (Math.ceil(item.zhangdiefuqianfuquantoday * 100) / 100).toFixed(2)
+          item.jingjiajinejingjialiangbi_s = (item.jingjiajinejingjialiangbi).toFixed(2)
 
           return item
         }).sort((a, b) => {
