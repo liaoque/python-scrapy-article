@@ -37,3 +37,5 @@ from .model.shares_finance import SharesFinance
 from .model.shares_industry_finance import SharesIndustryFinance
 from .model.shares_industry_week import SharesIndustryWeek
 from .model.shares_week_macds import SharesWeekMacds
+from .model.shares_zhang_tings import SharesZhangTings
+from .model.shares_block_gns import SharesBlockGns

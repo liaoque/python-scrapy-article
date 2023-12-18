@@ -21,7 +21,7 @@ def time2seconds(time_str):
 
 
 class Command(BaseCommand):
-    help = '观察32分涨停股票'
+    help = '15点收盘以后记录数据'
 
     def add_arguments(self, parser):
         # parser.add_argument('poll_ids', nargs='+', type=int)
@@ -36,7 +36,6 @@ class Command(BaseCommand):
 
         time_str = '09:32:00'
         end_seconds = time2seconds(time_str)
-        d2 = []
         for item in codes:
             d = {}
             d["股票代码"] = item["股票代码"]
@@ -58,13 +57,10 @@ class Command(BaseCommand):
                 if "a股市值(不含限售股)[" in key:
                     d["a股市值流通市值"] = value
 
-            d2.append(d)
-
             first_zhangting_time = time2seconds(d["首次涨停时间"])
             print(d["首次涨停时间"], first_zhangting_time, start_seconds, end_seconds)
             if first_zhangting_time > start_seconds and first_zhangting_time < end_seconds:
                 d["f32"] = 1
-                continue
 
             if d["连续涨停天数"] >= 4:
                 numbers = re.findall(r'\d+', d["几天几板"])
@@ -73,64 +69,43 @@ class Command(BaseCommand):
                 if number2 >= 8:
                     #     高标
                     d["gaobiao"] = 1
-                    continue
 
             if d["连续涨停天数"] >= 5:
                 #     高标
                 d["gaobiao"] = 1
+
+            if SharesZhangTings.objects.filter(code_id=d["股票代码"], date_at=d["date"]).count():
                 continue
 
-        # 昨天日期
-        sharesDate = SharesDate.objects.filter(date_as__lt=datetime.today().strftime('%Y-%m-%d')).order_by("-date_as")
+            sharesZhangTings = SharesZhangTings(
+                code_id=d["股票代码"],
+                name=d["股票简称"],
+                gn=d["所属概念"],
+                hy=d["所属同花顺行业"],
+                first_zhang_ting=d["首次涨停时间"],
+                last_zhang_ting=d["最终涨停时间"],
+                n_day_n_zhang_ting=d["几天几板"],
+                continuous_zhang_ting=d["连续涨停天数"],
+                liu_tong_shi_zhi=d["a股市值流通市值"],
+                date_as=d["date_as"],
+                f32=d["f32"],
+                gao_biao=d["gao_biao"]
+            )
+            sharesZhangTings.save()
 
-        result = list(filter(lambda item: item["gaobiao"] == 1 or item["f32"] == 1, d2))
-        result_f32 = [item["股票代码"] for item in result]
-        if len(result) > 1:
-            # 32分存在强势票
-            # 查昨日高标
-            # 合并后匹配概念
-            sharesZhangTings = SharesZhangTings.objects.filter(date_as=sharesDate[0].date_as, gao_biao__gt=1)
-            result = result_f32 + [item['code'] for item in sharesZhangTings]
-            sql = """
-                   select block_code_id, mc_shares_name.name, count(1) as c
-                   left join mc_shares_name on mc_shares_name.code = mc_shares_join_block.block_code_id 
-                            and mc_shares_name.code_type = 4
-                   from mc_shares_join_block
-                   where mc_shares_join_block.code_type = 2
-                       and mc_shares_join_block.code in (
-                       %s
-                       )
-                   group by block_code_id
-                    having  c > 0
-                """
-            result = Shares.objects.raw(sql, params=(",".join([item["股票代码"] for item in result]),))
+        # 保存到 SharesZhangTings
+        # SharesZhangTings.objects.filter(date_as=sharesDate[0].date_as, gao_biao__gt=1)
 
-        # 查当天涨幅前三概念
-        todayGns = list()
-        yeasterdayGns = SharesBlockGns.objects.filter(date_as=sharesDate[0].date_as, gao_biao__gt=1).order_by(
-            "-p_zhang_die_fu")[0:3]
-
-        sharesJoinBlocks = SharesJoinBlock.objects.filter(code_type=2, code__in=result_f32)
-        # for item in sharesJoinBlocks:
-        #     todayGns.append(item.code)
-        result_gns = {}
-        for item in sharesJoinBlocks:
-            if item.name not in result_gns:
-                result_gns[item.name] = 1
-            else:
-                result_gns[item.name] += 1
-
-        for item in yeasterdayGns:
-            if item.name not in result_gns:
-                result_gns[item.name] = 1
-            else:
-                result_gns[item.name] += 1
-
-        for item in todayGns:
-            if item.name not in result_gns:
-                result_gns[item.name] = 1
-            else:
-                result_gns[item.name] += 1
-
-        result_gns = filter(lambda item: item[1] > 1, result_gns.items())
-        result_gns = sorted(list(result_gns), key=lambda item: item[1], reverse=True)
+        # 取当天热门概念 保存到 SharesBlockGns
+        #
+        sharesZhangTings = SharesBlockGns(
+            code_id=d["股票代码"],
+            name=d["股票简称"],
+            p_min=d["所属概念"],
+            p_max=d["所属同花顺行业"],
+            p_start=d["首次涨停时间"],
+            p_end=d["最终涨停时间"],
+            p_zhang_die_fu=d["几天几板"],
+            date_as=d["date_as"],
+        )
+        sharesZhangTings.save()
