@@ -151,4 +151,26 @@ class ResetView(View):
         result["bu_zhang"] = d["bu_zhang_data"]
         result["biao_shai_xuan"] = d2["biao_shai_xuan"]
         result["gn"] = d2["gn"]
+
+        jing_zhang_ting = len(list(filter(lambda x: x[1].yi_zi_ban == 1, data1.items())))
+        yi_zi_die_ting = len(list(filter(lambda x: x[1].yi_zi_die_ting == 1, data1.items())))
+        zha_ban = len(list(filter(lambda x: x[1].zha_ban == 1, data1.items())))
+        zhu_chuang_zhang_ting = len(list(filter(lambda x: x[1].zhu_chuang_zhang_ting == 1, data1.items())))
+        shou_die_ting = len(list(filter(lambda x: x[1].dietingfengdane > 0, data1.items())))
+        jing_shang_zhang = len(list(filter(lambda x: x[1].jingjiazhangfutoday > 0, data1.items())))
+        jing_xia_die = len(list(filter(lambda x: x[1].jingjiazhangfutoday < 0, data1.items())))
+        shou_shang_zhang = len(list(filter(lambda x: x[1].zhangdiefuqianfuquantoday > 0, data1.items())))
+        shou_xia_die = len(list(filter(lambda x: x[1].zhangdiefuqianfuquantoday < 0, data1.items())))
+        result["other"] = {
+            "zha_ban_lv": zha_ban / zhu_chuang_zhang_ting,
+            "jing_zhang_ting": jing_zhang_ting,
+            "jing_die_ting": yi_zi_die_ting,
+            "shou_zhang_ting": zhu_chuang_zhang_ting,
+            "shou_die_ting": shou_die_ting,
+            "jing_shang_zhang": jing_shang_zhang,
+            "jing_xia_die":jing_xia_die,
+            "shou_shang_zhang": shou_shang_zhang,
+            "shou_xia_die": shou_xia_die
+        }
+
         return JsonResponse(result)
