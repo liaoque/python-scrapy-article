@@ -29,6 +29,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         t = datetime.today().strftime('[%Y%m%d]')
+        t2 = datetime.today().strftime('%Y%m%d')
         codes = zhangTing.zhangTing(t)
 
         time_str = '09:30:00'
@@ -58,6 +59,8 @@ class Command(BaseCommand):
                 if "a股市值(不含限售股)[" in key:
                     d["a股市值流通市值"] = value
 
+            if d["date"] != t2:
+                return
             d2.append(d)
 
             first_zhangting_time = time2seconds(d["首次涨停时间"])
