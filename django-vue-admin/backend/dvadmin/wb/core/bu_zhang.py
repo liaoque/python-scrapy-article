@@ -1,4 +1,3 @@
-from dvadmin.wb.core import concept
 from dvadmin.wb.config import code_config
 
 """
