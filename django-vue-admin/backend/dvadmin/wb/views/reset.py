@@ -11,7 +11,7 @@ from pymongo import MongoClient
 import string
 
 from django.views import View
-
+from dvadmin.wb.config import code_config
 
 class ResetView(View):
 
@@ -152,6 +152,7 @@ class ResetView(View):
         result["biao_shai_xuan"] = d2["biao_shai_xuan"]
         result["gn"] = d2["gn"]
 
+
         # 一字板
         jing_zhang_ting = len(list(filter(lambda x: x[1]["yi_zi_ban"] == 1, data.items())))
         # 一字跌停
@@ -181,5 +182,7 @@ class ResetView(View):
             "shou_shang_zhang": shou_shang_zhang,
             "shou_xia_die": shou_xia_die
         }
+
+        result["config"] = code_config.CodeConfig().getCodeConfig()
 
         return JsonResponse(result)
