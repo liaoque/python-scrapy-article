@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 #     高标
                 d["gao_biao"] = 1
 
-            SharesZhangTings.saveD(d)
+            self.saveD(d)
 
         # 取当天热门概念 保存到 SharesBlockGns
         #
@@ -70,7 +70,7 @@ class Command(BaseCommand):
             codes = zhangTing.zhangTingGns(t,i+1)
             for item in codes:
                 d = self.initD2(item)
-                SharesBlockGns.saveD(d)
+                self.saveD(d)
 
 
     def initD(self, item):
@@ -115,3 +115,43 @@ class Command(BaseCommand):
             if "指数@涨跌幅:前复权[" in key:
                 d["涨跌幅"] = value
         return d
+
+    def saveD(self, d):
+        date_obj = datetime.strptime(d["date"], '%Y%m%d')
+        formatted_date = date_obj.strftime('%Y-%m-%d')
+        if SharesZhangTings.objects.filter(code_id=d["股票代码"], date_as=formatted_date).count():
+            return
+
+        sharesZhangTings = SharesZhangTings(
+            code_id=d["股票代码"],
+            name=d["股票简称"],
+            gn=d["所属概念"],
+            hy=d["所属同花顺行业"],
+            first_zhang_ting=d["首次涨停时间"],
+            last_zhang_ting=d["最终涨停时间"],
+            n_day_n_zhang_ting=d["几天几板"],
+            continuous_zhang_ting=d["连续涨停天数"],
+            liu_tong_shi_zhi=int(float(d["a股市值流通市值"])),
+            date_as=formatted_date,
+            f32=d["f32"],
+            gao_biao=d["gao_biao"]
+        )
+        sharesZhangTings.save()
+
+    def saveD2(self, d):
+        date_obj = datetime.strptime(d["date"], '%Y%m%d')
+        formatted_date = date_obj.strftime('%Y-%m-%d')
+        if SharesBlockGns.objects.filter(code_id=d["指数代码"], date_as=formatted_date).count():
+            return
+
+        sharesZhangTings = SharesBlockGns(
+            code_id=d["指数代码"],
+            name=d["指数简称"],
+            p_min=d["最低价"],
+            p_max=d["最高价"],
+            p_start=d["开盘价"],
+            p_end=d["收盘价"],
+            p_zhang_die_fu=d["涨跌幅"],
+            date_as=formatted_date,
+        )
+        sharesZhangTings.save()

@@ -5,27 +5,7 @@ from datetime import datetime
 # Create your models here.
 
 
-def saveD(d):
-    date_obj = datetime.strptime(d["date"], '%Y%m%d')
-    formatted_date = date_obj.strftime('%Y-%m-%d')
-    if SharesZhangTings.objects.filter(code_id=d["股票代码"], date_as=formatted_date).count():
-        return
 
-    sharesZhangTings = SharesZhangTings(
-        code_id=d["股票代码"],
-        name=d["股票简称"],
-        gn=d["所属概念"],
-        hy=d["所属同花顺行业"],
-        first_zhang_ting=d["首次涨停时间"],
-        last_zhang_ting=d["最终涨停时间"],
-        n_day_n_zhang_ting=d["几天几板"],
-        continuous_zhang_ting=d["连续涨停天数"],
-        liu_tong_shi_zhi=int(float(d["a股市值流通市值"])),
-        date_as=formatted_date,
-        f32=d["f32"],
-        gao_biao=d["gao_biao"]
-    )
-    sharesZhangTings.save()
 
 
 class SharesZhangTings(models.Model):
