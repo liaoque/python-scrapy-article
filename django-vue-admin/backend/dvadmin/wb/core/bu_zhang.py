@@ -189,6 +189,7 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
     sortgn = []
     xia_xian = code_config.CodeConfig().getCodeConfig()
     fd = xia_xian["fd"]
+
     for gn, item in yesterday["shou_ban_sort"].items():
         # 趋势未变弱
         # 根据封单的股票数，取强势的首版概念
@@ -251,14 +252,19 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
     # zhu_chuang_zhang_ting = sorted(zhu_chuang_zhang_ting, key=lambda x: x[1]["lianbantianshutoday"], reverse=True)
     # zhu_lianban = zhu_chuang_zhang_ting[0]
 
-    lian_xu_duo_ri_yi_zi_ban = [data[gp]["lianbantianshutoday"] for gp in xia_xian["lian_xu_duo_ri_yi_zi_ban"]]
+    #  从自动查询改成手动输入， lian_xu_duo_ri_yi_zi_ban
+    # lian_xu_duo_ri_yi_zi_ban = [data[gp]["lianbantianshutoday"] for gp in xia_xian["lian_xu_duo_ri_yi_zi_ban"]]
+    lian_xu_duo_ri_yi_zi_ban = xia_xian["lian_ban_code_black"]
     # 连板股票 h10 - h11
+    # 按 4日涨跌幅排序， 在按连扳天数排序
     data2 = sorted(data.items(), key=lambda x: (x[1]["zhangdie4thday"], x[1]["lianbantianshutoday"]), reverse=True)
     lian_ban_code = getLianBanGuPiao(data2, lian_xu_duo_ri_yi_zi_ban, fd)
 
+    # 连扳天数超过4板，变颜色
     if lian_ban_code["lianbantianshu"] > 4:
-        lian_ban_code["lianbantianshu_coloer"] = 35
+        lian_ban_code["lianbantianshu_coloer"] = 13551615
 
+    # 连扳天数对应股票 涨跌幅 < -0.04
     if lian_ban_code["code"] in data:
         if fd == 1:
             if data[lian_ban_code["code"]]["zhangdiefuqianfuquantoday"] < -0.04: lian_ban_code["zhangdiefu_coloer"] = 35
@@ -266,22 +272,25 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
             if data[lian_ban_code["code"]]["jingjiazhangfutoday"] < -0.04: lian_ban_code["zhangdiefu_coloer"] = 35
 
     # 120日涨跌幅 H12
-    data2 = sorted(data.items(), key=lambda x: (x[1]["zhangdie4thday"]), reverse=True)
+    # 按 120日涨跌幅排序
+    data2 = sorted(data.items(), key=lambda x: (x[1]["zhangfu120"]), reverse=True)
     lian_ban_code120 = {
         "code": data2[0][1]["code"],
+        "briefname": data2[0][1]["briefname"],
         "zhangfu120": data2[0][1]["zhangfu120"],
         "zhangfu120_color": 0,
     }
     if data2[0][1]["zhangdie4thday"] < 0.2:
         lian_ban_code120["zhangfu120_color"] = 35
 
-    # 賽里斯
+    # 賽里斯, 按 120排序后， 找出流通市值最大的股票
     data2 = filter(lambda x: x[1]["zhangfu5"] > 0 and x[1]["ziyouliutongshizhiyesterday"] > 100 * 10000 * 10000,
                    data2)
     data2 = list(data2)
 
     zhong_jun = {
         "code": data2[0][0],
+        "briefname": data[data2[0][0]]["briefname"],
     }
 
     # '3、在"table1"中找到5日涨跌幅最大的股票，这个例子是尚太科技，用这个股票的所属概念比对昨原因表里的首板的非绿的概念找出相同的概念。
@@ -354,6 +363,7 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
 def getLianBanGuPiao(data2, lian_xu_duo_ri_yi_zi_ban, fd):
     lian_ban_code = {
         "code": "",
+        "briefname": "",
         "lianbantianshu": 0,
         "lianbantianshu_coloer": 35,
         "zhangdiefu_coloer": 0,
@@ -365,6 +375,7 @@ def getLianBanGuPiao(data2, lian_xu_duo_ri_yi_zi_ban, fd):
             if item["lianbantianshutoday"] in lian_xu_duo_ri_yi_zi_ban:
                 continue
             lian_ban_code["code"] = item["code"]
+            lian_ban_code["briefname"] = item["briefname"]
             lian_ban_code["lianbantianshu"] = item["lianbantianshutoday"]
             break
     else:
@@ -372,6 +383,7 @@ def getLianBanGuPiao(data2, lian_xu_duo_ri_yi_zi_ban, fd):
             if item["lianxuzhangtingtianshuyesterday"] in lian_xu_duo_ri_yi_zi_ban:
                 continue
             lian_ban_code["code"] = item["code"]
+            lian_ban_code["name"] = item["name"]
             lian_ban_code["lianbantianshu"] = item['lianxuzhangtingtianshuyesterday']
             break
     return lian_ban_code

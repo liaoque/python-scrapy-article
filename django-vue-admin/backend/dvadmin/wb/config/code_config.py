@@ -15,4 +15,5 @@ class CodeConfig:
             "fd": 1,
             "yd": 0,
             "lian_xu_duo_ri_yi_zi_ban": [],
+            "lian_ban_code_black": [], # 连扳天数黑名单 设置值 H33
         }
