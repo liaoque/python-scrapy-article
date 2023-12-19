@@ -117,14 +117,14 @@ class Command(BaseCommand):
             d["指数简称"] = item["指数简称"]
             for key, value in item.items():
                 if "指数@开盘价:不复权[" in key:
-                    d["开盘价"] = value.replace(" ", "")
+                    d["开盘价"] = value
                     d["date"] = key[-9:-1]
                 if "指数@收盘价:不复权[" in key:
                     d["收盘价"] = value
                 if "指数@最低价:不复权[" in key:
                     d["最低价"] = value
                 if "指数@最高价:不复权[" in key:
-                    d["最高价"] = value.replace(" ", "")
+                    d["最高价"] = value
                 if "指数@涨跌幅:前复权[" in key:
                     d["涨跌幅"] = value
 
