@@ -14,13 +14,13 @@
         <el-input v-model="form.cm10"></el-input>
       </el-form-item>
       <el-form-item label="20CM">
-        <el-input v-model="form.cm10"></el-input>
+        <el-input v-model="form.cm20"></el-input>
       </el-form-item>
       <el-form-item label="连板股票">
         <el-input type="textarea"  v-model="form.lian_ban_code_black"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button type="primary" @click="onSubmit">保存成功</el-button>
         <el-button>取消</el-button>
       </el-form-item>
     </el-form>
@@ -58,6 +58,8 @@ export default {
         cm10: this.form.cm10,
         cm20: this.form.cm20,
         lian_ban_code_black: this.form.lian_ban_code_black.split(',')
+      }).then(res=>{
+        alert("保存成功")
       })
     },
 

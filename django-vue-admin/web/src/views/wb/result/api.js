@@ -53,6 +53,8 @@ export function GetCascadeData () {
 }
 
 export function GetResult (d, fd, yd) {
+  fd = fd ? 1 : 0
+  yd = yd ? 1 : 0
   return request({
     url: '/api/wb/reset?current_time='+ (d || 20231122) + "&fd=" + fd + "&yd=" + yd,
     method: 'get'

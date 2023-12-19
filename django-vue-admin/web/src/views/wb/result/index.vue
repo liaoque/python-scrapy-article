@@ -211,8 +211,8 @@ export default {
       }
 
       api.GetResult(self.today, self.fd, self.yd).then(function (params) {
-        self.fd = !!params.config.fd
-        self.yd = !!params.config.yd
+        self.fd = params.config.fd == 1
+        self.yd = params.config.yd == 1
         self.lian_ban_code_black = params.config.lian_ban_code_black
         self.gvgn = params.config.gvgn
         self.other = params.other
