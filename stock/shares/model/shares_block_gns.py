@@ -17,7 +17,7 @@ class SharesBlockGns(models.Model):
     date_as = models.TimeField(help_text="创建时间")
 
     class Meta:
-        db_table = "mc_shares_zhang_tings"
+        db_table = "mc_shares_block_gns"
         # abstract = True
 
     def __str__(self):

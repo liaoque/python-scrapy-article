@@ -77,8 +77,8 @@ class Command(BaseCommand):
                 #     高标
                 d["gaobiao"] = 1
 
-            if SharesZhangTings.objects.filter(code_id=d["股票代码"], date_at=d["date"]).count():
-                continue
+            # if SharesZhangTings.objects.filter(code_id=d["股票代码"], date_at=d["date"]).count():
+            #     continue
 
             # sharesZhangTings = SharesZhangTings(
             #     code_id=d["股票代码"],
@@ -102,7 +102,7 @@ class Command(BaseCommand):
 
         # 取当天热门概念 保存到 SharesBlockGns
         #
-        t = datetime.today().strftime('[%Y%m%d]')
+        t = datetime.today().strftime('%Y%m%d')
         codes = zhangTing.zhangTingGns(t)
         for item in codes:
             d = {}
