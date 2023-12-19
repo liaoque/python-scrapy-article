@@ -382,7 +382,7 @@ def getLianBanGuPiao(data2, lian_xu_duo_ri_yi_zi_ban, fd):
             if item["lianxuzhangtingtianshuyesterday"] in lian_xu_duo_ri_yi_zi_ban:
                 continue
             lian_ban_code["code"] = item["code"]
-            lian_ban_code["name"] = item["name"]
+            lian_ban_code["briefname"] = item["briefname"]
             lian_ban_code["lianbantianshu"] = item['lianxuzhangtingtianshuyesterday']
             break
     return lian_ban_code

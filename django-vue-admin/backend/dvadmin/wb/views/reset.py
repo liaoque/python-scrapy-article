@@ -29,7 +29,7 @@ class ResetView(View):
         if current_time is None or current_time == "":
             return JsonResponse({"error": "current_time must"})
 
-
+        code_config.CodeConfig().getCodeConfig()
         code_config.CodeConfig().setFd(request.GET.get('fd'))
         code_config.CodeConfig().setFd(request.GET.get('yd'))
 
