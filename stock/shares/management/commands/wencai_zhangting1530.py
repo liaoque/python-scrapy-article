@@ -66,9 +66,8 @@ class Command(BaseCommand):
         # 取当天热门概念 保存到 SharesBlockGns
         #
         t = datetime.today().strftime('%Y%m%d')
-        i = 1
-        for i in 5:
-            codes = zhangTing.zhangTingGns(t,i)
+        for i in range(4):
+            codes = zhangTing.zhangTingGns(t,i+1)
             for item in codes:
                 d = self.initD2(item)
                 SharesBlockGns.saveD(d)
