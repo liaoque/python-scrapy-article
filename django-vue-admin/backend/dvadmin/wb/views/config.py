@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render
 import json
 # Create your views here.
@@ -41,6 +43,20 @@ class Config(View):
 
 
     def post(self, request, *args, **kwargs):
+        info = json.load(request.body.decode('utf-8'))
+
+        configfile = os.path.abspath(os.path.join(os.path.dirname(__file__), '../', 'config/data.json'))
+
+        with open(configfile, "w") as outfile:
+            json.dump({
+                "gvgn": info["gvgn"],
+                "chuang_ye_set": info["chuang_ye_set"],
+                "zhu_set": info["zhu_set"],
+                "10cm": info["cm10"],
+                "20cm": info["cm20"],
+                "lian_ban_code_black": info["lian_ban_code_black"],
+            }, outfile)
+
         config = code_config.CodeConfig().getCodeConfig()
         return JsonResponse({
             "code": 200,
