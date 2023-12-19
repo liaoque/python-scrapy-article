@@ -39,7 +39,7 @@ class Config(View):
                 "chuang_ye_set": config["chuang_ye_set"],
                 "zhu_set": config["zhu_set"],
                 "cm10": config["10cm"],
-                "cm10": config["20cm"],
+                "cm20": config["20cm"],
                 "lian_ban_code_black": config["lian_ban_code_black"],
             }
         })
