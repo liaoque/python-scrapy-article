@@ -5,12 +5,6 @@
         情绪: <span v-if="qx == 1">好</span> <span v-if="qx == -1">差</span>
       </el-col>
       <el-col :span="2">
-        封单: <span v-if="fd == 1">开</span> <span v-if="fd ==0">关</span>
-      </el-col>
-      <el-col :span="2">
-        异动: <span v-if="yd == 1">开</span> <span v-if="yd ==0">关</span>
-      </el-col>
-      <el-col :span="18">
         阈值:
       </el-col>
       <el-col :span="2">
@@ -40,73 +34,85 @@
       <el-col :span="2">
         收下跌: {{ other.shou_xia_die }}
       </el-col>
-      <el-col :span="8">
-      
-      </el-col>
-      <el-col :span="4" :class="{'green': bu_zhang.lian_ban_code.lianbantianshu_coloer===35, 'red': bu_zhang.lian_ban_code.lianbantianshu_coloer==13551615,}">
-        最高连板天数: {{ bu_zhang.lian_ban_code.lianbantianshu }}
-      </el-col>
-      <el-col :span="4">
-        最高连扳天数股票: {{ bu_zhang.lian_ban_code.briefname }}
-      </el-col>
-      <el-col :span="4" :class="{'green': bu_zhang.lian_ban_code120.zhangfu120_color==35}">
-        120日涨幅最高: {{ bu_zhang.lian_ban_code120.briefname }}
+      <el-col :span="8"></el-col>
+      <el-col :span="4"
+        :class="{ 'green': bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.lianbantianshu_coloer === 35, 'red': bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.lianbantianshu_coloer == 13551615, }">
+        最高连板天数: {{ bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.lianbantianshu }}
       </el-col>
       <el-col :span="4">
-        中军股票: {{ bu_zhang.zhong_jun.briefname }}
+        最高连扳天数股票: {{ bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.briefname }}
+      </el-col>
+      <el-col :span="4" :class="{ 'green': bu_zhang.lian_ban_code120 && bu_zhang.lian_ban_code120.zhangfu120_color == 35 }">
+        120日涨幅最高: {{ bu_zhang.lian_ban_code120 && bu_zhang.lian_ban_code120.briefname }}
+      </el-col>
+      <el-col :span="4">
+        中军股票: {{ bu_zhang.zhong_jun && bu_zhang.zhong_jun.briefname }}
       </el-col>
       <el-col :span="12">
       </el-col>
-      <el-col :span=" 2 ">
+
+      <el-col :span="12">
+      </el-col>
+      <el-col :span="10">
+        封单: <el-switch v-model="fd"></el-switch>
+        异动: <el-switch v-model="yd"></el-switch>
+        <el-date-picker
+          v-model="today"
+          type="date"
+          value-format="yyyyMMdd"
+          placeholder="选择日期">
+        </el-date-picker>
+        <el-button type="primary" @click="getCrudOptions" style="margin-left: 16px;">
+          查询
+        </el-button>
+      </el-col>
+
+      <el-col :span="2">
         <el-button @click="drawer = true" type="primary" style="margin-left: 16px;">
           补涨
         </el-button>
       </el-col>
-      <el-col :span=" 2 ">
+      <el-col :span="2">
         <el-button @click="drawer_gvgn = true" type="primary" style="margin-left: 16px;">
           过滤概念
         </el-button>
       </el-col>
     </el-row>
 
-    <el-tabs v-model=" activeName ">
+    <el-tabs v-model="activeName">
 
       <el-tab-pane label="创业板概念" name="first">
-        <chuangGn :data= plan.chuang_ye_ban_gai_nian  :titles= titles ></chuangGn>
+        <chuangGn :data=plan.chuang_ye_ban_gai_nian :titles=titles></chuangGn>
       </el-tab-pane>
 
       <el-tab-pane label="创业板" name="third">
-        <zhu :data= plan.chuang_ye_ban  :code-map= codeMap.chuang ></zhu>
+        <zhu :data=plan.chuang_ye_ban :code-map=codeMap.chuang></zhu>
       </el-tab-pane>
 
       <el-tab-pane label="主板" name="second">
-        <zhu :data= plan.zhu_ban  :code-map= codeMap.zhu ></zhu>
+        <zhu :data=plan.zhu_ban :code-map=codeMap.zhu></zhu>
       </el-tab-pane>
 
     </el-tabs>
-    <el-drawer
-      title=""
-      :visible.sync="drawer"
-      :with-header="false">
+
+    <!-- 侧边栏 -->
+    <el-drawer :visible.sync="drawer" :with-header="false">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>补涨概念</span>
         </div>
-        <div v-for="(item,key) in bu_zhang.gn" :key="key" class="text item">
+        <div v-for="(item, key) in bu_zhang.gn" :key="key" class="text item">
           {{ item }}
         </div>
       </el-card>
     </el-drawer>
 
-    <el-drawer
-      title=""
-      :visible.sync="drawer_gvgn"
-      :with-header="false">
+    <el-drawer :visible.sync="drawer_gvgn" :with-header="false">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>过滤概念</span>
         </div>
-        <div v-for="(item,key) in gvgn" :key="key" class="text item">
+        <div v-for="(item, key) in gvgn" :key="key" class="text item">
           {{ item }}
         </div>
       </el-card>
@@ -130,13 +136,15 @@ export default {
     chuangGn,
     zhu
   },
-  data () {
+  data() {
     return {
       drawer: false,
+      today: '',
       drawer_gvgn: false,
       fd: 0,
       qx: 0,
       yd: 0,
+      gvgn: [],
       other: {
         zha_ban_lv: 0,
         jing_zhang_ting: 0,
@@ -158,19 +166,19 @@ export default {
         value: '',
         shortcuts: [{
           text: '今天',
-          onClick (picker) {
+          onClick(picker) {
             picker.$emit('pick', new Date())
           }
         }, {
           text: '昨天',
-          onClick (picker) {
+          onClick(picker) {
             const date = new Date()
             date.setTime(date.getTime() - 3600 * 1000 * 24)
             picker.$emit('pick', date)
           }
         }, {
           text: '一周前',
-          onClick (picker) {
+          onClick(picker) {
             const date = new Date()
             date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
             picker.$emit('pick', date)
@@ -191,11 +199,20 @@ export default {
   },
   methods: {
 
-    getCrudOptions () {
+    getCrudOptions() {
       const self = this
-      api.GetResult().then(function (params) {
-        self.fd = params.config.fd
-        self.yd = params.config.yd
+      if (!self.today.length) {
+        const today = new Date()
+        const year = today.getFullYear()
+        const month = (today.getMonth() + 1).toString().padStart(2, '0') // 添加前导零
+        const day = today.getDate().toString().padStart(2, '0') // 添加前导零
+        const ymd = `${year}${month}${day}`
+        self.today = ymd
+      }
+
+      api.GetResult(self.today, self.fd, self.yd).then(function (params) {
+        self.fd = !!params.config.fd
+        self.yd = !!params.config.yd
         self.lian_ban_code_black = params.config.lian_ban_code_black
         self.gvgn = params.config.gvgn
         self.other = params.other
@@ -281,18 +298,18 @@ export default {
       })
       return []
     },
-    pageRequest (query) {
+    pageRequest(query) {
       return api.GetList(query)
     },
-    addRequest (row) {
+    addRequest(row) {
       console.log('api', api)
       return api.AddObj(row)
     },
-    updateRequest (row) {
+    updateRequest(row) {
       console.log('----', row)
       return api.UpdateObj(row)
     },
-    delRequest (row) {
+    delRequest(row) {
       return api.DelObj(row.id)
     }
   }

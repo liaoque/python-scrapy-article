@@ -84,6 +84,14 @@ const frameIn = [{
         auth: true
       },
       component: _import('wb/lian_zhang_gai_nian/index')
+    },
+    {
+      path: 'set_config',
+      name: 'set_config',
+      meta: {
+        auth: true
+      },
+      component: _import('wb/set_config/index')
     }
   ]
 }]

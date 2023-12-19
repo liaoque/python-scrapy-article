@@ -52,10 +52,9 @@ export function GetCascadeData () {
   })
 }
 
-export function GetResult () {
+export function GetResult (d, fd, yd) {
   return request({
-    url: '/api/wb/reset?current_time=20231122',
-    method: 'get',
-    data: { current_time: '20230913' }
+    url: '/api/wb/reset?current_time='+ (d || 20231122) + "&fd=" + fd + "&yd=" + yd,
+    method: 'get'
   })
 }
