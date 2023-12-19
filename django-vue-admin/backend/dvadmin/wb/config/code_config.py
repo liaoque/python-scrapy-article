@@ -44,6 +44,9 @@ class CodeConfig:
                 pass
         return self._instance._config
 
+    def clear(self):
+        self._instance._config = None
+
     def setFd(self, fd):
         self._instance._config["fd"] = fd
 

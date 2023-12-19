@@ -58,9 +58,10 @@ class Config(View):
                 "20cm": info["cm20"],
                 "lian_ban_code_black": info["lian_ban_code_black"],
             }, outfile)
+        code_config.CodeConfig().clear()
 
         return JsonResponse({
-            "code": 200,
+            "code": 2000,
             "msg": "success",
             "data": {
             }
