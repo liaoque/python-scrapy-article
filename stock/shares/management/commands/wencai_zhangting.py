@@ -71,7 +71,6 @@ class Command(BaseCommand):
 
             if d["连续涨停天数"] >= 4:
                 numbers = re.findall(r'\d+', d["几天几板"])
-                # number1 = int(numbers[0])  # 22
                 number2 = int(numbers[1])  # 13
                 if number2 >= 8:
                     #     高标
