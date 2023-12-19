@@ -29,6 +29,10 @@ class ResetView(View):
         if current_time is None or current_time == "":
             return JsonResponse({"error": "current_time must"})
 
+
+        code_config.CodeConfig().setFd(request.GET.get('fd'))
+        code_config.CodeConfig().setFd(request.GET.get('yd'))
+
         # 取所有数据
         table = self.db['d' + current_time]  # 选择你的数据库
         table1 = table.find_one({}, {"Table1FromJSON": 1})

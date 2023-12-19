@@ -1,3 +1,5 @@
+import json
+import os
 
 concept = [
     "分拆上市意愿", "人民币贬值受益", "富时罗素概念", "富时罗素概念股", "标普道琼斯A股", "沪股通", "深股通",
@@ -12,6 +14,7 @@ concept = [
 
 class CodeConfig:
     _instance = None
+    _config = None
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -19,13 +22,28 @@ class CodeConfig:
         return cls._instance
 
     def getCodeConfig(self):
-        return {
-            "chuang_ye_set": 18.99 ,
-            "zhu_set": 9.5 ,
-            "10cm": 50,
-            "20cm": 70,
-            "fd": 1,
-            "yd": 0,
-            "gvgn": concept, # 过滤概念
-            "lian_ban_code_black": [], # 连扳天数黑名单 设置值 H33
-        }
+        if self._instance._config:
+            return self._instance._config
+
+        configfile = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data.json'))
+        with open(configfile, "r+") as outfile:
+            try:
+                self._instance._config = json.load(outfile)
+            except json.JSONDecodeError:
+                self._instance._config = {
+                    "chuang_ye_set": 18.99,
+                    "zhu_set": 9.5,
+                    "10cm": 50,
+                    "20cm": 70,
+                    "fd": 1,
+                    "yd": 0,
+                    "gvgn": concept,  # 过滤概念
+                    "lian_ban_code_black": [],  # 连扳天数黑名单 设置值 H3
+                }
+        return self._instance._config
+
+    def setFd(self, fd):
+        self._instance._config["fd"] = fd
+
+    def setYd(self, yd):
+        self._instance._config["yd"] = yd
