@@ -70,7 +70,7 @@ class Command(BaseCommand):
             codes = zhangTing.zhangTingGns(t,i+1)
             for item in codes:
                 d = self.initD2(item)
-                self.saveD(d)
+                self.saveD2(d)
 
 
     def initD(self, item):
