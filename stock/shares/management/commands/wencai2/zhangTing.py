@@ -29,7 +29,7 @@ def zhangTing(today):
 
 def zhangTingGns(today):
     # 涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念
-    s = '%s同花顺概念指数，涨跌幅从大到小，开盘价，收盘价' % (
+    s = '%s同花顺概念指数，涨跌幅从大到小，开盘价，收盘价，最低价，最高价' % (
         today
     )
     print(s)
@@ -39,7 +39,7 @@ def zhangTingGns(today):
         'business_cat': 'soniu',
         'comp_id': 6829723,
         'page': '1',
-        'perpage': '500',
+        'perpage': '100',
         'query_type': 'zhishu',
         'query': s,
         'uuid': '24089',
