@@ -27,14 +27,14 @@ class Config(View):
     def get(self, request, *args, **kwargs):
         config = code_config.CodeConfig().getCodeConfig()
         return JsonResponse({
-            "code": 200,
+            "code": 2000,
             "msg": "success",
             "data": {
                 "gvgn": config["gvgn"],
                 "chuang_ye_set": config["chuang_ye_set"],
                 "zhu_set": config["zhu_set"],
-                "10cm": config["10cm"],
-                "20cm": config["20cm"],
+                "cm10": config["10cm"],
+                "cm10": config["20cm"],
                 "lian_ban_code_black": config["lian_ban_code_black"],
             }
         })
