@@ -14,7 +14,7 @@ class SharesBlockGns(models.Model):
     p_start = models.IntegerField(help_text="开始")
     p_end = models.IntegerField(help_text="结束")
     p_zhang_die_fu = models.IntegerField(help_text="涨跌幅")
-    date_as = models.TimeField(help_text="创建时间")
+    date_as = models.DateField(help_text="创建时间")
 
     class Meta:
         db_table = "mc_shares_block_gns"

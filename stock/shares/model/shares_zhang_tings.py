@@ -12,12 +12,12 @@ class SharesZhangTings(models.Model):
     hy = models.CharField(max_length=50, help_text="行业") # 行业
     first_zhang_ting = models.TimeField(help_text="第一个涨停时间") # 第一个涨停时间
     last_zhang_ting = models.TimeField(help_text="最后一个涨停时间") # 最后一个涨停时间
-    n_day_n_zhang_ting = models.TimeField(help_text="几天几版") # 几天几版
-    continuous_zhang_ting = models.TimeField(help_text="连续涨停时间") # 连续涨停时间
-    liu_tong_shi_zhi = models.TimeField(help_text="流通市值") # 流通市值
-    date_as = models.TimeField(help_text="创建时间") # 创建时间
-    f32 = models.TimeField(help_text="9点32分钟之前涨停") # 9点32分钟之前涨停
-    gao_biao = models.TimeField(help_text="高标票标记") # 9点32分钟之前涨停
+    n_day_n_zhang_ting = models.CharField(help_text="几天几版",max_length=30) # 几天几版
+    continuous_zhang_ting = models.IntegerField(help_text="连续涨停天数") # 连续涨停时间
+    liu_tong_shi_zhi = models.BigIntegerField(help_text="流通市值") # 流通市值
+    date_as = models.DateField(help_text="创建时间") # 创建时间
+    f32 = models.IntegerField(help_text="9点32分钟之前涨停") # 9点32分钟之前涨停
+    gao_biao = models.IntegerField(help_text="高标票标记") # 9点32分钟之前涨停
 
 
     class Meta:

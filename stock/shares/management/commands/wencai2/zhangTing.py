@@ -3,7 +3,7 @@ import shares.management.commands.wencai2.common
 
 def zhangTing(today):
     # 涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念
-    s = '%s去除ST，%s去除北交所，%s去除新股，%s涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念，所属同花顺行业' % (
+    s = '%s去除ST，%s去除北交所，%s去除新股，%s涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念，所属同花顺行业，最终涨停时间' % (
         today, today, today, today
     )
     print(s)
@@ -37,12 +37,13 @@ def zhangTingGns(today):
     url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
     data = {
         'business_cat': 'soniu',
-        'comp_id': shares.management.commands.wencai2.common.comp_id,
+        'comp_id': 6829723,
         'page': '1',
-        'perpage': '100',
+        'perpage': '500',
         'query_type': 'zhishu',
         'query': s,
         'uuid': '24089',
+        'uuids[0]': '24089',
 
     }
     headers = {
@@ -50,5 +51,4 @@ def zhangTingGns(today):
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
     }
     response = requests.post(url, data=data, headers=headers)
-    print(response.json())
     return response.json()["answer"]["components"][0]['data']["datas"]

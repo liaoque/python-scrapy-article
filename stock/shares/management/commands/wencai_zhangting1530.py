@@ -8,10 +8,10 @@ from django.core.management.base import BaseCommand, CommandError
 from django.core.mail import send_mail
 from collections import OrderedDict
 from shares.model.shares import Shares
-# from shares.model.shares_zhang_tings import SharesZhangTings
-# from shares.model.shares_block_gns import SharesBlockGns
-# from shares.model.shares_date import SharesDate
-# from shares.model.shares_join_block import SharesJoinBlock
+from shares.model.shares_zhang_tings import SharesZhangTings
+from shares.model.shares_block_gns import SharesBlockGns
+from shares.model.shares_date import SharesDate
+from shares.model.shares_join_block import SharesJoinBlock
 
 
 def time2seconds(time_str):
@@ -43,7 +43,7 @@ class Command(BaseCommand):
             d["股票简称"] = item["股票简称"]
             d["所属概念"] = item["所属概念"]
             d["所属同花顺行业"] = item["所属同花顺行业"]
-            d["gaobiao"] = 0
+            d["gao_biao"] = 0
             d["f32"] = 0
             for key, value in item.items():
                 if "首次涨停时间[" in key:
@@ -53,10 +53,15 @@ class Command(BaseCommand):
                     d["几天几板"] = value
                 if "连续涨停天数[" in key:
                     d["连续涨停天数"] = value
+
                 if "最终涨停时间[" in key:
                     d["最终涨停时间"] = value.replace(" ", "")
                 if "a股市值(不含限售股)[" in key:
                     d["a股市值流通市值"] = value
+
+            if "最终涨停时间" not in d.keys():
+                print(item)
+                continue
 
             if d["date"] != t2:
                 return
@@ -71,31 +76,33 @@ class Command(BaseCommand):
                 number2 = int(numbers[1])  # 13
                 if number2 >= 8:
                     #     高标
-                    d["gaobiao"] = 1
+                    d["gao_biao"] = 1
 
             if d["连续涨停天数"] >= 5:
                 #     高标
-                d["gaobiao"] = 1
+                d["gao_biao"] = 1
 
-            # if SharesZhangTings.objects.filter(code_id=d["股票代码"], date_at=d["date"]).count():
-            #     continue
 
-            # sharesZhangTings = SharesZhangTings(
-            #     code_id=d["股票代码"],
-            #     name=d["股票简称"],
-            #     gn=d["所属概念"],
-            #     hy=d["所属同花顺行业"],
-            #     first_zhang_ting=d["首次涨停时间"],
-            #     last_zhang_ting=d["最终涨停时间"],
-            #     n_day_n_zhang_ting=d["几天几板"],
-            #     continuous_zhang_ting=d["连续涨停天数"],
-            #     liu_tong_shi_zhi=d["a股市值流通市值"],
-            #     date_as=d["date_as"],
-            #     f32=d["f32"],
-            #     gao_biao=d["gao_biao"]
-            # )
-            # print(sharesZhangTings)
-            # sharesZhangTings.save()
+            date_obj = datetime.strptime(d["date"], '%Y%m%d')
+            formatted_date = date_obj.strftime('%Y-%m-%d')
+            if SharesZhangTings.objects.filter(code_id=d["股票代码"], date_as=formatted_date).count():
+                continue
+
+            sharesZhangTings = SharesZhangTings(
+                code_id=d["股票代码"],
+                name=d["股票简称"],
+                gn=d["所属概念"],
+                hy=d["所属同花顺行业"],
+                first_zhang_ting=d["首次涨停时间"],
+                last_zhang_ting=d["最终涨停时间"],
+                n_day_n_zhang_ting=d["几天几板"],
+                continuous_zhang_ting=d["连续涨停天数"],
+                liu_tong_shi_zhi=int(float(d["a股市值流通市值"])),
+                date_as=formatted_date,
+                f32=d["f32"],
+                gao_biao=d["gao_biao"]
+            )
+            sharesZhangTings.save()
 
         # 保存到 SharesZhangTings
         # SharesZhangTings.objects.filter(date_as=sharesDate[0].date_as, gao_biao__gt=1)
@@ -120,6 +127,12 @@ class Command(BaseCommand):
                     d["最高价"] = value.replace(" ", "")
                 if "指数@涨跌幅:前复权[" in key:
                     d["涨跌幅"] = value
+
+            date_obj = datetime.strptime(d["date"], '%Y%m%d')
+            formatted_date = date_obj.strftime('%Y-%m-%d')
+            if SharesBlockGns.objects.filter(code_id=d["指数代码"], date_as=formatted_date).count():
+                continue
+
             # sharesZhangTings = SharesBlockGns(
             #     code_id=d["指数代码"],
             #     name=d["指数简称"],
