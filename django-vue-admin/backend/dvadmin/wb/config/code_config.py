@@ -24,22 +24,24 @@ class CodeConfig:
     def getCodeConfig(self):
         if self._instance._config:
             return self._instance._config
-
+        self._instance._config = {
+            "chuang_ye_set": 18.99,
+            "zhu_set": 9.5,
+            "10cm": 50,
+            "20cm": 70,
+            "fd": 1,
+            "yd": 0,
+            "gvgn": concept,  # 过滤概念
+            "lian_ban_code_black": [],  # 连扳天数黑名单 设置值 H3
+        }
         configfile = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data.json'))
+        if not os.path.exists(configfile):
+            return self._instance._config
         with open(configfile, "r+") as outfile:
             try:
                 self._instance._config = json.load(outfile)
             except json.JSONDecodeError:
-                self._instance._config = {
-                    "chuang_ye_set": 18.99,
-                    "zhu_set": 9.5,
-                    "10cm": 50,
-                    "20cm": 70,
-                    "fd": 1,
-                    "yd": 0,
-                    "gvgn": concept,  # 过滤概念
-                    "lian_ban_code_black": [],  # 连扳天数黑名单 设置值 H3
-                }
+                pass
         return self._instance._config
 
     def setFd(self, fd):
