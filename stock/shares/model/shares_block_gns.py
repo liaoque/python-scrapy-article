@@ -5,6 +5,24 @@ from datetime import datetime
 
 # Create your models here.
 
+def saveD(d):
+    date_obj = datetime.strptime(d["date"], '%Y%m%d')
+    formatted_date = date_obj.strftime('%Y-%m-%d')
+    if SharesBlockGns.objects.filter(code_id=d["指数代码"], date_as=formatted_date).count():
+        return
+
+    sharesZhangTings = SharesBlockGns(
+        code_id=d["指数代码"],
+        name=d["指数简称"],
+        p_min=d["最低价"],
+        p_max=d["最高价"],
+        p_start=d["开盘价"],
+        p_end=d["收盘价"],
+        p_zhang_die_fu=d["涨跌幅"],
+        date_as=formatted_date,
+    )
+    sharesZhangTings.save()
+
 
 class SharesBlockGns(models.Model):
     code = models.ForeignKey(SharesName, name='code', on_delete=models.CASCADE)

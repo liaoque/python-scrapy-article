@@ -1,6 +1,7 @@
 import requests
 import shares.management.commands.wencai2.common
 
+
 def zhangTing(today):
     # 涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念
     s = '%s去除ST，%s去除北交所，%s去除新股，%s涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念，所属同花顺行业，最终涨停时间' % (
@@ -27,7 +28,7 @@ def zhangTing(today):
     # return response.json()["answer"]["components"][0]["data"]["meta"]["extra"]["row_count"]
 
 
-def zhangTingGns(today):
+def zhangTingGns(today, i):
     # 涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念
     s = '%s同花顺概念指数，涨跌幅从大到小，开盘价，收盘价，最低价，最高价' % (
         today
@@ -38,7 +39,7 @@ def zhangTingGns(today):
     data = {
         'business_cat': 'soniu',
         'comp_id': 6829723,
-        'page': '1',
+        'page': i,
         'perpage': '100',
         'query_type': 'zhishu',
         'query': s,
