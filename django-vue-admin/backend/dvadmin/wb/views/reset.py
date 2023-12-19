@@ -152,15 +152,24 @@ class ResetView(View):
         result["biao_shai_xuan"] = d2["biao_shai_xuan"]
         result["gn"] = d2["gn"]
 
-        jing_zhang_ting = len(list(filter(lambda x: x[1].yi_zi_ban == 1, data1.items())))
-        yi_zi_die_ting = len(list(filter(lambda x: x[1].yi_zi_die_ting == 1, data1.items())))
-        zha_ban = len(list(filter(lambda x: x[1].zha_ban == 1, data1.items())))
-        zhu_chuang_zhang_ting = len(list(filter(lambda x: x[1].zhu_chuang_zhang_ting == 1, data1.items())))
-        shou_die_ting = len(list(filter(lambda x: x[1].dietingfengdane > 0, data1.items())))
-        jing_shang_zhang = len(list(filter(lambda x: x[1].jingjiazhangfutoday > 0, data1.items())))
-        jing_xia_die = len(list(filter(lambda x: x[1].jingjiazhangfutoday < 0, data1.items())))
-        shou_shang_zhang = len(list(filter(lambda x: x[1].zhangdiefuqianfuquantoday > 0, data1.items())))
-        shou_xia_die = len(list(filter(lambda x: x[1].zhangdiefuqianfuquantoday < 0, data1.items())))
+        # 一字板
+        jing_zhang_ting = len(list(filter(lambda x: x[1]["yi_zi_ban"] == 1, data.items())))
+        # 一字跌停
+        yi_zi_die_ting = len(list(filter(lambda x: x[1]["yi_zi_die_ting"] == 1, data.items())))
+        # 炸板
+        zha_ban = len(list(filter(lambda x: x[1]["zha_ban"] == 1, data.items())))
+        # 漲停
+        zhu_chuang_zhang_ting = len(list(filter(lambda x: x[1]["zhu_chuang_zhang_ting"] == 1, data.items())))
+        # 跌停
+        shou_die_ting = len(list(filter(lambda x: x[1]["dietingfengdane"] > 0, data.items())))
+        # 竞价上涨
+        jing_shang_zhang = len(list(filter(lambda x: x[1]["jingjiazhangfutoday"] > 0, data.items())))
+        # 竞价下跌
+        jing_xia_die = len(list(filter(lambda x: x[1]["jingjiazhangfutoday"] < 0, data.items())))
+        # 收上涨
+        shou_shang_zhang = len(list(filter(lambda x: x[1]["zhangdiefuqianfuquantoday"] > 0, data.items())))
+        # 收下跌
+        shou_xia_die = len(list(filter(lambda x: x[1]["zhangdiefuqianfuquantoday"] < 0, data.items())))
         result["other"] = {
             "zha_ban_lv": round(zha_ban / zhu_chuang_zhang_ting * 100, 2)  ,
             "jing_zhang_ting": jing_zhang_ting,

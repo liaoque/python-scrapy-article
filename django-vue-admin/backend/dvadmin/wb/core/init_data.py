@@ -170,7 +170,7 @@ def tag_all(table1, data):
     data = tag_zha_ban(table1, data)
     data = tag_chuang_bai_ri_xin_gao(table1, data)
     data = tag_yi_zi_ban(table1, data)
-    data = tag_yi_die_ting(table1, data)
+    data = tag_yi_zi_die_ting(table1, data)
     data = tag_shou_ban(table1, data)
     data = tag_yi_dong(table1, data)
     data = tag_n10(table1, data)
@@ -210,18 +210,6 @@ def tag_chuang_bai_ri_xin_gao(table1, data):
         if code not in data:
             continue
         data[code]["chuang_bai_ri_xin_gao"] = 1
-    return data
-
-def tag_yi_die_ting(table1, data):
-    if "YiZiDieTing" not in table1:
-        return data
-    data2 = table1["YiZiDieTing"]
-    for items in data2:
-        code = gp.getCode(items["code"])
-        if code not in data:
-            continue
-        data[code]["jingjiaweipipeijinetoday"] = items["jingjiaweipipeijine"]
-
     return data
 
 def tag_yi_zi_ban(table1, data):
@@ -302,12 +290,11 @@ def tag_yi_dong(table1, data):
 
 # 取异动
 def tag_yi_zi_die_ting(table1, data):
+    for code, item in data.items():
+        data[code]["yi_zi_die_ting"] = 0
+
     if "YiZiDieTing" not in table1:
         return data
-
-    for code, item in data.items():
-        data[code]["jingjiaweipipeijinetoday"] = 0
-        data[code]["yi_zi_die_ting"] = 0
 
     data2 = table1["YiZiDieTing"]
 

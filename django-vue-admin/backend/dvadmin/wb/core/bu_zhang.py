@@ -290,7 +290,7 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
 
     zhong_jun = {
         "code": data2[0][0],
-        "briefname": data[data2[0][0]]["briefname"],
+        "briefname": data2[0][1]["briefname"],
     }
 
     # '3、在"table1"中找到5日涨跌幅最大的股票，这个例子是尚太科技，用这个股票的所属概念比对昨原因表里的首板的非绿的概念找出相同的概念。
