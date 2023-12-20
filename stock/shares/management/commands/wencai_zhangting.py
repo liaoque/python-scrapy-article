@@ -94,7 +94,8 @@ class Command(BaseCommand):
         # 取f32股票
         codes = self.codeGetCode(d2, yesterday)
         # print(codes)
-        self.s = "\n\r".join([ key + " ---- " + item for key, item in codes.items()])
+        self.s = "\n\r".join([ item["股票简称"] + " ---- " + item["最新涨跌幅"] for item in codes])
+
         # 查当天涨幅前5概念
         d2 = []
         for i in range(5):
@@ -105,15 +106,16 @@ class Command(BaseCommand):
 
         result = sorted(d2, key=lambda x: x["涨跌幅"], reverse=True)[0: 5]
 
-        yeasterdayGns = SharesBlockGns.objects.filter(date_as=yesterday).order_by(
+        yeasterdayGns = SharesBlockGns.objects.filter(date_as="2023-12-19").order_by(
             "-p_zhang_die_fu")[0]
 
 
         self.s = "\n\r".join([
             self.s,
-            "概念发酵: " + " , ".join([item["股票简称"] for item in filter(lambda x: x[1]["指数代码"] in self.f32GN, result)]),
+            "概念发酵: " + " , ".join([item["指数简称"] for item in filter(lambda x: x["指数代码"] in self.f32GN, result)]),
             "昨晚概念：" + yeasterdayGns.name
         ])
+        dingding.dingding(self.s)
         print(self.s)
         # yeasterdayGnIds = [yeasterdayGns.code_id]
         # 32分强势票概念
