@@ -14,6 +14,6 @@ class SharesJoinBlock(models.Model):
         # abstract = True
 
     def __str__(self):
-        return self.block_code + "----" + self.code
+        return self.block_code_id + "----" + self.code_id
 
 

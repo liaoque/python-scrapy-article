@@ -75,7 +75,7 @@ class Command(BaseCommand):
 
     def initD(self, item):
         d = {}
-        d["股票代码"] = item["股票代码"]
+        d["股票代码"] = item["股票代码"][:-3]
         d["股票简称"] = item["股票简称"]
         d["所属概念"] = item["所属概念"]
         d["所属同花顺行业"] = item["所属同花顺行业"]
@@ -100,7 +100,7 @@ class Command(BaseCommand):
 
     def initD2(self, item):
         d = {}
-        d["指数代码"] = item["指数代码"]
+        d["指数代码"] = item["指数代码"][:-3]
         d["指数简称"] = item["指数简称"]
         for key, value in item.items():
             if "指数@开盘价:不复权[" in key:
