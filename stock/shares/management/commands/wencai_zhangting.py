@@ -106,7 +106,7 @@ class Command(BaseCommand):
 
         result = sorted(d2, key=lambda x: x["涨跌幅"], reverse=True)[0: 5]
 
-        yeasterdayGns = SharesBlockGns.objects.filter(date_as="2023-12-19").order_by(
+        yeasterdayGns = SharesBlockGns.objects.filter(date_as=yesterday).order_by(
             "-p_zhang_die_fu")[0]
 
 
