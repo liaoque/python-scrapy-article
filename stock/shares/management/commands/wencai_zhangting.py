@@ -106,15 +106,15 @@ class Command(BaseCommand):
 
         yeasterdayGns = SharesBlockGns.objects.filter(date_as=yesterday).order_by(
             "-p_zhang_die_fu")[0]
-        yeasterdayGns = [yeasterdayGns.code_id]
+        yeasterdayGnIds = [yeasterdayGns.code_id]
         # 32分强势票概念
         for item in result:
             if item["指数代码"] not in self.f32GN:
                 continue
-            if item["指数代码"]  in yeasterdayGns:
+            if item["指数代码"]  in yeasterdayGnIds:
                 continue
             # yeasterdayGns.append(item["指数代码"])
-            print(item["指数代码"], yeasterdayGns[0])
+            print(item["股票简称"], yeasterdayGns.name)
 
     def initD(self, item, start_seconds, end_seconds):
         d = {}
