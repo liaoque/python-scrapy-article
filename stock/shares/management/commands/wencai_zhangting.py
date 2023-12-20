@@ -3,7 +3,7 @@ import re
 import numpy as np
 from datetime import datetime, timedelta
 
-from shares.management.commands.wencai2 import trend, trendCode, acodes, common, pic_n, zhangTing
+from shares.management.commands.wencai2 import trend, trendCode, acodes, common, pic_n, zhangTing, dingding
 from django.core.management.base import BaseCommand, CommandError
 from django.core.mail import send_mail
 from collections import OrderedDict
@@ -23,6 +23,7 @@ def time2seconds(time_str):
 class Command(BaseCommand):
     help = '观察32分涨停股票'
     f32GN = None
+    s =""
 
     def add_arguments(self, parser):
         # parser.add_argument('poll_ids', nargs='+', type=int)
@@ -93,7 +94,7 @@ class Command(BaseCommand):
         # 取f32股票
         codes = self.codeGetCode(d2, yesterday)
         # print(codes)
-
+        self.s = "\n\r".join([ key + " ---- " + item for key, item in codes.items()])
         # 查当天涨幅前5概念
         d2 = []
         for i in range(5):
@@ -106,15 +107,27 @@ class Command(BaseCommand):
 
         yeasterdayGns = SharesBlockGns.objects.filter(date_as=yesterday).order_by(
             "-p_zhang_die_fu")[0]
-        yeasterdayGnIds = [yeasterdayGns.code_id]
+
+
+        self.s = "\n\r".join([
+            self.s,
+            "概念发酵: " + " , ".join([item["股票简称"] for item in filter(lambda x: x[1]["指数代码"] in self.f32GN, result)]),
+            "昨晚概念：" + yeasterdayGns.name
+        ])
+        print(self.s)
+        # yeasterdayGnIds = [yeasterdayGns.code_id]
         # 32分强势票概念
-        for item in result:
-            if item["指数代码"] not in self.f32GN:
-                continue
-            if item["指数代码"]  in yeasterdayGnIds:
-                continue
+
+            # if item["指数代码"] not in self.f32GN:
+            #     continue
+            # if item["指数代码"]  in yeasterdayGnIds:
+            #     continue
             # yeasterdayGns.append(item["指数代码"])
-            print(item["股票简称"], yeasterdayGns.name)
+
+            # print(item["股票简称"], yeasterdayGns.name)
+
+
+
 
     def initD(self, item, start_seconds, end_seconds):
         d = {}
