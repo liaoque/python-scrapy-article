@@ -10,7 +10,7 @@ def dingding(s):
     {
         'msgtype': 'text',
         'text': {
-            'content':%s
+            'content':'%s'
         }
     }
     """%(s)
@@ -18,6 +18,6 @@ def dingding(s):
         "Content-Type": "application/json",
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
     }
-    response = requests.post(url, data=data, headers=headers)
+    response = requests.post(url, data=data.encode("utf-8"), headers=headers)
     print(data, response.json())
     return response.json()
