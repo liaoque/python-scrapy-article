@@ -25,8 +25,8 @@ def search(s):
 
 def zhangTing(today):
     # 涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念
-    s = '%s去除ST，%s去除北交所，%s去除新股，%s涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念，所属同花顺行业，最终涨停时间' % (
-        today, today, today, today
+    s = '%s去除ST，%s去除北交所，%s去除新股，%s涨停股票,%s首次涨停时间从小到大，流通市值，%s几天几板，%s连续涨停天数，%s涨停原因类别，所属概念，所属同花顺行业，%s最终涨停时间' % (
+        today, today, today, today, today, today, today, today, today
     )
     print(s)
     # s = "半年报预增，所属概念，s去除ST，去除北交所，去除新股"
@@ -51,8 +51,8 @@ def zhangTing(today):
 
 def zhangTingGns(today, i):
     # 涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念
-    s = '%s同花顺概念指数，涨跌幅从大到小，开盘价，收盘价，最低价，最高价' % (
-        today
+    s = '%s同花顺概念指数，涨跌幅从大到小，%s开盘价，%s收盘价，%s最低价，%s最高价' % (
+        today,today,today,today,today
     )
     print(s)
     # s = "半年报预增，所属概念，s去除ST，去除北交所，去除新股"

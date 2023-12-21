@@ -45,11 +45,11 @@ class SharesBlock(scrapy.Spider):
 
     def start_requests(self):
         self.connect()
+        self.deleteBlock()
         cache = self.findCache()
         results = self.findStoks(cache)
         for item in results:
             code = item[0]
-
             url = self.get_url(code)
             headers = copy.deepcopy(self.headers)
             headers['code'] = code
@@ -96,7 +96,15 @@ class SharesBlock(scrapy.Spider):
         item_loader2.add_value("block_code_id", block_code)
         item_loader2.add_value("code_type", 2)
         return item_loader2.load_item()
-
+    def deleteBlock(self):
+        sql = 'delete from mc_shares_join_block where code_type =2 ';
+        results = []
+        try:
+            # 执行SQL语句
+            self.cursor.execute(sql)
+        except:
+            print("Error: unable to fecth data")
+        return results
     def findStoks(self, cache):
         sql = 'select code,name,area_id from mc_shares_name where status = 1 and code_type =1 order by code asc limit %s,10000 ' % (
             cache);
