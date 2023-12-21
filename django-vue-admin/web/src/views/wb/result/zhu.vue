@@ -1,6 +1,7 @@
 <template>
   <div>
-    <el-table :cell-class-name="cellClassName" :data="data.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
+    <el-input v-model="search"></el-input>
+    <el-table :cell-class-name="cellClassName" :data="data.filter(data => !search || data.briefname.toLowerCase().includes(search.toLowerCase())).slice((currentPage - 1) * pageSize, currentPage * pageSize)"
       style="width: 100%">
       <el-table-column prop="code" sortable sort-by="color0" label="代码">
       </el-table-column>
@@ -56,35 +57,36 @@ export default {
     data: [],
     codeMap: {}
   },
-  data() {
+  data () {
     return {
+      search: "",
       currentPage: 1, // 当前页码
       pageSize: 500 // 每页的数据条数
     }
   },
   methods: {
     // 每页条数改变时触发 选择一页显示多少行
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       this.currentPage = 1
       this.pageSize = val
     },
     // 当前页改变时触发 跳转其他页
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.currentPage = val
     },
-    cellClassName(row) {
+    cellClassName (row) {
       const key = 'color' + row.columnIndex
       // console.log(row)
       // '    紫色 29 橘色 46 黄色 36 绿色 35 红色 3  粉色 13551615
-      let d = {
-        "35": 'el-button--success',
-        "46": 'el-button--46',
-        "36": 'el-button--36',
-        "13551615": 'el-button--13551615',
-        "29": 'el-button--29',
-        "37": 'el-button--37',
-        "38": 'el-button--38',
-        "3": 'el-button--3',
+      const d = {
+        35: 'el-button--success',
+        46: 'el-button--46',
+        36: 'el-button--36',
+        13551615: 'el-button--13551615',
+        29: 'el-button--29',
+        37: 'el-button--37',
+        38: 'el-button--38',
+        3: 'el-button--3'
       }
 
       return d[row.row[key]]

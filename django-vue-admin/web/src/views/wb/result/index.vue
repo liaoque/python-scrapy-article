@@ -1,5 +1,6 @@
 <template>
   <d2-container>
+
     <el-row>
       <el-col :span="2">
         情绪: <span v-if="qx == 1">好</span> <span v-if="qx == -1">差</span>
@@ -42,7 +43,8 @@
       <el-col :span="4">
         最高连扳天数股票: {{ bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.briefname }}
       </el-col>
-      <el-col :span="4" :class="{ 'green': bu_zhang.lian_ban_code120 && bu_zhang.lian_ban_code120.zhangfu120_color == 35 }">
+      <el-col :span="4"
+        :class="{ 'green': bu_zhang.lian_ban_code120 && bu_zhang.lian_ban_code120.zhangfu120_color == 35 }">
         120日涨幅最高: {{ bu_zhang.lian_ban_code120 && bu_zhang.lian_ban_code120.briefname }}
       </el-col>
       <el-col :span="4">
@@ -56,11 +58,7 @@
       <el-col :span="10">
         封单: <el-switch v-model="fd"></el-switch>
         异动: <el-switch v-model="yd"></el-switch>
-        <el-date-picker
-          v-model="today"
-          type="date"
-          value-format="yyyyMMdd"
-          placeholder="选择日期">
+        <el-date-picker v-model="today" type="date" value-format="yyyyMMdd" placeholder="选择日期">
         </el-date-picker>
         <el-button type="primary" @click="getCrudOptions" style="margin-left: 16px;">
           查询
@@ -78,7 +76,34 @@
         </el-button>
       </el-col>
     </el-row>
-
+    <el-row>
+      <el-col :span="1">
+        创业板
+      </el-col>
+      <el-col :span="2" style="color:yellow;background-color: cornflowerblue;">
+        黄色: {{ chuang.yellow }}
+      </el-col>
+      <el-col :span="2" style="color:orange;background-color: cornflowerblue;">
+        橘色:  {{ chuang.orange }}
+      </el-col>
+      <el-col :span="2" style="color:purple;background-color: cornflowerblue;">
+        紫色:  {{ chuang.purple }}
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="1">
+        主板
+      </el-col>
+      <el-col :span="2" style="color:yellow;background-color: cornflowerblue;">
+        黄色:  {{ zhu.yellow }}
+      </el-col>
+      <el-col :span="2" style="color:orange;background-color: cornflowerblue;">
+        橘色:  {{ zhu.orange }}
+      </el-col>
+      <el-col :span="2" style="color:purple;background-color: cornflowerblue;">
+        紫色:  {{ zhu.purple }}
+      </el-col>
+    </el-row>
     <el-tabs v-model="activeName">
 
       <el-tab-pane label="创业板概念" name="first">
@@ -138,6 +163,16 @@ export default {
   },
   data() {
     return {
+      zhu: {
+        yellow: "",
+        orange: "",
+        purple: "",
+      },
+      chuang: {
+        yellow: "",
+        orange: "",
+        purple: "",
+      },
       drawer: false,
       today: '',
       drawer_gvgn: false,
@@ -269,6 +304,14 @@ export default {
           item.ziyouliutongshizhiyesterday_s = (Math.ceil(item.ziyouliutongshizhiyesterday / 1000000) / 100).toFixed(2)
           item.zhangdiefuqianfuquantoday_s = (Math.ceil(item.zhangdiefuqianfuquantoday * 100) / 100).toFixed(2)
           item.jingjiajinejingjialiangbi_s = (item.jingjiajinejingjialiangbi).toFixed(2)
+          if (item['color0'] == 46) {
+            self.zhu.orange = item.briefname
+          } else if (item['color3'] == 29) {
+            self.zhu.purple = item.briefname
+          } else if (item['color1'] == 36) {
+            self.zhu.yellow = item.briefname
+          }
+
 
           return item
         }).sort((a, b) => {
@@ -289,6 +332,13 @@ export default {
           item.zhangdiefuqianfuquantoday_s = (Math.ceil(item.zhangdiefuqianfuquantoday * 100) / 100).toFixed(2)
           item.jingjiajinejingjialiangbi_s = (item.jingjiajinejingjialiangbi).toFixed(2)
 
+          if (item['color0'] == 46) {
+            self.chuang.orange = item.briefname
+          } else if (item['color3'] == 29) {
+            self.chuang.purple = item.briefname
+          } else if (item['color1'] == 36) {
+            self.chuang.yellow = item.briefname
+          }
           return item
         }).sort((a, b) => {
           if (a.zhangfu120 > b.zhangfu120) { return -1 }
