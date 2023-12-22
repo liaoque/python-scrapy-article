@@ -363,7 +363,7 @@ def tag_n20(table1, data):
         # data[code]["N_qujianzhangtingcishu"] = 0
         data[code]["N_zuidazhangfu"] = 0
         # data[code]["N_beforeyesterdaytop"] = 0
-        # data[code]["N_maxzhangfu"] = 0
+        data[code]["N_maxzhangfu"] = 0
         # data[code]["N_lianbancishu"] = 0
 
     if "N20" not in table1:
