@@ -40,16 +40,12 @@ def shares_date(request, date_today):
     tomorrow = SharesDate.objects.filter(date_as__gt=datetime.strptime(date_today, '%Y%m%d')).order_by('date_as')
 
     if len(tomorrow) < 2:
-        now = datetime.strptime(dates[0].date_as, '%Y-%m-%d')
+        now = dates[0].date_as
         tomorrow = now + timedelta(days=1)
         after_tomorrow = now + timedelta(days=2)
         tomorrow = [
-            {
-                "date_as": tomorrow.strftime("%Y-%m-%d"),
-            },
-            {
-                "date_as": after_tomorrow.strftime("%Y-%m-%d")
-            }
+            SharesDate(date_as=tomorrow),
+            SharesDate(date_as=after_tomorrow)
         ]
 
     return JsonResponse({
