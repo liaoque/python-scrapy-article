@@ -1,14 +1,16 @@
 from django.shortcuts import render,get_object_or_404
 
 # Create your views here.
-from django.http import HttpResponse,Http404,HttpResponseRedirect
+from django.http import HttpResponse,Http404,HttpResponseRedirect, JsonResponse
 from django.template import loader
 from django.urls import reverse
 from django.utils.html import format_html
 from django.views import generic
+from datetime import datetime
 
 # from ..model.shares import Shares
 from ..model.shares_name import SharesName
+from ..model.shares_date import SharesDate
 
 class SharesView(generic.DetailView):
     template_name = 'shares/detail.html'
@@ -32,3 +34,16 @@ class SharesView(generic.DetailView):
 #
 # def vote(request, question_id):
 #     return HttpResponse("You're voting on question %s." % question_id)
+
+
+def shares_date(request, date_today):
+    dates = SharesDate.objects.filter(date_as__lte=datetime.strptime(date_today,'%Y%m%d')).order_by('-date_as')[:3]
+    tomorrow = SharesDate.objects.filter(date_as__gt=datetime.strptime(date_today,'%Y%m%d')).order_by('date_as')[:2]
+    return JsonResponse({
+        "today":dates[0].date_as,
+        "yesterday":dates[1].date_as,
+        "before_yesterday":dates[2].date_as,
+        "tomorrow":tomorrow[0].date_as,
+        "after_tomorrow":tomorrow[1].date_as,
+    })
+    # return HttpResponse("You're voting on question %s." % question_id)
