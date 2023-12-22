@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render
 import json
 # Create your views here.
@@ -12,6 +14,8 @@ import string
 
 from django.views import View
 from dvadmin.wb.config import code_config
+from dvadmin.wb.utils import gp
+
 
 class ResetView(View):
 
@@ -29,6 +33,9 @@ class ResetView(View):
         if current_time is None or current_time == "":
             return JsonResponse({"error": "current_time must"})
 
+        dateInfo = gp.getToday(current_time)
+        current_time = datetime.datetime.strptime(dateInfo.today, "%Y-%m-%d").strftime("%Y%m%d")
+
         code_config.CodeConfig().getCodeConfig()
         code_config.CodeConfig().setFd(request.GET.get('fd'))
         code_config.CodeConfig().setFd(request.GET.get('yd'))
@@ -44,12 +51,12 @@ class ResetView(View):
         if table2 and "Table" in table2:
             data2 = table2["Table"]
 
-        history_day_table = self.db['history_day']
-        if len(table1) > 0:
-            history_day_data = history_day_table.find_one({"history_day": current_time})
-            if history_day_data is None:
-                history_day_data = {"history_day": current_time}
-                history_day_table.insert_one(history_day_data)
+        # history_day_table = self.db['history_day']
+        # if len(table1) > 0:
+        #     history_day_data = history_day_table.find_one({"history_day": current_time})
+        #     if history_day_data is None:
+        #         history_day_data = {"history_day": current_time}
+        #         history_day_table.insert_one(history_day_data)
 
         data1 = table1["Table1FromJSON"]
 
@@ -79,23 +86,22 @@ class ResetView(View):
             if code == "002512":
                 pass
 
-
         # 取跌停股票
         # dieting_table1 = (table.find_one({}, {"YiZiDieTing": 1}))
 
         yuan_yin = yuan_yin_data.getYuanYin(data)
 
         # 查昨原因
-        history_day_data = history_day_table.find({"history_day": {"$lt": current_time}},
-                                                  sort=[("history_day", -1)]).limit(2)
-        history_day_data = list(history_day_data)
+        # history_day_data = history_day_table.find({"history_day": {"$lt": current_time}},
+        #                                           sort=[("history_day", -1)]).limit(2)
+        # history_day_data = list(history_day_data)
         yeasterday_data = {}
         before_yesterday_data = {}
-        if len(history_day_data) >= 1:
-            yesterday = history_day_data[0]["history_day"]
+        if len(dateInfo.yesterday):
+            yesterday = datetime.datetime.strptime(dateInfo.yesterday, "%Y-%m-%d").strftime("%Y%m%d")
             yeasterday_data = self.db['d' + yesterday].find_one({}, {"yuan_yin": 1})
-        if len(history_day_data) == 2:
-            yesterday_day = history_day_data[1]["history_day"]
+        if len(dateInfo.before_yesterday):
+            yesterday_day = datetime.datetime.strptime(dateInfo.before_yesterday, "%Y-%m-%d").strftime("%Y%m%d")
             before_yesterday_data = self.db['d' + yesterday_day].find_one({}, {"yuan_yin": 1})
 
         if "yuan_yin" not in yeasterday_data:
@@ -156,7 +162,6 @@ class ResetView(View):
         result["biao_shai_xuan"] = d2["biao_shai_xuan"]
         result["gn"] = d2["gn"]
 
-
         # 一字板
         jing_zhang_ting = len(list(filter(lambda x: x[1]["yi_zi_ban"] == 1, data.items())))
         # 一字跌停
@@ -176,13 +181,13 @@ class ResetView(View):
         # 收下跌
         shou_xia_die = len(list(filter(lambda x: x[1]["zhangdiefuqianfuquantoday"] < 0, data.items())))
         result["other"] = {
-            "zha_ban_lv": round(zha_ban / zhu_chuang_zhang_ting * 100, 2)  ,
+            "zha_ban_lv": round(zha_ban / zhu_chuang_zhang_ting * 100, 2),
             "jing_zhang_ting": jing_zhang_ting,
             "jing_die_ting": yi_zi_die_ting,
             "shou_zhang_ting": zhu_chuang_zhang_ting,
             "shou_die_ting": shou_die_ting,
             "jing_shang_zhang": jing_shang_zhang,
-            "jing_xia_die":jing_xia_die,
+            "jing_xia_die": jing_xia_die,
             "shou_shang_zhang": shou_shang_zhang,
             "shou_xia_die": shou_xia_die
         }
