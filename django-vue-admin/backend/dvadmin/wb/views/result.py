@@ -12,6 +12,9 @@ import string
 
 from django.views import View
 from dvadmin.utils.json_response import ErrorResponse,DetailResponse
+from dvadmin.wb.config import code_config
+from dvadmin.wb.utils import gp
+import datetime
 
 class ResultView(View):
 
@@ -29,6 +32,9 @@ class ResultView(View):
         if current_time is None or current_time == "":
             return JsonResponse({"error": "current_time must"})
 
+        dateInfo = gp.getToday(current_time)
+        current_time = datetime.datetime.strptime(dateInfo.today, "%Y-%m-%d").strftime("%Y%m%d")
+
         table = self.db['d' + current_time]  # 选择你的数据库
         table1 = table.find_one({}, {"Table1FromJSON": 1})
         if table1 is None:
@@ -44,18 +50,25 @@ class ResultView(View):
         data2 = gn.gn_merge({item["code"]: item for item in data2})
 
         # 查昨原因
-        history_day_table = self.db['history_day']
-        history_day_data = history_day_table.find({"history_day": {"$lt": current_time}},
-                                                  sort=[("history_day", -1)]).limit(2)
-        history_day_data = list(history_day_data)
+        # history_day_table = self.db['history_day']
+        # history_day_data = history_day_table.find({"history_day": {"$lt": current_time}},
+        #                                           sort=[("history_day", -1)]).limit(2)
+        # history_day_data = list(history_day_data)
         yeasterday_data = {}
         before_yesterday_data = {}
-        if len(history_day_data) >= 1:
-            yesterday = history_day_data[0]["history_day"]
+        if len(dateInfo.yesterday):
+            yesterday = datetime.datetime.strptime(dateInfo.yesterday, "%Y-%m-%d").strftime("%Y%m%d")
             yeasterday_data = self.db['d' + yesterday].find_one({}, {"yuan_yin": 1})
-        if len(history_day_data) == 2:
-            yesterday_day = history_day_data[1]["history_day"]
+        if len(dateInfo.before_yesterday):
+            yesterday_day = datetime.datetime.strptime(dateInfo.before_yesterday, "%Y-%m-%d").strftime("%Y%m%d")
             before_yesterday_data = self.db['d' + yesterday_day].find_one({}, {"yuan_yin": 1})
+
+        # if len(history_day_data) >= 1:
+        #     yesterday = history_day_data[0]["history_day"]
+        #     yeasterday_data = self.db['d' + yesterday].find_one({}, {"yuan_yin": 1})
+        # if len(history_day_data) == 2:
+        #     yesterday_day = history_day_data[1]["history_day"]
+        #     before_yesterday_data = self.db['d' + yesterday_day].find_one({}, {"yuan_yin": 1})
 
         if "yuan_yin" not in yeasterday_data:
             return ErrorResponse(msg="yeasterday yuan_yin is None")

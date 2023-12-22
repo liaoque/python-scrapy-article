@@ -11,7 +11,8 @@ from pymongo import MongoClient
 import string
 
 from django.views import View
-
+from dvadmin.wb.utils import gp
+import datetime
 
 class LianZhangGiNian(View):
 
@@ -29,6 +30,9 @@ class LianZhangGiNian(View):
         if current_time is None or current_time == "":
             return JsonResponse({"error": "current_time must"})
 
+        dateInfo = gp.getToday(current_time)
+        current_time = datetime.datetime.strptime(dateInfo.today, "%Y-%m-%d").strftime("%Y%m%d")
+
         # 取所有数据
         table = self.db['d' + current_time]  # 选择你的数据库
         table1 = table.find_one({}, {"Table1FromJSON": 1})
@@ -40,12 +44,12 @@ class LianZhangGiNian(View):
         if table2:
             data2 = table2["Table"]
 
-        history_day_table = self.db['history_day']
-        if len(table1) > 0:
-            history_day_data = history_day_table.find_one({"history_day": current_time})
-            if history_day_data is None:
-                history_day_data = {"history_day": current_time}
-                history_day_table.insert_one(history_day_data)
+        # history_day_table = self.db['history_day']
+        # if len(table1) > 0:
+        #     history_day_data = history_day_table.find_one({"history_day": current_time})
+        #     if history_day_data is None:
+        #         history_day_data = {"history_day": current_time}
+        #         history_day_table.insert_one(history_day_data)
 
         data1 = table1["Table1FromJSON"]
 
