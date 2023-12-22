@@ -31,7 +31,7 @@ class LianZhangGuPiao(View):
             return JsonResponse({"error": "current_time must"})
 
         dateInfo = gp.getToday(current_time)
-        current_time = datetime.datetime.strptime(dateInfo.today, "%Y-%m-%d").strftime("%Y%m%d")
+        current_time = datetime.datetime.strptime(dateInfo["today"], "%Y-%m-%d").strftime("%Y%m%d")
 
         # 取所有数据
         table = self.db['d' + current_time]  # 选择你的数据库

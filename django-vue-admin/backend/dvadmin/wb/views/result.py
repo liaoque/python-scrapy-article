@@ -33,7 +33,7 @@ class ResultView(View):
             return JsonResponse({"error": "current_time must"})
 
         dateInfo = gp.getToday(current_time)
-        current_time = datetime.datetime.strptime(dateInfo.today, "%Y-%m-%d").strftime("%Y%m%d")
+        current_time = datetime.datetime.strptime(dateInfo["today"], "%Y-%m-%d").strftime("%Y%m%d")
 
         table = self.db['d' + current_time]  # 选择你的数据库
         table1 = table.find_one({}, {"Table1FromJSON": 1})
@@ -57,10 +57,10 @@ class ResultView(View):
         yeasterday_data = {}
         before_yesterday_data = {}
         if len(dateInfo.yesterday):
-            yesterday = datetime.datetime.strptime(dateInfo.yesterday, "%Y-%m-%d").strftime("%Y%m%d")
+            yesterday = datetime.datetime.strptime(dateInfo["yesterday"], "%Y-%m-%d").strftime("%Y%m%d")
             yeasterday_data = self.db['d' + yesterday].find_one({}, {"yuan_yin": 1})
         if len(dateInfo.before_yesterday):
-            yesterday_day = datetime.datetime.strptime(dateInfo.before_yesterday, "%Y-%m-%d").strftime("%Y%m%d")
+            yesterday_day = datetime.datetime.strptime(dateInfo["before_yesterday"], "%Y-%m-%d").strftime("%Y%m%d")
             before_yesterday_data = self.db['d' + yesterday_day].find_one({}, {"yuan_yin": 1})
 
         # if len(history_day_data) >= 1:
