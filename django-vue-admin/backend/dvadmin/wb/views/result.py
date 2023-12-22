@@ -56,10 +56,10 @@ class ResultView(View):
         # history_day_data = list(history_day_data)
         yeasterday_data = {}
         before_yesterday_data = {}
-        if len(dateInfo.yesterday):
+        if len(dateInfo["yesterday"]):
             yesterday = datetime.datetime.strptime(dateInfo["yesterday"], "%Y-%m-%d").strftime("%Y%m%d")
             yeasterday_data = self.db['d' + yesterday].find_one({}, {"yuan_yin": 1})
-        if len(dateInfo.before_yesterday):
+        if len(dateInfo["before_yesterday"]):
             yesterday_day = datetime.datetime.strptime(dateInfo["before_yesterday"], "%Y-%m-%d").strftime("%Y%m%d")
             before_yesterday_data = self.db['d' + yesterday_day].find_one({}, {"yuan_yin": 1})
 
