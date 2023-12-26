@@ -100,9 +100,13 @@ class ResetView(View):
         if len(dateInfo["yesterday"]):
             yesterday = datetime.datetime.strptime(dateInfo["yesterday"], "%Y-%m-%d").strftime("%Y%m%d")
             yeasterday_data = self.db['d' + yesterday].find_one({}, {"yuan_yin": 1})
+            if yeasterday_data is None:
+                yeasterday_data = {}
         if len(dateInfo["before_yesterday"]):
             yesterday_day = datetime.datetime.strptime(dateInfo["before_yesterday"], "%Y-%m-%d").strftime("%Y%m%d")
             before_yesterday_data = self.db['d' + yesterday_day].find_one({}, {"yuan_yin": 1})
+            if before_yesterday_data is None:
+                before_yesterday_data = {}
 
         if "yuan_yin" not in yeasterday_data:
             table.update_one({"_id": table1["_id"]}, {
