@@ -63,6 +63,9 @@
         <el-button type="primary" @click="getCrudOptions" style="margin-left: 16px;">
           查询
         </el-button>
+        <el-button type="primary" @click="restData" :disabled="dis" style="margin-left: 16px;">
+          重新抓取
+        </el-button>
       </el-col>
 
       <el-col :span="2">
@@ -148,7 +151,7 @@
 
 <script>
 import * as api from './api'
-import { crudOptions } from './crud'
+// import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 
 import chuangGn from './chuang_gn.vue'
@@ -161,17 +164,18 @@ export default {
     chuangGn,
     zhu
   },
-  data() {
+  data () {
     return {
+      dis: false,
       zhu: {
-        yellow: "",
-        orange: "",
-        purple: "",
+        yellow: '',
+        orange: '',
+        purple: ''
       },
       chuang: {
-        yellow: "",
-        orange: "",
-        purple: "",
+        yellow: '',
+        orange: '',
+        purple: ''
       },
       drawer: false,
       today: '',
@@ -201,19 +205,19 @@ export default {
         value: '',
         shortcuts: [{
           text: '今天',
-          onClick(picker) {
+          onClick (picker) {
             picker.$emit('pick', new Date())
           }
         }, {
           text: '昨天',
-          onClick(picker) {
+          onClick (picker) {
             const date = new Date()
             date.setTime(date.getTime() - 3600 * 1000 * 24)
             picker.$emit('pick', date)
           }
         }, {
           text: '一周前',
-          onClick(picker) {
+          onClick (picker) {
             const date = new Date()
             date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
             picker.$emit('pick', date)
@@ -233,21 +237,38 @@ export default {
     }
   },
   methods: {
-
-    getCrudOptions() {
+    getToday () {
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = (today.getMonth() + 1).toString().padStart(2, '0') // 添加前导零
+      const day = today.getDate().toString().padStart(2, '0') // 添加前导零
+      const ymd = `${year}${month}${day}`
+      this.today = ymd
+      return ymd
+    },
+    restData () {
       const self = this
       if (!self.today.length) {
-        const today = new Date()
-        const year = today.getFullYear()
-        const month = (today.getMonth() + 1).toString().padStart(2, '0') // 添加前导零
-        const day = today.getDate().toString().padStart(2, '0') // 添加前导零
-        const ymd = `${year}${month}${day}`
-        self.today = ymd
+        self.getToday()
+      }
+      api.RestData(self.today).then(() => {
+        self.dis = true
+        setInterval(() => {
+          api.RestStatus().then(res => {
+            self.dis = !res.res
+          })
+        }, 10000)
+      })
+    },
+    getCrudOptions () {
+      const self = this
+      if (!self.today.length) {
+        self.getToday()
       }
 
       api.GetResult(self.today, self.fd, self.yd).then(function (params) {
-        self.fd = params.config.fd == 1
-        self.yd = params.config.yd == 1
+        self.fd = params.config.fd === 1
+        self.yd = params.config.yd === 1
         self.lian_ban_code_black = params.config.lian_ban_code_black
         self.gvgn = params.config.gvgn
         self.other = params.other
@@ -304,14 +325,13 @@ export default {
           item.ziyouliutongshizhiyesterday_s = (Math.ceil(item.ziyouliutongshizhiyesterday / 1000000) / 100).toFixed(2)
           item.zhangdiefuqianfuquantoday_s = (Math.ceil(item.zhangdiefuqianfuquantoday * 100) / 100).toFixed(2)
           item.jingjiajinejingjialiangbi_s = (item.jingjiajinejingjialiangbi).toFixed(2)
-          if (item['color0'] == 46) {
+          if (item.color0 === 46) {
             self.zhu.orange = item.briefname
-          } else if (item['color3'] == 29) {
+          } else if (item.color3 === 29) {
             self.zhu.purple = item.briefname
-          } else if (item['color1'] == 36) {
+          } else if (item.color1 === 36) {
             self.zhu.yellow = item.briefname
           }
-
 
           return item
         }).sort((a, b) => {
@@ -332,11 +352,11 @@ export default {
           item.zhangdiefuqianfuquantoday_s = (Math.ceil(item.zhangdiefuqianfuquantoday * 100) / 100).toFixed(2)
           item.jingjiajinejingjialiangbi_s = (item.jingjiajinejingjialiangbi).toFixed(2)
 
-          if (item['color0'] == 46) {
+          if (item.color0 === 46) {
             self.chuang.orange = item.briefname
-          } else if (item['color3'] == 29) {
+          } else if (item.color3 === 29) {
             self.chuang.purple = item.briefname
-          } else if (item['color1'] == 36) {
+          } else if (item.color1 === 36) {
             self.chuang.yellow = item.briefname
           }
           return item
@@ -348,18 +368,18 @@ export default {
       })
       return []
     },
-    pageRequest(query) {
+    pageRequest (query) {
       return api.GetList(query)
     },
-    addRequest(row) {
+    addRequest (row) {
       console.log('api', api)
       return api.AddObj(row)
     },
-    updateRequest(row) {
+    updateRequest (row) {
       console.log('----', row)
       return api.UpdateObj(row)
     },
-    delRequest(row) {
+    delRequest (row) {
       return api.DelObj(row.id)
     }
   }

@@ -45,9 +45,27 @@ export function DelObj (id) {
     data: { id }
   })
 }
-export function GetCascadeData () {
+
+export function RestData (d) {
+  // return new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     resolve()
+  //   })
+  // })
   return request({
-    url: '/select/cascadeData',
+    url: 'http://127.0.0.1:13081/ths?d=' + (d || 20231122),
+    method: 'get'
+  })
+}
+
+export function RestStatus () {
+  // return new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     resolve(true)
+  //   })
+  // })
+  return request({
+    url: 'http://127.0.0.1:13081/doing',
     method: 'get'
   })
 }
@@ -56,7 +74,7 @@ export function GetResult (d, fd, yd) {
   fd = fd ? 1 : 0
   yd = yd ? 1 : 0
   return request({
-    url: '/api/wb/reset?current_time='+ (d || 20231122) + "&fd=" + fd + "&yd=" + yd,
+    url: '/api/wb/reset?current_time=' + (d || 20231122) + '&fd=' + fd + '&yd=' + yd,
     method: 'get'
   })
 }
