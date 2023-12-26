@@ -39,7 +39,14 @@ def shares_date(request, date_today):
     dates = SharesDate.objects.filter(date_as__lte=datetime.strptime(date_today, '%Y%m%d')).order_by('-date_as')[:3]
     tomorrow = SharesDate.objects.filter(date_as__gt=datetime.strptime(date_today, '%Y%m%d')).order_by('date_as')
 
-    if len(tomorrow) < 2:
+    if len(tomorrow) == 1:
+        tomorrow = tomorrow[0].date_as
+        after_tomorrow = tomorrow + timedelta(days=1)
+        tomorrow = [
+            SharesDate(date_as=tomorrow),
+            SharesDate(date_as=after_tomorrow)
+        ]
+    elif len(tomorrow) < 2:
         now = dates[0].date_as
         tomorrow = now + timedelta(days=1)
         after_tomorrow = now + timedelta(days=2)
