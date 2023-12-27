@@ -74,14 +74,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        today = "20231220"
+        today = "20231227"
         todayS = datetime.strptime(today, '%Y%m%d')
         t2 = todayS.strftime('%Y%m%d')
 
         # 昨天日期
         yesterday = SharesDate.objects.filter(date_as__lt=todayS.strftime('%Y-%m-%d')).order_by("-date_as")[
             0].date_as
-
 
         codes = zhangTing.zhangTing(t2)
         time_str = '09:30:00'
@@ -98,8 +97,32 @@ class Command(BaseCommand):
 
         # 取f32股票
         codes = self.codeGetCode(d2, yesterday)
-        self.s = "\n\r".join([item["股票简称"] + " ---- " + item["最新涨跌幅"] + " ---- " + item["股票代码"] for item in codes])
-        print(self.s )
+        codes = codes[0:3]
+        for item in codes:
+            self.checkG(item, todayS.strftime('%Y-%m-%d'))
+        # self.s = "\n\r".join([item["股票简称"] + " ---- " + item["最新涨跌幅"] + " ---- " + item["股票代码"] for item in codes])
+        # print(self.s )
+
+    def checkG(self, code, today):
+        l = zhangTing.infoG(code["股票代码"])
+        l = [item.split(',') for item in l]
+        t = None
+        l = list(filter(lambda x:x[0] >= today, l))
+        l = [[item[0], item[2]] for item in l]
+        # l = l[0:5]
+        print(l)
+         # l[0][2] -  l[1][2]
+
+        #
+        # for item in l:
+        #     itemC = datetime.strptime(item[0], '%Y-%m-%d')
+        #     if today > item[0]:
+        #         continue
+        #     if today == item[0]:
+        #         t = item[2]
+        #         continue
+        #     if today == (itemC - timedelta(2)).strftime('%Y-%m-%d') :
+        #         item[2] - t
 
 
     def initD(self, item, start_seconds, end_seconds):
@@ -142,6 +165,7 @@ class Command(BaseCommand):
             d["gao_biao"] = 1
             return d
         return d
+
 
     def initD2(self, item):
         d = {}
