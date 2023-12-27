@@ -23,13 +23,13 @@ def time2seconds(time_str):
 class Command(BaseCommand):
     help = '观察32分涨停股票'
     f32GN = None
-    s =""
+    s = ""
 
     def add_arguments(self, parser):
         # parser.add_argument('poll_ids', nargs='+', type=int)
         pass
 
-    def codeGetCode(self, d2,  yesterday):
+    def codeGetCode(self, d2, yesterday):
         result32 = list(filter(lambda item: item["f32"] == 1, d2))
         if len(result32) == 0:
             return
@@ -74,7 +74,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # 昨天日期
-        yesterday = SharesDate.objects.filter(date_as__lt=datetime.today().strftime('%Y-%m-%d')).order_by("-date_as")[0].date_as
+        yesterday = SharesDate.objects.filter(date_as__lt=datetime.today().strftime('%Y-%m-%d')).order_by("-date_as")[
+            0].date_as
 
         t = datetime.today().strftime('[%Y%m%d]')
         t2 = datetime.today().strftime('%Y%m%d')
@@ -94,7 +95,7 @@ class Command(BaseCommand):
         # 取f32股票
         codes = self.codeGetCode(d2, yesterday)
         # print(codes)
-        self.s = "\n\r".join([ item["股票简称"] + " ---- " + item["最新涨跌幅"] for item in codes])
+        self.s = "\n\r".join([item["股票简称"] + " ---- " + item["最新涨跌幅"] for item in codes])
 
         # 查当天涨幅前5概念
         d2 = []
@@ -103,16 +104,24 @@ class Command(BaseCommand):
             for item in codes:
                 d = self.initD2(item)
                 d2.append(d)
+        unique_arr = set()
+        d3 = []
+        for d in d2:
+            if d['指数代码'] in unique_arr:
+                continue
+            unique_arr.add(d['指数代码'])
+            d3.append(d)
 
+        d2 = d3
         result = sorted(d2, key=lambda x: x["涨跌幅"], reverse=True)[0: 5]
 
         yeasterdayGns = SharesBlockGns.objects.filter(date_as=yesterday).order_by(
             "-p_zhang_die_fu")[0]
 
-
         self.s = "\n\r".join([
             self.s,
-            "概念发酵: " + " , ".join([item["指数简称"] for item in filter(lambda x: x["指数代码"] in self.f32GN, result)]),
+            "概念发酵: " + " , ".join(
+                [item["指数简称"] for item in filter(lambda x: x["指数代码"] in self.f32GN, result)]),
             "昨晚概念：" + yeasterdayGns.name
         ])
         dingding.dingding(self.s)
@@ -120,16 +129,13 @@ class Command(BaseCommand):
         # yeasterdayGnIds = [yeasterdayGns.code_id]
         # 32分强势票概念
 
-            # if item["指数代码"] not in self.f32GN:
-            #     continue
-            # if item["指数代码"]  in yeasterdayGnIds:
-            #     continue
-            # yeasterdayGns.append(item["指数代码"])
+        # if item["指数代码"] not in self.f32GN:
+        #     continue
+        # if item["指数代码"]  in yeasterdayGnIds:
+        #     continue
+        # yeasterdayGns.append(item["指数代码"])
 
-            # print(item["股票简称"], yeasterdayGns.name)
-
-
-
+        # print(item["股票简称"], yeasterdayGns.name)
 
     def initD(self, item, start_seconds, end_seconds):
         d = {}
