@@ -96,7 +96,7 @@ class ResultView(View):
 
         d2 = biao_shai_xuan.biao_shai_xuan(d, data1)
 
-        d.update(d2)
+        # d.update(d2)
         result = pi_pei_gai_nian.pi_pei_gai_nian(d)
 
         # self.client.close()
