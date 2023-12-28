@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        t2 = "20231218"
+        t2 = "20231227"
         codes = zhangTing.zhangTing(t2)
 
         time_str = '09:30:00'
@@ -141,6 +141,8 @@ class Command(BaseCommand):
         date_obj = datetime.strptime(d["date"], '%Y%m%d')
         formatted_date = date_obj.strftime('%Y-%m-%d')
         if SharesBlockGns.objects.filter(code_id=d["指数代码"], date_as=formatted_date).count():
+            return
+        if d["最低价"] is None:
             return
 
         sharesZhangTings = SharesBlockGns(

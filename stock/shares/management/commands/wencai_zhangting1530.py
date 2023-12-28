@@ -144,6 +144,9 @@ class Command(BaseCommand):
         if SharesBlockGns.objects.filter(code_id=d["指数代码"], date_as=formatted_date).count():
             return
 
+        if d["最低价"] is None:
+            return
+
         sharesZhangTings = SharesBlockGns(
             code_id=d["指数代码"],
             name=d["指数简称"],
