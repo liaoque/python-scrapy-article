@@ -47,13 +47,14 @@ class Command(BaseCommand):
         sql = """
                select 1 as id, block_code_id, mc_shares_block_gns.name, count(1) as c
                 from mc_shares_join_block
-                left join mc_shares_block_gns on mc_shares_block_gns.code_id = mc_shares_join_block.block_code_id 
+                left join (select code_id,name from mc_shares_block_gns group by code_id) as mc_shares_block_gns on mc_shares_block_gns.code_id = mc_shares_join_block.block_code_id 
                 where mc_shares_join_block.code_type = 2 and mc_shares_join_block.code_id in ( 
                 %s
                 )
                 group by block_code_id
                 having  c > 1
             """ % (",".join(resultF32))
+        # print(sql)
         result = SharesJoinBlock.objects.raw(sql, params=())
         self.f32GN = [item.block_code_id for item in result]
         for item in result:
@@ -67,7 +68,7 @@ class Command(BaseCommand):
         else:
             c = result[len(result) - 1].c
         result = "且".join([item.name for item in list(filter(lambda item: item.c >= c, result))])
-
+        self.s =  result
         # 查對應概念股票
         codes = zhangTing.search(result)
         return codes
@@ -77,7 +78,7 @@ class Command(BaseCommand):
         yesterday = SharesDate.objects.filter(date_as__lt=datetime.today().strftime('%Y-%m-%d')).order_by("-date_as")[
             0].date_as
 
-        t = datetime.today().strftime('[%Y%m%d]')
+        t = datetime.today().strftime('%Y%m%d')
         t2 = datetime.today().strftime('%Y%m%d')
         codes = zhangTing.zhangTing(t)
         time_str = '09:30:00'
@@ -95,7 +96,7 @@ class Command(BaseCommand):
         # 取f32股票
         codes = self.codeGetCode(d2, yesterday)
         # print(codes)
-        self.s = "\n\r".join([item["股票简称"] + " ---- " + item["最新涨跌幅"] for item in codes])
+        self.s = self.s + "\n\r".join([item["股票简称"] + " ---- " + item["最新涨跌幅"] for item in codes])
 
         # 查当天涨幅前5概念
         d2 = []
