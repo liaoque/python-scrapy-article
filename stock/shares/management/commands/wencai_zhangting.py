@@ -55,6 +55,8 @@ class Command(BaseCommand):
                 having  c > 1
             """ % (",".join(resultF32))
         # print(sql)
+        self.s = "32分涨停股票：" + ",".join(resultF32)
+
         result = SharesJoinBlock.objects.raw(sql, params=())
         self.f32GN = [item.block_code_id for item in result]
         for item in result:
@@ -68,7 +70,7 @@ class Command(BaseCommand):
         else:
             c = result[len(result) - 1].c
         result = "且".join([item.name for item in list(filter(lambda item: item.c >= c, result))])
-        self.s =  result
+        self.s = self.s + "\n\r" + result
         # 查對應概念股票
         codes = zhangTing.search(result)
         return codes
@@ -95,10 +97,10 @@ class Command(BaseCommand):
 
         # 取f32股票
         codes = self.codeGetCode(d2, yesterday)
-        print(codes)
+        # print(codes)
         self.s = self.s + "\n\r".join([item["股票简称"] + " ---- " + item["最新涨跌幅"] for item in codes])
 
-        # 查当天涨幅前5概念
+        # 查当天涨幅前2概念
         d2 = []
         for i in range(5):
             codes = zhangTing.zhangTingGns(t2, i)
@@ -114,16 +116,35 @@ class Command(BaseCommand):
             d3.append(d)
 
         d2 = d3
-        result = sorted(d2, key=lambda x: x["涨跌幅"], reverse=True)[0: 5]
+        result = sorted(d2, key=lambda x: x["涨跌幅"], reverse=True)[0:2]
 
+        # 今日前2概念对应股票
+        todaySharesJoinBlocks = SharesJoinBlock.objects.filter(block_code_id__in=[item['指数代码'] for item in result])
+
+        # 昨天涨幅前2概念
         yeasterdayGns = SharesBlockGns.objects.filter(date_as=yesterday).order_by(
-            "-p_zhang_die_fu")[0]
+            "-p_zhang_die_fu")[0:2]
 
+        # 昨天涨幅前2概念对应股票
+        yeasterSharesJoinBlocks = SharesJoinBlock.objects.filter(block_code_id__in=[item.code_id for item in yeasterdayGns])
+
+        # 股票中昨天涨停的股票
+        yesterdayZhangTings = SharesZhangTings.objects.filter(date_as=yesterday,
+                                                              code_id__in=[item.code_id for item in yeasterSharesJoinBlocks]
+                                                              )
+
+        # 当天概念
+        # 匹配前天涨停股票
         self.s = "\n\r".join([
             self.s,
-            "概念发酵: " + " , ".join(
-                [item["指数简称"] for item in filter(lambda x: x["指数代码"] in self.f32GN, result)]),
-            "昨晚概念：" + yeasterdayGns.name
+            "今日概念发酵: " + " , ".join(
+                [item["指数简称"] for item in result]),
+            "昨晚概念：" + " , ".join(
+                [item.name for item in yeasterdayGns]),
+            "持续股票："+ " , ".join(
+                [
+                    item['code_id'] for item in list(filter(lambda x:x.code_id in [item.code_id for item in todaySharesJoinBlocks]  , yesterdayZhangTings))
+                ]),
         ])
         dingding.dingding(self.s)
         print(self.s)
