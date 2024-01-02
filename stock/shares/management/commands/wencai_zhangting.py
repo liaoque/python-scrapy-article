@@ -50,7 +50,7 @@ class Command(BaseCommand):
                 left join (select code_id,name from mc_shares_block_gns group by code_id) as mc_shares_block_gns on mc_shares_block_gns.code_id = mc_shares_join_block.block_code_id 
                 where mc_shares_join_block.code_type = 2 and mc_shares_join_block.code_id in ( 
                 %s
-                )
+                ) and mc_shares_join_block.block_code_id not in (301639)
                 group by block_code_id
                 having  c > 1
             """ % (",".join(resultF32))
