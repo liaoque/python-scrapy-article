@@ -95,7 +95,7 @@ class Command(BaseCommand):
 
         # 取f32股票
         codes = self.codeGetCode(d2, yesterday)
-        # print(codes)
+        print(codes)
         self.s = self.s + "\n\r".join([item["股票简称"] + " ---- " + item["最新涨跌幅"] for item in codes])
 
         # 查当天涨幅前5概念

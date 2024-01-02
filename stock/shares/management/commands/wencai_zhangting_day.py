@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        t2 = "20231227"
+        t2 = "20231229"
         codes = zhangTing.zhangTing(t2)
 
         time_str = '09:30:00'
