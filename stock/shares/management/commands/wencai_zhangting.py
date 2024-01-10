@@ -58,6 +58,9 @@ class Command(BaseCommand):
         self.s = "32分涨停股票：" + ",".join(resultF32)
 
         result = SharesJoinBlock.objects.raw(sql, params=())
+        if len(result) == 0:
+            return []
+
         self.f32GN = [item.block_code_id for item in result]
         for item in result:
             if item.block_code_id in blockGBGN:
