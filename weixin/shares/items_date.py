@@ -8,6 +8,11 @@
 import scrapy
 import re
 
+def strToFloat(s):
+    try:
+        return float(s)
+    except ValueError:
+        return 0
 
 class Items(scrapy.Item):
     # define the fields for your item here like:
@@ -50,15 +55,15 @@ class Items(scrapy.Item):
         params = (
             self["name"][0],
             code,
-            int(float(self["p_min"][0]) * 100),
-            int(float(self["p_max"][0]) * 100),
-            int(float(self["p_start"][0]) * 100),
-            int(float(self["p_end"][0]) * 100),
-            int(float(self["p_range"][0]) * 100),
+            int(strToFloat(self["p_min"][0]) * 100),
+            int(strToFloat(self["p_max"][0]) * 100),
+            int(strToFloat(self["p_start"][0]) * 100),
+            int(strToFloat(self["p_end"][0]) * 100),
+            int(strToFloat(self["p_range"][0]) * 100),
             self["buy_count"][0],
-            float(self["buy_sum"][0]) * 100,
-            float(self["master_buy_sum"][0]) * 100,
-            float(self["master_buy_sell"][0]) * 100,
+            strToFloat(self["buy_sum"][0]) * 100,
+            strToFloat(self["master_buy_sum"][0]) * 100,
+            strToFloat(self["master_buy_sell"][0]) * 100,
             self["date_as"][0]
         )
         cursor.execute(sql, params)
