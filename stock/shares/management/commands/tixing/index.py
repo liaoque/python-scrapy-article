@@ -1,6 +1,6 @@
 
 import requests
-
+import json
 
 def getData():
     url = 'https://28.push2.eastmoney.com/api/qt/clist/get?cb=&pn=1&pz=50&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&wbp2u=|0|0|0|web&fid=&fs=b:MK0010&fields=f3,f12,f14'
@@ -32,3 +32,16 @@ def getData():
     #     {"f3": 1.34, "f12": "399550", "f14": "央视50"}, {"f3": 1.2, "f12": "000903", "f14": "中证100"},
     #     {"f3": 1.4, "f12": "000906", "f14": "中证800"}]}}
     return codes2["data"]["diff"]
+
+
+def diffCode():
+    data = getData()
+
+    # 读文件
+    with open('file.json', 'r', encoding='utf-8') as file:
+        content = file.read()
+    if len(content) == 0:
+        json_data = json.loads(data)
+
+    with open('file.json', 'w') as f:
+        json.dump(data, f)
