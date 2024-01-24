@@ -160,7 +160,7 @@ def biao_shai_xuan(d, data1):
 
     i = 0
     gn3 = []
-    while i < 5:
+    while i < 4:
         if d["zhu_xian"][i]['gn'] not in gn:
             i += 1
             continue
