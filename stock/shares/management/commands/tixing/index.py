@@ -1,6 +1,30 @@
-
 import requests
 import json
+import os
+from datetime import datetime
+
+def dingding(s):
+    if len(s) == 0:
+        return
+    # 涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念
+    # s = "半年报预增，所属概念，s去除ST，去除北交所，去除新股"
+    url = 'https://oapi.dingtalk.com/robot/send?access_token=f51bee16742b25506373378cd7a33def2c1ce7d253998c59bfbdff28ffaf15d5'
+
+    data = """
+    {
+        'msgtype': 'text',
+        'text': {
+            'content':'%s'
+        }
+    }
+    """%(s)
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+    }
+    response = requests.post(url, data=data.encode("utf-8"), headers=headers)
+    print(data, response.json())
+    return response.json()
 
 def getData():
     url = 'https://28.push2.eastmoney.com/api/qt/clist/get?cb=&pn=1&pz=50&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&wbp2u=|0|0|0|web&fid=&fs=b:MK0010&fields=f3,f12,f14'
@@ -33,15 +57,52 @@ def getData():
     #     {"f3": 1.4, "f12": "000906", "f14": "中证800"}]}}
     return codes2["data"]["diff"]
 
+def check(data, json_data, key):
+    if "ff" not in json_data[key]:
+        data[key]["ff"] = 0
+    if data[key]["f3"] > 0.03 and ("ff" not in json_data[key] or  json_data[key]["ff"] != 0.03):
+        dingding(json.dumps(data[key], ensure_ascii=False))
+        data[key]["ff"] = 0.03
+
+    if data[key]["f3"] < -0.03 and ("ff" not in json_data[key] or  json_data[key]["ff"] != -0.03):
+        dingding(json.dumps(data[key], ensure_ascii=False))
+        data[key]["ff"] = -0.03
+    return data
 
 def diffCode():
+    # time.time()
+    file_path = './file.json'
+    current_time = datetime.now()
+    hour = current_time.hour
+    minute = current_time.minute
+    if hour <= 9 and minute <= 25:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        return
+    if hour > 15:
+        return
+
     data = getData()
+    data = {item['f12']: item for item in data}
 
     # 读文件
-    with open('file.json', 'r', encoding='utf-8') as file:
-        content = file.read()
-    if len(content) == 0:
-        json_data = json.loads(data)
+    if os.path.exists(file_path):
+        with open(file_path, 'r+', encoding='utf-8') as file:
+            content = file.read()
+        if len(content) != 0:
+            json_data = json.loads(content)
+            json_data = {item['f12']: item for item in json_data}
 
-    with open('file.json', 'w') as f:
+            data = check(data, json_data, "000001")
+            data = check(data, json_data, "399001")
+            data = check(data, json_data, "899050")
+            data = check(data, json_data, "399006")
+            data = check(data, json_data, "000688")
+
+
+    with open(file_path, 'w+') as f:
         json.dump(data, f)
+
+
+if __name__ == "__main__":
+    diffCode()
