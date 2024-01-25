@@ -60,6 +60,7 @@ def getData():
 def check(data, json_data, key):
     if "ff" not in json_data[key]:
         data[key]["ff"] = 0
+
     if data[key]["f3"] > 0.03 and ("ff" not in json_data[key] or  json_data[key]["ff"] != 0.03):
         dingding(json.dumps(data[key], ensure_ascii=False))
         data[key]["ff"] = 0.03
@@ -75,23 +76,28 @@ def diffCode():
     current_time = datetime.now()
     hour = current_time.hour
     minute = current_time.minute
-    if hour <= 9 and minute <= 25:
-        if os.path.exists(file_path):
-            os.remove(file_path)
-        return
+    # if hour < 9 or  (hour == 9 and minute <= 25):
+        # if os.path.exists(file_path):
+        #     os.remove(file_path)
+        # return
     if hour > 15:
         return
 
     data = getData()
     data = {item['f12']: item for item in data}
 
+    for key in data:
+        if data[key]["f3"] == "-":
+            data[key]["f3"] = 0
+
+
     # 读文件
     if os.path.exists(file_path):
         with open(file_path, 'r+', encoding='utf-8') as file:
             content = file.read()
         if len(content) != 0:
-            json_data = json.loads(content)
-            json_data = {item['f12']: item for item in json_data}
+            json_data2 = json.loads(content)
+            json_data = {item['f12']: item for item in json_data2}
 
             data = check(data, json_data, "000001")
             data = check(data, json_data, "399001")
@@ -99,9 +105,12 @@ def diffCode():
             data = check(data, json_data, "399006")
             data = check(data, json_data, "000688")
 
+    data2=[]
+    for key in data:
+        data2.append(data[key])
 
     with open(file_path, 'w+') as f:
-        json.dump(data, f)
+        json.dump(data2, f)
 
 
 if __name__ == "__main__":
