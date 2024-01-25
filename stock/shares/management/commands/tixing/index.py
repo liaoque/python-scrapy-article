@@ -76,10 +76,10 @@ def diffCode():
     current_time = datetime.now()
     hour = current_time.hour
     minute = current_time.minute
-    # if hour < 9 or  (hour == 9 and minute <= 25):
-        # if os.path.exists(file_path):
-        #     os.remove(file_path)
-        # return
+    if hour < 9 or  (hour == 9 and minute <= 25):
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        return
     if hour > 15:
         return
 
