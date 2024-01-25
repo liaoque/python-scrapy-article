@@ -60,6 +60,8 @@ def getData():
 def check(data, json_data, key):
     if "ff" not in json_data[key]:
         data[key]["ff"] = 0
+    else:
+        data[key]["ff"] = json_data[key]["ff"]
 
     if data[key]["f3"] > 0.03 and ("ff" not in json_data[key] or  json_data[key]["ff"] != 0.03):
         dingding(json.dumps(data[key], ensure_ascii=False))
