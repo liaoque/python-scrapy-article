@@ -150,6 +150,17 @@
       </el-card>
     </el-drawer>
 
+    <el-drawer :visible.sync="drawer_zhuxian" :with-header="false">
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>主线</span>
+        </div>
+        <div v-for="(item, key) in other.zhu_xian" :key="key" class="text item">
+          概念：{{ item.gn }} --- 数量：{{ item.c }}
+        </div>
+      </el-card>
+    </el-drawer>
+
   </d2-container>
 </template>
 
