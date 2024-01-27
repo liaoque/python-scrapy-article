@@ -3,6 +3,13 @@
     <template slot="header">连涨股票</template>
     <d2-container type="card">
       <el-row>
+        <el-date-picker v-model="today" type="date" value-format="yyyyMMdd" placeholder="选择日期">
+        </el-date-picker>
+        <el-button type="primary" @click="getCrudOptions" style="margin-left: 16px;">
+          查询
+        </el-button>
+      </el-row>
+      <el-row>
         <el-tabs>
           <el-tab-pane :key="index" v-for="(item, index) in nav" :label="item.name" :name="item.key">
 
@@ -27,6 +34,7 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
+      today: '',
       nav: [
         {
           name: '涨停大肉',
@@ -70,12 +78,28 @@ export default {
     ShouBan: () => import('./shou_ban.vue') // 这里填写实际的组件路径
   },
   methods: {
+    getToday () {
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = (today.getMonth() + 1).toString().padStart(2, '0') // 添加前导零
+      const day = today.getDate().toString().padStart(2, '0') // 添加前导零
+      const ymd = `${year}${month}${day}`
+      this.today = ymd
+      return ymd
+    },
     getData (query) {
-      return api.GetLianZhangGuPiao(query)
+      const self = this
+      if (!self.today.length) {
+        self.getToday()
+      }
+      return api.GetLianZhangGuPiao(self.today)
     },
     getCrudOptions () {
       const self = this
-      api.GetLianZhangGuPiao().then(function (params) {
+      if (!self.today.length) {
+        self.getToday()
+      }
+      api.GetLianZhangGuPiao(self.today).then(function (params) {
         // console.log(111222,  [...params.chuangbairixingao])
         self.nav[0].data = params.lianzhanggupiao.map(item => {
           item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)

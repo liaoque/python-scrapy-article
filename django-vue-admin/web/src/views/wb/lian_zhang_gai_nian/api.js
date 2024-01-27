@@ -1,6 +1,6 @@
-import { request } from '@/api/service'
+import {request} from '@/api/service'
 
-export function GetList (query) {
+export function GetList(query) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -11,19 +11,20 @@ export function GetList (query) {
           current: query.current,
           size: 20,
           data: [
-            { id: 1, select1: '1', select2: 'sz,wh' },
-            { id: 2, select1: '1', select2: 'sz,sh' },
-            { id: 3, select1: '0', select2: 'sz,gz' },
-            { id: 4, select1: '1', select2: 'sz' },
-            { id: 5, select1: '1', select2: 'sz,sh' },
-            { id: 6, select1: '1', select2: 'sz' }
+            {id: 1, select1: '1', select2: 'sz,wh'},
+            {id: 2, select1: '1', select2: 'sz,sh'},
+            {id: 3, select1: '0', select2: 'sz,gz'},
+            {id: 4, select1: '1', select2: 'sz'},
+            {id: 5, select1: '1', select2: 'sz,sh'},
+            {id: 6, select1: '1', select2: 'sz'}
           ]
         }
       })
     })
   })
 }
-export function AddObj (obj) {
+
+export function AddObj(obj) {
   return request({
     url: '/select/add',
     method: 'post',
@@ -31,31 +32,33 @@ export function AddObj (obj) {
   })
 }
 
-export function UpdateObj (obj) {
+export function UpdateObj(obj) {
   return request({
     url: '/select/update',
     method: 'post',
     data: obj
   })
 }
-export function DelObj (id) {
+
+export function DelObj(id) {
   return request({
     url: '/select/delete',
     method: 'post',
-    data: { id }
+    data: {id}
   })
 }
-export function GetCascadeData () {
+
+export function GetCascadeData() {
   return request({
     url: '/select/cascadeData',
     method: 'get'
   })
 }
 
-export function GetLianZhangGaiNian () {
+export function GetLianZhangGaiNian(today) {
   return request({
-    url: '/api/wb/lian_zhang_gai_nian?current_time=20231122',
+    url: '/api/wb/lian_zhang_gai_nian?current_time=' + today,
     method: 'get',
-    data: { current_time: '20231117' }
+    data: {current_time: today}
   })
 }

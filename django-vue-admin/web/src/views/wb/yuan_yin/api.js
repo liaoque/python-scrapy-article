@@ -52,10 +52,10 @@ export function GetCascadeData () {
   })
 }
 
-export function GetYuanYin () {
+export function GetYuanYin (today) {
   return request({
-    url: '/api/wb/yuan_yin?current_time=20231122',
+    url: '/api/wb/yuan_yin?current_time='+today,
     method: 'get',
-    data: { current_time: '20230913' }
+    data: { current_time: today }
   })
 }

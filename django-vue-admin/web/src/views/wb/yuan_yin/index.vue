@@ -13,6 +13,13 @@
     </template>
     <d2-container type="card">
       <el-row>
+        <el-date-picker v-model="today" type="date" value-format="yyyyMMdd" placeholder="选择日期">
+        </el-date-picker>
+        <el-button type="primary" @click="getCrudOptions" style="margin-left: 16px;">
+          查询
+        </el-button>
+      </el-row>
+      <el-row>
         <el-tabs>
           <el-tab-pane :key="index" v-for="(item, index) in nav" :label="item.name" :name="item.key">
             <component :is="item.table" :table-data="item.data"></component>
@@ -32,6 +39,7 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
+      today: '',
       other: {
         jing_zhang_ting: null,
         jing_die_ting: null,
@@ -76,12 +84,28 @@ export default {
     ShouBan: () => import('./shou_ban.vue') // 这里填写实际的组件路径
   },
   methods: {
+    getToday () {
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = (today.getMonth() + 1).toString().padStart(2, '0') // 添加前导零
+      const day = today.getDate().toString().padStart(2, '0') // 添加前导零
+      const ymd = `${year}${month}${day}`
+      this.today = ymd
+      return ymd
+    },
     getData (query) {
-      return api.GetYuanYin(query)
+      const self = this
+      if (!self.today.length) {
+        self.getToday()
+      }
+      return api.GetYuanYin(self.today)
     },
     getCrudOptions () {
       const self = this
-      api.GetYuanYin().then(function (params) {
+      if (!self.today.length) {
+        self.getToday()
+      }
+      api.GetYuanYin(self.today).then(function (params) {
         self.other.jing_zhang_ting = (params.jing_jia_sort.zhang_ting / 10000 / 10000).toFixed(2)
         self.other.jing_die_ting = (params.jing_jia_sort.die_ting / 10000 / 10000).toFixed(2)
         self.other.zhu_ban = params.day_5_sort.zhu_ban

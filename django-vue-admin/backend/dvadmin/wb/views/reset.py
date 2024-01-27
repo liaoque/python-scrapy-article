@@ -193,7 +193,8 @@ class ResetView(View):
             "jing_shang_zhang": jing_shang_zhang,
             "jing_xia_die": jing_xia_die,
             "shou_shang_zhang": shou_shang_zhang,
-            "shou_xia_die": shou_xia_die
+            "shou_xia_die": shou_xia_die,
+            "zhu_xian": d["zhu_xian"]
         }
 
         result["config"] = code_config.CodeConfig().getCodeConfig()

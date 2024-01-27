@@ -3,6 +3,13 @@
     <template slot="header">涨停概念</template>
     <d2-container type="card">
       <el-row>
+        <el-date-picker v-model="today" type="date" value-format="yyyyMMdd" placeholder="选择日期">
+        </el-date-picker>
+        <el-button type="primary" @click="getCrudOptions" style="margin-left: 16px;">
+          查询
+        </el-button>
+      </el-row>
+      <el-row>
         <el-col :span="4"  :key="index"  v-for="(item, index) in nav">
           <div class="grid-content bg-purple">
             <component :is="item.table" :table-data="item.data"></component>
@@ -23,6 +30,7 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
+      today: '',
       nav: [
         {
           name: '涨停大肉',
@@ -66,12 +74,28 @@ export default {
     ShouBan: () => import('./shou_ban.vue') // 这里填写实际的组件路径
   },
   methods: {
+    getToday () {
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = (today.getMonth() + 1).toString().padStart(2, '0') // 添加前导零
+      const day = today.getDate().toString().padStart(2, '0') // 添加前导零
+      const ymd = `${year}${month}${day}`
+      this.today = ymd
+      return ymd
+    },
     getData (query) {
-      return api.GetLianZhangGaiNian(query)
+      const self = this
+      if (!self.today.length) {
+        self.getToday()
+      }
+      return api.GetLianZhangGaiNian(self.today)
     },
     getCrudOptions () {
       let self = this
-      api.GetLianZhangGaiNian().then(function (params) {
+      if (!self.today.length) {
+        self.getToday()
+      }
+      api.GetLianZhangGaiNian(self.today ).then(function (params) {
         console.log(params)
         self.nav[0].data = params.lianzhanggainian
         // console.log(self.nav[0].data)

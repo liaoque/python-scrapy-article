@@ -36,26 +36,25 @@
         收下跌: {{ other.shou_xia_die }}
       </el-col>
       <el-col :span="8"></el-col>
-      <el-col :span="4"
+      <el-col :span="6"
         :class="{ 'green': bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.lianbantianshu_coloer === 35, 'red': bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.lianbantianshu_coloer == 13551615, }">
         最高连板天数: {{ bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.lianbantianshu }}
       </el-col>
-      <el-col :span="4">
+      <el-col :span="6">
         最高连扳天数股票: {{ bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.briefname }}
       </el-col>
-      <el-col :span="4"
+      <el-col :span="6"
         :class="{ 'green': bu_zhang.lian_ban_code120 && bu_zhang.lian_ban_code120.zhangfu120_color == 35 }">
         120日涨幅最高: {{ bu_zhang.lian_ban_code120 && bu_zhang.lian_ban_code120.briefname }}
       </el-col>
-      <el-col :span="4">
+      <el-col :span="6">
         中军股票: {{ bu_zhang.zhong_jun && bu_zhang.zhong_jun.briefname }}
       </el-col>
       <el-col :span="12">
       </el-col>
 
-      <el-col :span="12">
-      </el-col>
-      <el-col :span="10">
+
+      <el-col :span="16">
         封单: <el-switch v-model="fd"></el-switch>
         异动: <el-switch v-model="yd"></el-switch>
         <el-date-picker v-model="today" type="date" value-format="yyyyMMdd" placeholder="选择日期">
@@ -68,6 +67,11 @@
         </el-button>
       </el-col>
 
+      <el-col :span="2">
+        <el-button @click="drawer_zhuxian = true" type="primary" style="margin-left: 16px;">
+          主线
+        </el-button>
+      </el-col>
       <el-col :span="2">
         <el-button @click="drawer = true" type="primary" style="margin-left: 16px;">
           补涨
@@ -83,13 +87,13 @@
       <el-col :span="1">
         创业板
       </el-col>
-      <el-col :span="2" style="color:yellow;background-color: cornflowerblue;">
+      <el-col :span="4" style="color:yellow;background-color: cornflowerblue;">
         黄色: {{ chuang.yellow }}
       </el-col>
-      <el-col :span="2" style="color:orange;background-color: cornflowerblue;">
+      <el-col :span="4" style="color:orange;background-color: cornflowerblue;">
         橘色:  {{ chuang.orange }}
       </el-col>
-      <el-col :span="2" style="color:purple;background-color: cornflowerblue;">
+      <el-col :span="4" style="color:purple;background-color: cornflowerblue;">
         紫色:  {{ chuang.purple }}
       </el-col>
     </el-row>
@@ -97,13 +101,13 @@
       <el-col :span="1">
         主板
       </el-col>
-      <el-col :span="2" style="color:yellow;background-color: cornflowerblue;">
+      <el-col :span="4" style="color:yellow;background-color: cornflowerblue;">
         黄色:  {{ zhu.yellow }}
       </el-col>
-      <el-col :span="2" style="color:orange;background-color: cornflowerblue;">
+      <el-col :span="4" style="color:orange;background-color: cornflowerblue;">
         橘色:  {{ zhu.orange }}
       </el-col>
-      <el-col :span="2" style="color:purple;background-color: cornflowerblue;">
+      <el-col :span="4" style="color:purple;background-color: cornflowerblue;">
         紫色:  {{ zhu.purple }}
       </el-col>
     </el-row>
@@ -178,6 +182,7 @@ export default {
         purple: ''
       },
       drawer: false,
+      drawer_zhuxian: false,
       today: '',
       drawer_gvgn: false,
       fd: 0,
