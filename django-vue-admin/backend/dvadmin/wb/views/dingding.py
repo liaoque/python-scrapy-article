@@ -161,26 +161,20 @@ class DingdingView(View):
         result = pi_pei_gai_nian.pi_pei_gai_nian(d)
 
         self.client.close()
-        result["chuang_ye_ban_gn"] = [item for key, item in d['chuang_ye_ban_gn'].items()]
-        result["qing_xu"] = d["qing_xu"]
-        result["biao_shai_xuan"] = d2["biao_shai_xuan"]
-        result["gn"] = d2["gn"]
 
         qx = "好"
-        if result["qing_xu"] == -1:
+        if d["qing_xu"] == -1:
             qx = "差"
         s = "情绪：%s \r\n 主板：%s (黄色),%s (橘色), %s(紫色)  \r\n 创业板： %s(黄色), %s(橘色), %s(紫色) " % (
             qx,
-            ",".join(filter(result["zhu_data"], lambda gn: gn["color1"] == 36)),
-            ",".join(filter(result["zhu_data"], lambda gn: gn["color0"] == 46)),
-            ",".join(filter(result["zhu_data"], lambda gn: gn["color3"] == 29)),
-            ",".join(filter(result["chuang_data"], lambda gn: gn["chuang_data"] == 36)),
-            ",".join(filter(result["chuang_data"], lambda gn: gn["chuang_data"] == 46)),
-            ",".join(filter(result["chuang_data"], lambda gn: gn["chuang_data"] == 29)),
-
+            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color1") == 36, result["zhu_data"])]),
+            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color0") == 46, result["zhu_data"])]),
+            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color3") == 29, result["zhu_data"])]),
+            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color1") == 36, result["chuang_data"])]),
+            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color0") == 46, result["chuang_data"])]),
+            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color3") == 29, result["chuang_data"])]),
         )
 
-        # filter(  d["bu_zhang_data"]["gn"],  lambda gn:gn in d["chuang_ye_ban_gn"]. ))
         dingding(s)
         return JsonResponse([])
 
