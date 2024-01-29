@@ -37,14 +37,14 @@
       </el-col>
       <el-col :span="8"></el-col>
       <el-col :span="6"
-        :class="{ 'green': bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.lianbantianshu_coloer === 35, 'red': bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.lianbantianshu_coloer == 13551615, }">
+              :class="{ 'green': bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.lianbantianshu_coloer === 35, 'red': bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.lianbantianshu_coloer == 13551615, }">
         最高连板天数: {{ bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.lianbantianshu }}
       </el-col>
       <el-col :span="6">
         最高连扳天数股票: {{ bu_zhang.lian_ban_code && bu_zhang.lian_ban_code.briefname }}
       </el-col>
       <el-col :span="6"
-        :class="{ 'green': bu_zhang.lian_ban_code120 && bu_zhang.lian_ban_code120.zhangfu120_color == 35 }">
+              :class="{ 'green': bu_zhang.lian_ban_code120 && bu_zhang.lian_ban_code120.zhangfu120_color == 35 }">
         120日涨幅最高: {{ bu_zhang.lian_ban_code120 && bu_zhang.lian_ban_code120.briefname }}
       </el-col>
       <el-col :span="6">
@@ -53,8 +53,10 @@
       <el-col :span="12">
       </el-col>
       <el-col :span="16">
-        封单: <el-switch v-model="fd"></el-switch>
-        异动: <el-switch v-model="yd"></el-switch>
+        封单:
+        <el-switch v-model="fd"></el-switch>
+        异动:
+        <el-switch v-model="yd"></el-switch>
         <el-date-picker v-model="today" type="date" value-format="yyyyMMdd" placeholder="选择日期">
         </el-date-picker>
         <el-button type="primary" @click="getCrudOptions" style="margin-left: 16px;">
@@ -89,10 +91,10 @@
         黄色: {{ chuang.yellow }}
       </el-col>
       <el-col :span="4" style="color:orange;background-color: cornflowerblue;">
-        橘色:  {{ chuang.orange }}
+        橘色: {{ chuang.orange }}
       </el-col>
       <el-col :span="4" style="color:purple;background-color: cornflowerblue;">
-        紫色:  {{ chuang.purple }}
+        紫色: {{ chuang.purple }}
       </el-col>
     </el-row>
     <el-row>
@@ -100,13 +102,13 @@
         主板
       </el-col>
       <el-col :span="4" style="color:yellow;background-color: cornflowerblue;">
-        黄色:  {{ zhu.yellow }}
+        黄色: {{ zhu.yellow }}
       </el-col>
       <el-col :span="4" style="color:orange;background-color: cornflowerblue;">
-        橘色:  {{ zhu.orange }}
+        橘色: {{ zhu.orange }}
       </el-col>
       <el-col :span="4" style="color:purple;background-color: cornflowerblue;">
-        紫色:  {{ zhu.purple }}
+        紫色: {{ zhu.purple }}
       </el-col>
     </el-row>
     <el-tabs v-model="activeName">
@@ -165,7 +167,7 @@
 <script>
 import * as api from './api'
 // import { crudOptions } from './crud'
-import { d2CrudPlus } from 'd2-crud-plus'
+import {d2CrudPlus} from 'd2-crud-plus'
 
 import chuangGn from './chuang_gn.vue'
 import zhu from './zhu.vue'
@@ -177,7 +179,7 @@ export default {
     chuangGn,
     zhu
   },
-  data () {
+  data() {
     return {
       dis: false,
       zhu: {
@@ -220,19 +222,19 @@ export default {
         value: '',
         shortcuts: [{
           text: '今天',
-          onClick (picker) {
+          onClick(picker) {
             picker.$emit('pick', new Date())
           }
         }, {
           text: '昨天',
-          onClick (picker) {
+          onClick(picker) {
             const date = new Date()
             date.setTime(date.getTime() - 3600 * 1000 * 24)
             picker.$emit('pick', date)
           }
         }, {
           text: '一周前',
-          onClick (picker) {
+          onClick(picker) {
             const date = new Date()
             date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
             picker.$emit('pick', date)
@@ -252,7 +254,7 @@ export default {
     }
   },
   methods: {
-    getToday () {
+    getToday() {
       const today = new Date()
       const year = today.getFullYear()
       const month = (today.getMonth() + 1).toString().padStart(2, '0') // 添加前导零
@@ -261,7 +263,7 @@ export default {
       this.today = ymd
       return ymd
     },
-    restData () {
+    restData() {
       const self = this
       if (!self.today.length) {
         self.getToday()
@@ -275,15 +277,15 @@ export default {
         }, 10000)
       })
     },
-    getCrudOptions () {
+    getCrudOptions() {
       const self = this
       if (!self.today.length) {
         self.getToday()
       }
 
       api.GetResult(self.today, self.fd, self.yd).then(function (params) {
-        self.fd = params.config.fd === 1
-        self.yd = params.config.yd === 1
+        self.fd = parseInt(params.config.fd) === 1 ? 1 : 0
+        self.yd = parseInt(params.config.yd) === 1 ? 1 : 0
         self.lian_ban_code_black = params.config.lian_ban_code_black
         self.gvgn = params.config.gvgn
         self.other = params.other
@@ -323,8 +325,12 @@ export default {
 
           return item
         }).sort((a, b) => {
-          if (a.shu_liang.value > b.shu_liang.value) { return -1 }
-          if (a.shu_liang.value < b.shu_liang.value) { return 1 }
+          if (a.shu_liang.value > b.shu_liang.value) {
+            return -1
+          }
+          if (a.shu_liang.value < b.shu_liang.value) {
+            return 1
+          }
           return 0
         })
         // console.log(self.plan.chuang_ye_ban_gai_nian)
@@ -350,8 +356,12 @@ export default {
 
           return item
         }).sort((a, b) => {
-          if (a.zhangfu120 > b.zhangfu120) { return -1 }
-          if (a.zhangfu120 < b.zhangfu120) { return 1 }
+          if (a.zhangfu120 > b.zhangfu120) {
+            return -1
+          }
+          if (a.zhangfu120 < b.zhangfu120) {
+            return 1
+          }
           return 0
         })
 
@@ -376,25 +386,29 @@ export default {
           }
           return item
         }).sort((a, b) => {
-          if (a.zhangfu120 > b.zhangfu120) { return -1 }
-          if (a.zhangfu120 < b.zhangfu120) { return 1 }
+          if (a.zhangfu120 > b.zhangfu120) {
+            return -1
+          }
+          if (a.zhangfu120 < b.zhangfu120) {
+            return 1
+          }
           return 0
         })
       })
       return []
     },
-    pageRequest (query) {
+    pageRequest(query) {
       return api.GetList(query)
     },
-    addRequest (row) {
+    addRequest(row) {
       console.log('api', api)
       return api.AddObj(row)
     },
-    updateRequest (row) {
+    updateRequest(row) {
       console.log('----', row)
       return api.UpdateObj(row)
     },
-    delRequest (row) {
+    delRequest(row) {
       return api.DelObj(row.id)
     }
   }
