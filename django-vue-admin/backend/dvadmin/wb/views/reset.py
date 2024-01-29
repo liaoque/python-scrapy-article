@@ -38,7 +38,7 @@ class ResetView(View):
 
         code_config.CodeConfig().getCodeConfig()
         code_config.CodeConfig().setFd(request.GET.get('fd'))
-        code_config.CodeConfig().setFd(request.GET.get('yd'))
+        code_config.CodeConfig().setYd(request.GET.get('yd'))
 
         # 取所有数据
         table = self.db['d' + current_time]  # 选择你的数据库
