@@ -188,9 +188,8 @@ class DingdingView(View):
 def dingding(s):
     if len(s) == 0:
         return
-    # 涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念
-    # s = "半年报预增，所属概念，s去除ST，去除北交所，去除新股"
-    url = 'https://oapi.dingtalk.com/robot/send?access_token=f51bee16742b25506373378cd7a33def2c1ce7d253998c59bfbdff28ffaf15d5'
+
+    url = 'https://oapi.dingtalk.com/robot/send?access_token=3b4cf0d55e3e4f502623c290d7f7f70d718c68127718c194fa7c26dd988e2655'
 
     data = """
     {
