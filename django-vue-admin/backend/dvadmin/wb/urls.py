@@ -4,7 +4,7 @@ from dvadmin.wb.views.views import IndexView
 from dvadmin.wb.views.yuan_yin import YuanYinView
 from dvadmin.wb.views.result import ResultView
 from dvadmin.wb.views.reset import ResetView
-from dvadmin.wb.views.DingdingView import DingdingView
+from dvadmin.wb.views.dingding import DingdingView
 from dvadmin.wb.views.lian_zhang_gu_piao import LianZhangGuPiao
 from dvadmin.wb.views.lian_zhang_gai_nian import LianZhangGiNian
 from dvadmin.wb.views.config import Config
