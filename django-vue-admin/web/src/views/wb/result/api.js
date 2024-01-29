@@ -53,7 +53,7 @@ export function RestData (d) {
   //   })
   // })
   return request({
-    url: 'http://127.0.0.1:13081/ths?d=' + (d || 20231122),
+    url: 'http://60.204.137.231:39088/ths?d=' + (d || 20231122),
     method: 'get'
   })
 }
@@ -65,7 +65,7 @@ export function RestStatus () {
   //   })
   // })
   return request({
-    url: 'http://127.0.0.1:13081/doing',
+    url: 'http://60.204.137.231:39088/doing',
     method: 'get'
   })
 }

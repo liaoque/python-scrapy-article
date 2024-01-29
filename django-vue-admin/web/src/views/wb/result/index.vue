@@ -52,8 +52,6 @@
       </el-col>
       <el-col :span="12">
       </el-col>
-
-
       <el-col :span="16">
         封单: <el-switch v-model="fd"></el-switch>
         异动: <el-switch v-model="yd"></el-switch>
@@ -209,6 +207,7 @@ export default {
         jing_shang_zhang: 0,
         jing_xia_die: 0,
         shou_shang_zhang: 0,
+        zhu_xian: [],
         shou_xia_die: 0
       },
       bu_zhang: {},
