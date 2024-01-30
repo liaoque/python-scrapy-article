@@ -325,7 +325,7 @@ def setColor3Purple(chuang_data):
 
     rng5 = None
     for (key, item) in chuang_data:
-        if item["color1"] != 35 and  item["color12"] == 37:
+        if item["color1"] != 35 and item["color12"] == 37:
             if rng5 is None:
                 rng5 = item
             if item["color8"] == 38 or item["lianbantianshuyesterday"] > 0:
@@ -340,7 +340,7 @@ def setColorOrange(chuang_data):
     chuang_data = sorted(chuang_data, key=lambda x: x[1]["zhangfu120"], reverse=True)
     # chuang_data = dict(tmp)
     for (key, item) in chuang_data:
-        if item["color1"] != 35 and  item["chuang_bai_ri_xin_gao"] > 0 and item[
+        if item["color1"] != 35 and item["chuang_bai_ri_xin_gao"] > 0 and item[
             "color12"] == 37:
             item["color0"] = 46
             break
@@ -524,12 +524,13 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
             if item["lianxuzhangtingtianshuyesterday"] > 2:
                 if is_chuang_ye == 1:
                     item["color1"] = 35
-                elif item["lianxuzhangtingtianshuyesterday"] < bu_zhang_data["lian_ban_code"]["lianbantianshu"]:
-                    #  连板天数 < 最大连板天数
+                elif item["lianxuzhangtingtianshuyesterday"] < bu_zhang_data["lian_ban_code"]["lianbantianshu"] or \
+                        item["code"] != bu_zhang_data["lian_ban_code"]["code"]:
+                    #  连板天数 < 最大连板天数 or 或者 名字也不是连板名字
                     item["color1"] = 35
 
             # 创业板情绪差原来是4日涨跌幅大于20%就绿改成4日涨跌幅大于100%
-            if is_chuang_ye == 1 and item["zhangdie4thday"] >= 1 :
+            if is_chuang_ye == 1 and item["zhangdie4thday"] >= 1:
                 item["color1"] = 35
         else:
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
@@ -556,7 +557,7 @@ def definedcolor2(chuang_data, qx):
                 item["color6"] = 13551615
             if imin == 0:
                 # 竞价未匹配 < 0 and 名字不是绿色 and 竞价量比 > 0.08
-                if  item["color1"] != 35 and item["jingjiajinechengjiaoliangbi"] >= 0.08:
+                if item["color1"] != 35 and item["jingjiajinechengjiaoliangbi"] >= 0.08:
                     imin = 1
                     item["color1"] = 13551615
             # 今昨量比 > 100 and 今昨量比 <= 700 粉色
