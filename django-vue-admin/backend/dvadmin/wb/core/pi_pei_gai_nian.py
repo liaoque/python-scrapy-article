@@ -503,10 +503,15 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
         if item["yidongcishu"] >= 3 and xia_xian["yd"] == 1 and item["chuang_bai_ri_xin_gao"] == 0:
             item["color1"] = 35
 
+
+        jingjiajinechengjiaoliangbi = 1
+        if qx == -1:
+            jingjiajinechengjiaoliangbi = 0.5
+
         #  监管类型有数据或者停牌非0或今昨量比大于700或者竞价量比大于等于100或 自由流通市值大于100且不符合塞力斯概念 H13
         if item["jianguanleixingyesterday"] != "" or \
                 item["jingjiajinejingjialiangbi"] > 700 or \
-                item["jingjiajinechengjiaoliangbi"] >= 1 or \
+                item["jingjiajinechengjiaoliangbi"] >= jingjiajinechengjiaoliangbi or \
                 (is_chuang_ye != 1 and item["ziyouliutongshizhiyesterday"] / 10000 / 10000 > 100 and item["code"] !=
                  bu_zhang_data["zhong_jun"]["code"]):
             item["color1"] = 35
