@@ -503,7 +503,7 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
         if item["yidongcishu"] >= 3 and xia_xian["yd"] == 1 and item["chuang_bai_ri_xin_gao"] == 0:
             item["color1"] = 35
 
-
+        # 情绪差大于等于50绿, 我是想改情绪好大于等于100
         jingjiajinechengjiaoliangbi = 1
         if qx == -1:
             jingjiajinechengjiaoliangbi = 0.5
