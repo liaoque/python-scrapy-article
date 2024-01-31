@@ -52,8 +52,6 @@
       </el-col>
       <el-col :span="12">
       </el-col>
-
-
       <el-col :span="16">
         封单:
         <el-switch v-model="fd"></el-switch>
@@ -211,6 +209,7 @@ export default {
         jing_shang_zhang: 0,
         jing_xia_die: 0,
         shou_shang_zhang: 0,
+        zhu_xian: [],
         shou_xia_die: 0
       },
       bu_zhang: {},
@@ -285,12 +284,12 @@ export default {
       }
 
       api.GetResult(self.today, self.fd, self.yd).then(function (params) {
-        self.fd = parseInt(params.config.fd) === 1 ? 1 : 0
-        self.yd = parseInt(params.config.yd) === 1 ? 1 : 0
+        self.fd = parseInt(params.config.fd) === 1
+        self.yd = parseInt(params.config.yd) === 1
         self.lian_ban_code_black = params.config.lian_ban_code_black
         self.gvgn = params.config.gvgn
         self.other = params.other
-        if (self.fd === 1) {
+        if (self.fd) {
           self.titles.jinjinfengshu = '涨停大肉数'
           self.titles.dietingweipipei = '跌停封单额'
         }
