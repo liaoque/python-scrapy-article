@@ -35,10 +35,10 @@ class Command(BaseCommand):
 
     def dapan(self, date_as):
         # 大盘涨停数， 跌停数，连板数
-        sql = "select sum(zhangting) as max_zhangting, sum(dieting) as max_dieting , max(lianban) as max_lianban from mc_shares  where  date_as = %s";
+        sql = "select 0 as id, sum(zhangting) as max_zhangting, sum(dieting) as max_dieting , max(lianban) as max_lianban from mc_shares  where  date_as = %s";
         result = SharesKdjCompute.objects.raw(sql, params=(date_as,))
         for item in result:
-            sql = "INSERT INTO mc_dapan (max_zhangting, max_dieting, max_lianban, date_as)VALUES(%s, %s, %s, %s, %s)"
+            sql = "INSERT INTO mc_dapan (max_zhangting, max_dieting, max_lianban, date_as)VALUES(%s, %s, %s, %s)"
             cursor = connection.cursor()
             cursor.execute(sql, [item.max_zhangting, item.max_dieting, item.max_lianban, date_as])
 
@@ -77,10 +77,10 @@ class Command(BaseCommand):
         cursor.execute(sql, [date_as])
 
     def lianban(self, date_as, yesterday):
-        sql = "select code_id from mc_shares  where  zhangting =1 and date_as = %s";
+        sql = "select id,code_id from mc_shares  where  zhangting =1 and date_as = %s";
         result = SharesKdjCompute.objects.raw(sql, params=(date_as,))
         for item in result:
-            sql = "select lianban from mc_shares  where  code_id =%s and zhangting =1 and date_as = %s ";
+            sql = "select id, lianban from mc_shares  where  code_id =%s and zhangting =1 and date_as = %s ";
             result2 = SharesKdjCompute.objects.raw(sql, params=(item.code_id, yesterday,))
             sql = "update mc_shares set lianban =%s where  code_id =%s  and date_as = %s";
             if len(result2) > 0:
