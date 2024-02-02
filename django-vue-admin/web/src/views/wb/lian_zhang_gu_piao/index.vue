@@ -3,6 +3,10 @@
     <template slot="header">连涨股票</template>
     <d2-container type="card">
       <el-row>
+        封单:
+        <el-switch v-model="fd"></el-switch>
+        异动:
+        <el-switch v-model="yd"></el-switch>
         <el-date-picker v-model="today" type="date" value-format="yyyyMMdd" placeholder="选择日期">
         </el-date-picker>
         <el-button type="primary" @click="getCrudOptions" style="margin-left: 16px;">
@@ -34,6 +38,9 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
+      fd: 0,
+      qx: 0,
+      yd: 0,
       today: '',
       nav: [
         {
@@ -92,14 +99,14 @@ export default {
       if (!self.today.length) {
         self.getToday()
       }
-      return api.GetLianZhangGuPiao(self.today)
+      return api.GetLianZhangGuPiao(self.today, self.fd, self.yd)
     },
     getCrudOptions () {
       const self = this
       if (!self.today.length) {
         self.getToday()
       }
-      api.GetLianZhangGuPiao(self.today).then(function (params) {
+      api.GetLianZhangGuPiao(self.today, self.fd, self.yd).then(function (params) {
         // console.log(111222,  [...params.chuangbairixingao])
         self.nav[0].data = params.lianzhanggupiao.map(item => {
           item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)

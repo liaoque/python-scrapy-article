@@ -3,6 +3,10 @@
     <template slot="header">涨停概念</template>
     <d2-container type="card">
       <el-row>
+        封单:
+        <el-switch v-model="fd"></el-switch>
+        异动:
+        <el-switch v-model="yd"></el-switch>
         <el-date-picker v-model="today" type="date" value-format="yyyyMMdd" placeholder="选择日期">
         </el-date-picker>
         <el-button type="primary" @click="getCrudOptions" style="margin-left: 16px;">
@@ -30,6 +34,9 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
+      fd: 0,
+      qx: 0,
+      yd: 0,
       today: '',
       nav: [
         {
@@ -88,14 +95,14 @@ export default {
       if (!self.today.length) {
         self.getToday()
       }
-      return api.GetLianZhangGaiNian(self.today)
+      return api.GetLianZhangGaiNian(self.today, self.fd, self.yd)
     },
     getCrudOptions () {
       let self = this
       if (!self.today.length) {
         self.getToday()
       }
-      api.GetLianZhangGaiNian(self.today ).then(function (params) {
+      api.GetLianZhangGaiNian(self.today , self.fd, self.yd).then(function (params) {
         console.log(params)
         self.nav[0].data = params.lianzhanggainian
         // console.log(self.nav[0].data)

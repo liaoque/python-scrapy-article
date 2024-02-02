@@ -52,10 +52,10 @@ export function GetCascadeData () {
   })
 }
 
-export function GetLianZhangGuPiao () {
+export function GetLianZhangGuPiao (today, fd, yd) {
   return request({
-    url: '/api/wb/lian_zhang_gu_piao?current_time=20231122',
+    url: '/api/wb/lian_zhang_gu_piao?current_time=' + today + '&fd=' + fd + '&yd=' + yd,
     method: 'get',
-    data: { current_time: '20231117' }
+    data: {  }
   })
 }
