@@ -48,7 +48,13 @@ class CodeConfig:
         self._instance._config = None
 
     def setFd(self, fd):
-        self._instance._config["fd"] = fd
+        if fd == 'true' or fd == '1' or fd == 1:
+            self._instance._config["fd"] = 1
+        if fd == 'false' or fd == '0' or fd == 0:
+            self._instance._config["fd"] = 0
 
     def setYd(self, yd):
-        self._instance._config["yd"] = yd
+        if yd == 'true' or yd == '1' or yd == 1:
+            self._instance._config["yd"] = 1
+        if yd == 'false' or yd == '0' or yd == 0:
+            self._instance._config["yd"] = 0
