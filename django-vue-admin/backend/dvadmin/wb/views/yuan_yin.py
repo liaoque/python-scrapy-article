@@ -13,6 +13,7 @@ import string
 from django.views import View
 from dvadmin.wb.utils import gp
 import datetime
+from dvadmin.wb.config import code_config
 
 class YuanYinView(View):
 
@@ -32,6 +33,10 @@ class YuanYinView(View):
 
         dateInfo = gp.getToday(current_time)
         current_time = datetime.datetime.strptime(dateInfo["today"], "%Y-%m-%d").strftime("%Y%m%d")
+
+        code_config.CodeConfig().getCodeConfig()
+        code_config.CodeConfig().setFd(request.GET.get('fd'))
+        code_config.CodeConfig().setYd(request.GET.get('yd'))
 
         # 取所有数据
         table = self.db['d' + current_time]  # 选择你的数据库
