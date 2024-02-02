@@ -2,6 +2,7 @@ from django.urls import path
 
 from .view.index_view import *
 from .view.shares import *
+from .view.jj import *
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
@@ -9,7 +10,8 @@ urlpatterns = [
     path('<int:pk>/results/', ResultsView.as_view(), name='results'),
     path('<int:question_id>/vote/', vote, name='vote'),
 
-    path('date/<str:date_today>', shares_date, name='date')
+    path('date/<str:date_today>', shares_date, name='date'),
+    path('jj/<str:code>', jj_data, name='jj')
 
     # path('shares/', SharesView.as_view(), name='index'),
     # path('mzq/shares/<str:pk>/', SharesView.as_view(), name='shares_name_view'),
