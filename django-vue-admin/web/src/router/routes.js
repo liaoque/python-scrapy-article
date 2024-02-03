@@ -92,6 +92,14 @@ const frameIn = [{
         auth: true
       },
       component: _import('wb/set_config/index')
+    },
+    {
+      path: 'jj',
+      name: 'jj',
+      meta: {
+        auth: true
+      },
+      component: _import('wb/charts/index')
     }
   ]
 }]
