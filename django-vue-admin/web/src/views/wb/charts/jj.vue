@@ -114,7 +114,6 @@ export default {
     initGetJJ() {
       api.GetList(this.jj.code).then((data) => {
         this.jj.data = data
-        this.jj.data.reverse()
         let amount = this.jj.data.map(item => item.count);
         this.jj.macd = this.$util.macd.calculateMACD(amount)
         this.jj.chartOptions.xAxis.data = this.jj.data.map(item => item.day)
