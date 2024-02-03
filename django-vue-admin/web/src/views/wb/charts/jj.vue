@@ -6,12 +6,22 @@
       <el-form-item label="基金代码">
         <el-input v-model="jj.code"></el-input>
       </el-form-item>
+      <el-form-item label="">
+        <el-select v-model="jj.count" placeholder="请选择">
+          <el-option
+            v-for="item in jj.countOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
 
       <el-form-item>
         <el-button type="primary" @click="initGetJJ">查询</el-button>
       </el-form-item>
     </el-form>
-    <div :options="chartOptions" style="height:300px"></div>
+    <div id="main" :options="jj.chartOptions" style="height:300px"></div>
   </el-card>
 </template>
 
@@ -26,13 +36,75 @@ export default {
   data() {
     return {
       jj: {
+        count: 120,
+        countOptions: [
+          {
+            label: "120天",
+            value: 120,
+          },
+          {
+            label: "200天",
+            value: 200,
+          },
+          {
+            label: "500天",
+            value: 500,
+          },
+          {
+            label: "800天",
+            value: 800,
+          },
+          {
+            label: "全部",
+            value: -1,
+          }
+        ],
         macd: {},
-        code: "003095",
+        code: "003096",
         chartOptions: {
           title: {text: 'MACD'},
           tooltip: {},
           xAxis: {type: 'category', data: []},
-          yAxis: {type: 'value'},
+          yAxis: [{
+            // 第一个y轴（默认左侧）
+            axisLine: {
+              lineStyle: {
+                color: '#aaa',
+                width: 1
+              }
+            },
+            axisLabel: {
+              textStyle: {
+                color: '#333',
+                fontSize: 12
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: '#ddd',
+                type: 'dotted',
+                width: 1
+              }
+            }
+          }, {
+            // 第二个y轴（右侧）
+            axisLine: {
+              lineStyle: {
+                color: '#aaa',
+                width: 1
+              }
+            },
+            axisLabel: {
+              textStyle: {
+                color: '#333',
+                fontSize: 12
+              }
+            },
+            splitLine: {
+              show: false // 可以选择不显示分割线
+            },
+            position: 'right',
+          }],
           series: []
         }
       },
@@ -43,42 +115,58 @@ export default {
       api.GetList(this.jj.code).then((data) => {
         this.jj.data = data
         this.jj.data.reverse()
-        this.jj.macd = this.$util.macd.calculateMACD(this.jj.data.map(item => item.count))
+        let amount = this.jj.data.map(item => item.count);
+        this.jj.macd = this.$util.macd.calculateMACD(amount)
         this.jj.chartOptions.xAxis.data = this.jj.data.map(item => item.day)
-        this.jj.chartOptions.series = this.getMacdSeries().concat(this.getBarSeries())
+        if (this.jj.count != -1) {
+          this.jj.chartOptions.xAxis.data = this.jj.chartOptions.xAxis.data.slice(this.jj.data.length - this.jj.count)
+        }
+        let lineSeries = this.getLineSeries("amount", amount);
+        lineSeries.yAxisIndex = 1
+        lineSeries.color = 'red'
+        this.jj.chartOptions.series = this.getMacdSeries().concat(lineSeries).concat(this.getBarSeries())
+        this.myChart.setOption(this.jj.chartOptions)
       })
     },
     getMacdSeries() {
       const macdSeries = [];
-      const difSeries = this.getLineSeries("DIF");
-      const deaSeries = this.getLineSeries("DEA");
+      const difSeries = this.getLineSeriesMacd("DIF");
+      const deaSeries = this.getLineSeriesMacd("DEA");
       macdSeries.push(difSeries);
       macdSeries.push(deaSeries);
       return macdSeries;
     },
     getBarSeries() {
-      const barSeries = this.getLineSeries("MACD");
+      const barSeries = this.getLineSeriesMacd("MACD");
       barSeries.type = 'bar';
       return barSeries;
     },
-    getLineSeries(name) {
+    getLineSeriesMacd(name){
+      return this.getLineSeries(name, this.jj.macd[name]);
+    },
+    getLineSeries(name, data) {
       const series = {
         name: name,
         type: 'line',
-        symbol: 'none',
+        symbol: 'circle',
         smooth: true,
-        showSymbol: false,
+        showSymbol: true,
         showAllSymbol: false,
         data: []
       };
       for (let i = 0; i < this.jj.data.length; i++) {
-        series.data.push([this.jj.data[i]['day'], this.jj.macd[i][name]]);
+        series.data.push(data[i]);
       }
+      if (this.jj.count != -1) {
+        series.data = series.data.slice(this.jj.data.length - this.jj.count)
+      }
+
       return series;
     }
   },
   mounted() {
-    this.initGet()
+    this.myChart = this.$echarts.init(document.getElementById('main'))
+
   }
 }
 </script>

@@ -8,7 +8,7 @@ export function GetList(code) {
     for (let key in data) {
       data2.push({
         day: key,
-        count: data[key]
+        count: parseFloat(data[key])
       })
     }
     return data2

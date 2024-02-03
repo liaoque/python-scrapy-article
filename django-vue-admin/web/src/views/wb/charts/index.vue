@@ -30,20 +30,23 @@ export default {
     jj: () => import('./jj.vue'), // 这里填写实际的组件路径
   },
   methods: {
-    // pageRequest(query) {
-    //   return api.GetList(query)
-    // },
-    // addRequest(row) {
-    //   console.log('api', api)
-    //   return api.AddObj(row)
-    // },
-    // updateRequest(row) {
-    //   console.log('----', row)
-    //   return api.UpdateObj(row)
-    // },
-    // delRequest(row) {
-    //   return api.DelObj(row.id)
-    // }
+    getCrudOptions () {
+      return {}
+    },
+    pageRequest(query) {
+      return api.GetList(query)
+    },
+    addRequest(row) {
+      console.log('api', api)
+      return api.AddObj(row)
+    },
+    updateRequest(row) {
+      console.log('----', row)
+      return api.UpdateObj(row)
+    },
+    delRequest(row) {
+      return api.DelObj(row.id)
+    }
   }
 }
 </script>
