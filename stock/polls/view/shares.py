@@ -55,11 +55,16 @@ def shares_date(request, date_today):
             SharesDate(date_as=after_tomorrow)
         ]
 
-    return JsonResponse({
+    response = JsonResponse({
         "today": dates[0].date_as,
         "yesterday": dates[1].date_as,
         "before_yesterday": dates[2].date_as,
         "tomorrow": tomorrow[0].date_as,
         "after_tomorrow": tomorrow[1].date_as,
     })
+    response["Access-Control-Allow-Origin"] = "*"
+    # 如果需要，可以添加更多CORS相关的头信息，例如：
+    # response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    # response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
     # return HttpResponse("You're voting on question %s." % question_id)
