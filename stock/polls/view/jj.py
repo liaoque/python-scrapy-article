@@ -1,14 +1,21 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django.template import loader
 import requests
+import re
+import json
 
 
 def jj_data(request, code):
-    url = "https://fund.10jqka.com.cn/ifindRank/commonTypeAvgFqNet/%s.json" % (code)
+    # url = "https://fund.10jqka.com.cn/ifindRank/commonTypeAvgFqNet/%s.json" % (code)
+    url = "https://fund.10jqka.com.cn/%s/json/jsondwjz.json" % (code)
     r = requests.get(url)
-    response = JsonResponse(r.json())
+    match = re.search(r'var dwjz_\d+=\s*(\[\[.*?\]\])', r.text)
+    if match:
+        data_str = match.group(1)
+        data_list = json.loads(data_str)
+        transformed_data = [{date: value} for date, value in data_list]
+    else:
+        transformed_data = []
+    response = JsonResponse(transformed_data)
     response["Access-Control-Allow-Origin"] = "*"
-    # 如果需要，可以添加更多CORS相关的头信息，例如：
-    # response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
-    # response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
