@@ -17,6 +17,7 @@
 
 <script>
 import {request} from "@/api/service";
+import * as api from './api'
 
 export default {
   props: [
@@ -39,7 +40,7 @@ export default {
   },
   methods: {
     initGetJJ() {
-      api.GetList(this.code).then((data) => {
+      api.GetList(this.jj.code).then((data) => {
         this.jj.data = data
         this.jj.data.reverse()
         this.jj.macd = this.$util.macd.calculateMACD(this.jj.data.map(item => item.count))
