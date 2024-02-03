@@ -3,8 +3,7 @@ import {request} from '@/api/service'
 export function GetList(code) {
   return request({
     url: 'http://81.68.241.227:8082/polls/jj/' + code
-  }).then((res) => {
-    let data = JSON.parse(res)
+  }).then((data) => {
     let data2 = []
     for (let key in data) {
       data2.push({

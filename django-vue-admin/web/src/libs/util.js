@@ -3,10 +3,12 @@ import db from './util.db'
 import log from './util.log'
 import dayjs from 'dayjs'
 import filterParams from './util.params'
+import macd from './util.macd'
 const util = {
   cookies,
   db,
   log,
+  macd,
   filterParams
 }
 

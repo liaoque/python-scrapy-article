@@ -42,7 +42,7 @@ export default {
       api.GetList(this.code).then((data) => {
         this.jj.data = data
         this.jj.data.reverse()
-        this.jj.macd = this.$macd.calculateMACD(this.jj.data.map(item => item.count))
+        this.jj.macd = this.$util.macd.calculateMACD(this.jj.data.map(item => item.count))
         this.jj.chartOptions.xAxis.data = this.jj.data.map(item => item.day)
         this.jj.chartOptions.series = this.getMacdSeries().concat(this.getBarSeries())
       })
