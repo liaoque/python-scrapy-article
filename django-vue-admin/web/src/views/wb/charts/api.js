@@ -15,11 +15,18 @@ export function GetList(code) {
   })
 }
 
-export function AddObj(obj) {
+export function GetDaPanList() {
   return request({
-    url: '/select/add',
-    method: 'post',
-    data: obj
+    url: 'http://81.68.241.227:8082/polls/da_pan'
+  }).then((data) => {
+    let data2 = []
+    for (let key in data) {
+      data2.push({
+        day: key,
+        count: parseFloat(data[key])
+      })
+    }
+    return data2
   })
 }
 
