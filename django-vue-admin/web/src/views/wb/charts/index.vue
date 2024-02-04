@@ -8,7 +8,7 @@
         <jj></jj>
       </el-row>
       <el-row>
-
+        <dapan></dapan>
       </el-row>
     </d2-container>
   </d2-container>
@@ -28,6 +28,7 @@ export default {
   },
   components: {
     jj: () => import('./jj.vue'), // 这里填写实际的组件路径
+    dapan: () => import('./dapan.vue'), // 这里填写实际的组件路径
   },
   methods: {
     getCrudOptions () {

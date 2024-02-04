@@ -19,14 +19,8 @@ export function GetDaPanList() {
   return request({
     url: 'http://81.68.241.227:8082/polls/da_pan'
   }).then((data) => {
-    let data2 = []
-    for (let key in data) {
-      data2.push({
-        day: key,
-        count: parseFloat(data[key])
-      })
-    }
-    return data2
+   
+    return data
   })
 }
 

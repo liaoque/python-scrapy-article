@@ -21,7 +21,7 @@
         <el-button type="primary" @click="initGetJJ">查询</el-button>
       </el-form-item>
     </el-form>
-    <div id="main" :options="jj.chartOptions" style="height:300px"></div>
+    <div id="jj" :options="jj.chartOptions" style="height:300px"></div>
   </el-card>
 </template>
 
@@ -164,7 +164,7 @@ export default {
     }
   },
   mounted() {
-    this.myChart = this.$echarts.init(document.getElementById('main'))
+    this.myChart = this.$echarts.init(document.getElementById('jj'))
 
   }
 }

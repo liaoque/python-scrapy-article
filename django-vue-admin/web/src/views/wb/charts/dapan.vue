@@ -4,7 +4,7 @@
   >
     <el-form :inline="true" :model="jj" class="demo-form-inline">
 
-      <el-form-item label="">
+      <el-form-item label="大盘">
         <el-select v-model="jj.count" placeholder="请选择">
           <el-option
             v-for="item in jj.countOptions"
@@ -19,7 +19,7 @@
         <el-button type="primary" @click="initGetJJ">查询</el-button>
       </el-form-item>
     </el-form>
-    <div id="main" :options="jj.chartOptions" style="height:300px"></div>
+    <div id="dapan" :options="jj.chartOptions" style="height:300px"></div>
   </el-card>
 </template>
 
@@ -59,7 +59,10 @@ export default {
         ],
         macd: {},
         chartOptions: {
-          title: {text: 'MACD'},
+          legend: {
+            data: []
+          },
+          title: {text: '大盘'},
           tooltip: {},
           xAxis: {type: 'category', data: []},
           yAxis: [{
@@ -105,53 +108,73 @@ export default {
           series: []
         }
       },
+      options:{
+        "max_dieting": "跌停",
+        "max_lianban": "连板",
+        "max_zhangting": "涨停",
+      }
     }
   },
   methods: {
     initGetJJ() {
       api.GetDaPanList().then((data) => {
-        this.jj.data = data
-        let amount = this.jj.data.map(item => item.count);
-        this.jj.macd = this.$util.macd.calculateMACD(amount)
-        this.jj.chartOptions.xAxis.data = this.jj.data.map(item => item.day)
+        this.jj.data = data.data
+        this.jj.data.reverse()
+        this.jj.chartOptions.xAxis.data = this.jj.data.map(item => item.date_as.replaceAll("-", ""))
         if (this.jj.count != -1) {
           this.jj.chartOptions.xAxis.data = this.jj.chartOptions.xAxis.data.slice(this.jj.data.length - this.jj.count)
         }
-        let lineSeries = this.getLineSeries("amount", amount);
-        lineSeries.yAxisIndex = 1
-        lineSeries.color = 'red'
-        this.jj.chartOptions.series = this.getMacdSeries().concat(lineSeries).concat(this.getBarSeries())
+        this.jj.chartOptions.series = this.getMacdSeries()
+        this.jj.chartOptions.legend.data = [
+        "涨停","跌停","连板",
+        ]
         this.myChart.setOption(this.jj.chartOptions)
+        // console.log(
+        //   [...this.jj.data.map(item => item.max_dieting)],
+        //   Math.max(...this.jj.data.map(item => item.max_dieting)),
+        //   Math.max(...this.jj.data.map(item => item.max_lianban)),
+        //   Math.max(...this.jj.data.map(item => item.max_zhangting)),
+        // )
+      
+
+        // this.jj.macd = this.$util.macd.calculateMACD(amount)
+        // this.jj.chartOptions.xAxis.data = this.jj.data.map(item => item.day)
+        // if (this.jj.count != -1) {
+        //   this.jj.chartOptions.xAxis.data = this.jj.chartOptions.xAxis.data.slice(this.jj.data.length - this.jj.count)
+        // }
+        // let lineSeries = this.getLineSeries("amount", amount);
+        // lineSeries.yAxisIndex = 1
+        // lineSeries.color = 'red'
+        // this.jj.chartOptions.series = this.getMacdSeries().concat(lineSeries).concat(this.getBarSeries())
+        // this.myChart.setOption(this.jj.chartOptions)
       })
     },
     getMacdSeries() {
       const macdSeries = [];
-      const difSeries = this.getLineSeriesMacd("DIF");
-      const deaSeries = this.getLineSeriesMacd("DEA");
-      macdSeries.push(difSeries);
-      macdSeries.push(deaSeries);
+      const max_dieting = this.getLineSeriesMacd("max_dieting", 200);
+      const max_zhangting = this.getLineSeriesMacd("max_zhangting", 200);
+      const max_lianban = this.getLineSeriesMacd("max_lianban", 20);
+      max_lianban.yAxisIndex = 1
+      macdSeries.push(max_dieting);
+      macdSeries.push(max_zhangting);
+      macdSeries.push(max_lianban);
       return macdSeries;
     },
-    getBarSeries() {
-      const barSeries = this.getLineSeriesMacd("MACD");
-      barSeries.type = 'bar';
-      return barSeries;
+    getLineSeriesMacd(name, max){
+      return this.getLineSeries(name, this.jj.data.map(item => item[name]), max);
     },
-    getLineSeriesMacd(name){
-      return this.getLineSeries(name, this.jj.macd[name]);
-    },
-    getLineSeries(name, data) {
+    getLineSeries(name, data, max) {
       const series = {
-        name: name,
+        name: this.options[name],
         type: 'line',
         symbol: 'circle',
         smooth: true,
         showSymbol: true,
-        showAllSymbol: false,
+        showAllSymbol: true,
         data: []
       };
       for (let i = 0; i < this.jj.data.length; i++) {
-        series.data.push(data[i]);
+        series.data.push((data[i] > max ? max: data[i]) / max);
       }
       if (this.jj.count != -1) {
         series.data = series.data.slice(this.jj.data.length - this.jj.count)
@@ -161,7 +184,7 @@ export default {
     }
   },
   mounted() {
-    this.myChart = this.$echarts.init(document.getElementById('main'))
+    this.myChart = this.$echarts.init(document.getElementById('dapan'))
 
   }
 }
