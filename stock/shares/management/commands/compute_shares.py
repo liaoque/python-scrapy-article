@@ -21,7 +21,9 @@ class Command(BaseCommand):
     help = "计算股票的涨停，跌停"
 
     def handle(self, *args, **options):
-        shareDate = SharesDate.objects.order_by('date_as')[-10:]
+        shareDate = SharesDate.objects.order_by('date_as')
+        c = len(shareDate)
+        shareDate = shareDate[c-10:]
         c = len(shareDate)
         for key in range(c):
             if key + 1 >= c:
