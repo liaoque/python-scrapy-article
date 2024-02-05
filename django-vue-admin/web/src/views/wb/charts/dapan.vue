@@ -112,6 +112,7 @@ export default {
         "max_dieting": "跌停",
         "max_lianban": "连板",
         "max_zhangting": "涨停",
+        "a": "上证指数",
       }
     }
   },
@@ -126,7 +127,7 @@ export default {
         }
         this.jj.chartOptions.series = this.getMacdSeries()
         this.jj.chartOptions.legend.data = [
-        "涨停","跌停","连板",
+        "涨停","跌停","连板","上证指数"
         ]
         return this.jj.chartOptions;
         // this.myChart.setOption(this.jj.chartOptions)
@@ -136,7 +137,7 @@ export default {
         //   Math.max(...this.jj.data.map(item => item.max_lianban)),
         //   Math.max(...this.jj.data.map(item => item.max_zhangting)),
         // )
-      
+
 
         // this.jj.macd = this.$util.macd.calculateMACD(amount)
         // this.jj.chartOptions.xAxis.data = this.jj.data.map(item => item.day)
@@ -150,7 +151,10 @@ export default {
         // this.myChart.setOption(this.jj.chartOptions)
       }).then((res)=>{
         api.GetDaAList().then((res2)=>{
-            
+          const a = this.getLineSeries("a", res2.map(item=>item.count), 6000)
+          a.yAxisIndex = 1
+          this.jj.chartOptions.series.push(a);
+          this.myChart.setOption(this.jj.chartOptions)
         })
       })
     },
@@ -159,7 +163,7 @@ export default {
       const max_dieting = this.getLineSeriesMacd("max_dieting", 200);
       const max_zhangting = this.getLineSeriesMacd("max_zhangting", 200);
       const max_lianban = this.getLineSeriesMacd("max_lianban", 20);
-      max_lianban.yAxisIndex = 1
+      // max_lianban.yAxisIndex = 1
       macdSeries.push(max_dieting);
       macdSeries.push(max_zhangting);
       macdSeries.push(max_lianban);
@@ -178,11 +182,11 @@ export default {
         showAllSymbol: true,
         data: []
       };
-      for (let i = 0; i < this.jj.data.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         series.data.push((data[i] > max ? max: data[i]) / max);
       }
       if (this.jj.count != -1) {
-        series.data = series.data.slice(this.jj.data.length - this.jj.count)
+        series.data = series.data.slice(data.length - this.jj.count)
       }
 
       return series;
