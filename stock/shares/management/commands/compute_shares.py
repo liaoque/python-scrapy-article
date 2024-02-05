@@ -23,16 +23,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         shareDate = SharesDate.objects.order_by('date_as')
         c = len(shareDate)
-        shareDate = shareDate[c-10:]
+        shareDate = shareDate[c - 10:]
         c = len(shareDate)
+
         for key in range(c):
-            if key + 1 >= c:
+            if key + 1 > c:
                 break
             date_as = shareDate[key].date_as
-            end = shareDate[key + 1].date_as
             self.zhangting(date_as)
             self.dieting(date_as)
-            self.lianban(end, date_as)
+            self.lianban(date_as)
             self.dapan(date_as)
 
     def dapan(self, date_as):
@@ -85,12 +85,12 @@ class Command(BaseCommand):
         cursor = connection.cursor()
         cursor.execute(sql, [date_as])
 
-    def lianban(self, date_as, yesterday):
+    def lianban(self, date_as):
         sql = "select id,code_id from mc_shares  where  zhangting =1 and date_as = %s";
         result = SharesKdjCompute.objects.raw(sql, params=(date_as,))
         for item in result:
-            sql = "select id, code_id, lianban from mc_shares  where  code_id =%s and zhangting =1 and date_as = %s ";
-            result2 = SharesKdjCompute.objects.raw(sql, params=(item.code_id, yesterday,))
+            sql = "select id, code_id, lianban from mc_shares  where  code_id =%s and zhangting =1 and date_as < %s order by date_as desc limit 1";
+            result2 = SharesKdjCompute.objects.raw(sql, params=(item.code_id, date_as,))
             sql = "update mc_shares set lianban =%s where  code_id =%s  and date_as = %s";
             if len(result2) > 0:
                 item2 = result2[0]
