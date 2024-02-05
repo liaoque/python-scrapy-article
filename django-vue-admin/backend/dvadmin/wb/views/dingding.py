@@ -176,7 +176,7 @@ class DingdingView(View):
         )
 
         dingding(s)
-        return JsonResponse([])
+        return JsonResponse({})
 
 
 def dingding(s):
