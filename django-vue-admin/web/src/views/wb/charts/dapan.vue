@@ -63,7 +63,14 @@ export default {
             data: []
           },
           title: {text: '大盘'},
-          tooltip: {},
+          tooltip: {
+          },
+          dataZoom: [{
+            type: 'slider', // 这里是 slider 表示有滑动条的数据区域缩放
+            start: 0, // 数据窗口范围的起始百分比, 表示从头开始显示
+            end: 100 // 数据窗口范围的结束百分比, 表示显示到最后
+          }],
+
           xAxis: {type: 'category', data: []},
           yAxis: [{
             // 第一个y轴（默认左侧）
@@ -127,7 +134,7 @@ export default {
         }
         this.jj.chartOptions.series = this.getMacdSeries()
         this.jj.chartOptions.legend.data = [
-        "涨停","跌停","连板","上证指数"
+          "涨停","跌停","连板","上证指数"
         ]
         return this.jj.chartOptions;
         // this.myChart.setOption(this.jj.chartOptions)
@@ -151,7 +158,10 @@ export default {
         // this.myChart.setOption(this.jj.chartOptions)
       }).then((res)=>{
         api.GetDaAList().then((res2)=>{
-          const a = this.getLineSeries("a", res2.map(item=>item.count), 6000)
+          let days = res2.map(item=>item.day)
+          // console.log(this.jj.chartOptions.xAxis.data, res2.map(item=>item.day), this.jj.chartOptions.xAxis.data.includes("19910126"))
+          // console.log(this.jj.chartOptions.xAxis.data.filter(item => !days.includes(item)))
+          const a = this.getLineSeries("a", res2.map(item=>item.count), 4000)
           a.yAxisIndex = 1
           this.jj.chartOptions.series.push(a);
           this.myChart.setOption(this.jj.chartOptions)
@@ -183,7 +193,8 @@ export default {
         data: []
       };
       for (let i = 0; i < data.length; i++) {
-        series.data.push((data[i] > max ? max: data[i]) / max);
+        // series.data.push((data[i] > max ? max: data[i]) / max);
+        series.data.push((data[i]) );
       }
       if (this.jj.count != -1) {
         series.data = series.data.slice(data.length - this.jj.count)
