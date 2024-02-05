@@ -24,11 +24,12 @@ export function GetDaPanList() {
   })
 }
 
-export function UpdateObj(obj) {
+export function GetDaAList() {
   return request({
     url: '/select/update',
-    method: 'post',
-    data: obj
+    method: 'get',
+  }).then((data) => {
+    return data
   })
 }
 

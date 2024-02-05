@@ -128,7 +128,8 @@ export default {
         this.jj.chartOptions.legend.data = [
         "涨停","跌停","连板",
         ]
-        this.myChart.setOption(this.jj.chartOptions)
+        return this.jj.chartOptions;
+        // this.myChart.setOption(this.jj.chartOptions)
         // console.log(
         //   [...this.jj.data.map(item => item.max_dieting)],
         //   Math.max(...this.jj.data.map(item => item.max_dieting)),
@@ -147,6 +148,10 @@ export default {
         // lineSeries.color = 'red'
         // this.jj.chartOptions.series = this.getMacdSeries().concat(lineSeries).concat(this.getBarSeries())
         // this.myChart.setOption(this.jj.chartOptions)
+      }).then((res)=>{
+        api.GetDaAList().then((res2)=>{
+            
+        })
       })
     },
     getMacdSeries() {
