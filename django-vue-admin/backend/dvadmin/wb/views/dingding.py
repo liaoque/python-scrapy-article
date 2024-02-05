@@ -165,7 +165,7 @@ class DingdingView(View):
         qx = "好"
         if d["qing_xu"] == -1:
             qx = "差"
-        s = "情绪：%s \r\n 主板：%s (黄色),%s (橘色), %s(紫色)  \r\n 创业板： %s(黄色), %s(橘色), %s(紫色) " % (
+        s = "【复盘】情绪：%s \r\n 主板：%s (黄色),%s (橘色), %s(紫色)  \r\n 创业板： %s(黄色), %s(橘色), %s(紫色) " % (
             qx,
             ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color1") == 36, result["zhu_data"])]),
             ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color0") == 46, result["zhu_data"])]),
