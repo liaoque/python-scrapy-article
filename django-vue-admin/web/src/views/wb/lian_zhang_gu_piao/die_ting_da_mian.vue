@@ -6,8 +6,8 @@
     </el-table-column>
     <el-table-column prop="jingjiaweipipeijinetoday" label="竞价未匹配金额" sortable>
     </el-table-column>
-    <el-table-column prop="lianxuzhangtingtianshuonehundred" label="连续涨停天数" sortable>
-    </el-table-column>
+    <!-- <el-table-column prop="lianxuzhangtingtianshuonehundred" label="连续涨停天数" sortable>
+    </el-table-column> -->
     <el-table-column label="所属概念" >
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
@@ -20,7 +20,7 @@
     </el-table-column>
     <el-table-column prop="zhangfu120" label="120日涨跌幅" sortable>
     </el-table-column>
-    <el-table-column prop="zhangtingfengdanetoday" label="涨停封单金额" sortable>
+    <el-table-column prop="dietingfengdane" label="跌停封单金额" sortable>
     </el-table-column>
   </el-table>
 </template>

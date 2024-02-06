@@ -116,7 +116,13 @@ export default {
           return item
         })
         // console.log(self.nav[0].data)
-        self.nav[1].data = params.dietinggupiao
+        self.nav[1].data = params.dietinggupiao.map(item => {
+          item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
+          item.dietingfengdane = (item.dietingfengdane / 10000 / 10000).toFixed(2)
+          item.zhangfu120 = (item.zhangfu120).toFixed(2)
+
+          return item
+        })
         self.nav[2].data = params.zhabangupiao.map(item => {
           item.jingjiaweipipeijinetoday = (item.jingjiaweipipeijinetoday / 10000 / 10000).toFixed(2)
           item.zhangtingfengdanetoday = (item.zhangtingfengdanetoday / 10000 / 10000).toFixed(2)

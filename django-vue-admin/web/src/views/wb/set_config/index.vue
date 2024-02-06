@@ -52,12 +52,12 @@ export default {
       // this.form
       // console.log(this.form.gvgn)
       api.UpdateObj({
-        gvgn: this.form.gvgn.split(','),
+        gvgn: this.form.gvgn.split(';'),
         chuang_ye_set: this.form.chuang_ye_set,
         zhu_set: this.form.zhu_set,
         cm10: this.form.cm10,
         cm20: this.form.cm20,
-        lian_ban_code_black: this.form.lian_ban_code_black.split(',')
+        lian_ban_code_black: this.form.lian_ban_code_black.split(';')
       }).then(res=>{
         alert("保存成功")
       })
@@ -66,8 +66,8 @@ export default {
     pageRequest () {
       const self = this
       return api.GetCascadeData().then(res => {
-        res.data.gvgn = res.data.gvgn.join(",")
-        res.data.lian_ban_code_black = res.data.lian_ban_code_black.join(",")
+        res.data.gvgn = res.data.gvgn.join(";")
+        res.data.lian_ban_code_black = res.data.lian_ban_code_black.join(";")
         self.form = res.data
       })
     },
