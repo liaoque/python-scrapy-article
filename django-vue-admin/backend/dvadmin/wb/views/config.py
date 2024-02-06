@@ -51,7 +51,7 @@ class Config(View):
             json.dump({
                 "fd": 0,
                 "yd": 0,
-                "gvgn": info["gvgn"].split(";"),
+                "gvgn": info["gvgn"],
                 "chuang_ye_set": info["chuang_ye_set"],
                 "zhu_set": info["zhu_set"],
                 "10cm": info["cm10"],
