@@ -8,6 +8,7 @@ from dvadmin.wb.views.dingding import DingdingView
 from dvadmin.wb.views.lian_zhang_gu_piao import LianZhangGuPiao
 from dvadmin.wb.views.lian_zhang_gai_nian import LianZhangGiNian
 from dvadmin.wb.views.config import Config
+from dvadmin.wb.views.base import BaseView
 
 urlpatterns = [
     path('', IndexView.as_view()),
@@ -18,4 +19,5 @@ urlpatterns = [
     path('lian_zhang_gu_piao', LianZhangGuPiao.as_view()),
     path('lian_zhang_gai_nian', LianZhangGiNian.as_view()),
     path('config', Config.as_view()),
+    path('base', BaseView.as_view()),
 ]
