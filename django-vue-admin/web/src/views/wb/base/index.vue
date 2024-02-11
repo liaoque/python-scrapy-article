@@ -40,46 +40,46 @@ export default {
       yd: 0,
       today: '',
       nav: [
-        {
-          name: '今曾涨停',
-          table: 'JinCengZhangTing',
-          data: []
-        },
-        {
-          name: '今曾跌停',
-          table: 'JinCengDieTing',
-          data: []
-        },
-        {
-          name: '昨曾涨停',
-          table: 'ZuoCengZhangTing',
-          data: []
-        },
-        {
-          name: '昨曾跌停',
-          table: 'ZuoCengDieTing',
-          data: []
-        },
-        {
-          name: '断板',
-          table: 'DuanBan',
-          data: []
-        },
-        {
-          name: '反包',
-          table: 'FanBao',
-          data: []
-        },
+        // {
+        //   name: '今曾涨停',
+        //   table: 'JinCengZhangTing',
+        //   data: []
+        // },
+        // {
+        //   name: '今曾跌停',
+        //   table: 'JinCengDieTing',
+        //   data: []
+        // },
+        // {
+        //   name: '昨曾涨停',
+        //   table: 'ZuoCengZhangTing',
+        //   data: []
+        // },
+        // {
+        //   name: '昨曾跌停',
+        //   table: 'ZuoCengDieTing',
+        //   data: []
+        // },
+        // {
+        //   name: '断板',
+        //   table: 'DuanBan',
+        //   data: []
+        // },
+        // {
+        //   name: '反包',
+        //   table: 'FanBao',
+        //   data: []
+        // },
         {
           name: '创百日新高',
           table: 'ChuangBaiRiXinGao',
           data: []
         },
-        {
-          name: '创百日新低',
-          table: 'ChuangBaiRiXinDi',
-          data: []
-        },
+        // {
+        //   name: '创百日新低',
+        //   table: 'ChuangBaiRiXinDi',
+        //   data: []
+        // },
         {
           name: '异动',
           table: 'YiDong',
