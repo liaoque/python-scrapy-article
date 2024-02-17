@@ -1,14 +1,14 @@
 <template>
   <el-table :data="tableData" style="width: 100%">
 
-    <el-table-column prop="code" sortable sort-by="color0" label="代码">
+    <el-table-column prop="code" sortable sort-by="code" label="代码">
     </el-table-column>
-    <el-table-column prop="name" label="名称" sortable sort-by="color1">
+    <el-table-column prop="name" label="名称" sortable sort-by="name">
     </el-table-column>
-    <el-table-column prop="suoshuhangye" sortable sort-by="color2" label="所属行业">
+    <el-table-column prop="suoshuhangye" sortable sort-by="suoshuhangye" label="所属行业">
     </el-table-column>
 
-    <el-table-column sortable sort-by="color3" label="概念">
+    <el-table-column  label="概念">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <el-tag disable-transitions :key="index" v-for="(gainian, index) in scope.row.suoshugainian">{{
@@ -22,9 +22,9 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="zhangfu10" label="10日涨跌幅" sortable sort-by="color1">
+    <el-table-column prop="zhangfu10" label="10日涨跌幅" sortable sort-by="zhangfu10">
     </el-table-column>
-    <el-table-column prop="zhangfu30" sortable sort-by="color2" label="30日涨跌幅">
+    <el-table-column prop="zhangfu30" sortable sort-by="zhangfu30" label="30日涨跌幅">
     </el-table-column>
 
 
