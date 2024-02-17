@@ -26,7 +26,7 @@
     </el-table-column>
     <el-table-column prop="zhangdiefuqianfuquantoday" sortable sort-by="color2" label="涨跌幅">
     </el-table-column>
-    <el-table-column prop="cengdietingtoday" label="自由流通市值" sortable sort-by="color1">
+    <el-table-column prop="ziyouliutongshizhi" label="自由流通市值" sortable sort-by="color1">
     </el-table-column>
     <el-table-column prop="zhangdiefuqianfuquantoday" sortable sort-by="color2" label="120日涨跌幅">
     </el-table-column>

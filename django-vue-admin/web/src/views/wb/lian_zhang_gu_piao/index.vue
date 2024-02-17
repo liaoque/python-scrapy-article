@@ -15,7 +15,7 @@
       </el-row>
       <el-row>
         <el-tabs>
-          <el-tab-pane :key="index" v-for="(item, index) in nav" :label="item.name" :name="item.key">
+          <el-tab-pane :key="index" v-for="(item, index) in nav" :label="item.name" :name="item.table">
 
             <component :is="item.table" :table-data="item.data"></component>
 

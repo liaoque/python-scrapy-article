@@ -3,9 +3,9 @@
 
     <el-table-column prop="code" sortable sort-by="color0" label="代码">
     </el-table-column>
-    <el-table-column prop="briefname" label="名称" sortable sort-by="color1">
+    <el-table-column prop="name" label="名称" sortable sort-by="color1">
     </el-table-column>
-    <el-table-column prop="belongtohangye" sortable sort-by="color2" label="所属行业">
+    <el-table-column prop="suoshuhangye" sortable sort-by="color2" label="所属行业">
     </el-table-column>
 
     <el-table-column sortable sort-by="color3" label="概念">
@@ -22,9 +22,9 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="jingjiaweipipeijinetoday" label="竞价未匹配金额" sortable sort-by="color1">
+    <el-table-column prop="jingjiaweipipeijine" label="竞价未匹配金额" sortable sort-by="color1">
     </el-table-column>
-    <el-table-column prop="zhangdiefuqianfuquantoday" sortable sort-by="color2" label="涨跌幅">
+    <el-table-column prop="zhangdiefu" sortable sort-by="color2" label="涨跌幅">
     </el-table-column>
 
 

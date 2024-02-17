@@ -5,7 +5,7 @@
     </el-table-column>
     <el-table-column prop="briefname" label="名称" sortable sort-by="color1">
     </el-table-column>
-    <el-table-column prop="belongtohangye" sortable sort-by="color2" label="所属行业">
+    <el-table-column prop="suoshuhangye" sortable sort-by="color2" label="所属行业">
     </el-table-column>
 
     <el-table-column sortable sort-by="color3" label="概念">
@@ -24,7 +24,7 @@
 
     <el-table-column prop="zhangtingcishu25days" label="25日涨停次数" sortable sort-by="color1">
     </el-table-column>
-    <el-table-column prop="lianxuzhangtingtianshu" sortable sort-by="color2" label="昨日连板天数"></el-table-column>
+    <el-table-column prop="lianxuzhangtingyesterday" sortable sort-by="color2" label="昨日连板天数"></el-table-column>
     <el-table-column prop="lianbantianshutoday" label="连板天数" sortable sort-by="color1"></el-table-column>
     <el-table-column prop="zhangdiefuqianfuquantoday" sortable sort-by="color2" label="涨跌幅">
     </el-table-column>

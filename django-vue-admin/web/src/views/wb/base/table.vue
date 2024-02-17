@@ -3,7 +3,7 @@
 
     <el-table-column prop="code" sortable sort-by="color0" label="代码">
     </el-table-column>
-    <el-table-column prop="briefname" label="名称" sortable sort-by="color1">
+    <el-table-column prop="name" label="名称" sortable sort-by="color1">
     </el-table-column>
     <el-table-column prop="belongtohangye" sortable sort-by="color2" label="所属行业">
     </el-table-column>

@@ -14,13 +14,13 @@
         </el-button>
       </el-row>
       <el-row>
-        <el-col :span="4" :key="index" v-for="(item, index) in nav">
-          <div class="grid-content bg-purple">
+        <el-tabs>
+          <el-tab-pane :key="index" v-for="(item, index) in nav" :label="item.name" :name="item.table">
             <component :is="item.table" :table-data="item.data"></component>
-
-          </div>
-        </el-col>
+          </el-tab-pane>
+        </el-tabs>
       </el-row>
+
     </d2-container>
   </d2-container>
 </template>
@@ -105,8 +105,13 @@ export default {
           data: []
         },
         {
-          name: 'ZhuXianYuan',
+          name: '主线源',
           table: 'ZhuXianYuan',
+          data: []
+        },
+        {
+          name: 'table',
+          table: 'Table',
           data: []
         },
       ]
@@ -145,30 +150,74 @@ export default {
       if (!self.today.length) {
         self.getToday()
       }
-      return api.GetLianZhangGaiNian(self.today, self.fd, self.yd)
+      return api.GetBase(self.today, self.fd, self.yd)
     },
     getCrudOptions() {
       let self = this
       if (!self.today.length) {
         self.getToday()
       }
-      api.GetLianZhangGaiNian(self.today, self.fd, self.yd).then(function (params) {
-        self.nav[0].data = params.jin_ceng_zhang_ting
-        self.nav[1].data = params.jin_ceng_die_ting
-        self.nav[2].data = params.zuo_ceng_zhang_ting
-        self.nav[3].data = params.zuo_ceng_die_ting
-        self.nav[4].data = params.duan_ban
-        self.nav[5].data = params.fan_bao
-        self.nav[6].data = params.chuang_bai_ri_xin_gao
-        self.nav[7].data = params.chuang_bai_ri_xin_di
-        self.nav[8].data = params.zhu_chuang_zhang_ting
-        self.nav[9].data = params.yi_dong
-        self.nav[10].data = params.yi_zi_ban
-        self.nav[11].data = params.yi_zi_die_ting
-        self.nav[12].data = params.n10
-        self.nav[13].data = params.n20
-        self.nav[14].data = params.zhu_xian_yuan
-        self.nav[15].data = params.table
+      api.GetBase(self.today, self.fd, self.yd).then(function (params) {
+        self.nav[0].data = params.chuang_bai_ri_xin_gao.map(item=>{
+          item.suoshugainian = item.belongtogainian.split(";")
+          return item
+        })
+        self.nav[1].data = params.yi_dong.map(item=>{
+          //   item.belongtogainian = item.belongtogainian.split(";")
+          return item
+        })
+        self.nav[2].data = params.yi_zi_ban.map(item=>{
+          item.suoshugainian = item.belongtogainian.split(";")
+          return item
+        })
+        self.nav[3].data = params.yi_zi_die_ting.map(item=>{
+          item.suoshugainian = item.suoshugainian.split(";")
+          return item
+        })
+        self.nav[4].data = params.n10.map(item=>{
+          item.suoshugainian = item.suoshugainian.split(";")
+          return item
+        })
+        self.nav[5].data = params.n20.map(item=>{
+          item.suoshugainian = item.suoshugainian.split(";")
+          return item
+        })
+        self.nav[6].data = params.zhu_xian_yuan.map(item=>{
+          item.suoshugainian = item.suoshugainian.split(";")
+          return item
+        })
+        self.nav[7].data = params.table.map(item=>{
+          // item.belongtogainian = item.belongtogainian.split(";")
+          return item
+        })
+        // self.nav[6].data = params.chuang_bai_ri_xin_gao
+        // self.nav[7].data = params.chuang_bai_ri_xin_di
+        // self.nav[8].data = params.zhu_chuang_zhang_ting
+        // self.nav[9].data = params.yi_dong
+        // self.nav[10].data = params.yi_zi_ban
+        // self.nav[11].data = params.yi_zi_die_ting
+        // self.nav[12].data = params.n10
+        // self.nav[13].data = params.n20
+        // self.nav[14].data = params.zhu_xian_yuan
+        // self.nav[15].data = params.table
+
+
+        // self.nav[0].data = params.jin_ceng_zhang_ting
+        // self.nav[1].data = params.jin_ceng_die_ting
+        // self.nav[2].data = params.zuo_ceng_zhang_ting
+        // self.nav[3].data = params.zuo_ceng_die_ting
+        // self.nav[4].data = params.duan_ban
+        // self.nav[5].data = params.fan_bao
+        // self.nav[6].data = params.chuang_bai_ri_xin_gao
+        // self.nav[7].data = params.chuang_bai_ri_xin_di
+        // self.nav[8].data = params.zhu_chuang_zhang_ting
+        // self.nav[9].data = params.yi_dong
+        // self.nav[10].data = params.yi_zi_ban
+        // self.nav[11].data = params.yi_zi_die_ting
+        // self.nav[12].data = params.n10
+        // self.nav[13].data = params.n20
+        // self.nav[14].data = params.zhu_xian_yuan
+        // self.nav[15].data = params.table
       })
       return crudOptions(this)
     },
