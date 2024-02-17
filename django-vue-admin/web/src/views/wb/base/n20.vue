@@ -26,7 +26,7 @@
     <el-table-column prop="zuidazhangfu" sortable sort-by="zuidazhangfu" label="昨日最大涨幅"></el-table-column>
     <el-table-column prop="beforeyesterdaytop" sortable sort-by="beforeyesterdaytop" label="前日涨停"></el-table-column>
     <el-table-column prop="maxzhangfu" sortable sort-by="maxzhangfu" label="前日最大涨幅"></el-table-column>
-    <el-table-column prop="beforeyesterdaycengzhangting" sortable sort-by="beforeyesterdaycengzhangting" label="120日涨跌幅"></el-table-column>
+    <el-table-column prop="zhangfu120" sortable sort-by="zhangfu120" label="120日涨跌幅"></el-table-column>
     <el-table-column prop="lianbancishu" sortable sort-by="lianbancishu" label="连板次数"></el-table-column>
 
 

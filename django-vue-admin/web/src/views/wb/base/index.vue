@@ -168,22 +168,31 @@ export default {
         })
         self.nav[2].data = params.yi_zi_ban.map(item=>{
           item.suoshugainian = item.belongtogainian.split(";")
+          item.jingjiaweipipeijinetoday = (Math.ceil(item.jingjiaweipipeijinetoday / 1000000) / 100).toFixed(2)
+          item.ziyouliutongshizhi = (Math.ceil(item.ziyouliutongshizhi / 1000000) / 100).toFixed(2)
           return item
         })
         self.nav[3].data = params.yi_zi_die_ting.map(item=>{
           item.suoshugainian = item.suoshugainian.split(";")
+          item.jingjiaweipipeijine = (Math.ceil(item.jingjiaweipipeijine / 1000000) / 100).toFixed(4)
           return item
         })
         self.nav[4].data = params.n10.map(item=>{
           item.suoshugainian = item.suoshugainian.split(";")
+          item.zhangfu120 = (Math.ceil(item.zhangfu120 / 1) / 1).toFixed(2)
+
           return item
         })
         self.nav[5].data = params.n20.map(item=>{
           item.suoshugainian = item.suoshugainian.split(";")
+          item.zhangfu120 = (Math.ceil(item.zhangfu120 / 1) / 1).toFixed(2)
+
           return item
         })
         self.nav[6].data = params.zhu_xian_yuan.map(item=>{
           item.suoshugainian = item.suoshugainian.split(";")
+          item.zhangfu10 = (Math.ceil(item.zhangfu10 / 1) / 1).toFixed(2)
+          item.zhangfu30 = (Math.ceil(item.zhangfu30 / 1) / 1).toFixed(2)
           return item
         })
         self.nav[7].data = params.table.map(item=>{

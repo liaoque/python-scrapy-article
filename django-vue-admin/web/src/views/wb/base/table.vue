@@ -29,9 +29,9 @@
     <el-table-column prop="jingjiaweipipeijineyesterday" label="昨日竞价未匹配金额" sortable sort-by="jingjiaweipipeijineyesterday"></el-table-column>
     <el-table-column prop="zhangtingleixingtoday" label="涨停类型" sortable sort-by="zhangtingleixingtoday"></el-table-column>
     <el-table-column prop="zhangdiefuqianfuquantoday" label="涨跌幅" sortable sort-by="zhangdiefuqianfuquantoday"></el-table-column>
-    <el-table-column prop="shoupanjia" label="收盘价" sortable sort-by="shoupanjia"></el-table-column>
-    <el-table-column prop="kaipanjia" label="开盘价" sortable sort-by="kaipanjia"></el-table-column>
-    <el-table-column prop="zhangtingjia" label="涨停价" sortable sort-by="zhangtingjia"></el-table-column>
+<!--    <el-table-column prop="shoupanjia" label="收盘价" sortable sort-by="shoupanjia"></el-table-column>-->
+<!--    <el-table-column prop="kaipanjia" label="开盘价" sortable sort-by="kaipanjia"></el-table-column>-->
+<!--    <el-table-column prop="zhangtingjia" label="涨停价" sortable sort-by="zhangtingjia"></el-table-column>-->
 
 
   </el-table>
