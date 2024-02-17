@@ -315,6 +315,8 @@ def tag_n10(table1, data):
 
     for code, item in data.items():
         data[code]["n"] = 0
+        data[code]["n10"] = 0
+        data[code]["n20"] = 0
         data[code]["N_zhangtingcishu"] = 0
         data[code]["N_qujianzhangtingcishu"] = 0
         data[code]["N_zuocengzhangting"] = 0
@@ -330,6 +332,7 @@ def tag_n10(table1, data):
         if code not in data:
             continue
         data[code]["n"] = 1
+        data[code]["n10"] = 1
         # 涨停次数
         data[code]["N_zhangtingcishu"] = items["zhangtingcishu"]
         # 曾涨停次数
@@ -376,6 +379,7 @@ def tag_n20(table1, data):
         if code not in data:
             continue
         data[code]["n"] = 1
+        data[code]["n20"] = 1
         # 最大涨幅满足条件次数
         data[code]["N_qujianzhangtingcishu"] = items["qujianzhangtingcishu"]
         # 昨日最大涨幅
