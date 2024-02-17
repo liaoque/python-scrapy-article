@@ -22,7 +22,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="zhangtingcishu25days" label="25日涨停次数" sortable sort-by="color1">
+    <el-table-column prop="jitianjibantoday" label="25日涨停次数" sortable sort-by="color1">
     </el-table-column>
     <el-table-column prop="lianxuzhangtingyesterday" sortable sort-by="color2" label="昨日连板天数"></el-table-column>
     <el-table-column prop="lianbantianshutoday" label="连板天数" sortable sort-by="color1"></el-table-column>
