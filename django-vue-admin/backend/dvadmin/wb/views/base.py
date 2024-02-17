@@ -99,5 +99,5 @@ class BaseView(View):
             "n10": [item for key, item in data.items() if item["n10"] == 1],
             "n20": [item for key, item in data.items() if item["n20"] == 1],
             "zhu_xian_yuan": [item for key, item in data.items() if item["zhu_xian_yuan"] == 1],
-            "table": data2,
+            "table": [item for key, item in data2.items() ],
         })
