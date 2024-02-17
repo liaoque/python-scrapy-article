@@ -67,7 +67,7 @@ class BaseView(View):
         data2 = gn.gn_merge({item["code"]: item for item in data2})
 
         # 标记涨停和跌停， 炸板， 创百日新高， 一字板， 首板， N10, N20
-        data = init_data.tag_zhangting_dieting(data1)
+        # data = init_data.tag_zhangting_dieting(data1)
 
         #  标记 炸板， 创百日新高， 一字板， 首板， N10, N20
         table1 = (table.find_one({}, {
@@ -81,7 +81,7 @@ class BaseView(View):
             "YiZiDieTing": 1,
             "ZhuXianYuan": 1,
         }))
-        data = init_data.tag_all(table1, data)
+        # data = init_data.tag_all(table1, data)
 
         return JsonResponse({
             "jin_ceng_zhang_ting": [],
@@ -90,14 +90,14 @@ class BaseView(View):
             "zuo_ceng_die_ting": [],
             "duan_ban": [],
             "fan_bao": [],
-            "chuang_bai_ri_xin_gao": [item for key, item in data.items() if item["chuang_bai_ri_xin_gao"] == 1],
+            "chuang_bai_ri_xin_gao": table1["ChuangBaiRiXinGao"],
             "chuang_bai_ri_xin_di": [],
-            "zhu_chuang_zhang_ting": [item for key, item in data.items() if item["zhu_chuang_zhang_ting"] == 1],
-            "yi_dong": [item for key, item in data.items() if item["yi_dong"] == 1],
-            "yi_zi_ban": [item for key, item in data.items() if item["yi_zi_ban"] == 1],
-            "yi_zi_die_ting": [item for key, item in data.items() if item["yi_zi_die_ting"] == 1],
-            "n10": [item for key, item in data.items() if item["n10"] == 1],
-            "n20": [item for key, item in data.items() if item["n20"] == 1],
-            "zhu_xian_yuan": [item for key, item in data.items() if item["zhu_xian_yuan"] == 1],
+            "zhu_chuang_zhang_ting": table1["ZhuChuangZhangTing"],
+            "yi_dong": table1["YiDong"],
+            "yi_zi_ban": table1["YiZiBan"],
+            "yi_zi_die_ting": table1["YiZiDieTing"],
+            "n10": table1["N10"],
+            "n20": table1["N20"],
+            "zhu_xian_yuan":table1["ZhuXianYuan"],
             "table": [item for key, item in data2.items() ],
         })
