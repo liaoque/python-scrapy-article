@@ -107,7 +107,9 @@ def getYuanYin(data):
 
         # 排列5日涨跌幅，取每个概念涨跌幅最高得
         "day_5_sort": streak_rise.max_zhang_fu5_gu_piao(data),
-        "zhu_xian": zhu_xian.zhuxian(data)
+        "zhu_xian": zhu_xian.zhuxian(data),
+
+        "shang_zhang_sort": streak_rise.shang_zhang_sort(data)
     }
 
     return yuan_yin
