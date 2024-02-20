@@ -146,7 +146,7 @@ class Command(BaseCommand):
                 [item.name for item in yeasterdayGns]),
             "持续股票："+ " , ".join(
                 [
-                    item['code_id'] for item in list(filter(lambda x:x.code_id in [item.code_id for item in todaySharesJoinBlocks]  , yesterdayZhangTings))
+                    item.code_id for item in list(filter(lambda x:x.code_id in [item.code_id for item in todaySharesJoinBlocks]  , yesterdayZhangTings))
                 ]),
         ])
         dingding.dingding(self.s)
