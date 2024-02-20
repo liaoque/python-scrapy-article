@@ -1483,6 +1483,6 @@ def max_zhang_fu5_gu_piao(data):
 
 def shang_zhang_sort(data):
     jin_jia = {
-        "shang_zhang_count": len([x for x in data.items() if x["zhangdiefuqianfuquantoday"] > 0]),
+        "shang_zhang_count": len([x for x in data.items() if x[1]["zhangdiefuqianfuquantoday"] > 0]),
     }
     return jin_jia
