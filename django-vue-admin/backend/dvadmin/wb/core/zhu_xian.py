@@ -158,9 +158,9 @@ def zhuxian(data):
     fd = xia_xian['fd']
 
     if fd == 1:
-        suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['n10'] == 1 or item['n20'] == 1 or item['zhu_chuang_zhang_ting'] == 1 ]
+        suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['zhu_chuang_zhang_ting'] == 1 ]
     else:
-        suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['n10'] == 1 or item['n20'] == 1 or item['yi_zi_ban'] == 1 or item['lianbantianshuyesterday'] == 1]
+        suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['yi_zi_ban'] == 1 or item['lianbantianshuyesterday'] == 1]
 
     # suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['zhu_xian_yuan'] == 1]
 
