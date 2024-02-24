@@ -90,14 +90,19 @@ class BaseView(View):
             "zuo_ceng_die_ting": [],
             "duan_ban": [],
             "fan_bao": [],
-            "chuang_bai_ri_xin_gao": table1["ChuangBaiRiXinGao"],
+            "chuang_bai_ri_xin_gao": self.attr_get(table1, "ChuangBaiRiXinGao"),
             "chuang_bai_ri_xin_di": [],
-            "zhu_chuang_zhang_ting": table1["ZhuChuangZhangTing"],
-            "yi_dong": table1["YiDong"],
-            "yi_zi_ban": table1["YiZiBan"],
-            "yi_zi_die_ting": table1["YiZiDieTing"],
-            "n10": table1["N10"],
-            "n20": table1["N20"],
-            "zhu_xian_yuan":table1["ZhuXianYuan"],
-            "table": [item for key, item in data2.items() ],
+            "zhu_chuang_zhang_ting": self.attr_get(table1, "ZhuChuangZhangTing"),
+            "yi_dong": self.attr_get(table1, "YiDong"),
+            "yi_zi_ban": self.attr_get(table1, "YiZiBan"),
+            "yi_zi_die_ting": self.attr_get(table1, "YiZiDieTing"),
+            "n10": self.attr_get(table1, "N10"),
+            "n20": self.attr_get(table1, "N20"),
+            "zhu_xian_yuan": self.attr_get(table1, "ZhuXianYuan"),
+            "table": [item for key, item in data2.items()],
         })
+
+    def attr_get(self, table1, name):
+        if name in table1:
+            return table1[name]
+        return []
