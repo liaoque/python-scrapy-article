@@ -1,3 +1,4 @@
+from dvadmin.wb.config import code_config
 """
 Sub 主线()
 
@@ -145,7 +146,7 @@ End Sub
 """
 
 """
-返回 zhuxianyuan的所属概念的次数
+返回 
 概念1： 次数
 概念2： 次数
 """
@@ -153,7 +154,16 @@ End Sub
 
 def zhuxian(data):
     data2 = data.items()
-    suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['zhu_xian_yuan'] == 1]
+    xia_xian = code_config.CodeConfig().getCodeConfig()
+    fd = xia_xian['fd']
+
+    if fd == 1:
+        suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['n10'] == 1 or item['n20'] == 1 or item['zhu_chuang_zhang_ting'] == 1 ]
+    else:
+        suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['n10'] == 1 or item['n20'] == 1 or item['yi_zi_ban'] == 1 or item['lianbantianshuyesterday'] == 1]
+
+    # suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['zhu_xian_yuan'] == 1]
+
     suoshugainian = [it for item in suoshugainian for it in item]
     unique_array = list(set(suoshugainian))
 

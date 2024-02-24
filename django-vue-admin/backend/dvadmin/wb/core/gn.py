@@ -152,9 +152,10 @@ def gn_merge(data, path="data.xlsx"):
 
         if code in data2:
             gn = data2[code][2]
-            suoshugainian2 = gn.split(",")
-            suoshugainian2.extend(suoshuhangye)
-            suoshugainian.extend(suoshugainian2)
+            if gn != None:
+                suoshugainian2 = gn.split(",")
+                suoshugainian2.extend(suoshuhangye)
+                suoshugainian.extend(suoshugainian2)
 
         item["suoshugainian"] = concept.filter1(suoshugainian)
         a = item["suoshugainian"]
