@@ -82,9 +82,9 @@ class ResetView(View):
             "ZhuXianYuan": 1,
         }))
         data = init_data.tag_all(table1, data)
-        for code, item in data.items():
-            if code == "002512":
-                pass
+        # for code, item in data.items():
+        #     if code == "002512":
+        #         pass
 
         # 取跌停股票
         # dieting_table1 = (table.find_one({}, {"YiZiDieTing": 1}))

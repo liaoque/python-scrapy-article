@@ -399,24 +399,40 @@ def tag_n20(table1, data):
 
 
 def tag_zhu_xian_yuan(table1, data):
-    if "ZhuXianYuan" not in table1:
-        return data
-
     for code, item in data.items():
         # data[code]["n"] = 0
         data[code]["zhu_xian_yuan"] = 0
         data[code]["z_zhangfu10"] = 0
         data[code]["z_zhangfu30"] = 0
 
-    data2 = table1["ZhuXianYuan"]
+    xia_xian = code_config.CodeConfig().getCodeConfig()
+    fd = xia_xian['fd']
 
-    for items in data2:
-        code = gp.getCode(items["code"])
-        if code in data:
-            data[code]["zhu_xian_yuan"] = 1
-            if "zhangfu10" in items and items["zhangfu10"] > 0:
-                data[code]["z_zhangfu10"] = items["zhangfu10"]
-            if "zhangfu30" in items and items["zhangfu30"] > 0:
-                data[code]["z_zhangfu30"] = items["zhangfu30"]
-
+    for code, item in data.items():
+        if fd == 1:
+            if item['zhu_chuang_zhang_ting'] == 1:
+                data[code]["zhu_xian_yuan"] = 1
+        else:
+            if (item['yi_zi_ban'] == 1 and item['jingjiaweipipeijinetoday'] > 0) or item[
+                             'lianbantianshuyesterday'] == 1:
+                data[code]["zhu_xian_yuan"] = 1
     return data
+
+
+    # if "ZhuXianYuan" not in table1:
+    #     return data
+    #
+
+    #
+    # data2 = table1["ZhuXianYuan"]
+    #
+    # for items in data2:
+    #     code = gp.getCode(items["code"])
+    #     if code in data:
+    #         data[code]["zhu_xian_yuan"] = 1
+    #         if "zhangfu10" in items and items["zhangfu10"] > 0:
+    #             data[code]["z_zhangfu10"] = items["zhangfu10"]
+    #         if "zhangfu30" in items and items["zhangfu30"] > 0:
+    #             data[code]["z_zhangfu30"] = items["zhangfu30"]
+    #
+    # return data
