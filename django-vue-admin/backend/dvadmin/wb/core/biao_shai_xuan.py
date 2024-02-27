@@ -158,9 +158,10 @@ def biao_shai_xuan(d, data1):
     # print(gn)
     # gn.extend(filter(  d["bu_zhang_data"]["gn"],  lambda gn:gn in d["chuang_ye_ban_gn"]. ))
 
+    # 主线取前三
     i = 0
     gn3 = []
-    while i < 4:
+    while i < 3:
         if d["zhu_xian"][i]['gn'] not in gn:
             i += 1
             continue
