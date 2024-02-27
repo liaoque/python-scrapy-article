@@ -152,9 +152,10 @@ def biao_shai_xuan(d, data1):
 
     for gn2 in d["bu_zhang_data"]["gn"]:
         if gn2 in d["chuang_ye_ban_gn"] and d["chuang_ye_ban_gn"][gn2]["jin_jing_feng"]["color"] == 35:
-
             continue
         gn.append(gn2)
+
+
     # print(gn)
     # gn.extend(filter(  d["bu_zhang_data"]["gn"],  lambda gn:gn in d["chuang_ye_ban_gn"]. ))
 
@@ -162,7 +163,7 @@ def biao_shai_xuan(d, data1):
     i = 0
     gn3 = []
     while i < 3:
-        if d["zhu_xian"][i]['gn'] not in gn:
+        if d["zhu_xian"][i]['gn'] not in gn or d["zhu_xian"][i]['gn'] not in d["chuang_ye_ban_gn"]:
             i += 1
             continue
         gn3.append(d["zhu_xian"][i]['gn'])
