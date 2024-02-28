@@ -409,7 +409,7 @@ def tag_zhu_xian_yuan(table1, data):
             if item['zhu_chuang_zhang_ting'] == 1:
                 data[code]["zhu_xian_yuan"] = 1
         else:
-            if item['jingjiaweipipeijinetoday'] > 0 or item['lianbantianshuyesterday'] == 1:
+            if item['jingjiaweipipeijinetoday'] > 0 or item['lianbantianshuyesterday'] > 0:
                 data[code]["zhu_xian_yuan"] = 1
     return data
 
