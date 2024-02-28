@@ -98,3 +98,4 @@ media/
 __pypackages__/
 package-lock.json
 nohup.out
+data.xlsx
