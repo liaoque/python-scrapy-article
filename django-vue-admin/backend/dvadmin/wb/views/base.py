@@ -98,7 +98,15 @@ class BaseView(View):
             "yi_zi_die_ting": self.attr_get(table1, "YiZiDieTing"),
             "n10": self.attr_get(table1, "N10"),
             "n20": self.attr_get(table1, "N20"),
-            "zhu_xian_yuan": [item for key, item in data.items() if item["zhu_xian_yuan"] == 1],
+            "zhu_xian_yuan": [{
+               "code" : item["code"],
+               "name" : item["briefname"],
+               "suoshuhangye" : item["suoshuhangye"],
+               "suoshugainian" : ",".join(item["suoshugainian"]) ,
+               # "suoshugainian" : item["suoshugainian"],
+               "zhangfu10" : 0,
+               "zhangfu30" : 0,
+            } for key, item in data.items() if item["zhu_xian_yuan"] == 1],
             "table": [item for key, item in data2.items()],
         })
 
