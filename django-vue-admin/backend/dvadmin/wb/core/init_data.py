@@ -212,6 +212,7 @@ def tag_chuang_bai_ri_xin_gao(table1, data):
         data[code]["chuang_bai_ri_xin_gao"] = 1
     return data
 
+
 def tag_yi_zi_ban(table1, data):
     if "YiZiBan" not in table1:
         return data
@@ -261,7 +262,6 @@ def tag_shou_ban(table1, data):
 
 # 取异动
 def tag_yi_dong(table1, data):
-
     for code, item in data.items():
         data[code]["jianguanleixingyesterday"] = ""
         data[code]["lianxuzhangtingtianshuyesterday"] = 0
@@ -311,8 +311,6 @@ def tag_yi_zi_die_ting(table1, data):
 
 # 取n10
 def tag_n10(table1, data):
-
-
     for code, item in data.items():
         data[code]["n"] = 0
         data[code]["n10"] = 0
@@ -357,8 +355,6 @@ def tag_n10(table1, data):
 
 # 取n20
 def tag_n20(table1, data):
-
-
     for code, item in data.items():
         # data[code]["n"] = 0
         data[code]["N_zuidazhangfu"] = 0
@@ -413,11 +409,9 @@ def tag_zhu_xian_yuan(table1, data):
             if item['zhu_chuang_zhang_ting'] == 1:
                 data[code]["zhu_xian_yuan"] = 1
         else:
-            if (item['yi_zi_ban'] == 1 and item['jingjiaweipipeijinetoday'] > 0) or item[
-                             'lianbantianshuyesterday'] == 1:
+            if item['jingjiaweipipeijinetoday'] > 0 or item['lianbantianshuyesterday'] == 1:
                 data[code]["zhu_xian_yuan"] = 1
     return data
-
 
     # if "ZhuXianYuan" not in table1:
     #     return data
