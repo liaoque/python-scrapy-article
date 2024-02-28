@@ -67,7 +67,7 @@ class BaseView(View):
         data2 = gn.gn_merge({item["code"]: item for item in data2})
 
         # 标记涨停和跌停， 炸板， 创百日新高， 一字板， 首板， N10, N20
-        # data = init_data.tag_zhangting_dieting(data1)
+        data = init_data.tag_zhangting_dieting(data1)
 
         #  标记 炸板， 创百日新高， 一字板， 首板， N10, N20
         table1 = (table.find_one({}, {
@@ -81,7 +81,7 @@ class BaseView(View):
             "YiZiDieTing": 1,
             "ZhuXianYuan": 1,
         }))
-        # data = init_data.tag_all(table1, data)
+        data = init_data.tag_all(table1, data)
 
         return JsonResponse({
             "jin_ceng_zhang_ting": [],
@@ -98,7 +98,7 @@ class BaseView(View):
             "yi_zi_die_ting": self.attr_get(table1, "YiZiDieTing"),
             "n10": self.attr_get(table1, "N10"),
             "n20": self.attr_get(table1, "N20"),
-            "zhu_xian_yuan": self.attr_get(table1, "ZhuXianYuan"),
+            "zhu_xian_yuan": [item for key, item in data.items() if item["zhu_xian_yuan"] == 1],
             "table": [item for key, item in data2.items()],
         })
 
