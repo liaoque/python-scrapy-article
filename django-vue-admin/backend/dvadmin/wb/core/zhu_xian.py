@@ -160,7 +160,7 @@ def zhuxian(data):
     if fd == 1:
         suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['zhu_chuang_zhang_ting'] == 1 ]
     else:
-        suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['jingjiaweipipeijinetoday'] > 0 or item['lianbantianshuyesterday'] > 0]
+        suoshugainian = [item['suoshugainian'] for (code, item) in data2 if (item['jingjiaweipipeijinetoday'] > 0 and item['yi_zi_ban'] == 1) or item['lianbantianshuyesterday'] > 0]
 
     # suoshugainian = [item['suoshugainian'] for (code, item) in data2 if item['zhu_xian_yuan'] == 1]
 
