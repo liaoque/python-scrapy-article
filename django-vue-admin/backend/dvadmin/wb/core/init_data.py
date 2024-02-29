@@ -277,8 +277,10 @@ def tag_yi_dong(table1, data):
         code = gp.getCode(items["code"])
         if code not in data:
             continue
-        data[code]["jianguanleixingyesterday"] = items["jianguanleixingyesterday"]
-        data[code]["lianxuzhangtingtianshuyesterday"] = items["lianxuzhangtingtianshuyesterday"]
+        if len(items["jianguanleixingyesterday"]):
+            data[code]["jianguanleixingyesterday"] = items["jianguanleixingyesterday"]
+        if items["lianxuzhangtingtianshuyesterday"]:
+            data[code]["lianxuzhangtingtianshuyesterday"] = items["lianxuzhangtingtianshuyesterday"]
 
         if "连续" in items["qujianyidongleixing"]:
             data[code]["yidongcishu"] += 1
