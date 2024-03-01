@@ -317,15 +317,17 @@ End Sub
 """
 
 
-def setColor3Purple(chuang_data):
+def setColor3Purple(chuang_data, qx, lian_ban_code):
     # 这个紫色改，昨日连班天数最大，如果有多个昨日连班天数一样大的取这几个昨日连班天数里4日涨跌幅最大的
     # chuang_data = sorted(chuang_data, key=lambda x: x[1]["zhangdie4thday"], reverse=True)
     chuang_data = sorted(chuang_data, key=lambda x: (x[1]["lianbantianshutoday"], x[1]["zhangdie4thday"]), reverse=True)
     # chuang_data = dict(tmp)
-
+    zsjjwpp = 1000
+    if qx == 1 and lian_ban_code['lianbantianshu'] <= 5:
+        zsjjwpp = 1
     rng5 = None
     for (key, item) in chuang_data:
-        if item["color1"] != 35 and item["color12"] == 37:
+        if item["color1"] / 100000000 <= zsjjwpp and item["color1"] != 35 and item["color12"] == 37:
             if rng5 is None:
                 rng5 = item
             if item["color8"] == 38 or item["lianbantianshuyesterday"] > 0:
@@ -448,8 +450,8 @@ def pi_pei_gai_nian(d):
     chuang_data = setColorOrange(chuang_data)
     zhu_data = setColorOrange(zhu_data)
 
-    chuang_data = setColor3Purple(chuang_data)
-    zhu_data = setColor3Purple(zhu_data)
+    chuang_data = setColor3Purple(chuang_data, qx, d["bu_zhang_data"]["lian_ban_code"])
+    zhu_data = setColor3Purple(zhu_data, qx, d["bu_zhang_data"]["lian_ban_code"])
     #
     # for (key, item) in chuang_data:
     #     if item["color1"] != 35 and item["color4"] != 13551615 and item["color4"] != 3:
