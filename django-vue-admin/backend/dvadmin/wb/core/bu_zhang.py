@@ -256,7 +256,7 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
     lian_xu_duo_ri_yi_zi_ban = xia_xian["lian_ban_code_black"]
     # 连板股票 h10 - h11
     # 按 4日涨跌幅排序， 在按昨日连扳天数排序
-    data2 = sorted(data.items(), key=lambda x: (x[1]["zhangdie4thday"], x[1]["lianbantianshuyesterday"]), reverse=True)
+    data2 = sorted(data.items(), key=lambda x: (x[1]["lianbantianshuyesterday"], x[1]["zhangdie4thday"]), reverse=True)
     lian_ban_code = getLianBanGuPiao(data2, lian_xu_duo_ri_yi_zi_ban, fd)
 
     # 连扳天数超过4板，变颜色
@@ -371,16 +371,22 @@ def getLianBanGuPiao(data2, lian_xu_duo_ri_yi_zi_ban, fd):
         data2 = sorted(data2, key=lambda x: (x[1]['lianbantianshutoday']),
                        reverse=True)
         for index, item in data2:
-            if item["lianbantianshutoday"] in lian_xu_duo_ri_yi_zi_ban:
-                continue
+            if item["briefname"] in lian_xu_duo_ri_yi_zi_ban:
+                lian_ban_code["code"] = item["code"]
+                lian_ban_code["briefname"] = item["briefname"]
+                lian_ban_code["lianbantianshu"] = item['lianbantianshutoday']
+                break
             lian_ban_code["code"] = item["code"]
             lian_ban_code["briefname"] = item["briefname"]
             lian_ban_code["lianbantianshu"] = item["lianbantianshutoday"]
             break
     else:
         for index, item in data2:
-            if item["lianbantianshuyesterday"] in lian_xu_duo_ri_yi_zi_ban:
-                continue
+            if item["briefname"] in lian_xu_duo_ri_yi_zi_ban:
+                lian_ban_code["code"] = item["code"]
+                lian_ban_code["briefname"] = item["briefname"]
+                lian_ban_code["lianbantianshu"] = item['lianbantianshuyesterday']
+                break
             lian_ban_code["code"] = item["code"]
             lian_ban_code["briefname"] = item["briefname"]
             lian_ban_code["lianbantianshu"] = item['lianbantianshuyesterday']
