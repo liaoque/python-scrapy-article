@@ -450,8 +450,8 @@ def pi_pei_gai_nian(d):
     chuang_data = setColorOrange(chuang_data)
     zhu_data = setColorOrange(zhu_data)
 
-    chuang_data = setColor3Purple(chuang_data, qx, d["bu_zhang_data"]["lian_ban_code"])
-    zhu_data = setColor3Purple(zhu_data, qx, d["bu_zhang_data"]["lian_ban_code"])
+    chuang_data = setColor3Purple(chuang_data, qx, bu_zhang_data["lian_ban_code"])
+    zhu_data = setColor3Purple(zhu_data, qx, bu_zhang_data["lian_ban_code"])
     #
     # for (key, item) in chuang_data:
     #     if item["color1"] != 35 and item["color4"] != 13551615 and item["color4"] != 3:
@@ -539,6 +539,11 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
             # 创业板情绪差原来是4日涨跌幅大于20%就绿改成4日涨跌幅大于100%
             if is_chuang_ye == 1 and item["zhangdie4thday"] >= 1:
                 item["color1"] = 35
+
+            # 这个数字和名称 和主板那里的昨日连板天数最大值数字和名称是一样的，竞价未匹配的绿去除
+            if bu_zhang_data["lian_ban_code"]["code"] == item["code"]:
+                item["color1"] = 0
+                item["color2"] = 0
         else:
             if item["jingjiajinechengjiaoliangbi"] >= 0.08 and item["jingjiajinechengjiaoliangbi"] < 1:
                 item["color6"] = 13551615
