@@ -163,7 +163,7 @@ def biao_shai_xuan(d, data1):
     i = 0
     gn3 = []
     while i < 3:
-        if d["zhu_xian"][i]['gn'] not in gn or d["zhu_xian"][i]['gn'] not in d["chuang_ye_ban_gn"]:
+        if d["zhu_xian"][i]['gn'] not in gn :
             i += 1
             continue
         gn3.append(d["zhu_xian"][i]['gn'])
