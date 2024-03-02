@@ -327,7 +327,7 @@ def setColor3Purple(chuang_data, qx, lian_ban_code):
         zsjjwpp = 1
     rng5 = None
     for (key, item) in chuang_data:
-        if item["color1"] / 100000000 <= zsjjwpp and item["color1"] != 35 and item["color12"] == 37:
+        if item["jingjiaweipipeijinetoday"] / 100000000 <= zsjjwpp and item["color1"] != 35 and item["color12"] == 37:
             if rng5 is None:
                 rng5 = item
             if item["color8"] == 38 or item["lianbantianshuyesterday"] > 0:
