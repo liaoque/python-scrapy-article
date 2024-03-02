@@ -282,7 +282,16 @@ export default {
       if (!self.today.length) {
         self.getToday()
       }
-
+      self.chuang =  {
+        yellow: '',
+        orange: '',
+        purple: ''
+      }
+      self.zhu = {
+        yellow: '',
+        orange: '',
+        purple: ''
+      }
       api.GetResult(self.today, self.fd, self.yd).then(function (params) {
         self.fd = parseInt(params.config.fd) === 1
         self.yd = parseInt(params.config.yd) === 1

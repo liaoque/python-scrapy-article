@@ -320,7 +320,7 @@ End Sub
 def setColor3Purple(chuang_data, qx, lian_ban_code):
     # 这个紫色改，昨日连班天数最大，如果有多个昨日连班天数一样大的取这几个昨日连班天数里4日涨跌幅最大的
     # chuang_data = sorted(chuang_data, key=lambda x: x[1]["zhangdie4thday"], reverse=True)
-    chuang_data = sorted(chuang_data, key=lambda x: (x[1]["lianbantianshutoday"], x[1]["zhangdie4thday"]), reverse=True)
+    chuang_data = sorted(chuang_data, key=lambda x: (x[1]["lianbantianshuyesterday"], x[1]["zhangdie4thday"]), reverse=True)
     # chuang_data = dict(tmp)
     zsjjwpp = 1000
     if qx == 1 and lian_ban_code['lianbantianshu'] <= 5:
