@@ -317,23 +317,23 @@ def createJinJingFeng(gn_dict, gn, today, yesterday):
         jin_jing_feng["color"] = 35
 
     # 昨天一字板
-    if gn in yi_zi_ban_sort_yesterday:
-        jin_jing_feng["yesterday"] = yi_zi_ban_sort_yesterday[gn][
-            "gai_nian_jing_jia_wei_pi_pei"]
+    # if gn in yi_zi_ban_sort_yesterday:
+    #     jin_jing_feng["yesterday"] = yi_zi_ban_sort_yesterday[gn][
+    #         "gai_nian_jing_jia_wei_pi_pei"]
         # 竞价未匹配<昨天 弱
-        if jin_jing_feng["today"] < jin_jing_feng["yesterday"] and gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] > 0:
-            jin_jing_feng["color"] = 35
+        # if jin_jing_feng["today"] < jin_jing_feng["yesterday"] and gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] > 0:
+        #     jin_jing_feng["color"] = 35
     # gn_dict[gn]["jin_jing_feng"] = jin_jing_feng
 
     # 涨停大肉
     lian_zhang_sort_yesterday = yesterday["yuan_yin"]["lian_zhang_sort"]
-    if gn in lian_zhang_sort_yesterday:
-        jin_jing_feng["yesterday_fengdan"] = lian_zhang_sort_yesterday[gn][
-            "gai_nian_feng_dan_jin_e"]
+    # if gn in lian_zhang_sort_yesterday:
+    #     jin_jing_feng["yesterday_fengdan"] = lian_zhang_sort_yesterday[gn][
+    #         "gai_nian_feng_dan_jin_e"]
         # 竞价未匹配<昨天 弱
-        if jin_jing_feng["today"] < jin_jing_feng["yesterday_fengdan"] and gn_dict[gn]["shu_liang"][
-            "jin_jing_feng_count"] > 0:
-            jin_jing_feng["color"] = 35
+        # if jin_jing_feng["today"] < jin_jing_feng["yesterday_fengdan"] and gn_dict[gn]["shu_liang"][
+        #     "jin_jing_feng_count"] > 0:
+        #     jin_jing_feng["color"] = 35
 
     gn_dict[gn]["jin_jing_feng"] = jin_jing_feng
     return gn_dict
@@ -351,8 +351,8 @@ def createChuangBaiRiXinGao(gn_dict, gn, today, yesterday):
             yesterday["yuan_yin"]["chuang_bai_ri_xin_gao_sort"][gn]["gai_nian_jing_jia_wei_pi_pei"]
 
     # 涨停概念对应股票少于昨天的, 说明比昨天的弱
-    if round(chuang_bai_ri_xin_gao["today"]/100000000) == 0 or chuang_bai_ri_xin_gao["today"] < chuang_bai_ri_xin_gao["yesterday"]:
-        chuang_bai_ri_xin_gao["color"] = 35
+    # if round(chuang_bai_ri_xin_gao["today"]/100000000) == 0 or chuang_bai_ri_xin_gao["today"] < chuang_bai_ri_xin_gao["yesterday"]:
+    #     chuang_bai_ri_xin_gao["color"] = 35
     gn_dict[gn]["chuang_bai_ri_xin_gao"] = chuang_bai_ri_xin_gao
     return gn_dict
 
