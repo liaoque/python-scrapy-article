@@ -313,11 +313,11 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
 
     # 昨首版非綠的概念
     # ，就昨原因里首板的所有概念里非绿的概念加入 结果表的补涨
-    for (code, item2) in yesterday["shou_ban_sort"].items():
-        if "color" in item2 and item2["color"] == 35:
-            continue
-        # if item2["suoshugainian"] in gn:
-        outgn.append(item2["suoshugainian"])
+    # for (code, item2) in yesterday["shou_ban_sort"].items():
+    #     if "color" in item2 and item2["color"] == 35:
+    #         continue
+    #     # if item2["suoshugainian"] in gn:
+    #     outgn.append(item2["suoshugainian"])
 
     outgn = list(set(outgn))
 
@@ -347,6 +347,7 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
         "lian_ban_code120": lian_ban_code120,
         "zhong_jun": zhong_jun,
         "feng_kou": "feng_kou",
+        "outgn": "outgn",
         "yz": yzcode,
         "yz_rate": yzcode["zhangdie4thday"],
         "gn": gn,
