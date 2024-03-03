@@ -327,9 +327,9 @@ export default {
           }
 
           // 今竟封，跌停未匹配
-          today = (Math.ceil(item.jin_jing_feng.today / 1000000) / 100).toFixed(2)
-          yeasterday = (Math.ceil(item.jin_jing_feng.yesterday / 1000000) / 100).toFixed(2)
-          const yesterdayFengDan = (Math.ceil(item.jin_jing_feng.yesterday_fengdan / 1000000) / 100).toFixed(2)
+          today = (Math.round(item.jin_jing_feng.today / 1000000) / 100).toFixed(2)
+          yeasterday = (Math.round(item.jin_jing_feng.yesterday / 1000000) / 100).toFixed(2)
+          const yesterdayFengDan = (Math.round(item.jin_jing_feng.yesterday_fengdan / 1000000) / 100).toFixed(2)
           item.jin_zuo_jin_jing_feng = today + '|' + yeasterday + '|' + yesterdayFengDan
 
           return item

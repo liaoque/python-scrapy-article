@@ -313,7 +313,7 @@ def createJinJingFeng(gn_dict, gn, today, yesterday):
             "count"]
 
     # 竞价未匹配<0 弱
-    if jin_jing_feng["today"] <= 0 and gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] > 0:
+    if round(jin_jing_feng["today"]/100000000) <= 0 and gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] > 0:
         jin_jing_feng["color"] = 35
 
     # 昨天一字板
@@ -351,7 +351,7 @@ def createChuangBaiRiXinGao(gn_dict, gn, today, yesterday):
             yesterday["yuan_yin"]["chuang_bai_ri_xin_gao_sort"][gn]["gai_nian_jing_jia_wei_pi_pei"]
 
     # 涨停概念对应股票少于昨天的, 说明比昨天的弱
-    if chuang_bai_ri_xin_gao["today"] == 0 or chuang_bai_ri_xin_gao["today"] < chuang_bai_ri_xin_gao["yesterday"]:
+    if round(chuang_bai_ri_xin_gao["today"]/100000000) == 0 or chuang_bai_ri_xin_gao["today"] < chuang_bai_ri_xin_gao["yesterday"]:
         chuang_bai_ri_xin_gao["color"] = 35
     gn_dict[gn]["chuang_bai_ri_xin_gao"] = chuang_bai_ri_xin_gao
     return gn_dict

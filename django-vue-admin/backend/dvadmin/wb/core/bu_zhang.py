@@ -329,7 +329,8 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
     # gn.Offset(0, 6).Interior.ColorIndex <> 35
     for (item) in outgn:
         if item not in chuang_ye_ban_gn.keys():
-            gn.append(item)
+           # gn.append(item)
+            pass
         else:
             if fd == 1:
                 if chuang_ye_ban_gn[item]["jin_jing_feng"]["color"] != 35 and \
