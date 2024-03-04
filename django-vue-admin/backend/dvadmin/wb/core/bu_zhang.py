@@ -447,18 +447,19 @@ def zuo_biao_gao(yesterday):
 
 
 def merge_shou_ban(yesterday, before_yesterday):
-    for gn, item in yesterday["shou_ban_sort"].items():
-        yesterday["shou_ban_sort"][gn]["color"] = 0
-
-        if len(before_yesterday["yi_zi_ban_sort"].keys()) == 0 and len(
-                yesterday["yi_zi_ban_sort"].keys()) == 0:
-            break
-
-        if gn not in before_yesterday["shou_ban_sort"]:
-            continue
-
-        if before_yesterday["shou_ban_sort"][gn]["gai_nian_feng_dan_jin_e"] > item[
-            "gai_nian_feng_dan_jin_e"]:
-            yesterday["shou_ban_sort"][gn]["color"] = 35
-
     return yesterday
+    # for gn, item in yesterday["shou_ban_sort"].items():
+    #     yesterday["shou_ban_sort"][gn]["color"] = 0
+    #
+    #     if len(before_yesterday["yi_zi_ban_sort"].keys()) == 0 and len(
+    #             yesterday["yi_zi_ban_sort"].keys()) == 0:
+    #         break
+    #
+    #     if gn not in before_yesterday["shou_ban_sort"]:
+    #         continue
+    #
+    #     if before_yesterday["shou_ban_sort"][gn]["gai_nian_feng_dan_jin_e"] > item[
+    #         "gai_nian_feng_dan_jin_e"]:
+    #         yesterday["shou_ban_sort"][gn]["color"] = 35
+    #
+    # return yesterday
