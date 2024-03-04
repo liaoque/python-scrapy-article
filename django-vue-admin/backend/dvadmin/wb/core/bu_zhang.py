@@ -195,6 +195,7 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
         # 根据封单额度，取强势的首版概念
         if "color" not in item or item["color"] != 35:
             sortgn.append({"gn": gn, "c": item["count"]})
+            maxgn.append(gn)
             # if imax < item["count"]:
             #     imax = item["count"]
             #     maxgn = []
@@ -329,7 +330,7 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
     # gn.Offset(0, 6).Interior.ColorIndex <> 35
     for (item) in outgn:
         if item not in chuang_ye_ban_gn.keys():
-           # gn.append(item)
+            # gn.append(item)
             pass
         else:
             if fd == 1:
