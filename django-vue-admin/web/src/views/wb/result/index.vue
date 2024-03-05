@@ -59,7 +59,7 @@
         <el-switch v-model="yd"></el-switch>
         <el-date-picker v-model="today" type="date" value-format="yyyyMMdd" placeholder="选择日期">
         </el-date-picker>
-        <el-button type="primary" @click="getCrudOptions" style="margin-left: 16px;">
+        <el-button type="primary" @click="getCrudData" style="margin-left: 16px;">
           查询
         </el-button>
         <el-button type="primary" @click="restData" :disabled="dis" style="margin-left: 16px;">
@@ -277,7 +277,7 @@ export default {
         }, 10000)
       })
     },
-    getCrudOptions() {
+    getCrudData() {
       const self = this
       if (!self.today.length) {
         self.getToday()
@@ -407,7 +407,7 @@ export default {
       return []
     },
     pageRequest(query) {
-      return api.GetList(query)
+      // return api.GetList(query)
     },
     addRequest(row) {
       console.log('api', api)

@@ -9,7 +9,7 @@
         <el-switch v-model="yd"></el-switch>
         <el-date-picker v-model="today" type="date" value-format="yyyyMMdd" placeholder="选择日期">
         </el-date-picker>
-        <el-button type="primary" @click="getCrudOptions" style="margin-left: 16px;">
+        <el-button type="primary" @click="getCrudData" style="margin-left: 16px;">
           查询
         </el-button>
       </el-row>
@@ -152,7 +152,7 @@ export default {
       }
       return api.GetBase(self.today, self.fd, self.yd)
     },
-    getCrudOptions() {
+    getCrudData() {
       let self = this
       if (!self.today.length) {
         self.getToday()
