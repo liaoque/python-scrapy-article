@@ -109,7 +109,8 @@ def getYuanYin(data):
         "day_5_sort": streak_rise.max_zhang_fu5_gu_piao(data),
         "zhu_xian": zhu_xian.zhuxian(data),
 
-        "shang_zhang_sort": streak_rise.shang_zhang_sort(data)
+        "shang_zhang_sort": streak_rise.shang_zhang_sort(data),
+        "gu_piao_sort" : lianzhang_code_page
     }
 
     return yuan_yin

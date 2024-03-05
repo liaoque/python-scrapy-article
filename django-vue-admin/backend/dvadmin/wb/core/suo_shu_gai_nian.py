@@ -280,8 +280,11 @@ def createPanZhong(gn_dict, gn, today, fd):
         return gn_dict
     if gn not in today["yuan_yin"]["lian_zhang_sort"]:
         return gn_dict
-    gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] = today["yuan_yin"]["lian_zhang_sort"][gn][
-        "gai_nian_feng_dan_jin_e"]
+    lianzhanggupiao = today["yuan_yin"]["gu_piao_sort"]["lianzhanggupiao"].items()
+    gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] = sum([ item["zhangtingfengdanetoday"] for key,item in lianzhanggupiao if gn in item["suoshugainian"] ])
+
+    # gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] = today["yuan_yin"]["lian_zhang_sort"][gn][
+    #     "gai_nian_feng_dan_jin_e"]
     if gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] < gn_dict[gn]["jin_jing_feng"]["today"]:
         gn_dict[gn]["pan_zhong"]["color"] = 35
     if 0 < gn_dict[gn]["jin_jing_feng"]["today"]  < gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"]:
