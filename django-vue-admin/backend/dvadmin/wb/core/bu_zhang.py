@@ -189,6 +189,9 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
     xia_xian = code_config.CodeConfig().getCodeConfig()
     fd = xia_xian["fd"]
 
+    for gn, item in today["shou_ban_sort"].items():
+        maxgn.append(gn)
+
     for gn, item in yesterday["shou_ban_sort"].items():
         # 趋势未变弱
         # 根据封单的股票数，取强势的首版概念
