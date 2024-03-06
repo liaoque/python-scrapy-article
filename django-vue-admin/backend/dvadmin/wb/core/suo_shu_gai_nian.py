@@ -373,6 +373,8 @@ def create_dieting(gn_dict, gn, today, fd):
             gn_dict[gn]["die_ting"]["value"] = gn_dict[gn]["die_ting"]["feng_dan_jin_e"] = \
             today["yuan_yin"]["die_ting_sort"][gn][
                 "gai_nian_die_ting_feng_dan_jin_e"]
+            if gn_dict[gn]["die_ting"]["value"] > gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"]:
+                gn_dict[gn]["die_ting"]["color"] = 35
 
     else:
         jing_jia_wei_pi_pei = 0
@@ -386,10 +388,10 @@ def create_dieting(gn_dict, gn, today, fd):
             jing_jia_wei_pi_pei = abs(jing_jia_wei_pi_pei)
 
         gn_dict[gn]["die_ting"]["value"] = gn_dict[gn]["die_ting"]["jing_jia_wei_pi_pei"] = jing_jia_wei_pi_pei
-        if gn_dict[gn]["die_ting"]["jing_jia_wei_pi_pei"] > gn_dict[gn]["jin_jing_feng"]["today"]:
+        if gn_dict[gn]["die_ting"]["value"] > gn_dict[gn]["jin_jing_feng"]["today"]:
             gn_dict[gn]["die_ting"]["color"] = 35
 
-        if gn_dict[gn]["die_ting"]["color"] == 35 and gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] == 0:
+        if gn_dict[gn]["die_ting"]["color"] == 35 and gn_dict[gn]["shu_liang"]["value"] == 0:
             gn_dict[gn]["die_ting"]["color"] = 0
     return gn_dict
 
@@ -402,6 +404,8 @@ def create_dieting(gn_dict, gn, today, fd):
 def gai_nian_biao_shang_se(gn_dict):
     # imax = 0
     # isred = 0
+    if len(gn_dict.items()) == 0:
+        return gn_dict
 
     imax = max(gn_dict.items(), key=lambda x: x[1]["shu_liang"]["value"])
     # 今竞封的数量最大的
