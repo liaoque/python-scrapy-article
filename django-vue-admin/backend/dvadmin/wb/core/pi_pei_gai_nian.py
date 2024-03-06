@@ -541,7 +541,7 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
                 item["color1"] = 35
 
             # 这个数字和名称 和主板那里的昨日连板天数最大值数字和名称是一样的，竞价未匹配的绿去除
-            if bu_zhang_data["lian_ban_code"]["code"] == item["code"]:
+            if bu_zhang_data["lian_ban_code"]["code"] == item["code"] and bu_zhang_data["lian_ban_code"]["lianbantianshu"] == item["lianxuzhangtingtianshuyesterday"]:
                 item["color1"] = 0
                 item["color2"] = 0
         else:
