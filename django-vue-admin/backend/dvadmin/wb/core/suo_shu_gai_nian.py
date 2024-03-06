@@ -287,7 +287,7 @@ def createPanZhong(gn_dict, gn, today, fd):
     #     "gai_nian_feng_dan_jin_e"]
     if gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] < gn_dict[gn]["jin_jing_feng"]["today"]:
         gn_dict[gn]["pan_zhong"]["color"] = 35
-    if 0 < gn_dict[gn]["jin_jing_feng"]["today"]  < gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"]:
+    if (0 < gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] and gn_dict[gn]["jin_jing_feng"]["today"]  < gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"]):
         gn_dict[gn]["jin_jing_feng"]["color"] = 0
     return gn_dict
 
@@ -316,7 +316,7 @@ def createJinJingFeng(gn_dict, gn, today, yesterday):
             "count"]
 
     # 竞价未匹配<0 弱
-    if round(jin_jing_feng["today"]/100000000) <= 0 and gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] > 0:
+    if round(jin_jing_feng["today"]/100000000) <= 0 and gn_dict[gn]["shu_liang"]["value"] > 0:
         jin_jing_feng["color"] = 35
 
     # 昨天一字板
@@ -324,7 +324,7 @@ def createJinJingFeng(gn_dict, gn, today, yesterday):
         jin_jing_feng["yesterday"] = yi_zi_ban_sort_yesterday[gn][
             "gai_nian_jing_jia_wei_pi_pei"]
         # 竞价未匹配<昨天 弱
-        if jin_jing_feng["today"] < jin_jing_feng["yesterday"] and gn_dict[gn]["shu_liang"]["jin_jing_feng_count"] > 0:
+        if jin_jing_feng["today"] < jin_jing_feng["yesterday"] and gn_dict[gn]["shu_liang"]["value"] > 0:
             jin_jing_feng["color"] = 35
     # gn_dict[gn]["jin_jing_feng"] = jin_jing_feng
 
@@ -335,8 +335,10 @@ def createJinJingFeng(gn_dict, gn, today, yesterday):
             "gai_nian_feng_dan_jin_e"]
         # 竞价未匹配<昨天 弱
         if jin_jing_feng["today"] < jin_jing_feng["yesterday_fengdan"] and gn_dict[gn]["shu_liang"][
-            "jin_jing_feng_count"] > 0:
+            "value"] > 0:
             jin_jing_feng["color"] = 35
+
+
 
     gn_dict[gn]["jin_jing_feng"] = jin_jing_feng
     return gn_dict
