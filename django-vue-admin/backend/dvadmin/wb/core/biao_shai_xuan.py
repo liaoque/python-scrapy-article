@@ -189,15 +189,15 @@ def biao_shai_xuan(d, data1):
         item["color13"] = 0
         if item["n"] > 0:
             item["color12"] = 37
-        # 前日最大涨幅 >0 昨日连板天数 = 38
-        if item["N_maxzhangfu"] > 0:
-            item["color8"] = 38
-        # 昨日最大涨幅 >0 昨日连板天数 = 38
-        if item["N_zuidazhangfu"] > 0:
-            item["color8"] = 38
-        # '前日涨停 = "涨停" 且 昨日连板天数 = 0 昨日连板天数 = 38
-        if item["N_beforeyesterdaytop"] > 0 and item["lianbantianshuyesterday"] == 0:
-            item["color8"] = 38
+            # 前日最大涨幅 >0 昨日连板天数 = 38
+            if item["N_maxzhangfu"] > 0:
+                item["color8"] = 38
+            # 昨日最大涨幅 >0 昨日连板天数 = 38
+            if item["N_zuidazhangfu"] > 0:
+                item["color8"] = 38
+            # '前日涨停 = "涨停" 且 昨日连板天数 = 0 昨日连板天数 = 38
+            if item["N_beforeyesterdaytop"] > 0 and item["lianbantianshuyesterday"] == 0:
+                item["color8"] = 38
 
     # T2 数据
     zhu_data = filter(
@@ -212,15 +212,15 @@ def biao_shai_xuan(d, data1):
         item["color13"] = 0
         if item["n"] > 0:
             item["color12"] = 37
-        # 连板次数 >0 昨日连板天数 = 38
-        if item["N_lianbancishu"] > 0:
-            item["color8"] = 38
-        # 昨日曾涨停 >0 昨日连板天数 = 38
-        if item["N_zuocengzhangting"] > 0:
-            item["color8"] = 38
-        # '前日涨停 = "涨停"  昨日连板天数 = 38
-        if item["N_beforeyesterdaytop"] > 0 :
-            item["color8"] = 38
+            # 连板次数 >0 昨日连板天数 = 38
+            if item["N_lianbancishu"] > 0:
+                item["color8"] = 38
+            # 昨日曾涨停 >0 昨日连板天数 = 38
+            if item["N_zuocengzhangting"] > 0:
+                item["color8"] = 38
+            # '前日涨停 = "涨停"  昨日连板天数 = 38
+            if item["N_beforeyesterdaytop"] > 0 and item["lianbantianshuyesterday"] == 0:
+                item["color8"] = 38
 
     return {
         "chuang_data": chuang_data,
