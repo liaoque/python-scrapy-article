@@ -174,8 +174,8 @@ def biao_shai_xuan(d, data1):
     # gn.extend(d["bu_zhang_data"]["gn"])
 
     #  如果主线源选不到，直接走原来逻辑
-    if len(gn3) == 0:
-        gn3 = gn
+    # if len(gn3) == 0:
+    #     gn3 = gn
 
     # T1 数据
     chuang_data = filter(lambda x: len(set(x[1]["suoshugainian"]) & set(gn3)) > 0 and x[0][0:2] == '30', data1.items())
