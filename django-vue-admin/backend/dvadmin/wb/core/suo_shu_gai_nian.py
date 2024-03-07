@@ -280,8 +280,8 @@ def createPanZhong(gn_dict, gn, today, fd):
         return gn_dict
     if gn not in today["yuan_yin"]["lian_zhang_sort"]:
         return gn_dict
-    lianzhanggupiao = today["yuan_yin"]["gu_piao_sort"]["lianzhanggupiao"].items()
-    gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] = sum([ item["zhangtingfengdanetoday"] for key,item in lianzhanggupiao if gn in item["suoshugainian"] ])
+    lianzhanggupiao = today["yuan_yin"]["lian_zhang_sort"].items()
+    gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] = sum([ item["gai_nian_feng_dan_jin_e"] for key,item in lianzhanggupiao if gn == item["suoshugainian"] ])
 
     # gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] = today["yuan_yin"]["lian_zhang_sort"][gn][
     #     "gai_nian_feng_dan_jin_e"]
@@ -300,7 +300,7 @@ def createZhangTingDaRou(gn_dict, gn, today, fd):
         # 盘中 涨停次数 < 1, 弱： execl : 298行
         gn_dict[gn]["shu_liang"]["value"] = gn_dict[gn]["shu_liang"]["zhang_ting_da_rou"] = \
         today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
-        if gn_dict[gn]["shu_liang"]["zhang_ting_da_rou"] < 1:
+        if gn_dict[gn]["shu_liang"]["value"] < 1:
             gn_dict[gn]["shu_liang"]["color"] = 35
 
     return gn_dict
@@ -407,7 +407,11 @@ def gai_nian_biao_shang_se(gn_dict):
     if len(gn_dict.items()) == 0:
         return gn_dict
 
-    imax = max(gn_dict.items(), key=lambda x: x[1]["shu_liang"]["value"])
+    filtered_items = [(k, v) for k, v in gn_dict.items() if
+                      v["jin_jing_feng"]["color"] != 35 and v["pan_zhong"]["color"] != 35 and v["die_ting"][
+                          "color"] != 35]
+    imax = max(filtered_items, key=lambda x: x[1]["shu_liang"]["value"])
+
     # 今竞封的数量最大的
     for (gn, item) in gn_dict.items():
         if (item["jin_jing_feng"]["color"] != 35 and item["pan_zhong"]["color"] != 35 and
