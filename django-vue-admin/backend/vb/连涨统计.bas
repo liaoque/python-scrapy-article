@@ -90,7 +90,8 @@ Sub 取连涨股票()
             dic.RemoveAll
             'Set dic = Nothing '关闭字典
             Sheet5.Range("c" & h) = ";" & Join(arr1, ";") & ";"
-            Sheet5.Range("d" & h) = rng.Offset(0, 16)
+          '  Sheet5.Range("d" & h) = rng.Offset(0, 16)
+          '  Sheet5.Range("d" & h) = rng.Offset(0, 25) '从 table1的25日涨停次数 改成取连板天数
             Sheet5.Range("h" & h) = Round(rng.Offset(0, 21) / 100000000, 2) '未匹配金额
             'Sheet5.Range("e" & h) = Round(rng.Offset(0, 14) / 100000000, 2)
             h = h + 1
@@ -107,6 +108,10 @@ Sub 取连涨股票()
             Set rng = Sheet2.Range("a:a").Find(Sheet15.Range("a" & i), , , 1)
             If Not rng Is Nothing Then
                 rng.Offset(0, 25) = Sheet15.Range("g" & i)
+            End If
+            Set rng = Sheet5.Range("a:a").Find(Sheet15.Range("a" & i), , , 1)
+            If Not rng Is Nothing Then
+                rng.Offset(0, 3) = Sheet15.Range("g" & i)
             End If
         Next
     End If
@@ -806,10 +811,13 @@ Sub 排列涨停原因()
                         firstAddress = rng.Address
                         Do
                             'If rng.Offset(0, 1) < 2 Then Exit Do
-                            h = h + 1
-                            Sheet7.Cells(h, 概念计数 * 3 + 1) = rng.Offset(0, -4)
-                            Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, -1) '未匹配金额
-                            未匹配求和 = 未匹配求和 + Sheet7.Cells(h, 概念计数 * 3 + 2)
+                            If rng.Offset(0, -1) > 0 Then
+                                h = h + 1
+                                Sheet7.Cells(h, 概念计数 * 3 + 1) = rng.Offset(0, -4)
+                                Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, -1) '未匹配金额
+                                未匹配求和 = 未匹配求和 + Sheet7.Cells(h, 概念计数 * 3 + 2)
+                                
+                            End If
                             Set rng = Sheet5.Range("f:f").FindNext(rng)
                         Loop While Not rng Is Nothing And rng.Address <> firstAddress
                         
@@ -1021,6 +1029,10 @@ Sub 排列一字板原因()
             End If
         Next
     Next
+    
+    
+    
+    
 End Sub
 
 Sub 排列首板原因()

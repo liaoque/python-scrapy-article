@@ -134,10 +134,6 @@ Sub 主线()
             
     
     
-    
-    
-    
-    
     Sheet25.Range("a1") = "所属概念"
     Sheet25.Range("b1") = "数量"
     If dic.Count > 0 Then
@@ -145,7 +141,25 @@ Sub 主线()
         Sheet25.Range("b2").Resize(dic.Count, 1) = Application.Transpose(dic.items)
         Sheet25.Range("a:h").Sort "数量", 2, , , , , , 1
     End If
+    
+    dic.RemoveAll
+    For Each gp In Sheet26.Range("A:A")
+        If gp = "" Then Exit For
+        If gp <> "  代码" Then
+            Set rng = Range("表1[  代码]").Find(gp, , , 1)
+            If Not rng Is Nothing Then
+                nogn = rng.Offset(0, 4).Value
+                Call UpdateDictionary(nogn, dic, rng.Value)
+            End If
+        End If
+    Next gp
 
+    Sheet25.Range("i1") = "主线源所属概念"
+    Sheet25.Range("j1") = "主线源数量"
+    If dic.Count > 0 Then
+        Sheet25.Range("i2").Resize(dic.Count) = Application.Transpose(dic.keys)
+        Sheet25.Range("j2").Resize(dic.Count, 1) = Application.Transpose(dic.items)
+    End If
 End Sub
 
 

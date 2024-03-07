@@ -185,14 +185,14 @@ Sub 概念表上色()
     On Error GoTo line1
     Range("概念筛选[概念筛选]").SpecialCells(4).Rows.Delete Shift:=xlShiftUp
 line1:
-        For Each rng1 In Range("概念筛选[概念筛选]")
-            If rng1 <> "" Then
-                Set rng2 = Range("创业板概念[所属概念]").Find(rng1.Value, , , 1) '精确
-                If Not rng2 Is Nothing Then
-                    rng2.Offset(0, 2).Interior.ColorIndex = 36
-                End If
-            End If
-        Next
+     '   For Each rng1 In Range("概念筛选[概念筛选]")
+      '      If rng1 <> "" Then
+       '         Set rng2 = Range("创业板概念[所属概念]").Find(rng1.Value, , , 1) '精确
+       '         If Not rng2 Is Nothing Then
+       '             rng2.Offset(0, 2).Interior.ColorIndex = 36
+       '         End If
+       '     End If
+       ' Next
     
     '取创业板概念最大计数里的最大实际流通
     '改为创业板概念最大计数的都要
@@ -603,6 +603,28 @@ NextIteration:
             End If
         End If
     Next
+
+    If Sheet25.Range("d2") = "" Then
+        Sheet25.Range("i:j").Sort "主线源数量", 2, , , , , , 1
+        Sheet25.Range("d2") = Sheet25.Range("i2")
+        Sheet25.Range("e2") = Sheet25.Range("j2")
+        
+        h1 = h1 + 1
+        
+        Sheet4.Range("aw" & h1) = Sheet25.Range("d2")
+        Sheet4.Range("ax" & h1) = "*;" & Sheet25.Range("d2") & ";*"
+        Sheet4.Range("ay" & h1) = "SZ.30*"
+        'Sheet4.Range("ap" & h1) = "SH.68*"
+        
+
+        
+        Sheet4.Range("ba" & h1) = Sheet25.Range("d2")
+        Sheet4.Range("bb" & h1) = "*;" & Sheet25.Range("d2") & ";*"
+        Sheet4.Range("bc" & h1) = "<>SZ.30*"
+        Sheet4.Range("bd" & h1) = "<>SH.68*"
+        
+        
+    End If
     
     Sheet4.Range("aw1") = h1
     Sheet4.Range("ba1") = h1
@@ -1053,7 +1075,7 @@ Sub 匹配概念()
         '比较阈值, 价量比大于等于8%
      '   If gp.Offset(0, 3) >= yz And gp.Offset(0, 4) >= 0.08 Then gp.Offset(0, -1).Interior.ColorIndex = 35
         '1：情绪好和差时 ，异动次数大于等于3或者监管类型有数据 且异动是开的情况下
-        If (gp.Offset(0, 8) >= 3 And Sheet4.Range("H90") = "异动开" And gp.Offset(0, 10) = "") Then gp.Offset(0, -1).Interior.ColorIndex = 35
+        If (gp.Offset(0, 8) >= 4 And Sheet4.Range("H90") = "异动开" And gp.Offset(0, 10) = "") Then gp.Offset(0, -1).Interior.ColorIndex = 35
        
         
         If qx = "差" Then
@@ -1085,7 +1107,7 @@ Sub 匹配概念()
             If gp.Column = 12 And gp.Offset(0, 3) > 1 Then gp.Offset(0, -1).Interior.ColorIndex = 35
             
             '这个数字和名称 和主板那里的昨日连板天数最大值数字和名称是一样的，竞价未匹配的绿去除
-            If gp.Offset(0, -1) = Sheet4.Range("H11") And gp.Offset(0, 6) = Sheet4.Range("H10") Then
+            If gp.Offset(0, -1) = Sheet4.Range("H11") And gp.Offset(0, 6) = Sheet4.Range("H10") And gp <> "" Then
                 gp.Interior.Color = xlNone
                 gp.Offset(0, -1).Interior.Color = xlNone
             End If
@@ -1708,30 +1730,40 @@ Sub 补涨()
     '
     
     Range("表1").Sort "4日涨跌幅", 2, , , , , , 1
+     Range("表1").Sort "连板天数", 2, , , , , , 1
+    Sheet4.Range("h25") = Sheet2.Range("B2")
+    Sheet4.Range("h24") = Sheet2.Range("Z2")
+    If Sheet4.Range("H33") = Sheet2.Range("B2") Then
+        Sheet4.Range("h25") = Sheet2.Range("B3")
+        Sheet4.Range("h24") = Sheet2.Range("z3")
+    End If
+    
+    
+    Range("表1").Sort "4日涨跌幅", 2, , , , , , 1
     Range("表1").Sort "昨日连板天数", 2, , , , , , 1
     Set ztlbts = Sheet2.Range("B2")
     Set rng = Sheet2.Range("b:b").Find(Sheet4.Range("H33"))
     
     
     
-    If Sheet4.Range("h3") = "封单开" Then
+  '  If Sheet4.Range("h3") = "封单开" Then
     
-        Range("表1").Sort "连板天数", 2, , , , , , 1
-        Set rng = Sheet2.Range("b:b").Find(Sheet4.Range("H33"))
-        '改成手动，输入股票名称
+   '     Range("表1").Sort "连板天数", 2, , , , , , 1
+   '     Set rng = Sheet2.Range("b:b").Find(Sheet4.Range("H33"))
+   '     '改成手动，输入股票名称
 
-        If rng.Offset(0, 24) = Sheet2.Range("Z2") Then
-        'If Sheet28.Range("F2") = Sheet2.Range("Z2") Then
-            Sheet4.Range("H10") = Sheet2.Range("Z3")
-            Sheet4.Range("H11") = Sheet2.Range("B3")
-        Else
-            Sheet4.Range("H10") = Sheet2.Range("Z2")
-            Sheet4.Range("H11") = Sheet2.Range("B2")
-        End If
+   '     If rng.Offset(0, 24) = Sheet2.Range("Z2") Then
+  '      'If Sheet28.Range("F2") = Sheet2.Range("Z2") Then
+   '         Sheet4.Range("H10") = Sheet2.Range("Z3")
+  '          Sheet4.Range("H11") = Sheet2.Range("B3")
+  '      Else
+  '          Sheet4.Range("H10") = Sheet2.Range("Z2")
+ '           Sheet4.Range("H11") = Sheet2.Range("B2")
+  '      End If
     
-    Else
+  '  Else
         ' 做昨日连板天数 = table1 昨日连板天数
-        If rng.Offset(0, 14) = Sheet2.Range("P2") Then
+        If rng = Sheet2.Range("B2") Then
         'If Sheet28.Range("E2") = Sheet2.Range("P2") Then
             Sheet4.Range("H10") = Sheet2.Range("P3")
             Sheet4.Range("H11") = Sheet2.Range("B3")
@@ -1739,7 +1771,7 @@ Sub 补涨()
             Sheet4.Range("H10") = Sheet2.Range("P2")
             Sheet4.Range("H11") = Sheet2.Range("B2")
         End If
-    End If
+ '   End If
     
     Sheet4.Range("H10").Interior.ColorIndex = 35
     If Sheet4.Range("H10") >= 4 Then

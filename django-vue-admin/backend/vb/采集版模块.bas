@@ -32,7 +32,8 @@ Sub 重新生成超级表()
     Sheet16.ListObjects.Add(xlSrcRange, Sheet16.Range("a1").CurrentRegion, , xlYes).Name = "qs"
 End Sub
 Sub cc()
-    Range("表1[趋势]") = ""
+   ' Range("表1[趋势]") = ""
+     Debug.Print Sheet27.UsedRange.Rows.Count
 End Sub
 
 Sub 增加前后分号()
@@ -127,6 +128,7 @@ Sub 增加前后分号()
             Set rng = Range("表1[  代码]").Find(Sheet19.Range("a" & i), , , 1)
             If Not rng Is Nothing Then
                 rng.Offset(0, 21) = Sheet19.Range("e" & i)
+                Sheet19.Range("h" & i) = rng.Offset(0, 15) + 1
             End If
         Next
     End If
@@ -164,7 +166,7 @@ Sub 生成所属概念()
     On Error Resume Next
 '    Application.ScreenUpdating = False
 '    t = Timer
-    Dim rng As Range
+    Dim rng, gp As Range
     Dim dic As Object
     Dim gnstr As String
     Dim arr
@@ -173,15 +175,42 @@ Sub 生成所属概念()
     a = 0
     
     '取出有效概念合并成一个长字符串
-    cyset = Range("设置值[设置值]").Rows(1)
-    zbset = Range("设置值[设置值]").Rows(2)
-    For Each rng In Sheet1.Range("表[所属概念]")
-        If Left(rng.Offset(0, -4), 5) = "SZ.30" Or Left(rng.Offset(0, -4), 6) = "SH.688" Or Left(rng.Offset(0, -4), 6) = "SH.689" Then '创业
-            If rng.Offset(0, 5) > cyset Then gnstr = gnstr & rng
-        Else '主板
-            If rng.Offset(0, 5) > zbset Then gnstr = gnstr & rng
-        End If
-    Next
+ '   cyset = Range("设置值[设置值]").Rows(1)
+ '   zbset = Range("设置值[设置值]").Rows(2)
+ '   For Each rng In Sheet1.Range("表[所属概念]")
+ '       If Left(rng.Offset(0, -4), 5) = "SZ.30" Or Left(rng.Offset(0, -4), 6) = "SH.688" Or Left(rng.Offset(0, -4), 6) = "SH.689" Then '创业
+'            If rng.Offset(0, 5) > cyset Then gnstr = gnstr & rng
+'        Else '主板
+'            If rng.Offset(0, 5) > zbset Then gnstr = gnstr & rng
+'        End If
+'    Next
+
+    '现在封单关所属概念从一字板表取
+    ' 封单开所属概念从主创涨停表取
+    If Sheet4.Range("h3") = "封单开" Then
+        For Each rng In Sheet15.Range("A2:A3000")
+            If rng = "" Then Exit For
+            
+            Set gp = Sheet2.Range("A:A").Find(rng, , , 1)
+            If Not gp Is Nothing Then
+              gnstr = gnstr & gp.Offset(0, 4)
+            End If
+            
+        Next
+    Else
+        For Each rng In Sheet19.Range("A2:A3000")
+            If rng = "" Then Exit For
+            If rng.Offset(0, 4) > 0 Then
+                Set gp = Sheet2.Range("A:A").Find(rng, , , 1)
+                If Not gp Is Nothing Then
+                 gnstr = gnstr & gp.Offset(0, 4)
+                End If
+            End If
+        Next
+    End If
+
+
+
     'Debug.Print str_cy
     '概念长字符串拆分成数组
     If gnstr <> "" Then arr = Split(Left(gnstr, Len(gnstr) - 1), ";")
@@ -827,7 +856,7 @@ Sub test()
         
     Next
     
-    For i = 2 To 100 Step 1
+    For i = 2 To 200 Step 1
         If Sheet27.Cells(i, 1) = "" Then
             
             Sheet27.Cells(i, 1) = CurrentDate
@@ -837,18 +866,19 @@ Sub test()
             Sheet27.Cells(i, 1).Offset(0, 3) = Evaluate("COUNTIFS(表1[ [连板天数] ],""1"")")
             Sheet27.Cells(i, 1).Offset(0, 4) = Evaluate("COUNTIFS(表1[ [连板天数] ],"">1"")")
             Sheet27.Cells(i, 1).Offset(0, 5) = Sheet2.Range("z2") ' 总高度
-            Sheet27.Cells(i, 1).Offset(0, 6) = Sheet2.Range("b2") ' 龙头
-            
-            
+        Sheet27.Cells(i, 1).Offset(0, 6) = Sheet4.Range("H25") ' 龙头
+        
+        
 '            If Not rng Is Nothing Then lz = rng.Offset(0, 3)
-            Set rng = Sheet5.Range("B:B").Find(Sheet2.Range("b2"))  ' 龙头 涨停原因
-            If Not rng Is Nothing Then
-                Sheet27.Cells(i, 1).Offset(0, 7) = rng.Offset(0, 4) ' 龙头
-                Debug.Print "SUMIFS(连涨大肉股[涨停封单额],连涨大肉股[涨停大肉原因],""*" & rng.Offset(0, 4) & "*"")"
-                
-                Sheet27.Cells(i, 1).Offset(0, 8) = Evaluate("SUMIFS(连涨大肉股[涨停封单额],连涨大肉股[涨停大肉原因],""*" & rng.Offset(0, 4) & "*"")")  ' 龙头
-                Sheet27.Cells(i, 1).Offset(0, 9) = Evaluate("SUMIFS(首板股[涨停封单额],首板股[首板原因],""*" & rng.Offset(0, 4) & "*"")")  ' 龙头
-            End If
+        Set rng = Sheet5.Range("B:B").Find(Sheet27.Cells(i, 1).Offset(0, 6))  ' 龙头 涨停原因
+        If Not rng Is Nothing Then
+            Sheet27.Cells(i, 1).Offset(0, 7) = rng.Offset(0, 4) ' 龙头
+            Debug.Print "SUMIFS(连涨大肉股[涨停封单额],连涨大肉股[涨停大肉原因],""*" & rng.Offset(0, 4) & "*"")"
+            
+            Sheet27.Cells(i, 1).Offset(0, 8) = Evaluate("SUMIFS(连涨大肉股[涨停封单额],连涨大肉股[涨停大肉原因],""*" & rng.Offset(0, 4) & "*"")")  ' 龙头
+            Sheet27.Cells(i, 1).Offset(0, 9) = Evaluate("SUMIFS(首板股[涨停封单额],首板股[首板原因],""*" & rng.Offset(0, 4) & "*"")")  ' 龙头
+        End If
+    
         
             
             Sheet27.Cells(i, 1).Offset(0, 10) = cybgd '创业板高度
@@ -922,7 +952,7 @@ Sub 导出涨停原因()
     Next
     
     行数 = Sheet7.UsedRange.Rows.Count + 2
-    Debug.Print 行数
+    Debug.Print Sheet27.UsedRange.Rows.Count
     
     
     Dim lastRow As Long
@@ -942,47 +972,48 @@ Sub 导出涨停原因()
         
     Next
     
-    For i = 2 To 100 Step 1
-        If Sheet27.Cells(i, 1) = "" Then
-           
-            Sheet27.Cells(i, 1) = CurrentDate
-            Sheet27.Cells(i, 1).Offset(0, 1) = lastRow
-            
-            Sheet27.Cells(i, 1).Offset(0, 2) = Evaluate("COUNTIFS(表1[ [跌停封单额] ],"">0"")")
-            Sheet27.Cells(i, 1).Offset(0, 3) = Evaluate("COUNTIFS(表1[ [连板天数] ],""1"")")
-            Sheet27.Cells(i, 1).Offset(0, 4) = Evaluate("COUNTIFS(表1[ [连板天数] ],"">1"")")
-            Sheet27.Cells(i, 1).Offset(0, 5) = Sheet2.Range("z2") ' 总高度
-            Sheet27.Cells(i, 1).Offset(0, 6) = Sheet2.Range("b2") ' 龙头
-            
-            
-'            If Not rng Is Nothing Then lz = rng.Offset(0, 3)
-            Set rng = Sheet5.Range("B:B").Find(Sheet2.Range("b2"))  ' 龙头 涨停原因
-            If Not rng Is Nothing Then
-                Sheet27.Cells(i, 1).Offset(0, 7) = rng.Offset(0, 4) ' 龙头
-                Debug.Print "SUMIFS(连涨大肉股[涨停封单额],连涨大肉股[涨停大肉原因],""*" & rng.Offset(0, 4) & "*"")"
-                
-                Sheet27.Cells(i, 1).Offset(0, 8) = Evaluate("SUMIFS(连涨大肉股[涨停封单额],连涨大肉股[涨停大肉原因],""*" & rng.Offset(0, 4) & "*"")")  ' 龙头
-                Sheet27.Cells(i, 1).Offset(0, 9) = Evaluate("SUMIFS(首板股[涨停封单额],首板股[首板原因],""*" & rng.Offset(0, 4) & "*"")")  ' 龙头
-            End If
+    i = Sheet27.UsedRange.Rows.Count + 1
+   
+    If Sheet27.Cells(i, 1) = "" Then
+       
+        Sheet27.Cells(i, 1) = CurrentDate
+        Sheet27.Cells(i, 1).Offset(0, 1) = lastRow
         
+        Sheet27.Cells(i, 1).Offset(0, 2) = Evaluate("COUNTIFS(表1[ [跌停封单额] ],"">0"")")
+        Sheet27.Cells(i, 1).Offset(0, 3) = Evaluate("COUNTIFS(表1[ [连板天数] ],""1"")")
+        Sheet27.Cells(i, 1).Offset(0, 4) = Evaluate("COUNTIFS(表1[ [连板天数] ],"">1"")")
+        Sheet27.Cells(i, 1).Offset(0, 5) = Sheet2.Range("z2") ' 总高度
+        Sheet27.Cells(i, 1).Offset(0, 6) = Sheet4.Range("H25") ' 龙头
+        
+        
+'            If Not rng Is Nothing Then lz = rng.Offset(0, 3)
+        Set rng = Sheet5.Range("B:B").Find(Sheet27.Cells(i, 1).Offset(0, 6))  ' 龙头 涨停原因
+        If Not rng Is Nothing Then
+            Sheet27.Cells(i, 1).Offset(0, 7) = rng.Offset(0, 4) ' 龙头
+            Debug.Print "SUMIFS(连涨大肉股[涨停封单额],连涨大肉股[涨停大肉原因],""*" & rng.Offset(0, 4) & "*"")"
             
-            Sheet27.Cells(i, 1).Offset(0, 10) = cybgd '创业板高度
-            
-            
-            Sheet27.Cells(i, 1).Offset(0, 11) = Sheet25.Range("e2")
-            Sheet27.Cells(i, 1).Offset(0, 12) = Sheet25.Range("e3")
-            Sheet27.Cells(i, 1).Offset(0, 13) = Sheet25.Range("d2")
-            Sheet27.Cells(i, 1).Offset(0, 14) = Sheet25.Range("d3")
-            
-            'Sheet27.Cells(i, 1).Offset(0, 12) = Sheet2.Range("b2")
-            Sheet27.Cells(i, 1).Offset(0, 15) = Sheet4.Range("H6")
-            Sheet27.Cells(i, 1).Offset(0, 15).Interior.ColorIndex = Sheet4.Range("H6").Interior.ColorIndex
-            
-            Sheet27.Cells(i, 1).Offset(0, 16) = Evaluate("COUNTIFS(表1[ [涨跌幅] ],"">0"")")
-            Sheet27.Cells(i, 1).Offset(0, 17) = Sheet27.Cells(i, 1).Offset(0, 16) / lastRow
-            Exit For
+            Sheet27.Cells(i, 1).Offset(0, 8) = Evaluate("SUMIFS(连涨大肉股[涨停封单额],连涨大肉股[涨停大肉原因],""*" & rng.Offset(0, 4) & "*"")")  ' 龙头
+            Sheet27.Cells(i, 1).Offset(0, 9) = Evaluate("SUMIFS(首板股[涨停封单额],首板股[首板原因],""*" & rng.Offset(0, 4) & "*"")")  ' 龙头
         End If
-    Next
+    
+        
+        Sheet27.Cells(i, 1).Offset(0, 10) = cybgd '创业板高度
+        
+        
+        Sheet27.Cells(i, 1).Offset(0, 11) = Sheet25.Range("e2")
+        Sheet27.Cells(i, 1).Offset(0, 12) = Sheet25.Range("e3")
+        Sheet27.Cells(i, 1).Offset(0, 13) = Sheet25.Range("d2")
+        Sheet27.Cells(i, 1).Offset(0, 14) = Sheet25.Range("d3")
+        
+        'Sheet27.Cells(i, 1).Offset(0, 12) = Sheet2.Range("b2")
+        Sheet27.Cells(i, 1).Offset(0, 15) = Sheet4.Range("H6")
+        Sheet27.Cells(i, 1).Offset(0, 15).Interior.ColorIndex = Sheet4.Range("H6").Interior.ColorIndex
+        
+        Sheet27.Cells(i, 1).Offset(0, 16) = Evaluate("COUNTIFS(表1[ [涨跌幅] ],"">0"")")
+        Sheet27.Cells(i, 1).Offset(0, 17) = Sheet27.Cells(i, 1).Offset(0, 16) / lastRow
+
+    End If
+    
     
     
     
