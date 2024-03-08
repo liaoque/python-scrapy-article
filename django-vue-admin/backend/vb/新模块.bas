@@ -644,7 +644,7 @@ NextIteration:
         Range("表1[#ALL]").AdvancedFilter 2, Sheet4.Range("bb1:bd" & h1), Sheet4.Range("x1:ag1")
     End If
             t1 = Timer - t
-        Debug.Print Round(t1, 2) & "----"
+      '  Debug.Print Round(t1, 2) & "----"
         
     ActiveSheet.ListObjects.Add(xlSrcRange, Range("j1").CurrentRegion, , xlYes).Name = "T1_匹配"
     ActiveSheet.ListObjects.Add(xlSrcRange, Range("x1").CurrentRegion, , xlYes).Name = "T2_匹配"
@@ -693,7 +693,7 @@ Sub 表筛选2()
     Range("T2_匹配").Sort "4日涨跌幅", 2, , , , , , 1
     yd = Sheet18.Range("a1").End(xlDown).Row '异动表行数
     For Each rng In Range("T1_匹配[  代码]")
-        If InStr(Sheet4.Range("H33"), rng.Offset(0, 1)) Then rng.Offset(0, 1).Interior.ColorIndex = 35
+        If InStr(Sheet4.Range("H33"), ";" & rng.Offset(0, 1) & ";") Then rng.Offset(0, 1).Interior.ColorIndex = 35
             
             
 '        Set rng1 = Sheet16.Range("A:A").Find(rng.Value)
@@ -740,7 +740,7 @@ Sub 表筛选2()
     Next
     
     For Each rng In Range("T2_匹配[  代码]")
-        If InStr(Sheet4.Range("H33"), rng.Offset(0, 1)) Then rng.Offset(0, 1).Interior.ColorIndex = 35
+        If InStr(Sheet4.Range("H33"), ";" & rng.Offset(0, 1) & ";") Then rng.Offset(0, 1).Interior.ColorIndex = 35
 '        Set rng1 = Sheet16.Range("A:A").Find(rng.Value)
 '        If Not rng Is Nothing Then
 '            rng.Offset(0, 8) = rng1.Offset(0, 5)
@@ -1558,10 +1558,10 @@ Function SortDictionaryByValue(dict10 As Object) As Variant
         Next j
     Next i
     
-    For i = LBound(keys) To UBound(keys) - 1
-        Debug.Print keys(i)
+  '  For i = LBound(keys) To UBound(keys) - 1
+  '      Debug.Print keys(i)
         
-    Next i
+ '   Next i
     
     SortDictionaryByValue = keys
 End Function
@@ -1733,7 +1733,7 @@ Sub 补涨()
      Range("表1").Sort "连板天数", 2, , , , , , 1
     Sheet4.Range("h25") = Sheet2.Range("B2")
     Sheet4.Range("h24") = Sheet2.Range("Z2")
-    If Sheet4.Range("H33") = Sheet2.Range("B2") Then
+    If InStr(Sheet4.Range("H33"), ";" & Sheet2.Range("B2") & ";") Then
         Sheet4.Range("h25") = Sheet2.Range("B3")
         Sheet4.Range("h24") = Sheet2.Range("z3")
     End If
@@ -1742,7 +1742,7 @@ Sub 补涨()
     Range("表1").Sort "4日涨跌幅", 2, , , , , , 1
     Range("表1").Sort "昨日连板天数", 2, , , , , , 1
     Set ztlbts = Sheet2.Range("B2")
-    Set rng = Sheet2.Range("b:b").Find(Sheet4.Range("H33"))
+   ' Set rng = Sheet2.Range("b:b").Find(Sheet4.Range("H33"))
     
     
     
@@ -1762,15 +1762,18 @@ Sub 补涨()
   '      End If
     
   '  Else
+    For i = 2 To 100
         ' 做昨日连板天数 = table1 昨日连板天数
-        If rng = Sheet2.Range("B2") Then
+        If InStr(Sheet4.Range("H33"), ";" & Sheet2.Range("B" & i) & ";") Then
         'If Sheet28.Range("E2") = Sheet2.Range("P2") Then
-            Sheet4.Range("H10") = Sheet2.Range("P3")
-            Sheet4.Range("H11") = Sheet2.Range("B3")
+          '  Sheet4.Range("H10") = Sheet2.Range("P3")
+          '  Sheet4.Range("H11") = Sheet2.Range("B3")
         Else
-            Sheet4.Range("H10") = Sheet2.Range("P2")
-            Sheet4.Range("H11") = Sheet2.Range("B2")
+            Sheet4.Range("H10") = Sheet2.Range("P" & i)
+            Sheet4.Range("H11") = Sheet2.Range("B" & i)
+            Exit For
         End If
+    Next
  '   End If
     
     Sheet4.Range("H10").Interior.ColorIndex = 35
