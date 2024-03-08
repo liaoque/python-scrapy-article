@@ -503,7 +503,7 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
         xia_xian = code_config.CodeConfig().getCodeConfig()
 
         # 异动次数大于等于3 且异动是开的情况下 且 创百日新高 == 1
-        if item["yidongcishu"] >= 3 and xia_xian["yd"] == 1 and item["chuang_bai_ri_xin_gao"] == 0:
+        if item["yidongcishu"] >= 4 and xia_xian["yd"] == 1 and item["chuang_bai_ri_xin_gao"] == 0:
             item["color1"] = 35
 
         # 情绪差大于等于50绿, 我是想改情绪好大于等于100
@@ -542,7 +542,7 @@ def definedcolor1(chuang_data, bu_zhang_data, qx, is_chuang_ye=1):
                 item["color1"] = 35
 
             # 这个数字和名称 和主板那里的昨日连板天数最大值数字和名称是一样的，竞价未匹配的绿去除
-            if bu_zhang_data["lian_ban_code"]["code"] == item["code"] and bu_zhang_data["lian_ban_code"]["lianbantianshu"] == item["lianxuzhangtingtianshuyesterday"]:
+            if item["jingjiaweipipeijinetoday"] != 0 and bu_zhang_data["lian_ban_code"]["code"] == item["code"] and bu_zhang_data["lian_ban_code"]["lianbantianshu"] == item["lianxuzhangtingtianshuyesterday"]:
                 item["color1"] = 0
                 item["color2"] = 0
         else:
