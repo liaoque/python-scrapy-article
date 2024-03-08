@@ -68,7 +68,7 @@ class Command(BaseCommand):
 
         # 排序, 取前3
         result = sorted(result, key=lambda x: x.c, reverse=True)
-        print(result)
+        # print(result)
         if len(result) > 2:
             c = result[2].c
         else:
