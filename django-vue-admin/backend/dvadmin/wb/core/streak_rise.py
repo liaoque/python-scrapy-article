@@ -86,7 +86,7 @@ def lian_zhang_gu_piao(data):
             "code": items["code"],
             "briefname": items["briefname"],
             "suoshugainian": items["suoshugainian"],  # 概念
-            "lianxuzhangtingtianshuonehundred": items["lianxuzhangtingtianshuonehundred"],  # 25日涨停次数
+            "lianxuzhangtingtianshuonehundred": items["lian_ban_tian_shu"],  # 25日涨停次数
             "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],  # 未匹配金额
             "zhangtingfengdanetoday": items["zhangtingfengdanetoday"],  # 未匹配金额
             "zhangfu120": items["zhangfu120"],
@@ -1014,7 +1014,7 @@ def zhang_ting_yuan_yin(lianzhanggupiao, lianzhanggainian):
         # gainian["gai_nian_gu_piao"] = []
         join_lian_zhang = 0
         for (code, item) in lianzhanggupiao.items():
-            if gn in item["yuanyin"]:
+            if gn in item["yuanyin"] and item["zhangtingfengdanetoday"] > 0:
                 gn_item["gai_nian_gu_piao"].append(item)
                 join_lian_zhang = 1
 

@@ -204,17 +204,27 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
     # 遍历竞价涨幅表，取涨跌幅大于 设置值的股票 的所属概念
     xia_xian = code_config.CodeConfig().getCodeConfig()
     gns = []
-    for code, item in data2.items():
-        if item["code"][0:5] == "SZ.30" or item["code"][0:6] == "SZ.688" or item["code"][0:6] == "SZ.689":
-            if item['zhangdiefuqianfuquantoday'] > xia_xian["chuang_ye_set"]:
+    fd = xia_xian['fd']
+    # for code, item in data2.items():
+    #     if item["code"][0:5] == "SZ.30" or item["code"][0:6] == "SZ.688" or item["code"][0:6] == "SZ.689":
+    #         if item['zhangdiefuqianfuquantoday'] > xia_xian["chuang_ye_set"]:
+    #             gns.extend(item["suoshugainian"])
+    #     else:
+    #         if item['zhangdiefuqianfuquantoday'] > xia_xian["zhu_set"]:
+    #             gns.extend(item["suoshugainian"])
+    if fd == 1:
+        for code, item in data2.items():
+            if item['zhu_chuang_zhang_ting'] == 1:
                 gns.extend(item["suoshugainian"])
-        else:
-            if item['zhangdiefuqianfuquantoday'] > xia_xian["zhu_set"]:
+    else:
+        for code, item in data2.items():
+            if item['yi_zi_ban'] == 1 and item['jingjiaweipipeijinetoday'] > 0:
                 gns.extend(item["suoshugainian"])
+
 
     gns = list(set(gns))
     gn_dict = {}
-    fd = xia_xian['fd']
+
     for gn in gns:
         gn_dict[gn] = {
             "suoshugainian": gn,

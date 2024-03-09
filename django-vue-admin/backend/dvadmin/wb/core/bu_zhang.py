@@ -350,6 +350,7 @@ def bu_zhang(data, chuang_ye_ban_gn, today, yesterday):
                     gn.append(item)
 
     bu_zhang = {
+        "lian_ban_code_today": lian_ban_code_today,
         "lian_ban_code": lian_ban_code,
         "lian_ban_code120": lian_ban_code120,
         "zhong_jun": zhong_jun,
@@ -391,30 +392,30 @@ def getLianBanGuPiao(data2, lian_xu_duo_ri_yi_zi_ban, fd):
         "lianbantianshu_coloer": 35,
         "zhangdiefu_coloer": 0,
     }
-    if fd == 1:
-        data2 = sorted(data2, key=lambda x: (x[1]['lianbantianshutoday']),
-                       reverse=True)
-        for index, item in data2:
-            if item["briefname"] in lian_xu_duo_ri_yi_zi_ban:
-                lian_ban_code["code"] = item["code"]
-                lian_ban_code["briefname"] = item["briefname"]
-                lian_ban_code["lianbantianshu"] = item['lianbantianshutoday']
-                break
-            lian_ban_code["code"] = item["code"]
-            lian_ban_code["briefname"] = item["briefname"]
-            lian_ban_code["lianbantianshu"] = item["lianbantianshutoday"]
-            break
-    else:
-        for index, item in data2:
-            if item["briefname"] in lian_xu_duo_ri_yi_zi_ban:
-                lian_ban_code["code"] = item["code"]
-                lian_ban_code["briefname"] = item["briefname"]
-                lian_ban_code["lianbantianshu"] = item['lianbantianshuyesterday']
-                break
-            lian_ban_code["code"] = item["code"]
-            lian_ban_code["briefname"] = item["briefname"]
-            lian_ban_code["lianbantianshu"] = item['lianbantianshuyesterday']
-            break
+    # if fd == 1:
+    #     data2 = sorted(data2, key=lambda x: (x[1]['lianbantianshutoday']),
+    #                    reverse=True)
+    #     for index, item in data2:
+    #         if item["briefname"] in lian_xu_duo_ri_yi_zi_ban:
+    #             lian_ban_code["code"] = item["code"]
+    #             lian_ban_code["briefname"] = item["briefname"]
+    #             lian_ban_code["lianbantianshu"] = item['lianbantianshutoday']
+    #             break
+    #         lian_ban_code["code"] = item["code"]
+    #         lian_ban_code["briefname"] = item["briefname"]
+    #         lian_ban_code["lianbantianshu"] = item["lianbantianshutoday"]
+    #         break
+    # else:
+    for index, item in data2:
+        if item["briefname"] in lian_xu_duo_ri_yi_zi_ban:
+            # lian_ban_code["code"] = item["code"]
+            # lian_ban_code["briefname"] = item["briefname"]
+            # lian_ban_code["lianbantianshu"] = item['lianbantianshuyesterday']
+            continue
+        lian_ban_code["code"] = item["code"]
+        lian_ban_code["briefname"] = item["briefname"]
+        lian_ban_code["lianbantianshu"] = item['lianbantianshuyesterday']
+        break
     return lian_ban_code
 
 
