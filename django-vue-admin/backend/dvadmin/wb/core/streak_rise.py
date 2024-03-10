@@ -86,7 +86,7 @@ def lian_zhang_gu_piao(data):
             "code": items["code"],
             "briefname": items["briefname"],
             "suoshugainian": items["suoshugainian"],  # 概念
-            "lianxuzhangtingtianshuonehundred": items["lian_ban_tian_shu"],  # 25日涨停次数
+            "lianxuzhangtingtianshuonehundred": items["lianbantianshutoday"],  # 25日涨停次数
             "jingjiaweipipeijinetoday": items["jingjiaweipipeijinetoday"],  # 未匹配金额
             "zhangtingfengdanetoday": items["zhangtingfengdanetoday"],  # 未匹配金额
             "zhangfu120": items["zhangfu120"],

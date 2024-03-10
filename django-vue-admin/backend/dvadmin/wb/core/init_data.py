@@ -249,7 +249,7 @@ def tag_shou_ban(table1, data):
         if code not in data:
             continue
         data[code]["zhu_chuang_zhang_ting"] = 1
-        data[code]["lian_ban_tian_shu"] = items["code"]
+        # data[code]["lian_ban_tian_shu"] = items["lianbantianshutoday"]
         data[code]["zhangtingfengdanetoday"] = float(items["zhangtingfengdanetoday"])
         data[code]["lianbantianshuyesterday"] = items["lianbantianshuyesterday"]
         data[code]["lianbantianshutoday"] = items["lianbantianshutoday"]
