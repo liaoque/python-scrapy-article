@@ -1,4 +1,5 @@
 import requests
+import datetime
 
 
 def getCode(code):
@@ -14,6 +15,10 @@ def getToday(today):
 
 
 def saveSort(d, data):
+    current_time = datetime.datetime.now().hour
+    if current_time < 9 and current_time > 10:
+        return
+
     url = 'http://81.68.241.227:39001/polls/date/stor/save'
     data = {
         "d": d,
