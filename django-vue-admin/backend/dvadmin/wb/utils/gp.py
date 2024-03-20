@@ -11,3 +11,16 @@ def getToday(today):
     url = "http://81.68.241.227:39001/polls/date/%s" % (today)
     r = requests.get(url)
     return r.json()
+
+
+def saveSort(d, data):
+    url = 'http://81.68.241.227:39001/polls/date/stor/save'
+    data = {
+        "d": d,
+        "type": 5,
+        "data": data
+    }
+    response = requests.post(url, json=data)
+    print("polls/date/stor/save")
+    print(data, response.json())
+    return response.json()

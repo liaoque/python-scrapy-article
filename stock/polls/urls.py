@@ -4,6 +4,7 @@ from .view.index_view import *
 from .view.shares import *
 from .view.jj import *
 from .view.dapan import *
+from .view.stro_date import *
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
@@ -13,7 +14,8 @@ urlpatterns = [
 
     path('date/<str:date_today>', shares_date, name='date'),
     path('jj/<str:code>', jj_data, name='jj'),
-    path('da_pan', da_pan, name='da_pan')
+    path('da_pan', da_pan, name='da_pan'),
+    path('date/stor/save', stro_date, name='stro_date')
 
     # path('shares/', SharesView.as_view(), name='index'),
     # path('mzq/shares/<str:pk>/', SharesView.as_view(), name='shares_name_view'),

@@ -165,17 +165,45 @@ class DingdingView(View):
         qx = "好"
         if d["qing_xu"] == -1:
             qx = "差"
+
+
         s = "【复盘】情绪：%s \r\n 主板：%s (黄色),%s (橘色), %s(紫色)  \r\n 创业板： %s(黄色), %s(橘色), %s(紫色) " % (
             qx,
-            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color1") == 36, result["zhu_data"])]),
-            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color0") == 46, result["zhu_data"])]),
-            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color3") == 29, result["zhu_data"])]),
-            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color1") == 36, result["chuang_data"])]),
-            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color0") == 46, result["chuang_data"])]),
-            ",".join([item["briefname"] for item in filter(lambda gn: "color1" in gn and gn.get("color3") == 29, result["chuang_data"])]),
+            ",".join([item["briefname"] for item in
+                      filter(lambda gn: "color1" in gn and gn.get("color1") == 36, result["zhu_data"])]),
+            ",".join([item["briefname"] for item in
+                      filter(lambda gn: "color1" in gn and gn.get("color0") == 46, result["zhu_data"])]),
+            ",".join([item["briefname"] for item in
+                      filter(lambda gn: "color1" in gn and gn.get("color3") == 29, result["zhu_data"])]),
+            ",".join([item["briefname"] for item in
+                      filter(lambda gn: "color1" in gn and gn.get("color1") == 36, result["chuang_data"])]),
+            ",".join([item["briefname"] for item in
+                      filter(lambda gn: "color1" in gn and gn.get("color0") == 46, result["chuang_data"])]),
+            ",".join([item["briefname"] for item in
+                      filter(lambda gn: "color1" in gn and gn.get("color3") == 29, result["chuang_data"])]),
         )
 
         dingding(s)
+
+        result = {
+            "z": {
+                "yellow": [item["code"] for item in
+                           filter(lambda gn: "color1" in gn and gn.get("color1") == 36, result["zhu_data"])],
+                "orange": [item["code"] for item in
+                           filter(lambda gn: "color1" in gn and gn.get("color1") == 46, result["zhu_data"])],
+                "purple": [item["code"] for item in
+                           filter(lambda gn: "color1" in gn and gn.get("color1") == 29, result["zhu_data"])],
+            },
+            "c": {
+                "yellow": [item["code"] for item in
+                           filter(lambda gn: "color1" in gn and gn.get("color1") == 36, result["chuang_data"])],
+                "orange": [item["code"] for item in
+                           filter(lambda gn: "color1" in gn and gn.get("color1") == 46, result["chuang_data"])],
+                "purple": [item["code"] for item in
+                           filter(lambda gn: "color1" in gn and gn.get("color1") == 29, result["chuang_data"])],
+            }
+        }
+        gp.saveSort(current_time, result)
         return JsonResponse({})
 
 
