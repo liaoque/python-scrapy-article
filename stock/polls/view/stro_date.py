@@ -3,8 +3,10 @@ from django.template import loader
 import requests
 import re
 import json
+import datetime
 from ..model.shares_date_listen import SharesDateListen
 from django.views.decorators.csrf import csrf_exempt
+
 
 @csrf_exempt
 def stro_date(request):
@@ -39,15 +41,16 @@ def stro_date(request):
     return response
 
 
-def saveCode(code, data, type):
-    transformed_data = SharesDateListen.objects.filter(date_as=data["d"], code=code, type=type)
+def saveCode(code, data, type2):
+    date3 = datetime.datetime.strptime(data["d"], "%Y%m%d").strftime("%Y-%m-%d")
+    transformed_data = SharesDateListen.objects.filter(date_as=date3, code_id=code, type=type2)
     if len(transformed_data) > 0:
         return
     SharesDateListen(
-        buy_date_as=data["d"],
-        date_as=data["d"],
-        code=code,
+        buy_date_as=date3,
+        date_as=date3,
+        code_id=code,
         p_start=0,
         buy_pre=0,
-        type=type
-    )
+        type=type2
+    ).save()
