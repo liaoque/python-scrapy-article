@@ -27,5 +27,6 @@ def saveSort(d, data):
     }
     response = requests.post(url, json=data)
     print("polls/date/stor/save")
-    print(data, response.json())
+    print(data)
+    print(response.json())
     return response.json()
