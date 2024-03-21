@@ -10,7 +10,7 @@ def stro_date(request):
     response = JsonResponse({}, safe=False)
     if request.method == 'POST':
         # 获取POST请求中的数据
-        data = request.POST
+        data = json.loads(request.body)
         # 处理数据，例如保存到数据库等
         # ...
         # for item in data["data"]["z"]["yellow"]:
