@@ -35,16 +35,21 @@ class ZhuXianGnsView(View):
             return JsonResponse({"error": "current_time must"})
 
         gns = []
+        dtgns = []
         dateInfo = gp.getTodayLimit(current_time)
         for date in dateInfo['dates']:
             today = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y%m%d")
             yuan_yin = self.db['d' + today].find_one({}, {"yuan_yin": 1})
             c = []
-            for d in yuan_yin["yuan_yin"]:
+            for d in yuan_yin["yuan_yin"]["zhu_xian"]:
                 if len(c) > 3:
                     break
                 elif len(c) == 0 or c[len(c) - 1] != d.c:
                     c.append(d.c)
                 gns.append(d.gn)
+            for gn, d in yuan_yin["yuan_yin"]["die_ting_sort"].items():
+                dtgns.append(gn)
+            for gn, d in yuan_yin["yuan_yin"]["zha_ban_sort"].items():
+                dtgns.append(gn)
 
-        return JsonResponse({"gn": gns})
+        return JsonResponse({"gn": gns, "dtgn": dtgns})

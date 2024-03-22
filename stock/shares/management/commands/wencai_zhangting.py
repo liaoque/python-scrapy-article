@@ -152,7 +152,13 @@ class Command(BaseCommand):
                 ]),
         ])
         dingding.dingding(self.s)
-        print(self.s)
+
+        # 查复盘股票
+
+        for item in result:
+            code = item["指数简称"]
+
+
         # yeasterdayGnIds = [yeasterdayGns.code_id]
         # 32分强势票概念
 
