@@ -8,6 +8,12 @@ def getCode(code):
     return str(code)
 
 
+def getTodayLimit(today):
+    url = "http://81.68.241.227:39001/polls/date/last/%s" % (today)
+    r = requests.get(url)
+    return r.json()
+
+
 def getToday(today):
     url = "http://81.68.241.227:39001/polls/date/%s" % (today)
     r = requests.get(url)

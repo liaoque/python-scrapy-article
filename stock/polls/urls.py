@@ -13,6 +13,7 @@ urlpatterns = [
     path('<int:question_id>/vote/', vote, name='vote'),
 
     path('date/<str:date_today>', shares_date, name='date'),
+    path('date/last/<str:date_today>', shares_date_last, name='date_last'),
     path('jj/<str:code>', jj_data, name='jj'),
     path('da_pan', da_pan, name='da_pan'),
     path('date/stor/save', stro_date, name='stro_date')

@@ -68,3 +68,16 @@ def shares_date(request, date_today):
     # response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
     # return HttpResponse("You're voting on question %s." % question_id)
+
+
+def shares_date_last(request, date_today):
+    dates = SharesDate.objects.filter(date_as__lte=datetime.strptime(date_today, '%Y%m%d')).order_by('-date_as')[:10]
+
+    response = JsonResponse({
+        "dates": dates
+    })
+    response["Access-Control-Allow-Origin"] = "*"
+    # 如果需要，可以添加更多CORS相关的头信息，例如：
+    # response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    # response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
