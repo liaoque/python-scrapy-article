@@ -2,6 +2,19 @@ import requests
 import shares.management.commands.wencai2.common
 
 
+def zhishu(secid):
+    """
+    zhishu
+    :param s:
+    :return:
+    """
+    url = ("http://25.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid=%s&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f53&klt=101&fqt=1&beg=0&end=20500101&smplmt=460&lmt=1000000&_=1711101890918") % (
+        secid )
+
+    response = requests.get(url)
+    return response.json()["data"]["klines"]
+
+
 def rdgainian(s):
     """
     查最近10天的热点概念
