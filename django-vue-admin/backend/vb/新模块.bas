@@ -213,6 +213,8 @@ line1:
         If isred = 0 Then imax = rng.Offset(0, 3).Value
         'If rng.Offset(0, -3).Interior.ColorIndex <> 35 And rng.Interior.ColorIndex <> 35 And rng.Offset(0, 1).Interior.ColorIndex <> 35 And rng.Offset(0, 2).Interior.ColorIndex <> 35 And rng = imax Then
         ' 今昨竞封  盘中封单总和 跌停封单额  非绿
+        If Sheet4.Range("h3") = "封单关" Then imax = rng.Offset(0, 3).Value
+        
         If rng.Offset(0, 4).Interior.ColorIndex <> 35 And rng.Offset(0, 5).Interior.ColorIndex <> 35 And rng.Offset(0, 6).Interior.ColorIndex <> 35 And rng.Offset(0, 3) = imax Then
             rng.Offset(0, 3).Interior.Color = 13421823
             'If rng.Offset(0, -3) <> "国企改革" Then isred = isred + 1
@@ -500,7 +502,7 @@ Sub tt()
 End Sub
 Sub 表筛选()
     Debug.Print Now & "表筛选"
-    Dim h1, h2, yd, i As Integer
+    Dim h1, h2, h3, yd, i, imax As Integer
     Dim a As Range
     Dim arr
     Dim firstAddress
@@ -513,6 +515,7 @@ Sub 表筛选()
     Dim rng As Range
     Dim rng1 As Range
     Dim rng2 As Range
+    Dim rng3 As Range
     Dim allgn As String
     'Sheet4.Range("af2:az1048576").Clear
     Sheet4.Range("i2:bh1048576").Clear
@@ -572,45 +575,67 @@ NextIteration:
     
     h1 = 1
     h2 = 2
-    ' 主线取前3
-    For i = 2 To 4
-        
-        If InStr(allgn, ";" & Sheet25.Cells(i, 1) & ";") > 0 Then
-            h1 = h1 + 1
-            
-            Set rng2 = Sheet25.Cells(i, 1)
-            Set rng2 = Sheet4.Range("A:A").Find(rng2)
-            If Not rng2 Is Nothing Then
-                Sheet4.Range("aw" & h1) = Sheet25.Cells(i, 1)
-                Sheet4.Range("ax" & h1) = "*;" & Sheet25.Cells(i, 1) & ";*"
-                Sheet4.Range("ay" & h1) = "SZ.30*"
-                'Sheet4.Range("ap" & h1) = "SH.68*"
-                
+    imax = 0
+    '涨停大肉最大连板
+    Set rng = Sheet21.Range("a:a").Find("涨停大肉最大连板")
+    h3 = 0
+    If Not rng Is Nothing Then
+        h3 = rng.Row + 2
+    End If
     
+    
+    ' 主线取前3
+    For i = 2 To 10
+        If imax <> Sheet25.Cells(i, 2) Then
+            h1 = h1 + 1
+            imax = Sheet25.Cells(i, 2)
+        End If
+        If InStr(allgn, ";" & Sheet25.Cells(i, 1) & ";") > 0 Then
+            
+            
+            ' 存在 创业板概念
+            Set rng2 = Sheet25.Cells(i, 1)
+          '  Set rng2 = Sheet4.Range("A:A").Find(rng2)
+            If Not rng2 Is Nothing Then
+                If h3 > 0 Then
+                    ' 概念最大连板 != 1
+                    
+                    If InStr(Sheet21.Cells(h3, 1), ";" & Sheet25.Cells(i, 1) & ";") = 0 Then
+                        
+                        Sheet4.Range("aw" & h2) = Sheet25.Cells(i, 1)
+                        Sheet4.Range("ax" & h2) = "*;" & Sheet25.Cells(i, 1) & ";*"
+                        Sheet4.Range("ay" & h2) = "SZ.30*"
+                        'Sheet4.Range("ap" & h1) = "SH.68*"
+                        
+            
+                        
+                        Sheet4.Range("ba" & h2) = Sheet25.Cells(i, 1)
+                        Sheet4.Range("bb" & h2) = "*;" & Sheet25.Cells(i, 1) & ";*"
+                        Sheet4.Range("bc" & h2) = "<>SZ.30*"
+                        Sheet4.Range("bd" & h2) = "<>SH.68*"
+                        Sheet25.Cells(i, 1).Interior.ColorIndex = 38
+                        Sheet25.Cells(h2, 4) = Sheet25.Cells(i, 1)
+                        Sheet25.Cells(h2, 5) = Sheet25.Cells(i, 2)
+                        h2 = h2 + 1
+                    End If
+                End If
                 
-                Sheet4.Range("ba" & h1) = Sheet25.Cells(i, 1)
-                Sheet4.Range("bb" & h1) = "*;" & Sheet25.Cells(i, 1) & ";*"
-                Sheet4.Range("bc" & h1) = "<>SZ.30*"
-                Sheet4.Range("bd" & h1) = "<>SH.68*"
-                Sheet25.Cells(i, 1).Interior.ColorIndex = 38
-                Sheet25.Cells(h2, 4) = Sheet25.Cells(i, 1)
-                Sheet25.Cells(h2, 5) = Sheet25.Cells(i, 2)
-                
-                h2 = h2 + 1
             End If
-            If h1 > 5 Then
+            If h1 > 4 Then
                 Exit For
             End If
         End If
     Next
 
+    
     If Sheet25.Range("d2") = "" Then
+        h2 = 2
         Sheet25.Range("i:j").Sort "主线源数量", 2, , , , , , 1
         Sheet25.Range("d2") = Sheet25.Range("i2")
         Sheet25.Range("e2") = Sheet25.Range("j2")
         
-        h1 = h1 + 1
-        
+        h1 = h2
+        h2 = h2 + 1
         Sheet4.Range("aw" & h1) = Sheet25.Range("d2")
         Sheet4.Range("ax" & h1) = "*;" & Sheet25.Range("d2") & ";*"
         Sheet4.Range("ay" & h1) = "SZ.30*"
@@ -626,10 +651,10 @@ NextIteration:
         
     End If
     
-    Sheet4.Range("aw1") = h1
-    Sheet4.Range("ba1") = h1
+    Sheet4.Range("aw1") = h2 - 2
+    Sheet4.Range("ba1") = h2 - 2
     
-    If h1 = 1 Then
+    If h2 - 1 = 1 Then
          ActiveSheet.ListObjects.Add(xlSrcRange, Range("j1").CurrentRegion, , xlYes).Name = "T1_匹配"
     ActiveSheet.ListObjects.Add(xlSrcRange, Range("x1").CurrentRegion, , xlYes).Name = "T2_匹配"
        Exit Sub
@@ -639,9 +664,9 @@ NextIteration:
     Dim t, t1, t0
     t = Timer
     
-    If h1 > 1 Then
-        Range("表1[#ALL]").AdvancedFilter 2, Sheet4.Range("ax1:ay" & h1), Sheet4.Range("j1:s1")
-        Range("表1[#ALL]").AdvancedFilter 2, Sheet4.Range("bb1:bd" & h1), Sheet4.Range("x1:ag1")
+    If h2 - 1 > 1 Then
+        Range("表1[#ALL]").AdvancedFilter 2, Sheet4.Range("ax1:ay" & (h2 - 1)), Sheet4.Range("j1:s1")
+        Range("表1[#ALL]").AdvancedFilter 2, Sheet4.Range("bb1:bd" & (h2 - 1)), Sheet4.Range("x1:ag1")
     End If
             t1 = Timer - t
       '  Debug.Print Round(t1, 2) & "----"
@@ -1107,10 +1132,10 @@ Sub 匹配概念()
             If gp.Column = 12 And gp.Offset(0, 3) > 1 Then gp.Offset(0, -1).Interior.ColorIndex = 35
             
             '这个数字和名称 和主板那里的昨日连板天数最大值数字和名称是一样的，竞价未匹配的绿去除
-            If gp.Offset(0, -1) = Sheet4.Range("H11") And gp.Offset(0, 6) = Sheet4.Range("H10") And gp <> "" Then
-                gp.Interior.Color = xlNone
-                gp.Offset(0, -1).Interior.Color = xlNone
-            End If
+    '        If gp.Offset(0, -1) = Sheet4.Range("H11") And gp.Offset(0, 6) = Sheet4.Range("H10") And gp <> "" Then
+    '            gp.Interior.Color = xlNone
+    '            gp.Offset(0, -1).Interior.Color = xlNone
+    '        End If
         Else
              ' 或者停牌非0或今昨量比大于700或者竞价量比大于等于100或 (自由流通市值大于80且不符合塞力斯概念 H13)，其中任何一种情况发生，就名称绿
             If gp.Offset(0, 9) <> "" Or gp.Offset(0, 5) > 700 Or gp.Offset(0, 4) >= 1 Or (gp.Offset(0, 11) > 100 And gp.Offset(0, -1) <> Sheet4.Range("H13")) Then
@@ -1381,7 +1406,7 @@ Sub 匹配概念()
     Range("T1_匹配").Sort "120日涨跌幅", 2, , , , , , 1
     Range("T2_匹配").Sort "120日涨跌幅", 2, , , , , , 1
     For Each gp In Range("T1_匹配[    名称]")
-        If gp.Offset(0, 3) > 0 Then
+        If gp.Interior.ColorIndex <> 35 And gp.Offset(0, 3) > 0 Then
             Set rng = Sheet2.Range("b:b").Find(gp, , , 1)
             If rng.Offset(0, 23) < 0 Then
                 gp.Interior.ColorIndex = 36
@@ -1390,7 +1415,7 @@ Sub 匹配概念()
         End If
     Next
     For Each gp In Range("T2_匹配[    名称]")
-       If gp.Offset(0, 3) > 0 Then
+       If gp.Interior.ColorIndex <> 35 And gp.Offset(0, 3) > 0 Then
             Set rng = Sheet2.Range("b:b").Find(gp, , , 1)
             If rng.Offset(0, 23) < 0 Then
                 gp.Interior.ColorIndex = 36
@@ -1487,7 +1512,7 @@ Sub 匹配概念()
     ' 紫色竞价未匹配 设置 1000 就是不需要需要竞价未匹配小于等于1
     Dim zsjjwpp As Integer
     zsjjwpp = 1000
-    If Sheet4.Range("H10") <= 5 And qx = "好" Then
+    If qx = "好" Then
         zsjjwpp = 1
     End If
     For Each gp In Range("T1_匹配[    名称]")
@@ -1534,11 +1559,54 @@ Sub 匹配概念()
         rng3.Interior.ColorIndex = 29
     End If
     
-   ' Range("T1_匹配").Sort "4日涨跌幅", 2, , , , , , 1
-   ' Range("T2_匹配").Sort "4日涨跌幅", 2, , , , , , 1
     
-
+    Range("T1_匹配").Sort "4日涨跌幅", 2, , , , , , 1
+    Range("T2_匹配").Sort "4日涨跌幅", 2, , , , , , 1
+    Dim lianban As Integer
+    If qx = "好" Or (qx = "差" And Sheet4.Range("H28") <= 3) Then
+       lianban = Sheet4.Range("H28") - 1
+        Set rng3 = Nothing
+        Set rng4 = Nothing
+        ' 紫色备选
+        For Each gp In Range("T1_匹配[    名称]")
+            
+            If gp.Interior.ColorIndex <> 35 And gp.Offset(0, 1) <= zsjjwpp And gp.Offset(0, 7) = lianban Then
+                If rng3 Is Nothing Then Set rng3 = gp.Offset(0, 2)
+                If gp.Offset(0, 7).Interior.ColorIndex = 38 And rng4 Is Nothing Then
+                    Set rng4 = gp.Offset(0, 2)
+                    Exit For
+                End If
+                
+            End If
+        Next
+        If Not rng4 Is Nothing Then
+            rng4.Interior.ColorIndex = 29
+        ElseIf Not rng3 Is Nothing Then
+            rng3.Interior.ColorIndex = 29
+        End If
+        Set rng3 = Nothing
+        Set rng4 = Nothing
+        For Each gp In Range("T2_匹配[    名称]")
+            
+            If gp.Interior.ColorIndex <> 35 And gp.Offset(0, 1) <= zsjjwpp And gp.Offset(0, 7) = lianban Then
+                If rng3 Is Nothing Then Set rng3 = gp.Offset(0, 2)
+                If gp.Offset(0, 7).Interior.ColorIndex = 38 And rng4 Is Nothing Then
+                    Set rng4 = gp.Offset(0, 2)
+                    Exit For
+                End If
+            End If
+        Next
+        
+        If Not rng4 Is Nothing Then
+            rng4.Interior.ColorIndex = 29
+        ElseIf Not rng3 Is Nothing Then
+            rng3.Interior.ColorIndex = 29
+        End If
     
+    End If
+    
+    Range("T1_匹配").Sort "昨日连板天数", 2, , , , , , 1
+    Range("T2_匹配").Sort "昨日连板天数", 2, , , , , , 1
 End Sub
 Function SortDictionaryByValue(dict10 As Object) As Variant
     Dim keys() As Variant
@@ -1730,14 +1798,15 @@ Sub 补涨()
     '
     
     Range("表1").Sort "4日涨跌幅", 2, , , , , , 1
-     Range("表1").Sort "连板天数", 2, , , , , , 1
-    Sheet4.Range("h25") = Sheet2.Range("B2")
-    Sheet4.Range("h24") = Sheet2.Range("Z2")
-    If InStr(Sheet4.Range("H33"), ";" & Sheet2.Range("B2") & ";") Then
-        Sheet4.Range("h25") = Sheet2.Range("B3")
-        Sheet4.Range("h24") = Sheet2.Range("z3")
-    End If
-    
+    Range("表1").Sort "连板天数", 2, , , , , , 1
+    For i = 2 To 50 Step 1
+        If InStr(Sheet4.Range("H33"), ";" & Sheet2.Range("B" & i) & ";") = 0 Then
+            Sheet4.Range("h25") = Sheet2.Range("B" & i)
+            Sheet4.Range("h24") = Sheet2.Range("z" & i)
+            Exit For
+        End If
+    Next
+   
     
     Range("表1").Sort "4日涨跌幅", 2, , , , , , 1
     Range("表1").Sort "昨日连板天数", 2, , , , , , 1

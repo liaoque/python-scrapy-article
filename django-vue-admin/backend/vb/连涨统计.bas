@@ -28,6 +28,7 @@ Sub 连涨算法()
     生成一字板概念
     Debug.Print Now & "生成首板概念"
     生成首板概念
+
     
     Debug.Print Now & "取涨停原因"
     取涨停原因
@@ -41,6 +42,8 @@ Sub 连涨算法()
     取一字板原因
     Debug.Print Now & "取首板原因"
     取首板原因
+    Debug.Print Now & "取涨停大肉连板原因"
+    取涨停大肉连板原因
     
     Debug.Print Now & "排列涨停原因"
     排列涨停原因
@@ -54,6 +57,9 @@ Sub 连涨算法()
     排列一字板原因
     Debug.Print Now & "排列首板原因"
     排列首板原因
+    Debug.Print Now & "排列大肉连板原因"
+    排列涨停大肉连板原因
+    
     
     排列竞涨停竞跌停
     排列5日涨跌幅
@@ -588,6 +594,8 @@ Sub 生成首板概念()
     'Sheet6.Range("a:b").Sort "连涨股票数", 2, , , , , , 1
 End Sub
 
+
+
 Sub 取涨停原因()
     Dim rng As Range
     If Sheet5.Range("a2") = "" Then Exit Sub
@@ -777,6 +785,35 @@ Sub 取首板原因()
      Range("首板股").Sort "首板数", 2, , , , , , 1
 End Sub
 
+Sub 取涨停大肉连板原因()
+
+    Dim rng As Range
+    Sheet6.Range("S2:T99999").Clear
+    If Sheet5.Range("C2") = "" Then Exit Sub
+    hs = Sheet5.Range("a1").End(xlDown).Row
+    hs6 = Sheet6.Range("a1").End(xlDown).Row
+    k = 2
+    For j = 2 To hs6
+        For i = 2 To hs
+            If InStr(Sheet5.Range("f" & i), ";" & Sheet6.Range("a" & j) & ";") Then
+                Set rng = Sheet6.Range("S:S").Find(Sheet6.Range("a" & j), , , 1)
+                If rng Is Nothing Then
+                    Sheet6.Range("t" & k) = Sheet5.Range("d" & i)
+                    Sheet6.Range("s" & k) = Sheet6.Range("a" & j)
+                    k = k + 1
+                Else
+                    If Sheet5.Range("d" & i) > rng.Offset(0, 1) Then
+                        rng.Offset(0, 1) = Sheet5.Range("d" & i)
+                    End If
+                End If
+                
+            End If
+        Next
+    Next
+
+End Sub
+
+
 Sub 排列涨停原因()
     Dim dic As Object
     Dim rng As Range
@@ -814,7 +851,12 @@ Sub 排列涨停原因()
                             If rng.Offset(0, -1) > 0 Then
                                 h = h + 1
                                 Sheet7.Cells(h, 概念计数 * 3 + 1) = rng.Offset(0, -4)
-                                Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, -1) '未匹配金额
+                                If Sheet4.Range("h3") = "封单开" Then
+                                    '封单关取竞价未匹配，封单开涨停封单额
+                                    Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, -1) '涨停封单额
+                                Else
+                                    Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, 2) '竞价未匹配
+                                End If
                                 未匹配求和 = 未匹配求和 + Sheet7.Cells(h, 概念计数 * 3 + 2)
                                 
                             End If
@@ -873,8 +915,14 @@ Sub 排列跌停原因()
                         Do
                             'If rng.Offset(0, 1) < 2 Then Exit Do
                             Sheet7.Cells(h, 概念计数 * 3 + 1) = rng.Offset(0, -4)
-                            Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, -2)
-                            未匹配求和 = 未匹配求和 + rng.Offset(0, -2)
+                          '  Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, -2)
+                            If Sheet4.Range("h3") = "封单开" Then
+                                '封单关取竞价未匹配，封单开涨停封单额
+                                Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, -1) '跌停封单额
+                            Else
+                                Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, -2) '竞价未匹配
+                            End If
+                            未匹配求和 = 未匹配求和 + Sheet7.Cells(h, 概念计数 * 3 + 2)
                             h = h + 1
                              Set rng = Sheet5.Range("n:n").FindNext(rng)
                         Loop While Not rng Is Nothing And rng.Address <> firstAddress
@@ -996,7 +1044,10 @@ Sub 排列一字板原因()
     Sheet7.Cells(行数, 1).Interior.ColorIndex = 36
     行数 = 行数 + 1
     For i = 2 To hs
-        arr = Split(Sheet5.Range("al" & i), ";")
+      '  arr = Split(Sheet5.Range("al" & i), ";")
+      '  If Sheet4.Range("h3") = "封单关" Then
+            arr = Split(Sheet5.Range("ai" & i), ";")
+     '   End If
         '概念 = Sheet5.Range("f" & i)
         For Each 概念 In arr
             If 概念 <> "" Then
@@ -1010,19 +1061,37 @@ Sub 排列一字板原因()
                     Sheet7.Cells(行数 + 1, 概念计数 * 3 + 1) = "名称"
                     Sheet7.Cells(行数 + 1, 概念计数 * 3 + 2) = "竞价未匹配"
                     未匹配求和 = 0
-                    Set rng = Sheet5.Range("al:al").Find(";" & 概念 & ";", , , 2) '模糊
-                    If Not rng Is Nothing Then
-                        h = 行数 + 2
-                        firstAddress = rng.Address
-                        Do
-                            'If rng.Offset(0, 1) < 2 Then Exit Do
-                            Sheet7.Cells(h, 概念计数 * 3 + 1) = rng.Offset(0, -4)
-                            Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, -2)
-                            未匹配求和 = 未匹配求和 + rng.Offset(0, -2)
-                            h = h + 1
-                             Set rng = Sheet5.Range("al:al").FindNext(rng)
-                        Loop While Not rng Is Nothing And rng.Address <> firstAddress
-                    End If
+                    
+      '              If Sheet4.Range("h3") = "封单关" Then
+                        Set rng = Sheet5.Range("ai:ai").Find(";" & 概念 & ";", , , 2) '模糊
+                        If Not rng Is Nothing Then
+                            h = 行数 + 2
+                            firstAddress = rng.Address
+                            Do
+                                'If rng.Offset(0, 1) < 2 Then Exit Do
+                                Sheet7.Cells(h, 概念计数 * 3 + 1) = rng.Offset(0, -1)
+                                Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, 1)
+                                未匹配求和 = 未匹配求和 + rng.Offset(0, 1)
+                                h = h + 1
+                                Set rng = Sheet5.Range("ai:ai").FindNext(rng)
+                            Loop While Not rng Is Nothing And rng.Address <> firstAddress
+                        End If
+       '             Else
+       '                 Set rng = Sheet5.Range("al:al").Find(";" & 概念 & ";", , , 2) '模糊
+       '                 If Not rng Is Nothing Then
+       '                     h = 行数 + 2
+       '                     firstAddress = rng.Address
+       '                     Do
+       '                         'If rng.Offset(0, 1) < 2 Then Exit Do
+       '                         Sheet7.Cells(h, 概念计数 * 3 + 1) = rng.Offset(0, -4)
+       '                         Sheet7.Cells(h, 概念计数 * 3 + 2) = rng.Offset(0, -2)
+       '                         未匹配求和 = 未匹配求和 + rng.Offset(0, -2)
+       '                         h = h + 1
+       '                         Set rng = Sheet5.Range("al:al").FindNext(rng)
+       '                     Loop While Not rng Is Nothing And rng.Address <> firstAddress
+       '                 End If
+       '             End If
+                    
                     Sheet7.Cells(行数, 概念计数 * 3 + 2) = 未匹配求和
                     概念计数 = 概念计数 + 1
                 End If
@@ -1081,6 +1150,21 @@ Sub 排列首板原因()
                 End If
             End If
         Next
+    Next
+End Sub
+
+Sub 排列涨停大肉连板原因()
+    行数 = Sheet7.UsedRange.Rows.Count + 2
+    Sheet7.Cells(行数, 1) = "涨停大肉最大连板"
+    Sheet7.Cells(行数, 1).Interior.ColorIndex = 36
+    行数 = 行数 + 1
+    概念计数 = 0
+    hs = Sheet6.Range("s1").End(xlDown).Row
+    For i = 2 To hs
+        Sheet7.Cells(行数, 概念计数 * 3 + 1) = Sheet6.Range("s" & i)
+        Sheet7.Cells(行数, 概念计数 * 3 + 2) = Sheet6.Range("t" & i)
+        If Sheet7.Cells(行数, 概念计数 * 3 + 2) = 1 Then Sheet7.Cells(行数 + 1, 1) = Sheet7.Cells(行数 + 1, 1) & ";" & Sheet6.Range("s" & i) & ";"
+        概念计数 = 概念计数 + 1
     Next
 End Sub
 

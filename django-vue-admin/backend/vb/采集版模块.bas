@@ -473,6 +473,7 @@ Sub 生成所属概念()
  '           'a.Offset(0, 2) = "-"
  '       End If
  '   Next
+ 
 End Sub
 Sub sssa()
     arr = Split([b3], " | ")
@@ -1020,9 +1021,9 @@ Sub 导出涨停原因()
         Sheet27.Cells(i, 1).Offset(0, 17) = Sheet27.Cells(i, 1).Offset(0, 16) / lastRow
         
         Range("表1").Sort "120日涨跌幅", 2, , , , , , 1
-        For j = 1 To 1000 Step 1
-             If Sheet2.Cells(1 + j, 15) / 10000 / 10000 > 50 Then
-                 Sheet27.Cells(i, 1).Offset(0, 18) = Sheet2.Cells(1 + j, 2)
+        For j2 = 1 To 1000 Step 1
+             If Sheet2.Cells(1 + j2, 15) / 10000 / 10000 > 50 Then
+                 Sheet27.Cells(i, 1).Offset(0, 18) = Sheet2.Cells(1 + j2, 2)
                  Exit For
              End If
          Next
