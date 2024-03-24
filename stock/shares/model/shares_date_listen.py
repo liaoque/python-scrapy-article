@@ -19,4 +19,4 @@ class SharesDateListen(models.Model):
         db_table = "mc_shares_date_listen"
 
     def __str__(self):
-        return self.name
+        return self.code_id

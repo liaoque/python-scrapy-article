@@ -19,4 +19,4 @@ class SharesBuys(models.Model):
         db_table = "mc_shares_buys"
 
     def __str__(self):
-        return self.code
+        return self.code_id

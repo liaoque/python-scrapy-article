@@ -1,4 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.db.models import Q
+
 import talib
 import numpy as np
 import os
@@ -33,8 +35,8 @@ class Command(BaseCommand):
 
     fp = 1
     fp_start = "2024-01-01"
-    fp_end = "2024-03-24"
-    fp_dates = ""
+    fp_end = ""
+    fp_dates = "2024-04-01"
 
     stop = False
 
@@ -58,21 +60,22 @@ class Command(BaseCommand):
         :return:
         """
         if self.fp == 1:
-            self.fp_dates = SharesDate.objects.filter(date_as__gte=self.fp_start, date_as__lte=self.fp_start).order_by(
+            self.fp_dates = SharesDate.objects.filter(date_as__gte=self.fp_start, date_as__lte=self.fp_dates).order_by(
                 'date_as')
         else:
             self.fp_dates = SharesDate.objects.filter(date_as__lte=datetime.now().strftime('%Y-%m-%d')).order_by(
                 '-date_as')[:2]
             self.fp_dates = sorted(self.fp_dates, key=lambda x: x.date_as, reverse=False)
 
-        for d in self.fp_dates:
-            self.date = d.date_as.strftime("%Y%m%d")
-            self.a()
-            self.etf()
-            self.gn()
-            self.gp()
-            self.saveGC()
+        # for d in self.fp_dates:
+        #     self.date = d.date_as.strftime("%Y%m%d")
+        #     self.a()
+        #     self.etf()
+        #     self.gn()
+        #     self.gp()
+        #     self.saveGC()
 
+        # return
         i = 0
         for d in self.fp_dates:
             self.date = d.date_as.strftime("%Y%m%d")
@@ -274,12 +277,15 @@ class Command(BaseCommand):
         if i == 0:
             return
 
+        new_date_str = self.date[:4] + "-" + self.date[4:6] + "-" + self.date[6:]
         """
         查当天强势概念， 32分之前涨停的股票，计算出的概念
         找出这些概念的所有的相关股票
         """
         f32Gns = self.codeGetGn()
-        f32Result = SharesJoinBlock.objects.filter(block_code_id__not__in=[item.block_code_id for item in f32Gns])
+        # print(f32Gns)
+        f32Gns2 = [item["block_code_id"] for item in f32Gns]
+        f32Result = SharesJoinBlock.objects.filter(block_code_id__in=f32Gns2)
         f32Codes = [code.code_id for code in f32Result]
 
         """
@@ -287,11 +293,9 @@ class Command(BaseCommand):
         按今天收盘价卖出
         跌停价无法卖出
         """
-        new_date_str = self.date[:4] + "-" + self.date[4:6] + "-" + self.date[6:]
-        codes2 = SharesBuys.objects.filter(buy_date_as__lt=new_date_str, sell_end=0,
-                                           code_id__not__in=f32Codes)
+        codes2 = SharesBuys.objects.filter(~Q(code_id__in=f32Codes), buy_date_as__lt=new_date_str, sell_end=0)
         for code in codes2:
-            result = Shares.objects.filter(code_id=code, date_as=code.buy_date_as)[0]
+            result = Shares.objects.filter(code_id=code.code_id, date_as=code.buy_date_as)[0]
             if result.p_range <= -9.7:
                 continue
             code.sell_end = result.p_end
@@ -305,7 +309,7 @@ class Command(BaseCommand):
         根据强势概念相关的股票匹配股池的股票
         匹配4日涨跌幅，取前3
         """
-        date = self.fp_dates[i - 1]
+        date = self.fp_dates[i - 1].date_as
         codes2 = SharesDateListen.objects.filter(date_as=date, type=11, code_id__in=f32Codes).order_by("-buy_pre")
         if len(codes2) == 0:
             return
@@ -316,14 +320,14 @@ class Command(BaseCommand):
             买入价是当天最高价
             涨停价无法买入，且只买一个股票
             """
-            d2 = SharesBuys.objects.filter(buy_date_as=new_date_str, code_id=code, buy_start__gte=0)
+            d2 = SharesBuys.objects.filter(buy_date_as=new_date_str, code_id=code.code_id, buy_start__gte=0)
             if len(d2) == 0:
-                result = Shares.objects.filter(code_id=code, date_as=new_date_str)
+                result = Shares.objects.filter(code_id=code.code_id, date_as=new_date_str)[0]
                 if result.p_range >= 9.7:
                     continue
                 # 查当前最高价， 算当天最高价买入
                 b = SharesBuys(
-                    code_id=code,
+                    code_id=code.code_id,
                     buy_date_as=new_date_str,
                     buy_start=result.p_max,
                 )
@@ -392,7 +396,7 @@ class Command(BaseCommand):
 
         result32 = list(filter(lambda item: item["f32"] == 1, d2))
         if len(result32) == 0:
-            return
+            return []
         # 32分涨停股票
         resultF32 = [item["股票代码"] for item in result32]
 
@@ -417,8 +421,10 @@ class Command(BaseCommand):
                     "c": 0
                 }
             f32GN[item.block_code_id]["c"] += 1
-        gns = [item.c for item in f32GN.items()]
+
+        gns = [item[1]["c"] for item in f32GN.items()]
         result2 = sorted(list(set(gns)), key=lambda x: x, reverse=True)[:2]
         minGn = min(result2)
-        result = filter(lambda item: item.c >= minGn, f32GN.items())
-        return result
+        result = filter(lambda item: item[1]["c"] >= minGn, f32GN.items())
+
+        return [item[1] for item in result]
