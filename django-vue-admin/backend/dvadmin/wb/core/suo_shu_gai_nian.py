@@ -214,11 +214,11 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
     #             gns.extend(item["suoshugainian"])
     if fd == 1:
         for code, item in data2.items():
-            if item['zhu_chuang_zhang_ting'] == 1:
+            if data1[code]['zhu_chuang_zhang_ting'] == 1:
                 gns.extend(item["suoshugainian"])
     else:
         for code, item in data2.items():
-            if item['yi_zi_ban'] == 1 and item['jingjiaweipipeijinetoday'] > 0:
+            if data1[code]['yi_zi_ban'] == 1 and item['jingjiaweipipeijinetoday'] > 0:
                 gns.extend(item["suoshugainian"])
 
 
