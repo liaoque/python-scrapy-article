@@ -33,7 +33,7 @@ def codes(today, gn, etf):
     :param s:
     :return:
     """
-    s = '%s去除ST，%s去除北交所，%s去除新股，所属概念包含%s，属于指数%s, 4日涨跌幅从大到小' % (
+    s = '%s去除ST，%s去除北交所，%s去除新股，所属概念包含%s，属于指数%s, 4日涨跌幅从大到小，近20日的跌停次数取反，近半年无减持公告，近半年无处罚原因，无造假' % (
         today, today, today, gn, etf
     )
     url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'

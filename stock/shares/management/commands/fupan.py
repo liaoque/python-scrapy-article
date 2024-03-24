@@ -2,15 +2,24 @@ from django.core.management.base import BaseCommand, CommandError
 # import talib
 import numpy as np
 import os
+import re
 
 from shares.model.shares_join_block import SharesJoinBlock
 from shares.model.shares_name import SharesName
 from shares.model.shares_macd import SharesMacd
-from shares.management.commands.wencai2 import rediangainnian
+from shares.management.commands.wencai2 import rediangainnian, zhangTing
 from shares.model.shares_date import SharesDate
 from datetime import datetime, timedelta
 from shares.model.shares_date_listen import SharesDateListen
 from shares.model.shares_buys import SharesBuys
+from shares.model.shares_zhang_tings import SharesZhangTings
+from shares.model.shares import Shares
+
+
+def time2seconds(time_str):
+    time_format = '%H:%M:%S'  # 时间字符串的格式
+    time_obj = datetime.strptime(time_str, time_format)
+    return timedelta(hours=time_obj.hour, minutes=time_obj.minute, seconds=time_obj.second).total_seconds()
 
 
 class Command(BaseCommand):
@@ -48,28 +57,25 @@ class Command(BaseCommand):
         :param options:
         :return:
         """
-        self.date = "20240301"
-        self.a()
+        if self.fp == 1:
+            self.fp_dates = SharesDate.objects.filter(date_as__gte=self.fp_start, date_as__lte=self.fp_start).order_by(
+                'date_as')
+        else:
+            self.fp_dates = SharesDate.objects.filter(date_as__lte=datetime.now().strftime('%Y%m%d')).order_by(
+                '-date_as')[:2]
+            self.fp_dates = sorted(self.fp_dates, key=lambda x: x.date_as, reverse=False)
+        for i, d in self.fp_dates:
+            self.date = d
+            if not self.a():
+                return
+            if not self.etf():
+                return
+            self.gn()
+            self.gp()
+            self.saveGC()
 
-        #
-        # if self.fp == 1:
-        #     self.fp_dates = SharesDate.objects.filter(date_as__gte=self.fp_start, date_as__lte=self.fp_start).order_by(
-        #         'date_as')
-        # else:
-        #     self.fp_dates = SharesDate.objects.filter(date_as__lte=datetime.now().strftime('%Y%m%d')).order_by(
-        #         '-date_as')
-        # for i, d in self.fp_dates:
-        #     self.date = d
-        #     if not self.a():
-        #         return
-        #     if not self.etf():
-        #         return
-        #     self.gn()
-        #     self.gp()
-        #     self.saveGC()
-        #
-        # for i, d in self.fp_dates:
-        #     self.hcGC(i)
+        for i, d in self.fp_dates:
+            self.hcGC(i)
 
     def macd(self, data):
         # 计算kd指标
@@ -105,7 +111,7 @@ class Command(BaseCommand):
         if len(self.data["a"]) == 0:
             data = self.data["a"] = rediangainnian.zhishu("1.000001")
         data = [item.split(",")[1] for item in data if
-                       item.split(",")[0].replace("-", "") <= self.date]
+                item.split(",")[0].replace("-", "") <= self.date]
         return self.computeMacd(data)
 
     def etf(self):
@@ -133,7 +139,7 @@ class Command(BaseCommand):
         if len(self.data["a50"]) == 0:
             data = self.data["a50"] = rediangainnian.zhishu("2.930050")
         data = [item.split(",")[1] for item in data if
-                       item.split(",")[0].replace("-", "") <= self.date]
+                item.split(",")[0].replace("-", "") <= self.date]
         return self.computeMacd(data)
 
     def hs300(self):
@@ -145,7 +151,7 @@ class Command(BaseCommand):
         if len(self.data["hs300"]) == 0:
             data = self.data["hs300"] = rediangainnian.zhishu("1.000300")
         data = [item.split(",")[1] for item in data if
-                       item.split(",")[0].replace("-", "") <= self.date]
+                item.split(",")[0].replace("-", "") <= self.date]
         return self.computeMacd(data)
 
     def zt500(self):
@@ -200,8 +206,16 @@ class Command(BaseCommand):
         获得股票池
         :return:
         """
+        etf = {
+            "a50": "上证50",
+            "hs300": "沪深300",
+            "zt500": "中证500",
+            "zt1000": "中证1000",
+            "zt2000": "中证2000",
+        }
+        etfs = "或".join([etf[item] for item in self.etfs])
         for gn in self.gns:
-            codes = rediangainnian.codes(self.date, gn, self.etfs)
+            codes = rediangainnian.codes(self.date, gn, etfs)
             # 计算macd，
             for code in codes:
                 sharesKdjList = SharesMacd.objects.filter(code_id=codes).order_by('-date_as')[:3]
@@ -222,16 +236,17 @@ class Command(BaseCommand):
         股池
         :return:
         """
-        for code in self.codes:
+        codes = list(set(self.codes))
+        for code in codes:
             transformed_data = SharesDateListen.objects.filter(date_as=self.date, code_id=code, type=11)
             if len(transformed_data) > 0:
                 return
             SharesDateListen(
-                buy_start=0,  # 4日涨跌幅
+                buy_start=0,
                 date_as=self.date,
                 code_id=code,
                 p_start=0,
-                buy_pre=0,
+                buy_pre=0,  # 4日涨跌幅
                 type=11
             ).save()
 
@@ -244,73 +259,61 @@ class Command(BaseCommand):
             return
         if i == 0:
             return
-        if i + 2 >= len(self.fp_dates):
-            return
-
-        # 当天股池取前10
-        codes = SharesDateListen.objects.filter(date_as=self.date, type=11).order_by('-buy_start')[:10]
-        if len(codes) == 0:
-            return
 
         """
-        匹配4日涨跌幅，每个概念取前10个股票
-        第二天强势概念 + 在以上10个股票里排序，然后取能买到的前排股票
+        查当天强势概念， 32分之前涨停的股票，计算出的概念
+        找出这些概念的所有的相关股票
         """
+        f32Gns = self.codeGetGn()
+        f32Result = SharesJoinBlock.objects.filter(block_code_id__not__in=[item.block_code_id for item in f32Gns])
+        f32Codes = [code.code_id for code in f32Result]
 
-        # 查第二天强势概念， 32分之前涨停的股票，计算出的概念
-        gps = []
-        blocks = SharesJoinBlock.objects.filter(date_as=self.date, code_id__in=gps)
-        gns = []
-        for code in codes:
-            d2 = SharesJoinBlock.objects.filter(date_as=self.date, code_id__in=codes)
-            if len(d2) == 0:
+        """
+        查持有的股票，买入时间是今天之前的，且与当天概念不匹配的股票
+        按今天收盘价卖出
+        跌停价无法卖出
+        """
+        codes2 = SharesBuys.objects.filter(buy_date_as__lt=self.date, sell_end=0,
+                                           code_id__not__in=f32Codes)
+        for code in codes2:
+            result = Shares.objects.filter(code_id=code, date_as=code.buy_date_as)[0]
+            if result.p_range <= -9.7:
                 continue
-            # d2 = d
+            code.sell_end = result.p_end
+            code.sell_date_as = self.date
+            code.save()
 
-        # SharesDateListen.objects.filter(date_as=self.date, code_id=code)
+        if self.stop:
+            return
 
-        for code in codes:
+        """
+        根据强势概念相关的股票匹配股池的股票
+        匹配4日涨跌幅，取前3
+        """
+        date = self.fp_dates[i - 1]
+        codes2 = SharesDateListen.objects.filter(date_as=date, type=11, code_id__in=f32Codes).order_by("-buy_pre")
+        if len(codes2) == 0:
+            return
+
+        codes2 = codes2[:5]
+        for code in codes2:
             """
-            买入算第一天
-            卖出算第三天
-            检查有没有持有中的股票，如果有不操作， 如果没有设置买入价格
-            再检查是否在股池里面， 如果在就持有，如果不再，以第二天开盘价卖掉
-            
-            持有股票检测方法
-            1. 今天之前的股池
-            2. 买入 > 0
-            3. 卖出 = 0
+            买入价是当天最高价
+            涨停价无法买入，且只买一个股票
             """
-            d2 = SharesDateListen.objects.filter(date_as__lte=self.date, type=11, code_id=code, p_start=0,
-                                                 buy_pre__gte=0)
+            d2 = SharesBuys.objects.filter(buy_date_as=self.date, code_id=code, buy_start__gte=0)
             if len(d2) == 0:
+                result = Shares.objects.filter(code_id=code, date_as=self.date)
+                if result.p_range >= 9.7:
+                    continue
                 # 查当前最高价， 算当天最高价买入
                 b = SharesBuys(
                     code_id=code,
                     buy_date_as=self.date,
-                    buy_start=self.date,
+                    buy_start=result.p_max,
                 )
-                c = SharesDateListen.objects.filter(date_as=self.date, code_id=code)
-                code.p_start = c.m
-                code.buy_date_as = self.date
-                code.save()
-            else:
-                # 持有
-                code.date_as = self.date
-                code.save()
-
-        """
-        查持有的股票
-        第二天该股票没在股池， 则按第三天的开盘价卖掉
-        """
-        codes = SharesDateListen.objects.filter(date_as=self.date, p_start=0, buy_pre__gte=0, type=11)
-        for code in codes:
-            d2 = SharesDateListen.objects.filter(date_as=self.dates[i + 1], type=11, code_id=code)
-            if len(d2) == 0:
-                # 查当前最高价， 算当天最高价买入
-                c = SharesDateListen.objects.filter(date_as=self.dates[i + 2], code_id=code)
-                code.p_start = c.m
-                code.save()
+                b.save()
+                break
 
     def tgYk(self):
         """
@@ -318,3 +321,89 @@ class Command(BaseCommand):
         select sum(p_start- buy_pre) from mc_shares_date_listen where buy_pre >0 and type=11 and p_start=0
         :return:
         """
+
+    def initD(self, item, start_seconds, end_seconds):
+        d = {}
+        d["股票代码"] = item["股票代码"][:-3]
+        d["股票简称"] = item["股票简称"]
+        d["所属概念"] = item["所属概念"]
+        d["所属同花顺行业"] = item["所属同花顺行业"]
+        d["gao_biao"] = 0
+        d["f32"] = 0
+        for key, value in item.items():
+            if "首次涨停时间[" in key:
+                d["首次涨停时间"] = value.replace(" ", "")
+                d["date"] = key[-9:-1]
+            if "几天几板[" in key:
+                d["几天几板"] = value
+            if "连续涨停天数[" in key:
+                d["连续涨停天数"] = value
+            if "最终涨停时间[" in key:
+                d["最终涨停时间"] = value.replace(" ", "")
+            if "a股市值(不含限售股)[" in key:
+                d["a股市值流通市值"] = value
+
+        first_zhangting_time = time2seconds(d["首次涨停时间"])
+        if first_zhangting_time > start_seconds and first_zhangting_time < end_seconds:
+            # print(d)
+            d["f32"] = 1
+            return d
+
+        if d["连续涨停天数"] >= 4:
+            numbers = re.findall(r'\d+', d["几天几板"])
+            number2 = int(numbers[1])  # 13
+            if number2 >= 8:
+                #     高标
+                d["gao_biao"] = 1
+                return d
+
+        if d["连续涨停天数"] >= 5:
+            #     高标
+            d["gao_biao"] = 1
+            return d
+        return d
+
+    def codeGetGn(self):
+        codes = zhangTing.zhangTing(self.date)
+        time_str = '09:30:00'
+        start_seconds = time2seconds(time_str)
+
+        time_str = '09:32:00'
+        end_seconds = time2seconds(time_str)
+        d2 = []
+        for item in codes:
+            d = self.initD(item, start_seconds, end_seconds)
+            d2.append(d)
+
+        result32 = list(filter(lambda item: item["f32"] == 1, d2))
+        if len(result32) == 0:
+            return
+        # 32分涨停股票
+        resultF32 = [item["股票代码"] for item in result32]
+
+        sql = """
+               select 1 as id, block_code_id, mc_shares_block_gns.name, count(1) as c
+                from mc_shares_join_block
+                left join (select code_id,name from mc_shares_block_gns group by code_id) as mc_shares_block_gns on mc_shares_block_gns.code_id = mc_shares_join_block.block_code_id 
+                where mc_shares_join_block.code_type = 2 and mc_shares_join_block.code_id in ( 
+                %s
+                ) and mc_shares_join_block.block_code_id not in (301639)
+                group by block_code_id
+                having  c > 1
+            """ % (",".join(resultF32))
+        result = SharesJoinBlock.objects.raw(sql, params=())
+        if len(result) == 0:
+            return []
+        f32GN = {}
+        for item in result:
+            if item.block_code_id not in f32GN:
+                f32GN[item.block_code_id] = {
+                    "block_code_id": item.block_code_id,
+                    "c": 0
+                }
+            f32GN[item.block_code_id]["c"] += 1
+        gns = [item.c for item in f32GN.items()]
+        result2 = sorted(list(set(gns)), key=lambda x: x, reverse=True)[:2]
+        minGn = min(result2)
+        result = filter(lambda item: item.c >= minGn, f32GN.items())
+        return result

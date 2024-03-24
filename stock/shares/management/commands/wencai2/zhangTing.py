@@ -3,8 +3,7 @@ import shares.management.commands.wencai2.common
 
 
 def search(s):
-    # 涨停股票,首次涨停时间从小到大，流通市值，几天几板，连续涨停天数，去除st，涨停原因类别，所属概念
-    # s = "半年报预增，所属概念，s去除ST，去除北交所，去除新股"
+    # x概念且x概念
     url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
     data = {
         'business_cat': 'soniu',
