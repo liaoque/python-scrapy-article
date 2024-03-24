@@ -21,7 +21,7 @@ def rdgainian(s):
     :param s:
     :return:
     """
-    url = ('http://81.68.241.227:39001/gns?current_time=%s') % (s)
+    url = ('http://60.204.137.231:39088/gns?current_time=%s') % (s)
 
     response = requests.get(url)
     return response.json()
