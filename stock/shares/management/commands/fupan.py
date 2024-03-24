@@ -261,7 +261,7 @@ class Command(BaseCommand):
                 date_as=new_date_str,
                 code_id=code["code"],
                 p_start=0,
-                buy_pre=fr,  # 4日涨跌幅
+                buy_pre=fr * 1000,  # 4日涨跌幅
                 type=11
             ).save()
 
