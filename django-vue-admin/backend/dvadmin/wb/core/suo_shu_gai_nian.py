@@ -214,13 +214,12 @@ def suo_shu_gai_nian(data1, data2, today, yesterday, fd=0):
     #             gns.extend(item["suoshugainian"])
     if fd == 1:
         for code, item in data2.items():
-            if data1[code]['zhu_chuang_zhang_ting'] == 1:
+            if "zhu_chuang_zhang_ting" in item and item['zhu_chuang_zhang_ting'] == 1:
                 gns.extend(item["suoshugainian"])
     else:
         for code, item in data2.items():
-            if data1[code]['yi_zi_ban'] == 1 and item['jingjiaweipipeijinetoday'] > 0:
+            if "yi_zi_ban" in item and item['yi_zi_ban'] == 1 and item['jingjiaweipipeijinetoday'] > 0:
                 gns.extend(item["suoshugainian"])
-
 
     gns = list(set(gns))
     gn_dict = {}
@@ -291,13 +290,15 @@ def createPanZhong(gn_dict, gn, today, fd):
     if gn not in today["yuan_yin"]["lian_zhang_sort"]:
         return gn_dict
     lianzhanggupiao = today["yuan_yin"]["lian_zhang_sort"].items()
-    gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] = sum([ item["gai_nian_feng_dan_jin_e"] for key,item in lianzhanggupiao if gn == item["suoshugainian"] ])
+    gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] = sum(
+        [item["gai_nian_feng_dan_jin_e"] for key, item in lianzhanggupiao if gn == item["suoshugainian"]])
 
     # gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] = today["yuan_yin"]["lian_zhang_sort"][gn][
     #     "gai_nian_feng_dan_jin_e"]
     if gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] < gn_dict[gn]["jin_jing_feng"]["today"]:
         gn_dict[gn]["pan_zhong"]["color"] = 35
-    if (0 < gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] and gn_dict[gn]["jin_jing_feng"]["today"]  < gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"]):
+    if (0 < gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"] and gn_dict[gn]["jin_jing_feng"]["today"] <
+            gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"]):
         gn_dict[gn]["jin_jing_feng"]["color"] = 0
     return gn_dict
 
@@ -309,7 +310,7 @@ def createZhangTingDaRou(gn_dict, gn, today, fd):
     if gn in today["yuan_yin"]["lian_zhang_sort"]:
         # 盘中 涨停次数 < 1, 弱： execl : 298行
         gn_dict[gn]["shu_liang"]["value"] = gn_dict[gn]["shu_liang"]["zhang_ting_da_rou"] = \
-        today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
+            today["yuan_yin"]["lian_zhang_sort"][gn]["count"]
         if gn_dict[gn]["shu_liang"]["value"] < 1:
             gn_dict[gn]["shu_liang"]["color"] = 35
 
@@ -326,7 +327,7 @@ def createJinJingFeng(gn_dict, gn, today, yesterday):
             "count"]
 
     # 竞价未匹配<0 弱
-    if round(jin_jing_feng["today"]/100000000) <= 0 and gn_dict[gn]["shu_liang"]["value"] > 0:
+    if round(jin_jing_feng["today"] / 100000000) <= 0 and gn_dict[gn]["shu_liang"]["value"] > 0:
         jin_jing_feng["color"] = 35
 
     # 昨天一字板
@@ -348,8 +349,6 @@ def createJinJingFeng(gn_dict, gn, today, yesterday):
             "value"] > 0:
             jin_jing_feng["color"] = 35
 
-
-
     gn_dict[gn]["jin_jing_feng"] = jin_jing_feng
     return gn_dict
 
@@ -366,7 +365,8 @@ def createChuangBaiRiXinGao(gn_dict, gn, today, yesterday):
             yesterday["yuan_yin"]["chuang_bai_ri_xin_gao_sort"][gn]["gai_nian_jing_jia_wei_pi_pei"]
 
     # 涨停概念对应股票少于昨天的, 说明比昨天的弱
-    if round(chuang_bai_ri_xin_gao["today"]/100000000) == 0 or chuang_bai_ri_xin_gao["today"] < chuang_bai_ri_xin_gao["yesterday"]:
+    if round(chuang_bai_ri_xin_gao["today"] / 100000000) == 0 or chuang_bai_ri_xin_gao["today"] < chuang_bai_ri_xin_gao[
+        "yesterday"]:
         chuang_bai_ri_xin_gao["color"] = 35
     gn_dict[gn]["chuang_bai_ri_xin_gao"] = chuang_bai_ri_xin_gao
     return gn_dict
@@ -381,8 +381,8 @@ def create_dieting(gn_dict, gn, today, fd):
     if fd == 1:
         if gn in today["yuan_yin"]["die_ting_sort"]:
             gn_dict[gn]["die_ting"]["value"] = gn_dict[gn]["die_ting"]["feng_dan_jin_e"] = \
-            today["yuan_yin"]["die_ting_sort"][gn][
-                "gai_nian_die_ting_feng_dan_jin_e"]
+                today["yuan_yin"]["die_ting_sort"][gn][
+                    "gai_nian_die_ting_feng_dan_jin_e"]
             if gn_dict[gn]["die_ting"]["value"] > gn_dict[gn]["pan_zhong"]["feng_dan_jin_e"]:
                 gn_dict[gn]["die_ting"]["color"] = 35
 
