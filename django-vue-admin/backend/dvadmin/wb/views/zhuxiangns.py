@@ -40,13 +40,15 @@ class ZhuXianGnsView(View):
         for date in dateInfo['dates']:
             today = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y%m%d")
             yuan_yin = self.db['d' + today].find_one({}, {"yuan_yin": 1})
-            c = []
+
+            c = [item["c"] for item in yuan_yin["yuan_yin"]["zhu_xian"]]
+            c = sorted(list(set(c)), key=lambda x: x, reverse=True)
+            minc = min(c[:2])
+
             for d in yuan_yin["yuan_yin"]["zhu_xian"]:
-                if len(c) > 3:
-                    break
-                elif len(c) == 0 or c[len(c) - 1] != d.c:
-                    c.append(d.c)
-                gns.append(d.gn)
+                if d["c"] < minc:
+                    continue
+                gns.append(d["gn"])
             for gn, d in yuan_yin["yuan_yin"]["die_ting_sort"].items():
                 dtgns.append(gn)
             for gn, d in yuan_yin["yuan_yin"]["zha_ban_sort"].items():
