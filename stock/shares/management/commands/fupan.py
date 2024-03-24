@@ -31,9 +31,9 @@ class Command(BaseCommand):
     codes = []
     date = ""
 
-    fp = 0
-    fp_start = ""
-    fp_end = ""
+    fp = 1
+    fp_start = "2024-01-01"
+    fp_end = "2024-03-24"
     fp_dates = ""
 
     stop = False
@@ -73,7 +73,6 @@ class Command(BaseCommand):
             self.gp()
             self.saveGC()
 
-        return
         i = 0
         for d in self.fp_dates:
             self.date = d.date_as.strftime("%Y%m%d")
@@ -288,14 +287,15 @@ class Command(BaseCommand):
         按今天收盘价卖出
         跌停价无法卖出
         """
-        codes2 = SharesBuys.objects.filter(buy_date_as__lt=self.date, sell_end=0,
+        new_date_str = self.date[:4] + "-" + self.date[4:6] + "-" + self.date[6:]
+        codes2 = SharesBuys.objects.filter(buy_date_as__lt=new_date_str, sell_end=0,
                                            code_id__not__in=f32Codes)
         for code in codes2:
             result = Shares.objects.filter(code_id=code, date_as=code.buy_date_as)[0]
             if result.p_range <= -9.7:
                 continue
             code.sell_end = result.p_end
-            code.sell_date_as = self.date
+            code.sell_date_as = new_date_str
             code.save()
 
         if self.stop:
@@ -316,15 +316,15 @@ class Command(BaseCommand):
             买入价是当天最高价
             涨停价无法买入，且只买一个股票
             """
-            d2 = SharesBuys.objects.filter(buy_date_as=self.date, code_id=code, buy_start__gte=0)
+            d2 = SharesBuys.objects.filter(buy_date_as=new_date_str, code_id=code, buy_start__gte=0)
             if len(d2) == 0:
-                result = Shares.objects.filter(code_id=code, date_as=self.date)
+                result = Shares.objects.filter(code_id=code, date_as=new_date_str)
                 if result.p_range >= 9.7:
                     continue
                 # 查当前最高价， 算当天最高价买入
                 b = SharesBuys(
                     code_id=code,
-                    buy_date_as=self.date,
+                    buy_date_as=new_date_str,
                     buy_start=result.p_max,
                 )
                 b.save()
