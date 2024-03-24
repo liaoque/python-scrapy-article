@@ -74,7 +74,7 @@ def shares_date_last(request, date_today):
     dates = SharesDate.objects.filter(date_as__lte=datetime.strptime(date_today, '%Y%m%d')).order_by('-date_as')[:10]
 
     response = JsonResponse({
-        "dates": dates
+        "dates": [ item.date_as for item in dates]
     })
     response["Access-Control-Allow-Origin"] = "*"
     # 如果需要，可以添加更多CORS相关的头信息，例如：
