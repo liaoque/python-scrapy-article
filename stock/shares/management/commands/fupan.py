@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-# import talib
+import talib
 import numpy as np
 import os
 import re
@@ -61,25 +61,28 @@ class Command(BaseCommand):
             self.fp_dates = SharesDate.objects.filter(date_as__gte=self.fp_start, date_as__lte=self.fp_start).order_by(
                 'date_as')
         else:
-            self.fp_dates = SharesDate.objects.filter(date_as__lte=datetime.now().strftime('%Y%m%d')).order_by(
+            self.fp_dates = SharesDate.objects.filter(date_as__lte=datetime.now().strftime('%Y-%m-%d')).order_by(
                 '-date_as')[:2]
             self.fp_dates = sorted(self.fp_dates, key=lambda x: x.date_as, reverse=False)
-        for i, d in self.fp_dates:
-            self.date = d
-            if not self.a():
-                return
-            if not self.etf():
-                return
+
+        for d in self.fp_dates:
+            self.date = d.date_as.strftime("%Y%m%d")
+            self.a()
+            self.etf()
             self.gn()
             self.gp()
             self.saveGC()
 
-        for i, d in self.fp_dates:
+        return
+        i = 0
+        for d in self.fp_dates:
+            self.date = d.date_as.strftime("%Y%m%d")
             self.hcGC(i)
+            i += 1
 
     def macd(self, data):
         # 计算kd指标
-        close_prices = np.array(data)
+        close_prices = np.array([float(item) for item in data])
         macdDIFF, macdDEA, macd = talib.MACDEXT(close_prices, fastperiod=12, fastmatype=1, slowperiod=26,
                                                 slowmatype=1,
                                                 signalperiod=9, signalmatype=1)
@@ -196,9 +199,9 @@ class Command(BaseCommand):
         :return:
         """
         gn = rediangainnian.rdgainian(self.date)
-        if len(gn.gns) == 0:
+        if len(gn["gn"]) == 0:
             return
-        self.gns = [item for item in list(set(gn.gns)) if item not in gn.dtgn]
+        self.gns = [item for item in list(set(gn["gn"])) if item not in gn["dtgn"]]
 
     def gp(self):
         """
@@ -214,21 +217,26 @@ class Command(BaseCommand):
             "zt2000": "中证2000",
         }
         etfs = "或".join([etf[item] for item in self.etfs])
+        code33 = []
         for gn in self.gns:
             codes = rediangainnian.codes(self.date, gn, etfs)
             # 计算macd，
             for code in codes:
-                sharesKdjList = SharesMacd.objects.filter(code_id=codes).order_by('-date_as')[:3]
+                if code["code"] in code33:
+                    continue
+
+                sharesKdjList = SharesMacd.objects.filter(code_id=code["code"]).order_by('-date_as')[:11]
                 if len(sharesKdjList) < 10:
                     continue
-                last = sharesKdjList[0]
-                last2 = sharesKdjList[1]
-                last3 = sharesKdjList[2]
+                last = sharesKdjList[0].macd
+                last2 = sharesKdjList[1].macd
+                last3 = sharesKdjList[2].macd
                 if last > 0:
                     self.codes.append(code)
-                elif last < 0:
-                    if last > last2 > last3:
-                        self.codes.append(code)
+                    code33.append(code["code"])
+                elif 0 > last > last2 > last3:
+                    self.codes.append(code)
+                    code33.append(code["code"])
         #
 
     def saveGC(self):
@@ -236,17 +244,24 @@ class Command(BaseCommand):
         股池
         :return:
         """
-        codes = list(set(self.codes))
+        new_date_str = self.date[:4] + "-" + self.date[4:6] + "-" + self.date[6:]
+        codes = self.codes
         for code in codes:
-            transformed_data = SharesDateListen.objects.filter(date_as=self.date, code_id=code, type=11)
+
+            transformed_data = SharesDateListen.objects.filter(date_as=new_date_str, code_id=code["code"], type=11)
             if len(transformed_data) > 0:
                 return
+            for key, item in code.items():
+                if key.find("区间涨跌幅:前复权[") != -1:
+                    fr = code[key]
+            # print(fr)
+            # return
             SharesDateListen(
                 buy_start=0,
-                date_as=self.date,
-                code_id=code,
+                date_as=new_date_str,
+                code_id=code["code"],
                 p_start=0,
-                buy_pre=0,  # 4日涨跌幅
+                buy_pre=fr,  # 4日涨跌幅
                 type=11
             ).save()
 
