@@ -42,7 +42,7 @@ class ResultView(View):
 
         table2 = table.find_one({}, {"Table": 1})
         data2 = []
-        if table2:
+        if table2 and "Table" in table2:
             data2 = table2["Table"]
         data1 = table1["Table1FromJSON"]
         data1 = ({item["code"][0:-3]: item for item in data1})

@@ -45,7 +45,7 @@ class LianZhangGuPiao(View):
 
         table2 = table.find_one({}, {"Table": 1})
         data2 = []
-        if table2:
+        if table2 and "Table" in table2:
             data2 = table2["Table"]
 
         # history_day_table = self.db['history_day']
