@@ -37,9 +37,10 @@ class ZhuXianGnsView(View):
         gns = []
         dtgns = []
         d2 = []
-        dateInfo = gp.getTodayLimit(current_time)[1:]
+        dateInfo = gp.getTodayLimit(current_time)
         i = 0
-        for date in dateInfo['dates']:
+
+        for date in dateInfo['dates'][1:]:
             today = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y%m%d")
             yuan_yin = self.db['d' + today].find_one({}, {"yuan_yin": 1})
             if "yuan_yin" not in yuan_yin:
