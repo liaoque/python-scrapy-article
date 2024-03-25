@@ -37,7 +37,8 @@ class ZhuXianGnsView(View):
         gns = []
         dtgns = []
         d2 = []
-        dateInfo = gp.getTodayLimit(current_time)
+        dateInfo = gp.getTodayLimit(current_time)[1:]
+        i = 0
         for date in dateInfo['dates']:
             today = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y%m%d")
             yuan_yin = self.db['d' + today].find_one({}, {"yuan_yin": 1})
@@ -52,9 +53,12 @@ class ZhuXianGnsView(View):
                 if d["c"] < minc:
                     continue
                 gns.append(d["gn"])
+            if i > 0:
+                continue
+            i += 1
             for gn, d in yuan_yin["yuan_yin"]["die_ting_sort"].items():
                 dtgns.append(gn)
             for gn, d in yuan_yin["yuan_yin"]["zha_ban_sort"].items():
                 dtgns.append(gn)
 
-        return JsonResponse({"gn": gns, "dtgn": dtgns, "d":d2})
+        return JsonResponse({"gn": gns, "dtgn": dtgns, "d": d2})

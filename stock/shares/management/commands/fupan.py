@@ -67,15 +67,19 @@ class Command(BaseCommand):
                 '-date_as')[:2]
             self.fp_dates = sorted(self.fp_dates, key=lambda x: x.date_as, reverse=False)
 
-        # for d in self.fp_dates:
-        #     self.date = d.date_as.strftime("%Y%m%d")
-        #     self.a()
-        #     self.etf()
-        #     self.gn()
-        #     self.gp()
-        #     self.saveGC()
+        for d in self.fp_dates:
+            self.etfs = []
+            self.gns = []
+            self.gps = []
+            self.codes = []
+            self.date = d.date_as.strftime("%Y%m%d")
+            self.a()
+            self.etf()
+            self.gn()
+            self.gp()
+            self.saveGC()
 
-        # return
+        return
         i = 0
         for d in self.fp_dates:
             self.date = d.date_as.strftime("%Y%m%d")
@@ -124,6 +128,7 @@ class Command(BaseCommand):
         对 中证A50， 沪深300，中证500，中证1000，中证2000
         :return:
         """
+        self.etfs = []
         if self.A50():
             self.etfs.append("a50")
         if self.hs300():
@@ -201,8 +206,11 @@ class Command(BaseCommand):
         :return:
         """
         gn = rediangainnian.rdgainian(self.date)
+
         if len(gn["gn"]) == 0:
             return
+        print(list(set(gn["gn"])))
+        print(list(set(gn["dtgn"])))
         self.gns = [item for item in list(set(gn["gn"])) if item not in gn["dtgn"]]
 
     def gp(self):
@@ -218,6 +226,7 @@ class Command(BaseCommand):
             "zt1000": "中证1000",
             "zt2000": "中证2000",
         }
+        self.codes = []
         etfs = "或".join([etf[item] for item in self.etfs])
         code33 = []
         for gn in self.gns:
