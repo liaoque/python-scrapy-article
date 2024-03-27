@@ -1,5 +1,6 @@
 import requests
 import shares.management.commands.wencai2.common
+from datetime import datetime, timedelta
 
 
 def zhishu(secid):
@@ -8,8 +9,9 @@ def zhishu(secid):
     :param s:
     :return:
     """
-    url = ("http://25.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid=%s&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f53&klt=101&fqt=1&beg=0&end=20500101&smplmt=460&lmt=1000000&_=1711101890918") % (
-        secid )
+    url = (
+              "http://25.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid=%s&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f53&klt=101&fqt=1&beg=0&end=20500101&smplmt=460&lmt=1000000&_=1711101890918") % (
+              secid)
 
     response = requests.get(url)
     return response.json()["data"]["klines"]
@@ -33,8 +35,15 @@ def codes(today, gn, etf):
     :param s:
     :return:
     """
-    s = '%s去除ST，%s去除北交所，%s去除新股，所属概念包含%s，属于指数%s, %s前4日涨跌幅从大到小，%s前近20日的跌停次数取反，近半年无减持公告，近半年无处罚原因，无造假' % (
-        today, today, today, gn, etf, today, today
+    date_str = "2024-01-02"
+    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+    result_date = date_obj - timedelta(days=20)
+    t20 = result_date.strftime("%Y-%m-%d")
+    result_date = date_obj - timedelta(days=185)
+    t185 = result_date.strftime("%Y-%m-%d")
+
+    s = '%s去除ST，%s去除北交所，%s去除新股，所属概念包含%s，属于指数%s, %s前4日涨跌幅从大到小，%s-%s跌停次数取反，%s-%s无减持公告，%s-%s无处罚原因，无造假' % (
+        today, today, today, gn, etf, today, t20, today, t185, today, t185, today
     )
     url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
     data = {
