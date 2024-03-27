@@ -67,19 +67,19 @@ class Command(BaseCommand):
                 '-date_as')[:2]
             self.fp_dates = sorted(self.fp_dates, key=lambda x: x.date_as, reverse=False)
 
-        for d in self.fp_dates:
-            self.etfs = []
-            self.gns = []
-            self.gps = []
-            self.codes = []
-            self.date = d.date_as.strftime("%Y%m%d")
-            self.a()
-            self.etf()
-            self.gn()
-            self.gp()
-            self.saveGC()
+        # for d in self.fp_dates:
+        #     self.etfs = []
+        #     self.gns = []
+        #     self.gps = []
+        #     self.codes = []
+        #     self.date = d.date_as.strftime("%Y%m%d")
+        #     self.a()
+        #     self.etf()
+        #     self.gn()
+        #     self.gp()
+        #     self.saveGC()
 
-        return
+        # return
         i = 0
         for d in self.fp_dates:
             self.date = d.date_as.strftime("%Y%m%d")
@@ -258,10 +258,10 @@ class Command(BaseCommand):
         new_date_str = self.date[:4] + "-" + self.date[4:6] + "-" + self.date[6:]
         codes = self.codes
         for code in codes:
-
+            print(code["code"], new_date_str)
             transformed_data = SharesDateListen.objects.filter(date_as=new_date_str, code_id=code["code"], type=11)
             if len(transformed_data) > 0:
-                return
+                continue
             for key, item in code.items():
                 if key.find("区间涨跌幅:前复权[") != -1:
                     fr = code[key]
@@ -304,7 +304,11 @@ class Command(BaseCommand):
         """
         codes2 = SharesBuys.objects.filter(~Q(code_id__in=f32Codes), buy_date_as__lt=new_date_str, sell_end=0)
         for code in codes2:
-            result = Shares.objects.filter(code_id=code.code_id, date_as=code.buy_date_as)[0]
+            result = Shares.objects.filter(code_id=code.code_id, date_as=code.buy_date_as)
+            if len(result) == 0:
+                print("no found sell ", code.code_id, new_date_str)
+                continue
+            result = result[0]
             if result.p_range <= -9.7:
                 continue
             code.sell_end = result.p_end
@@ -331,7 +335,11 @@ class Command(BaseCommand):
             """
             d2 = SharesBuys.objects.filter(buy_date_as=new_date_str, code_id=code.code_id, buy_start__gte=0)
             if len(d2) == 0:
-                result = Shares.objects.filter(code_id=code.code_id, date_as=new_date_str)[0]
+                result = Shares.objects.filter(code_id=code.code_id, date_as=new_date_str)
+                if len(result) == 0:
+                    print("no found buy", code.code_id, new_date_str)
+                    continue
+                result = result[0]
                 if result.p_range >= 9.7:
                     continue
                 # 查当前最高价， 算当天最高价买入
@@ -343,12 +351,14 @@ class Command(BaseCommand):
                 b.save()
                 break
 
+
     def tgYk(self):
         """
         统计盈亏
         select sum(p_start- buy_pre) from mc_shares_date_listen where buy_pre >0 and type=11 and p_start=0
         :return:
         """
+
 
     def initD(self, item, start_seconds, end_seconds):
         d = {}
@@ -391,6 +401,7 @@ class Command(BaseCommand):
             return d
         return d
 
+
     def codeGetGn(self):
         codes = zhangTing.zhangTing(self.date)
         time_str = '09:30:00'
@@ -410,15 +421,15 @@ class Command(BaseCommand):
         resultF32 = [item["股票代码"] for item in result32]
 
         sql = """
-               select 1 as id, block_code_id, mc_shares_block_gns.name, count(1) as c
-                from mc_shares_join_block
-                left join (select code_id,name from mc_shares_block_gns group by code_id) as mc_shares_block_gns on mc_shares_block_gns.code_id = mc_shares_join_block.block_code_id 
-                where mc_shares_join_block.code_type = 2 and mc_shares_join_block.code_id in ( 
-                %s
-                ) and mc_shares_join_block.block_code_id not in (301639)
-                group by block_code_id
-                having  c > 1
-            """ % (",".join(resultF32))
+                   select 1 as id, block_code_id, mc_shares_block_gns.name, count(1) as c
+                    from mc_shares_join_block
+                    left join (select code_id,name from mc_shares_block_gns group by code_id) as mc_shares_block_gns on mc_shares_block_gns.code_id = mc_shares_join_block.block_code_id 
+                    where mc_shares_join_block.code_type = 2 and mc_shares_join_block.code_id in ( 
+                    %s
+                    ) and mc_shares_join_block.block_code_id not in (301639)
+                    group by block_code_id
+                    having  c > 1
+                """ % (",".join(resultF32))
         result = SharesJoinBlock.objects.raw(sql, params=())
         if len(result) == 0:
             return []

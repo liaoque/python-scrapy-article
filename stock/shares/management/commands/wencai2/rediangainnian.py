@@ -33,8 +33,8 @@ def codes(today, gn, etf):
     :param s:
     :return:
     """
-    s = '%s去除ST，%s去除北交所，%s去除新股，所属概念包含%s，属于指数%s, 4日涨跌幅从大到小，近20日的跌停次数取反，近半年无减持公告，近半年无处罚原因，无造假' % (
-        today, today, today, gn, etf
+    s = '%s去除ST，%s去除北交所，%s去除新股，所属概念包含%s，属于指数%s, %s前4日涨跌幅从大到小，%s前近20日的跌停次数取反，近半年无减持公告，近半年无处罚原因，无造假' % (
+        today, today, today, gn, etf, today, today
     )
     url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
     data = {
@@ -45,6 +45,7 @@ def codes(today, gn, etf):
         'query': s,
         'uuid': '24087',
     }
+    print(s)
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
