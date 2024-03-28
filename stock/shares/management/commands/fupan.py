@@ -68,6 +68,7 @@ class Command(BaseCommand):
             self.fp_dates = sorted(self.fp_dates, key=lambda x: x.date_as, reverse=False)
 
         for d in self.fp_dates:
+            break
             self.etfs = []
             self.gns = []
             self.gps = []
@@ -79,7 +80,6 @@ class Command(BaseCommand):
             self.gp()
             self.saveGC()
 
-        return
         i = 0
         for d in self.fp_dates:
             self.date = d.date_as.strftime("%Y%m%d")
@@ -308,7 +308,7 @@ class Command(BaseCommand):
         """
         codes2 = SharesBuys.objects.filter(~Q(code_id__in=f32Codes), buy_date_as__lt=new_date_str, sell_end=0)
         for code in codes2:
-            result = Shares.objects.filter(code_id=code.code_id, date_as=code.buy_date_as)
+            result = Shares.objects.filter(code_id=code.code_id, date_as=new_date_str)
             if len(result) == 0:
                 print("no found sell ", code.code_id, new_date_str)
                 continue
@@ -337,7 +337,7 @@ class Command(BaseCommand):
             买入价是当天最高价
             涨停价无法买入，且只买一个股票
             """
-            d2 = SharesBuys.objects.filter(buy_date_as=new_date_str, code_id=code.code_id, buy_start__gte=0)
+            d2 = SharesBuys.objects.filter(buy_date_as__lt=new_date_str, code_id=code.code_id, buy_start__gte=0)
             if len(d2) == 0:
                 result = Shares.objects.filter(code_id=code.code_id, date_as=new_date_str)
                 if len(result) == 0:
