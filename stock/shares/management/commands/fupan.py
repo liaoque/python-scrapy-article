@@ -67,19 +67,19 @@ class Command(BaseCommand):
                 '-date_as')[:2]
             self.fp_dates = sorted(self.fp_dates, key=lambda x: x.date_as, reverse=False)
 
-        # for d in self.fp_dates:
-        #     self.etfs = []
-        #     self.gns = []
-        #     self.gps = []
-        #     self.codes = []
-        #     self.date = d.date_as.strftime("%Y%m%d")
-        #     self.a()
-        #     self.etf()
-        #     self.gn()
-        #     self.gp()
-        #     self.saveGC()
+        for d in self.fp_dates:
+            self.etfs = []
+            self.gns = []
+            self.gps = []
+            self.codes = []
+            self.date = d.date_as.strftime("%Y%m%d")
+            self.a()
+            self.etf()
+            self.gn()
+            self.gp()
+            self.saveGC()
 
-        # return
+        return
         i = 0
         for d in self.fp_dates:
             self.date = d.date_as.strftime("%Y%m%d")
@@ -226,11 +226,13 @@ class Command(BaseCommand):
             "zt1000": "中证1000",
             "zt2000": "中证2000",
         }
+        date_obj = datetime.strptime(self.date, "%Y%m%d")
+        cdate = SharesDate.objects.filter(date_as__lte=date_obj.strftime("%Y-%m-%d")).order_by('-date_as')[:125]
         self.codes = []
         etfs = "或".join([etf[item] for item in self.etfs])
         code33 = []
         for gn in self.gns:
-            codes = rediangainnian.codes(self.date, gn, etfs)
+            codes = rediangainnian.codes(cdate, gn, etfs)
             # 计算macd，
             for code in codes:
                 if code["code"] in code33:
@@ -259,13 +261,15 @@ class Command(BaseCommand):
         codes = self.codes
         for code in codes:
             print(code["code"], new_date_str)
+            # return
             transformed_data = SharesDateListen.objects.filter(date_as=new_date_str, code_id=code["code"], type=11)
             if len(transformed_data) > 0:
                 continue
+            # fr = code["区间涨跌幅:前复权[%s]"%(self.date)]
             for key, item in code.items():
                 if key.find("区间涨跌幅:前复权[") != -1:
                     fr = code[key]
-            # print(fr)
+            print(fr)
             # return
             SharesDateListen(
                 buy_start=0,
@@ -351,14 +355,12 @@ class Command(BaseCommand):
                 b.save()
                 break
 
-
     def tgYk(self):
         """
         统计盈亏
         select sum(p_start- buy_pre) from mc_shares_date_listen where buy_pre >0 and type=11 and p_start=0
         :return:
         """
-
 
     def initD(self, item, start_seconds, end_seconds):
         d = {}
@@ -400,7 +402,6 @@ class Command(BaseCommand):
             d["gao_biao"] = 1
             return d
         return d
-
 
     def codeGetGn(self):
         codes = zhangTing.zhangTing(self.date)

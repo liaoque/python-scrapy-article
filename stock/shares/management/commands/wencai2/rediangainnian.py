@@ -29,21 +29,22 @@ def rdgainian(s):
     return response.json()
 
 
-def codes(today, gn, etf):
+def codes(cdate, gn, etf):
     """
     查最近10天的热点概念
     :param s:
     :return:
     """
-    date_str = "2024-01-02"
-    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
-    result_date = date_obj - timedelta(days=20)
-    t20 = result_date.strftime("%Y-%m-%d")
-    result_date = date_obj - timedelta(days=185)
-    t185 = result_date.strftime("%Y-%m-%d")
+    today = cdate[0].date_as
+    t3 = cdate[3].date_as
+    # date_obj = datetime.strptime(today, "%Y%m%d")
+    # result_date = date_obj - timedelta(days=20)
+    t20 = cdate[19].date_as
+    # result_date = date_obj - timedelta(days=185)
+    t185 = cdate[124].date_as
 
-    s = '%s去除ST，%s去除北交所，%s去除新股，所属概念包含%s，属于指数%s, %s前4日涨跌幅从大到小，%s-%s跌停次数取反，%s-%s无减持公告，%s-%s无处罚原因，无造假' % (
-        today, today, today, gn, etf, today, t20, today, t185, today, t185, today
+    s = '%s去除ST，%s去除北交所，%s去除新股，所属概念包含%s，属于指数%s, %s-%s涨跌幅从大到小，%s-%s跌停次数取反，%s-%s无减持公告，%s-%s无处罚原因，无造假' % (
+        today, today, today, gn, etf, t3, today, t20, today, t185, today, t185, today
     )
     url = 'http://www.iwencai.com/gateway/urp/v7/landing/getDataList'
     data = {
@@ -60,4 +61,6 @@ def codes(today, gn, etf):
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
     }
     response = requests.post(url, data=data, headers=headers)
+    if "answer" not in response.json():
+        print(response.json())
     return response.json()["answer"]["components"][0]['data']["datas"]
