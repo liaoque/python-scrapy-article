@@ -10,7 +10,7 @@ def zhishu(secid):
     :return:
     """
     url = (
-              "http://25.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid=%s&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f53&klt=101&fqt=1&beg=0&end=20500101&smplmt=460&lmt=1000000&_=1711101890918") % (
+              "http://25.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid=%s&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f53&klt=101&fqt=1&beg=0&end=20500101&lmt=1000000&_=1711101890918") % (
               secid)
 
     response = requests.get(url)

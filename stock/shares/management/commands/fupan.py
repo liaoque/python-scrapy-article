@@ -68,7 +68,6 @@ class Command(BaseCommand):
             self.fp_dates = sorted(self.fp_dates, key=lambda x: x.date_as, reverse=False)
 
         for d in self.fp_dates:
-            break
             self.etfs = []
             self.gns = []
             self.gps = []
@@ -83,6 +82,7 @@ class Command(BaseCommand):
         i = 0
         for d in self.fp_dates:
             self.date = d.date_as.strftime("%Y%m%d")
+            self.a()
             self.hcGC(i)
             i += 1
 
@@ -296,7 +296,7 @@ class Command(BaseCommand):
         找出这些概念的所有的相关股票
         """
         f32Gns = self.codeGetGn()
-        # print(f32Gns)
+        print(new_date_str, f32Gns)
         f32Gns2 = [item["block_code_id"] for item in f32Gns]
         f32Result = SharesJoinBlock.objects.filter(block_code_id__in=f32Gns2)
         f32Codes = [code.code_id for code in f32Result]
@@ -337,7 +337,8 @@ class Command(BaseCommand):
             买入价是当天最高价
             涨停价无法买入，且只买一个股票
             """
-            d2 = SharesBuys.objects.filter(buy_date_as__lt=new_date_str, code_id=code.code_id, buy_start__gte=0)
+            print(code.code_id, new_date_str)
+            d2 = SharesBuys.objects.filter(buy_date_as__lt=new_date_str, code_id=code.code_id, sell_end=0)
             if len(d2) == 0:
                 result = Shares.objects.filter(code_id=code.code_id, date_as=new_date_str)
                 if len(result) == 0:
@@ -441,11 +442,10 @@ class Command(BaseCommand):
                     "block_code_id": item.block_code_id,
                     "c": 0
                 }
-            f32GN[item.block_code_id]["c"] += 1
+            f32GN[item.block_code_id]["c"] = item.c
 
         gns = [item[1]["c"] for item in f32GN.items()]
-        result2 = sorted(list(set(gns)), key=lambda x: x, reverse=True)[:2]
+        result2 = sorted(list(set(gns)), key=lambda x: x, reverse=True)[:1]
         minGn = min(result2)
         result = filter(lambda item: item[1]["c"] >= minGn, f32GN.items())
-
         return [item[1] for item in result]
