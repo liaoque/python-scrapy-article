@@ -169,7 +169,7 @@ class Command(BaseCommand):
 
                     new_date_str = d1[0]
                     # 处于区间内
-                    if data[i]['d'] > new_date_str or new_date_str > data[i + 1]['d']:
+                    if data[i]['d'] >= new_date_str or new_date_str > data[i + 1]['d']:
                         continue
                     if d2[1] > d1[1]:
                         sz = sz + 1
