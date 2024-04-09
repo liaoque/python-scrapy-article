@@ -85,7 +85,7 @@ class Command(BaseCommand):
             if macd is None:
                 i = i + 1
                 continue
-            if i + 2 > len(macds):
+            if i + 2 >= len(macds):
                 break
             if macds[i] > macds[i - 1]:
                 """
@@ -147,10 +147,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.date = "20240404"
+
         boduan = []
         boduan.append({
-            "code": "a",
-            "data": self.a()
+            "code": "zt2000",
+            "data": self.zt2000()
         })
 
         for item in boduan:
@@ -161,11 +162,11 @@ class Command(BaseCommand):
                 if i + 1 == len(item["data"]):
                     continue
                 sz = xd = p = sz2 = xd2 = p2 = 0
-                for j in range(len(self.data["a"])):
-                    if j + 1 == len(self.data["a"]):
+                for j in range(len(self.data[item["code"]])):
+                    if j + 1 == len(self.data[item["code"]]):
                         continue
-                    d1 = self.data["a"][j].split(",")
-                    d2 = self.data["a"][j + 1].split(",")
+                    d1 = self.data[item["code"]][j].split(",")
+                    d2 = self.data[item["code"]][j + 1].split(",")
 
                     new_date_str = d1[0]
                     # 处于区间内
@@ -265,6 +266,9 @@ class Command(BaseCommand):
         data = self.data["a50"]
         if len(self.data["a50"]) == 0:
             data = self.data["a50"] = rediangainnian.zhishu("2.930050")
+        self.dates = [item.split(",")[0] for item in data if
+                      item.split(",")[0].replace("-", "") <= self.date]
+        # print(self.dates)
         data = [item.split(",")[1] for item in data if
                 item.split(",")[0].replace("-", "") <= self.date]
         return self.computeBoDuan(data)
@@ -277,6 +281,9 @@ class Command(BaseCommand):
         data = self.data["hs300"]
         if len(self.data["hs300"]) == 0:
             data = self.data["hs300"] = rediangainnian.zhishu("1.000300")
+        self.dates = [item.split(",")[0] for item in data if
+                      item.split(",")[0].replace("-", "") <= self.date]
+        # print(self.dates)
         data = [item.split(",")[1] for item in data if
                 item.split(",")[0].replace("-", "") <= self.date]
         return self.computeBoDuan(data)
@@ -289,6 +296,9 @@ class Command(BaseCommand):
         data = self.data["zt500"]
         if len(self.data["zt500"]) == 0:
             data = self.data["zt500"] = rediangainnian.zhishu("1.000905")
+        self.dates = [item.split(",")[0] for item in data if
+                      item.split(",")[0].replace("-", "") <= self.date]
+        # print(self.dates)
         data = [item.split(",")[1] for item in data if
                 item.split(",")[0].replace("-", "") <= self.date]
         return self.computeBoDuan(data)
@@ -301,6 +311,9 @@ class Command(BaseCommand):
         data = self.data["zt1000"]
         if len(self.data["zt1000"]) == 0:
             data = self.data["zt1000"] = rediangainnian.zhishu("1.000852")
+        self.dates = [item.split(",")[0] for item in data if
+                      item.split(",")[0].replace("-", "") <= self.date]
+        # print(self.dates)
         data = [item.split(",")[1] for item in data if
                 item.split(",")[0].replace("-", "") <= self.date]
         return self.computeBoDuan(data)
@@ -313,6 +326,9 @@ class Command(BaseCommand):
         data = self.data["zt2000"]
         if len(self.data["zt2000"]) == 0:
             data = self.data["zt2000"] = rediangainnian.zhishu("2.932000")
+        self.dates = [item.split(",")[0] for item in data if
+                      item.split(",")[0].replace("-", "") <= self.date]
+        # print(self.dates)
         data = [item.split(",")[1] for item in data if
                 item.split(",")[0].replace("-", "") <= self.date]
         return self.computeBoDuan(data)
