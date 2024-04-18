@@ -63,17 +63,21 @@ class Command(BaseCommand):
                 numdata = [item for item in data if item["num"] == num]
                 gt = len([item for item in numdata if item["action"] == "gt"])
                 lt = len([item for item in numdata if item["action"] == "lt"])
-                print("%s-%s  %s week-%s down: %s up: %s" % (
-                    self.fp_start, self.fp_end, code, num, gt, lt
-                ))
+                # print("%s-%s  %s week-%s down: %s up: %s" % (
+                #     self.fp_start, self.fp_end, code, num, lt, gt,
+                # ))
 
             data = self.compute(item["month"], False)
             for num in range(1, 13):
                 numdata = [item for item in data if item["num"] == num]
                 gt = len([item for item in numdata if item["action"]  == "gt"])
                 lt = len([item for item in numdata if item["action"]  == "lt"])
+                if 6 < num or num < 4:
+                    continue
+                if gt <= lt:
+                    continue
                 print("%s-%s  %s month-%s down: %s up: %s" % (
-                    self.fp_start, self.fp_end, code, num, gt, lt
+                    self.fp_start, self.fp_end, code, num, lt, gt,
                 ))
 
     def compute(self, item, week=True):
@@ -119,36 +123,36 @@ class Command(BaseCommand):
         }
 
         self.data["a50"]["week"] = {
-            "data": rediangainnian.zhishu_week("1.000001")
+            "data": rediangainnian.zhishu_week("1.000016")
         }
         self.data["a50"]["month"] = {
-            "data": rediangainnian.zhishu_month("1.000001")
+            "data": rediangainnian.zhishu_month("1.000016")
         }
 
         self.data["hs300"]["week"] = {
-            "data": rediangainnian.zhishu_week("1.000001")
+            "data": rediangainnian.zhishu_week("1.000300")
         }
         self.data["hs300"]["month"] = {
-            "data": rediangainnian.zhishu_month("1.000001")
+            "data": rediangainnian.zhishu_month("1.000300")
         }
 
         self.data["zt500"]["week"] = {
-            "data": rediangainnian.zhishu_week("1.000001")
+            "data": rediangainnian.zhishu_week("1.000905")
         }
         self.data["zt500"]["month"] = {
-            "data": rediangainnian.zhishu_month("1.000001")
+            "data": rediangainnian.zhishu_month("1.000905")
         }
 
         self.data["zt1000"]["week"] = {
-            "data": rediangainnian.zhishu_week("1.000001")
+            "data": rediangainnian.zhishu_week("1.000852")
         }
         self.data["zt1000"]["month"] = {
-            "data": rediangainnian.zhishu_month("1.000001")
+            "data": rediangainnian.zhishu_month("1.000852")
         }
 
         self.data["zt2000"]["week"] = {
-            "data": rediangainnian.zhishu_week("1.000001")
+            "data": rediangainnian.zhishu_week("2.932000")
         }
         self.data["zt2000"]["month"] = {
-            "data": rediangainnian.zhishu_month("1.000001")
+            "data": rediangainnian.zhishu_month("2.932000")
         }
