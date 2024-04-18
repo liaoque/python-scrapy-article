@@ -40,8 +40,8 @@ class Command(BaseCommand):
     date = ""
 
     fp = 1
-    fp_start = "2024-01-01"
-    fp_end = ""
+    fp_start = "2000-01-01"
+    fp_end = "2024-04-01"
     fp_dates = "2024-04-01"
 
     stop = False
@@ -70,8 +70,8 @@ class Command(BaseCommand):
             data = self.compute(item["month"], False)
             for num in range(1, 13):
                 numdata = [item for item in data if item["num"] == num]
-                gt = len([item for item in data if numdata == "gt"])
-                lt = len([item for item in data if numdata == "lt"])
+                gt = len([item for item in numdata if item["action"]  == "gt"])
+                lt = len([item for item in numdata if item["action"]  == "lt"])
                 print("%s-%s  %s month-%s down: %s up: %s" % (
                     self.fp_start, self.fp_end, code, num, gt, lt
                 ))
