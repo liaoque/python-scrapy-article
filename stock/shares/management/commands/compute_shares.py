@@ -89,11 +89,13 @@ class Command(BaseCommand):
         sql = "select id,code_id from mc_shares  where  zhangting =1 and date_as = %s";
         result = SharesKdjCompute.objects.raw(sql, params=(date_as,))
         for item in result:
-            sql = "select id, code_id, lianban from mc_shares  where  code_id =%s and zhangting =1 and date_as < %s order by date_as desc limit 1";
+            sql = "select id, code_id, lianban,zhangting from mc_shares  where  code_id =%s and  date_as < %s order by date_as desc limit 1";
             result2 = SharesKdjCompute.objects.raw(sql, params=(item.code_id, date_as,))
             sql = "update mc_shares set lianban =%s where  code_id =%s  and date_as = %s";
             if len(result2) > 0:
                 item2 = result2[0]
+                if item2.zhangting != 1:
+                    return
                 cursor = connection.cursor()
                 cursor.execute(sql, [item2.lianban + 1, item2.code_id, date_as])
             else:
