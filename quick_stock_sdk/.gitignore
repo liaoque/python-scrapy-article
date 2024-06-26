@@ -1,0 +1,10 @@
+weixin/__pycache__
+weixin/*/__pycache__
+.vscode
+.test/*
+build/*
+.idea
+config.ini
+.idea/*
+wb/polls/core/__pycache__/*
+wb/polls/views/__pycache__/*
