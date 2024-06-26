@@ -40,7 +40,7 @@ class Command(BaseCommand):
             HAVING rang > 0.7 and rang < 1 ) c;
                     """
             print(sql)
-            slist = SharesHalfYear.objects.raw(sql, params=(half, half, "ST%",))
+            slist = SharesHalfYear.objects.raw(sql, params=(half, half, "%ST%",))
             if half == 1:
                 ya = "上半年"
             else:
@@ -63,7 +63,7 @@ class Command(BaseCommand):
             HAVING rang > 0.7 and rang < 1 ) c;
                     """
             print(sql)
-            slist = SharesHalfYear.objects.raw(sql, params=(season, season, "ST%"))
+            slist = SharesHalfYear.objects.raw(sql, params=(season, season, "%ST%"))
             print("\n%s季度---start\n" % season)
             print(",".join(["\"" + item.code_id + "\"" for item in slist]))
             print("\n%s季度---end\n" % season)
@@ -85,7 +85,7 @@ class Command(BaseCommand):
             ) c
                     """
             print(sql)
-            slist = SharesHalfYear.objects.raw(sql, params=(season, season, "ST%"))
+            slist = SharesHalfYear.objects.raw(sql, params=(season, season, "%ST%"))
             print("\n%s月---start\n" % season)
             print(",".join(["\"" + item.code_id + "\"" for item in slist]))
             print("\n%s月---end\n" % season)
