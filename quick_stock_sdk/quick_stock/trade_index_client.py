@@ -1,5 +1,5 @@
 import datetime
-from quick_stock import getDClient
+from quick_stock.d import getDClient
 from quick_stock.remote.index import TradeIndex
 
 class TradeIndexClient:

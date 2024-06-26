@@ -1,7 +1,8 @@
 import datetime
 import pandas as pd
 import numpy as np
-from quick_stock import getDClient, getTradeDays
+from quick_stock.d import getDClient
+from quick_stock.remote import getTradeDays
 
 
 class TradeDateClient:
