@@ -1,8 +1,6 @@
 import datetime
-import pandas as pd
-import numpy as np
-from client import getDClient
-from remote.index import TradeIndex
+from quick_stock import getDClient
+from quick_stock.remote.index import TradeIndex
 
 class TradeIndexClient:
     dClient = None

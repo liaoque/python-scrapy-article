@@ -1,4 +1,4 @@
-import remote.req as req
+import quick_stock.remote.req as req
 class TradeDays:
     _all_trade = None
 

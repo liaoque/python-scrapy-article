@@ -1,5 +1,5 @@
-import remote.req as req
-import share as share
+import quick_stock.remote.req as req
+from quick_stock import share as share
 
 
 class TradeIndex:

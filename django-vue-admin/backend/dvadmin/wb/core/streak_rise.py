@@ -1,4 +1,5 @@
 from dvadmin.wb.core import concept, gn
+from dvadmin.wb.config import code_config
 
 """
 Sub 取连涨股票()
@@ -1263,6 +1264,18 @@ End Sub
 
 
 def yi_zi_ban_yuan_yin(yizibangupiao, yizibangainian):
+    xia_xian = code_config.CodeConfig().getCodeConfig()
+    fd = xia_xian['fd']
+    if fd == 1:
+        #  如果封单开， 使用一字板概念计算
+        return step18(yizibangupiao, yizibangainian)
+    # 如果封单关，使用一字板股票的所属概念的所有集合
+    gns = [suoshugainian for item in yizibangupiao for suoshugainian in item["suoshugainian"]]
+    gns = list(set(gns))
+    yizibangainian = {}
+    for gn in gns:
+        if gn not in yizibangainian:
+            yizibangainian[gn] = {}
     return step18(yizibangupiao, yizibangainian)
 
 
