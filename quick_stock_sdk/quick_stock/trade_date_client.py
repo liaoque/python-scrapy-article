@@ -19,7 +19,7 @@ class TradeDateClient:
         """
         df = self.dClient.select("select date_at from mc_dates")
         if df.empty or df.iloc[-1]['date_at'] != datetime.date.today():
-            data = self.tradeDays.get_all_trade_days()
+            data = self.tradeDays.get_all()
             df = pd.DataFrame({"date_at": data})
             self.dClient.save(df, 'mc_dates')
         else:

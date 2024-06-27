@@ -15,7 +15,7 @@ class TradeIndexClient:
         df = self.dClient.select("select * from mc_index_basic")
         if df.empty or datetime.date.today().day == 1:
             df = TradeIndex().get_all()
-            self.dClient.save(df, 'mc_stock_basic')
+            self.dClient.save(df, 'mc_index_basic')
         return df
 
     def daily(self):
