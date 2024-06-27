@@ -18,15 +18,15 @@ class TradeIndexClient:
             self.dClient.save(df, 'mc_index_basic')
         return df
 
-    def daily(self):
-        pass
+    def daily(self, code):
+        return TradeIndex().daily(code)
 
-    def weekly(self):
-        pass
+    def weekly(self, code):
+        return TradeIndex().weekly(code)
 
-    def monthly(self):
-        pass
+    def monthly(self, code):
+        return TradeIndex().monthly(code)
 
 if __name__ == "__main__":
-    TradeIndexClient().get_all_index()
+    print(TradeIndexClient().daily("0.000001"))
 

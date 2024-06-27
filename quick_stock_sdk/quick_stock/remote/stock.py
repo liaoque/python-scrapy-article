@@ -7,6 +7,9 @@ class TradeStock:
     _all_days = {}
     _all_weeks = {}
     _all_months = {}
+    _all_minute = {}
+    _all_minute30 = {}
+    _all_minute60 = {}
 
     def get_all(self):
         if self._all_trade:
@@ -19,35 +22,35 @@ class TradeStock:
         self._all_trade = df
         return self._all_trade
 
-    def minute1(self, secid):
-        if self._all_days[secid] :
-            return self._all_days[secid]
+    def minute(self, secid):
+        if secid in self._all_minute:
+            return self._all_minute[secid]
         url = (
                   "http://25.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid=%s&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f53&klt=101&fqt=1&beg=0&end=20500101&lmt=1000000&_=1711101890918") % (
                   secid)
-        self._all_days[secid] = req.getDF(url)
-        return self._all_days[secid]
+        self._all_minute[secid] = req.getDF(url)
+        return self._all_minute[secid]
 
     def minute30(self, secid):
-        if self._all_days[secid] :
-            return self._all_days[secid]
+        if secid in self._all_minute30:
+            return self._all_minute30[secid]
         url = (
                   "http://25.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid=%s&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f53&klt=101&fqt=1&beg=0&end=20500101&lmt=1000000&_=1711101890918") % (
                   secid)
-        self._all_days[secid] = req.getDF(url)
-        return self._all_days[secid]
+        self._all_minute30[secid] = req.getDF(url)
+        return self._all_minute30[secid]
 
     def minute60(self, secid):
-        if self._all_days[secid] :
-            return self._all_days[secid]
+        if secid in self._all_minute60:
+            return self._all_minute60[secid]
         url = (
                   "http://25.push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid=%s&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f53&klt=101&fqt=1&beg=0&end=20500101&lmt=1000000&_=1711101890918") % (
                   secid)
-        self._all_days[secid] = req.getDF(url)
-        return self._all_days[secid]
+        self._all_minute60[secid] = req.getDF(url)
+        return self._all_minute60[secid]
 
     def daily(self, code):
-        if self._all_days[code] :
+        if code in self._all_days:
             return self._all_days[code]
         url = "https://push2.eastmoney.com/api/qt/stock/get?" \
         "ut=fa5fd1943c7b386f172d6893dbfba10b&fltt=2&invt=2&" \
@@ -57,7 +60,7 @@ class TradeStock:
         return self._all_days[code]
 
     def weekly(self, code):
-        if self._all_weeks[code] :
+        if code in self._all_weeks:
             return self._all_weeks[code]
         days = 10000
         url = 'https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=' + \
@@ -67,7 +70,7 @@ class TradeStock:
         return self._all_weeks[code]
 
     def monthly(self, code):
-        if self._all_months[code] :
+        if code in self._all_months:
             return self._all_months[code]
         days = 10000
         url = 'https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=' + \
