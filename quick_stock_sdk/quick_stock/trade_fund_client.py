@@ -19,14 +19,14 @@ class TradeFundClient:
             self.dClient.save(df, 'mc_fund_basic')
         return df
 
-    def daily(self, code):
-        return TradeFund().daily(code)
+    def daily(self, code, start=None, end=None):
+        return TradeFund().daily(code,start,end)
 
-    def weekly(self, code):
-        return TradeFund().weekly(code)
+    def weekly(self, code, start=None, end=None):
+        return TradeFund().weekly(code,start,end)
 
-    def monthly(self, code):
-        return TradeFund().monthly(code)
+    def monthly(self, code, start=None, end=None):
+        return TradeFund().monthly(code,start,end)
 
 
 if __name__ == "__main__":

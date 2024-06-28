@@ -19,14 +19,14 @@ class TradeStockClient:
             self.dClient.save(df, 'mc_stock_basic')
         return df
 
-    def daily(self, code):
-        return TradeStock().daily(code)
+    def daily(self, code, start=None, end=None):
+        return TradeStock().daily(code,start,end)
 
-    def weekly(self, code):
-        return TradeStock().weekly(code)
+    def weekly(self, code, start=None, end=None):
+        return TradeStock().weekly(code,start,end)
 
-    def monthly(self, code):
-        return TradeStock().monthly(code)
+    def monthly(self, code, start=None, end=None):
+        return TradeStock().monthly(code,start,end)
 
 
 if __name__ == "__main__":
