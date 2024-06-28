@@ -19,6 +19,15 @@ class TradeStockClient:
             self.dClient.save(df, 'mc_stock_basic')
         return df
 
+    def minute(self, code):
+        return TradeStock().minute(code)
+
+    def minute30(self, code, start=None, end=None):
+        return TradeStock().minute30(code,start,end)
+
+    def minute60(self, code, start=None, end=None):
+        return TradeStock().minute60(code,start,end)
+
     def daily(self, code, start=None, end=None):
         return TradeStock().daily(code,start,end)
 

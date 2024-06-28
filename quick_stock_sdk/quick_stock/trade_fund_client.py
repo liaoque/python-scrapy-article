@@ -19,6 +19,15 @@ class TradeFundClient:
             self.dClient.save(df, 'mc_fund_basic')
         return df
 
+    def minute(self, code):
+        return TradeFund().minute(code)
+
+    def minute30(self, code, start=None, end=None):
+        return TradeFund().minute30(code,start,end)
+
+    def minute60(self, code, start=None, end=None):
+        return TradeFund().minute60(code,start,end)
+
     def daily(self, code, start=None, end=None):
         return TradeFund().daily(code,start,end)
 

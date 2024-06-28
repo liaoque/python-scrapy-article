@@ -18,6 +18,15 @@ class TradeIndexClient:
             self.dClient.save(df, 'mc_index_basic')
         return df
 
+    def minute(self, code):
+        return TradeIndex().minute(code)
+
+    def minute30(self, code, start=None, end=None):
+        return TradeIndex().minute30(code,start,end)
+
+    def minute60(self, code, start=None, end=None):
+        return TradeIndex().minute60(code,start,end)
+
     def daily(self, code, start=None, end=None):
         return TradeIndex().daily(code,start,end)
 
