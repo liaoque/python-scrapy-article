@@ -32,16 +32,16 @@ class TradeFund:
         self._all_minute[secid] = req.getDF(url)
         self._all_minute[secid] = [{
             "date_at": x[0],
-            "start": x[1],
-            "end": x[2],
-            "max": x[3],
-            "min": x[4],
-            "count": x[5],  # 成交量
-            "amount": x[6],  # 成交额
-            "amplitude": x[7],  # 振幅
-            "range": x[8],  # 涨跌幅
-            "range_amount": x[9],  # 涨跌额
-            "turnover_rate": x[10],  # 换手率
+            "start": float(x[1]),
+            "end": float(x[2]),
+            "max": float(x[3]),
+            "min": float(x[4]),
+            "count": int(x[5]),  # 成交量
+            "amount": float(x[6]),  # 成交额
+            "amplitude": float(x[7]),  # 振幅
+            "range": float(x[8]),  # 涨跌幅
+            "range_amount": float(x[9]),  # 涨跌额
+            "turnover_rate": float(x[10]),  # 换手率
         } for v in self._all_minute[secid] for x in [v.split(',')]]
         return self._all_minute[secid]
 
@@ -55,16 +55,16 @@ class TradeFund:
         self._all_minute30[secid] = req.getDF(url)
         self._all_minute30[secid] = [{
             "date_at": x[0],
-            "start": x[1],
-            "end": x[2],
-            "max": x[3],
-            "min": x[4],
-            "count": x[5], # 成交量
-            "amount": x[6], #成交额
-            "amplitude": x[7],  # 振幅
-            "range": x[8], # 涨跌幅
-            "range_amount": x[9], # 涨跌额
-            "turnover_rate": x[10], # 换手率
+             "start": float(x[1]),
+            "end": float(x[2]),
+            "max": float(x[3]),
+            "min": float(x[4]),
+            "count": int(x[5]),  # 成交量
+            "amount": float(x[6]),  # 成交额
+            "amplitude": float(x[7]),  # 振幅
+            "range": float(x[8]),  # 涨跌幅
+            "range_amount": float(x[9]),  # 涨跌额
+            "turnover_rate": float(x[10]),  # 换手率
         } for v in self._all_minute30[secid] for x in [v.split(',')]]
 
         return self._all_minute30[secid]
@@ -79,16 +79,16 @@ class TradeFund:
         self._all_minute60[secid] = req.getDF(url)
         self._all_minute60[secid] = [{
             "date_at": x[0],
-            "start": x[1],
-            "end": x[2],
-            "max": x[3],
-            "min": x[4],
-            "count": x[5],  # 成交量
-            "amount": x[6],  # 成交额
-            "amplitude": x[7],  # 振幅
-            "range": x[8],  # 涨跌幅
-            "range_amount": x[9],  # 涨跌额
-            "turnover_rate": x[10],  # 换手率
+             "start": float(x[1]),
+            "end": float(x[2]),
+            "max": float(x[3]),
+            "min": float(x[4]),
+            "count": int(x[5]),  # 成交量
+            "amount": float(x[6]),  # 成交额
+            "amplitude": float(x[7]),  # 振幅
+            "range": float(x[8]),  # 涨跌幅
+            "range_amount": float(x[9]),  # 涨跌额
+            "turnover_rate": float(x[10]),  # 换手率
         } for v in self._all_minute60[secid] for x in [v.split(',')]]
         return self._all_minute60[secid]
 
@@ -102,16 +102,16 @@ class TradeFund:
         self._all_days[code] = req.getDF(url)
         self._all_days[code] = [{
             "date_at": x[0],
-            "start": x[1],
-            "end": x[2],
-            "max": x[3],
-            "min": x[4],
-            "count": x[5],  # 成交量
-            "amount": x[6],  # 成交额
-            "amplitude": x[7],  # 振幅
-            "range": x[8],  # 涨跌幅
-            "range_amount": x[9],  # 涨跌额
-            "turnover_rate": x[10],  # 换手率
+            "start": float(x[1]),
+            "end": float(x[2]),
+            "max": float(x[3]),
+            "min": float(x[4]),
+            "count": int(x[5]),  # 成交量
+            "amount": float(x[6]),  # 成交额
+            "amplitude": float(x[7]),  # 振幅
+            "range": float(x[8]),  # 涨跌幅
+            "range_amount": float(x[9]),  # 涨跌额
+            "turnover_rate": float(x[10]),  # 换手率
         } for v in self._all_days[code] for x in [v.split(',')]]
         return self._all_days[code]
 
@@ -125,16 +125,16 @@ class TradeFund:
         self._all_weeks[code] = req.getDF(url)
         self._all_weeks[code] = [{
             "date_at": x[0],
-            "start": x[1],
-            "end": x[2],
-            "max": x[3],
-            "min": x[4],
-            "count": x[5],  # 成交量
-            "amount": x[6],  # 成交额
-            "amplitude": x[7],  # 振幅
-            "range": x[8],  # 涨跌幅
-            "range_amount": x[9],  # 涨跌额
-            "turnover_rate": x[10],  # 换手率
+            "start": float(x[1]),
+            "end": float(x[2]),
+            "max": float(x[3]),
+            "min": float(x[4]),
+            "count": int(x[5]),  # 成交量
+            "amount": float(x[6]),  # 成交额
+            "amplitude": float(x[7]),  # 振幅
+            "range": float(x[8]),  # 涨跌幅
+            "range_amount": float(x[9]),  # 涨跌额
+            "turnover_rate": float(x[10]),  # 换手率
         } for v in self._all_weeks[code] for x in [v.split(',')]]
         return self._all_weeks[code]
 
@@ -148,20 +148,20 @@ class TradeFund:
         self._all_months[code] = req.getDF(url)
         self._all_months[code] = [{
             "date_at": x[0],
-            "start": x[1],
-            "end": x[2],
-            "max": x[3],
-            "min": x[4],
-            "count": x[5],  # 成交量
-            "amount": x[6],  # 成交额
-            "amplitude": x[7],  # 振幅
-            "range": x[8],  # 涨跌幅
-            "range_amount": x[9],  # 涨跌额
-            "turnover_rate": x[10],  # 换手率
+            "start": float(x[1]),
+            "end": float(x[2]),
+            "max": float(x[3]),
+            "min": float(x[4]),
+            "count": int(x[5]),  # 成交量
+            "amount": float(x[6]),  # 成交额
+            "amplitude": float(x[7]),  # 振幅
+            "range": float(x[8]),  # 涨跌幅
+            "range_amount": float(x[9]),  # 涨跌额
+            "turnover_rate": float(x[10]),  # 换手率
         } for v in self._all_months[code] for x in [v.split(',')]]
         return self._all_months[code]
 
 
 
 if __name__ == "__main__":
-    print(TradeFund().weekly(0.159537))
+    print(TradeFund().minute(0.159537,'20240627'))

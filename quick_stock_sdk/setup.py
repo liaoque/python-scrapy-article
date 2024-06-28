@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="quick_stock_sdk",
-    version="0.1.2",
+    version="0.1.4",
     packages=find_packages(),
     include_package_data=True,
     description="A quick stock SDK for retrieving stock prices and information",
