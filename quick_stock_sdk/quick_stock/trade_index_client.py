@@ -1,6 +1,9 @@
 import datetime
+import time
+
 from quick_stock.d import getDClient
 from quick_stock.remote.index import TradeIndex
+import pandas as pd
 
 class TradeIndexClient:
     dClient = None
@@ -12,10 +15,35 @@ class TradeIndexClient:
         """
         :return: list - string
         """
-        df = self.dClient.select("select * from mc_index_basic")
-        if df.empty or datetime.date.today().day == 1:
+        df = self.dClient.select("select * from mc_index_basic where exp_date is not NULL")
+        if df.empty or datetime.date.today().day == 1 :
             df = TradeIndex().get_all()
+            time.sleep(30)
+
+            df2 = TradeIndex().get_all("MSCI")
+            df = pd.concat([df, df2], axis=0)
+            time.sleep(30)
+
+            df2 = TradeIndex().get_all("CSI")
+            df = pd.concat([df, df2], axis=0)
+            time.sleep(30)
+
+            df2 = TradeIndex().get_all("SZSE")
+            df = pd.concat([df, df2], axis=0)
+            time.sleep(30)
+
+            df2 = TradeIndex().get_all("CICC")
+            df = pd.concat([df, df2], axis=0)
+            time.sleep(30)
+
+            df2 = TradeIndex().get_all("SW")
+            df = pd.concat([df, df2], axis=0)
+            time.sleep(30)
+
+            df2 = TradeIndex().get_all("OTH")
+            df = pd.concat([df, df2], axis=0)
             self.dClient.save(df, 'mc_index_basic')
+
         return df
 
     def minute(self, code):
@@ -37,5 +65,5 @@ class TradeIndexClient:
         return TradeIndex().monthly(code,start,end)
 
 if __name__ == "__main__":
-    print(TradeIndexClient().daily("0.000001"))
+    print(TradeIndexClient().get_all_index())
 

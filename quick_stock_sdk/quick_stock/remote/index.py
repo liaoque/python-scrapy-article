@@ -3,7 +3,7 @@ from quick_stock import share as share
 
 
 class TradeIndex:
-    _all_trade = None
+    _all_trade = {}
     _all_days = {}
     _all_weeks = {}
     _all_months = {}
@@ -11,16 +11,16 @@ class TradeIndex:
     _all_minute30 = {}
     _all_minute60 = {}
 
-    def get_all(self):
-        if self._all_trade:
-            return self._all_trade
+    def get_all(self, market="SSE"):
+        if market in self._all_trade:
+            return self._all_trade[market]
 
-        df = share.getTushare().index_basic()
+        df = share.getTushare().index_basic(market=market)
         columns = df.columns.tolist()
         columns[0] = 'code'
         df.columns = columns
-        self._all_trade = df
-        return self._all_trade
+        self._all_trade[market] = df
+        return self._all_trade[market]
 
     def minute(self, secid, end=None):
         if end == None:

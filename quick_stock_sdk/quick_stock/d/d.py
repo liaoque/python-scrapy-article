@@ -13,3 +13,4 @@ class DClient:
 
     def select(self, sql):
         return pd.read_sql_query(sql, self.conn)
+
