@@ -45,17 +45,17 @@ if __name__ == '__main__':
     fig, (ax1, ax2) = plt.subplots(2, sharex=True, figsize=(10, 8))
     candlestick_ohlc(ax1, zip(np.arange(1, len(dates))  , open_prices, high_prices, low_prices, close_prices), width=0.6, colorup='g',
                      colordown='r')
-    ax1.set_title('股价K线图')
-    ax1.set_ylabel('价格')
+    ax1.set_title('date')
+    ax1.set_ylabel('price')
 
     # 绘制MAC柱状图
     macd = macd[-120:]
     signal = signal[-120:]
     hist = hist[-120:]
     ax2.bar(dates, macd, color='b')
-    ax2.set_title('MAC柱状图')
-    ax2.set_xlabel('日期')
-    ax2.set_ylabel('MAC值')
+    ax2.set_title('macd')
+    ax2.set_xlabel('date')
+    ax2.set_ylabel('macd')
     plt.show()
 
     # fig, ax1 = plt.subplots()
