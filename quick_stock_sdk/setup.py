@@ -22,6 +22,8 @@ setup(
         "pandas",
         "tushare",
         "numpy",
+        "lxml",
+        "cssselect",
     ],
     tests_require=[
         "pytest",

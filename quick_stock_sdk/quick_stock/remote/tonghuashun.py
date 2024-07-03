@@ -1,4 +1,7 @@
-
+import quick_stock.remote.req as req
+from lxml import etree
+import json
+from lxml.cssselect import CSSSelector
 # https://q.10jqka.com.cn/gn/
 class TongHuaShun:
     _all_trade = {}
@@ -9,16 +12,35 @@ class TongHuaShun:
     _all_minute30 = {}
     _all_minute60 = {}
 
-    def get_all(self, market="SSE"):
-        if market in self._all_trade:
-            return self._all_trade[market]
+    def get_all(self):
+        url = f"https://q.10jqka.com.cn/gn/"
+        html = req.getTongHuaShun(url, headers={
+            "HOST": "q.10jqka.com.cn",
+        })
+        root = etree.fromstring(html, etree.HTMLParser(encoding='utf-8'))
+        value = root.cssselect('#gnSection')[0].get("value")
+        values = json.loads(value)
+        self._all_trade = [{
+            "code": item["platename"],
+            "name": item["platecode"],
+            "cid": item["cid"],
+        } for key, item in values.items()]
+        return self._all_trade
 
-        df = share.getTushare().index_basic(market=market)
-        columns = df.columns.tolist()
-        columns[0] = 'code'
-        df.columns = columns
-        self._all_trade[market] = df
-        return self._all_trade[market]
+    def get_all_concept_stock(self, concept):
+        url = f"https://q.10jqka.com.cn/gn/"
+        html = req.getTongHuaShun(url, headers={
+            "HOST": "q.10jqka.com.cn",
+        })
+        root = etree.fromstring(html, etree.HTMLParser(encoding='utf-8'))
+        value = root.cssselect('#gnSection')[0].get("value")
+        values = json.loads(value)
+        self._all_trade = [{
+            "code": item["platename"],
+            "name": item["platecode"],
+            "cid": item["cid"],
+        } for key, item in values.items()]
+        return self._all_trade
 
     def minute(self, secid, end=None):
         if end == None:
@@ -171,4 +193,4 @@ class TongHuaShun:
 
 
 if __name__ == "__main__":
-    print(TradeIndex().weekly(1.000001))
+    print(TongHuaShun().get_all())
