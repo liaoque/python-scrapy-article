@@ -2,9 +2,12 @@ import quick_stock.remote.req as req
 from lxml import etree
 import json
 from lxml.cssselect import CSSSelector
+
+
 # https://q.10jqka.com.cn/gn/
 class TongHuaShun:
     _all_trade = {}
+    _all_concept_stock = {}
     _all_days = {}
     _all_weeks = {}
     _all_months = {}
@@ -21,26 +24,26 @@ class TongHuaShun:
         value = root.cssselect('#gnSection')[0].get("value")
         values = json.loads(value)
         self._all_trade = [{
-            "code": item["platename"],
-            "name": item["platecode"],
+            "code": item["platecode"],
+            "name": item["platename"],
             "cid": item["cid"],
         } for key, item in values.items()]
         return self._all_trade
 
     def get_all_concept_stock(self, concept):
-        url = f"https://q.10jqka.com.cn/gn/"
+        url = f"https://q.10jqka.com.cn/gn/detail/field/199112/order/desc/size/1000/page/1/ajax/1/code/" + concept
         html = req.getTongHuaShun(url, headers={
             "HOST": "q.10jqka.com.cn",
+            "COOKIE": "searchGuide=sg; u_ukey=A10702B8689642C6BE607730E11E6E4A; u_uver=1.0.0; u_dpass=lignn5uDagL%2FR4CtiX%2BMX69%2F%2FZTMNCCXqopV9IjcvV4T9L9Xxw9NBpgq4IUtl2%2FzHi80LrSsTFH9a%2B6rtRvqGg%3D%3D; u_did=B75F5E165BFF480CB85F12A6D29FDDFE; u_ttype=WEB; ttype=WEB; v=A87GRcTrJLz1ZZCYAIXvIGKDH6-VT5JhpBJGLfgXO3aMtGARYN_iWXSjlh_L"
         })
         root = etree.fromstring(html, etree.HTMLParser(encoding='utf-8'))
-        value = root.cssselect('#gnSection')[0].get("value")
-        values = json.loads(value)
-        self._all_trade = [{
-            "code": item["platename"],
-            "name": item["platecode"],
-            "cid": item["cid"],
-        } for key, item in values.items()]
-        return self._all_trade
+        values = root.cssselect('tr td:nth-child(2) a')
+
+        self._all_concept_stock[concept] = [{
+            "code": item.text,
+            "cid": concept,
+        } for  item in values]
+        return self._all_concept_stock[concept]
 
     def minute(self, secid, end=None):
         if end == None:
@@ -193,4 +196,4 @@ class TongHuaShun:
 
 
 if __name__ == "__main__":
-    print(TongHuaShun().get_all())
+    print(TongHuaShun().get_all_concept_stock("301558"))
