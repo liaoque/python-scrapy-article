@@ -26,13 +26,21 @@ class TradeConceptClient:
             return df
         return pd.DataFrame([])
 
-    def get_all_concept_stock(self, concept, platform="THS"):
+    def get_all_concept_stock(self, code, platform="THS"):
         """
         :return: list - string
         """
+
+        concepts = self.get_all_concept()
+        concepts = concepts[concepts['code'] == code]
+        if len(concepts) == 0:
+            return pd.DataFrame([])
+
+        concept = concepts['cid'].iloc[0]
+
         if platform == "THS":
             df = self.dClient.select("select * from mc_concept_ths_stock_basic")
-            if df.empty or datetime.date.today().day == 1 or df[df["concept"] == concept].empty:
+            if df.empty or datetime.date.today().day == 1 or df[df["cid"] == concept].empty:
                 data = TongHuaShun().get_all_concept_stock(concept)
                 concept2 = pd.DataFrame(data)
                 df = pd.concat([df[df["cid"] != concept], concept2], axis=0)
@@ -60,4 +68,4 @@ class TradeConceptClient:
 
 
 if __name__ == "__main__":
-    print(TradeConceptClient().get_all_concept_stock("301558"))
+    print(TradeConceptClient().get_all_concept_stock("885333"))
