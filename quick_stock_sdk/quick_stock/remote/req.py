@@ -2,7 +2,6 @@ import requests
 import random
 import time
 
-
 _headers = {
     "HOST": "push2his.eastmoney.com",
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
@@ -13,9 +12,9 @@ class TongHuaShunId:
 
     def __init__(self, t, userAgent):
         self.n = [0] * 18
-        self.n[0] = 4228805416 #self.random()
-        self.n[1] = 1720486505 #int(t)
-        self.n[3] =90299976# self.strHash(userAgent) # Jn.strhash(navigator.userAgent),
+        self.n[0] = self.random()
+        self.n[1] = int(t)
+        self.n[3] = self.strHash(userAgent)  # Jn.strhash(navigator.userAgent),
         self.n[4] = 1  # 假设平台为1 tt.getPlatform(),
         self.n[5] = 10  # 假设浏览器索引为10 tt.getBrowserIndex(),
         self.n[6] = 5  # 假设插件数量为0  tt.getPluginNum()
@@ -23,7 +22,7 @@ class TongHuaShunId:
         self.n[16] = 1
         self.n[17] = 3
         self.n[13] = 3748
-        self.n[2] = 1720491475 #self.timeNow()
+        self.n[2] = self.timeNow()
 
     def encode(self, n):
         r = self._hash(n)
@@ -98,6 +97,10 @@ class TongHuaShunId:
         n = self.to_buff(self.n)
         return self.encode(n)
 
+
+# def get
+
+
 def getTongHuaShun(url, cookies=None, headers=None):
     if headers == None:
         headers = {}
@@ -106,9 +109,9 @@ def getTongHuaShun(url, cookies=None, headers=None):
     # headers["Referer"] = url
     #
     # "https://s.thsi.cn/js/chameleon/chameleon.min.1720490.js"
-    resp = getDF("http://s.thsi.cn/js/chameleon/chameleon.min." + str(time.time()+10000)[0:7] + ".js")
+    # resp = getDF("http://s.thsi.cn/js/chameleon/chameleon.min." + str(time.time()+10000)[0:7] + ".js")
     # resp = getDF("https://s.thsi.cn/js/chameleon/chameleon.min.1720490.js")
-    resp = resp[22:32]
+    resp = time.time()
     if cookies == None:
         cookies = {}
     cookies["v"] = TongHuaShunId(resp, headers["User-Agent"]).__str__()
@@ -117,7 +120,8 @@ def getTongHuaShun(url, cookies=None, headers=None):
     if response.status_code == 200:
         return response.content
     else:
-        raise Exception("无法获取股票信息"+url)
+        raise Exception("无法获取股票信息" + url)
+
 
 def getDF(url, cookie=None, headers=None):
     response = requests.get(url)
@@ -126,13 +130,13 @@ def getDF(url, cookie=None, headers=None):
     else:
         raise Exception("无法获取股票信息")
 
+
 def postDF(url, data, cookie=None, headers=None):
     pass
 
 
 if __name__ == "__main__":
-
-    print(str(time.time()+10000)[0:7])
+    print(str(time.time() + 10000)[0:7])
     url = f"http://q.10jqka.com.cn/gn/detail/field/199112/order/desc/size/1000/page/1/ajax/1/code/" + "301558"
     html = getTongHuaShun(url, headers={
         "HOST": "q.10jqka.com.cn",
