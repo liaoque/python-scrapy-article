@@ -106,6 +106,7 @@ def getTongHuaShun(url, cookies=None, headers=None):
         headers = {}
     headers["User-Agent"] = _headers["User-Agent"]
     headers["HOST"] = "q.10jqka.com.cn"
+    headers["Referer"] = "d.10jqka.com.cn"
     # headers["Referer"] = url
     #
     # "https://s.thsi.cn/js/chameleon/chameleon.min.1720490.js"

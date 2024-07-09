@@ -30,7 +30,6 @@ class TradeConceptClient:
         """
         :return: list - string
         """
-
         concepts = self.get_all_concept()
         concepts = concepts[concepts['code'] == code]
         if len(concepts) == 0:

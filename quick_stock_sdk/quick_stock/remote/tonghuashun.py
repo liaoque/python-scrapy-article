@@ -50,21 +50,25 @@ class TongHuaShun:
         if secid in self._all_months:
             return self._all_months[secid]
         url = f"https://d.10jqka.com.cn/v4/time/bk_{secid}/last.js"
+        html = req.getTongHuaShun(url)
+        html = html[35:-1]
+        data = json.loads(html)
+
         # url = f"https://d.10jqka.com.cn/v4/line/bk_{secid}/01/2024.js"
         # self._all_months[secid] = req.getDF(url)
-        # self._all_months[secid] = [{
-        #     "date_at": x[0],
-        #     "start": float(x[1]),
-        #     "end": float(x[2]),
-        #     "max": float(x[3]),
-        #     "min": float(x[4]),
-        #     "count": int(x[5]),  # 成交量
-        #     "amount": float(x[6]),  # 成交额
-        #     "amplitude": float(x[7]),  # 振幅
-        #     "range": float(x[8]),  # 涨跌幅
-        #     "range_amount": float(x[9]),  # 涨跌额
-        #     "turnover_rate": float(x[10]),  # 换手率
-        # } for v in self._all_months[secid] for x in [v.split(',')]]
+        self._all_months[secid] = [{
+            "date_at": x[0],
+            "start": float(x[1]),
+            "end": float(x[1]),
+            "max": float(x[1]),
+            "min": float(x[1]),
+            "count": int(x[4]),  # 成交量
+            "amount": float(x[2]),  # 成交额
+            # "amplitude": float(x[7]),  # 振幅
+            # "range": float(x[8]),  # 涨跌幅
+            # "range_amount": float(x[9]),  # 涨跌额
+            # "turnover_rate": float(x[10]),  # 换手率
+        } for v in data[f"bk_{secid}"]["data"].split(';') for x in [v.split(',')]]
         return self._all_months[secid]
 
     def minute30(self, secid, start=None, end=None):
@@ -194,4 +198,4 @@ class TongHuaShun:
 
 
 if __name__ == "__main__":
-    print(TongHuaShun().get_all_concept_stock("301558"))
+    print(TongHuaShun().minute("886056"))
