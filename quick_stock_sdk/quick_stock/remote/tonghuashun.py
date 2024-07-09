@@ -1,3 +1,5 @@
+import datetime
+
 import quick_stock.remote.req as req
 from lxml import etree
 import json
@@ -49,7 +51,10 @@ class TongHuaShun:
         # klt = 分钟
         if secid in self._all_months:
             return self._all_months[secid]
+        # https://d.10jqka.com.cn/v4/line/bk_885943/61/last.js
         url = f"https://d.10jqka.com.cn/v4/time/bk_{secid}/last.js"
+        year = datetime.date.today().year
+        url = f"https://d.10jqka.com.cn/v4/line/bk_{secid}/61/{year}.js"
         html = req.getTongHuaShun(url)
         html = html[35:-1]
         data = json.loads(html)
@@ -59,141 +64,161 @@ class TongHuaShun:
         self._all_months[secid] = [{
             "date_at": x[0],
             "start": float(x[1]),
-            "end": float(x[1]),
-            "max": float(x[1]),
-            "min": float(x[1]),
-            "count": int(x[4]),  # 成交量
-            "amount": float(x[2]),  # 成交额
-            # "amplitude": float(x[7]),  # 振幅
-            # "range": float(x[8]),  # 涨跌幅
-            # "range_amount": float(x[9]),  # 涨跌额
-            # "turnover_rate": float(x[10]),  # 换手率
+            "end": float(x[4]),
+            "max": float(x[2]),
+            "min": float(x[3]),
+            "count": int(x[5]),  # 成交量
+            "amount": float(x[6]),  # 成交额
+            "amplitude": float(x[2] - x[3]),  # （当期最高价－当期最低价）/前一交易日收盘价×100%
+            "range": float(0),  # 当日收盘价−前一交易日收盘价/前一交易日收盘价
+            "range_amount": float(x[9]),  # 当前交易日的最新成交价（或收盘价） - 前一交易日的收盘价
+            "turnover_rate": float(0),  # 换手率
         } for v in data[f"bk_{secid}"]["data"].split(';') for x in [v.split(',')]]
         return self._all_months[secid]
 
     def minute30(self, secid, start=None, end=None):
-        if start == None:
-            start = ""
-        if end == None:
-            end = "20500101"
-        if secid in self._all_minute30:
-            return self._all_minute30[secid]
-        url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid={secid}&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=30&fqt=1&beg={start}&end={end}&smplmt=100000&lmt=100&_="
+        # https://d.10jqka.com.cn/v4/line/bk_885943/41/last.js
+        year = datetime.date.today().year
+        d = []
+        while year > 2014:
+            url = f"https://d.10jqka.com.cn/v4/line/bk_{secid}/41/{year}.js"
+            html = req.getTongHuaShun(url)
+            if html == False:
+                break
+            html = html[38:-1]
+            data = json.loads(html)
 
-        self._all_minute30[secid] = req.getDF(url)
-        self._all_minute30[secid] = [{
-            "date_at": x[0],
-            "start": float(x[1]),
-            "end": float(x[2]),
-            "max": float(x[3]),
-            "min": float(x[4]),
-            "count": int(x[5]),  # 成交量
-            "amount": float(x[6]),  # 成交额
-            "amplitude": float(x[7]),  # 振幅
-            "range": float(x[8]),  # 涨跌幅
-            "range_amount": float(x[9]),  # 涨跌额
-            "turnover_rate": float(x[10]),  # 换手率
-        } for v in self._all_minute30[secid] for x in [v.split(',')]]
+            d = d.extend([{
+                "date_at": x[0],
+                "start": float(x[1]),
+                "end": float(x[4]),
+                "max": float(x[2]),
+                "min": float(x[3]),
+                "count": int(x[5]),  # 成交量
+                "amount": float(x[6]),  # 成交额
+                "amplitude": float(x[2] - x[3]),  # （当期最高价－当期最低价）/前一交易日收盘价×100%
+                "range": float(0),  # 当日收盘价−前一交易日收盘价/前一交易日收盘价
+                "range_amount": float(x[9]),  # 当前交易日的最新成交价（或收盘价） - 前一交易日的收盘价
+                "turnover_rate": float(0),  # 换手率
+            } for v in data["data"].split(';') for x in [v.split(',')]])
+        self._all_minute30[secid] = d
         return self._all_minute30[secid]
 
-    def minute60(self, secid, start=None, end=None):
-        if start == None:
-            start = ""
-        if end == None:
-            end = "20500101"
-        if secid in self._all_minute60:
-            return self._all_minute60[secid]
-        url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid={secid}&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=60&fqt=1&beg={start}&end={end}&smplmt=100000&lmt=100&_="
 
-        self._all_minute60[secid] = req.getDF(url)
-        self._all_minute60[secid] = [{
-            "date_at": x[0],
-            "start": float(x[1]),
-            "end": float(x[2]),
-            "max": float(x[3]),
-            "min": float(x[4]),
-            "count": int(x[5]),  # 成交量
-            "amount": float(x[6]),  # 成交额
-            "amplitude": float(x[7]),  # 振幅
-            "range": float(x[8]),  # 涨跌幅
-            "range_amount": float(x[9]),  # 涨跌额
-            "turnover_rate": float(x[10]),  # 换手率
-        } for v in self._all_minute60[secid] for x in [v.split(',')]]
+    def minute60(self, secid, start=None, end=None):
+        # https://d.10jqka.com.cn/v4/line/bk_885943/51/last.js
+
+        year = datetime.date.today().year
+        d = []
+        while year > 2014:
+            url = f"https://d.10jqka.com.cn/v4/line/bk_{secid}/51/{year}.js"
+            html = req.getTongHuaShun(url)
+            if html == False:
+                break
+            html = html[38:-1]
+            data = json.loads(html)
+
+            d = d.extend([{
+                "date_at": x[0],
+                "start": float(x[1]),
+                "end": float(x[4]),
+                "max": float(x[2]),
+                "min": float(x[3]),
+                "count": int(x[5]),  # 成交量
+                "amount": float(x[6]),  # 成交额
+                "amplitude": float(x[2] - x[3]),  # （当期最高价－当期最低价）/前一交易日收盘价×100%
+                "range": float(0),  # 当日收盘价−前一交易日收盘价/前一交易日收盘价
+                "range_amount": float(x[9]),  # 当前交易日的最新成交价（或收盘价） - 前一交易日的收盘价
+                "turnover_rate": float(0),  # 换手率
+            } for v in data["data"].split(';') for x in [v.split(',')]])
+        self._all_minute60[secid] = d
         return self._all_minute60[secid]
 
     def daily(self, secid, start=None, end=None):
-        if start == None:
-            start = ""
-        if end == None:
-            end = "20500101"
         if secid in self._all_days:
             return self._all_days[secid]
-        url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid={secid}&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=1&beg={start}&end={end}&smplmt=100000&lmt=100&_="
+        # url = f"https://d.10jqka.com.cn/v4/line/bk_{secid}/01/last.js"
+        # html = req.getTongHuaShun(url)
+        # html = html[37:-1]
+        # data = json.loads(html)
+        year = datetime.date.today().year
+        d = []
+        while year > 2014:
+            # https://d.10jqka.com.cn/v4/line/bk_885943/01/2021.js
+            url = f"https://d.10jqka.com.cn/v4/line/bk_{secid}/01/{year}.js"
+            html = req.getTongHuaShun(url)
+            if html == False:
+                break
+            html = html[38:-1]
+            data = json.loads(html)
 
-        self._all_days[secid] = req.getDF(url)
-        self._all_days[secid] = [{
-            "date_at": x[0],
-            "start": float(x[1]),
-            "end": float(x[2]),
-            "max": float(x[3]),
-            "min": float(x[4]),
-            "count": int(x[5]),  # 成交量
-            "amount": float(x[6]),  # 成交额
-            "amplitude": float(x[7]),  # 振幅
-            "range": float(x[8]),  # 涨跌幅
-            "range_amount": float(x[9]),  # 涨跌额
-            "turnover_rate": float(x[10]),  # 换手率
-        } for v in self._all_days[secid] for x in [v.split(',')]]
+            d = d.extend([{
+                "date_at": x[0],
+                "start": float(x[1]),
+                "end": float(x[4]),
+                "max": float(x[2]),
+                "min": float(x[3]),
+                "count": int(x[5]),  # 成交量
+                "amount": float(x[6]),  # 成交额
+                "amplitude": float(x[2] - x[3]),  # （当期最高价－当期最低价）/前一交易日收盘价×100%
+                "range": float(0),  # 当日收盘价−前一交易日收盘价/前一交易日收盘价
+                "range_amount": float(x[9]),  # 当前交易日的最新成交价（或收盘价） - 前一交易日的收盘价
+                "turnover_rate": float(0),  # 换手率
+            } for v in data["data"].split(';') for x in [v.split(',')]])
+        self._all_days[secid] = d
         return self._all_days[secid]
 
     def weekly(self, secid, start=None, end=None):
-        if start == None:
-            start = ""
-        if end == None:
-            end = "20500101"
         if secid in self._all_weeks:
             return self._all_weeks[secid]
-        url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid={secid}&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=102&fqt=1&beg={start}&end={end}&smplmt=100000&lmt=100&_="
+        year = datetime.date.today().year
+        d = []
+        while year > 2014:
+            # https://d.10jqka.com.cn/v4/line/bk_885943/11/last.js
+            url = f"https://d.10jqka.com.cn/v4/line/bk_{secid}/11/{year}.js"
+            html = req.getTongHuaShun(url)
+            if html == False:
+                break
+            html = html[38:-1]
+            data = json.loads(html)
 
-        self._all_weeks[secid] = req.getDF(url)
-        self._all_weeks[secid] = [{
-            "date_at": x[0],
-            "start": float(x[1]),
-            "end": float(x[2]),
-            "max": float(x[3]),
-            "min": float(x[4]),
-            "count": int(x[5]),  # 成交量
-            "amount": float(x[6]),  # 成交额
-            "amplitude": float(x[7]),  # 振幅
-            "range": float(x[8]),  # 涨跌幅
-            "range_amount": float(x[9]),  # 涨跌额
-            "turnover_rate": float(x[10]),  # 换手率
-        } for v in self._all_weeks[secid] for x in [v.split(',')]]
+            d = d.extend([{
+                "date_at": x[0],
+                "start": float(x[1]),
+                "end": float(x[4]),
+                "max": float(x[2]),
+                "min": float(x[3]),
+                "count": int(x[5]),  # 成交量
+                "amount": float(x[6]),  # 成交额
+                "amplitude": float(x[2] - x[3]),  # （当期最高价－当期最低价）/前一交易日收盘价×100%
+                "range": float(0),  # 当日收盘价−前一交易日收盘价/前一交易日收盘价
+                "range_amount": float(x[9]),  # 当前交易日的最新成交价（或收盘价） - 前一交易日的收盘价
+                "turnover_rate": float(0),  # 换手率
+            } for v in data["data"].split(';') for x in [v.split(',')]])
         return self._all_weeks[secid]
 
     def monthly(self, secid, start=None, end=None):
-        if start == None:
-            start = ""
-        if end == None:
-            end = "20500101"
         if secid in self._all_months:
             return self._all_months[secid]
-        url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get?cb=&secid={secid}&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=103&fqt=1&beg={start}&end={end}&smplmt=100000&lmt=100&_="
+        url = f"https://d.10jqka.com.cn/v4/line/bk_{secid}/21/last.js"
+        html = req.getTongHuaShun(url)
 
-        self._all_months[secid] = req.getDF(url)
+        html = html[38:-1]
+        data = json.loads(html)
+
         self._all_months[secid] = [{
             "date_at": x[0],
             "start": float(x[1]),
-            "end": float(x[2]),
-            "max": float(x[3]),
-            "min": float(x[4]),
+            "end": float(x[4]),
+            "max": float(x[2]),
+            "min": float(x[3]),
             "count": int(x[5]),  # 成交量
             "amount": float(x[6]),  # 成交额
-            "amplitude": float(x[7]),  # 振幅
-            "range": float(x[8]),  # 涨跌幅
-            "range_amount": float(x[9]),  # 涨跌额
-            "turnover_rate": float(x[10]),  # 换手率
-        } for v in self._all_months[secid] for x in [v.split(',')]]
+            "amplitude": float(x[2] - x[3]),  # （当期最高价－当期最低价）/前一交易日收盘价×100%
+            "range": float(0),  # 当日收盘价−前一交易日收盘价/前一交易日收盘价
+            "range_amount": float(x[9]),  # 当前交易日的最新成交价（或收盘价） - 前一交易日的收盘价
+            "turnover_rate": float(0),  # 换手率
+        } for v in data["data"].split(';') for x in [v.split(',')]]
         return self._all_months[secid]
 
 

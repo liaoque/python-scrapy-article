@@ -98,8 +98,6 @@ class TongHuaShunId:
         return self.encode(n)
 
 
-# def get
-
 
 def getTongHuaShun(url, cookies=None, headers=None):
     if headers == None:
@@ -120,6 +118,8 @@ def getTongHuaShun(url, cookies=None, headers=None):
     response = requests.get(url, cookies=cookies, headers=headers)
     if response.status_code == 200:
         return response.content
+    elif response.status_code == 404:
+        return False
     else:
         raise Exception("无法获取股票信息" + url)
 
@@ -137,8 +137,14 @@ def postDF(url, data, cookie=None, headers=None):
 
 
 if __name__ == "__main__":
-    print(str(time.time() + 10000)[0:7])
-    url = f"http://q.10jqka.com.cn/gn/detail/field/199112/order/desc/size/1000/page/1/ajax/1/code/" + "301558"
-    html = getTongHuaShun(url, headers={
-        "HOST": "q.10jqka.com.cn",
-    })
+    # print(str(time.time() + 10000)[0:7])
+    # url = f"http://q.10jqka.com.cn/gn/detail/field/199112/order/desc/size/1000/page/1/ajax/1/code/" + "301558"
+    i = 30
+    while i < 100:
+        i +=1
+        url = f"https://d.10jqka.com.cn/v4/line/bk_885943/{i}/last.js"
+        html = getTongHuaShun(url, headers={
+            "HOST": "q.10jqka.com.cn",
+        })
+        if html != False:
+            print(url,html)
