@@ -51,19 +51,44 @@ class TradeConceptClient:
         return TongHuaShun().minute(code)
 
     def minute30(self, code, start=None, end=None):
-        return TongHuaShun().minute30(code, start, end)
+        data = TongHuaShun().minute30(code)
+        if start is not None:
+            data = [item for item in data if item['date_at'] >= start]
+        if end is not None:
+            data = [item for item in data if item['date_at'] < end]
+        return data
 
     def minute60(self, code, start=None, end=None):
-        return TongHuaShun().minute60(code, start, end)
+        data = TongHuaShun().minute60(code)
+        if start is not None:
+            data = [item for item in data if item['date_at'] >= start]
+        if end is not None:
+            data = [item for item in data if item['date_at'] < end]
+        return data
 
     def daily(self, code, start=None, end=None):
-        return TongHuaShun().daily(code, start, end)
+        data = TongHuaShun().daily(code)
+        if start is not None:
+            data = [item for item in data if item['date_at'] >= start]
+        if end is not None:
+            data = [item for item in data if item['date_at'] < end]
+        return data
 
     def weekly(self, code, start=None, end=None):
-        return TongHuaShun().weekly(code, start, end)
+        data = TongHuaShun().weekly(code)
+        if start is not None:
+            data = [item for item in data if item['date_at'] >= start]
+        if end is not None:
+            data = [item for item in data if item['date_at'] < end]
+        return data
 
     def monthly(self, code, start=None, end=None):
-        return TongHuaShun().monthly(code, start, end)
+        data = TongHuaShun().monthly(code)
+        if start is not None:
+            data = [item for item in data if item['date_at'] >= start]
+        if end is not None:
+            data = [item for item in data if item['date_at'] < end]
+        return data
 
 
 if __name__ == "__main__":
