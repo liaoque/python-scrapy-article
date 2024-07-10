@@ -127,7 +127,7 @@ def getTongHuaShun(url, cookies=None, headers=None):
 def getDF(url, cookie=None, headers=None):
     response = requests.get(url)
     if response.status_code == 200:
-        return response.content
+        return response.json()["data"]["klines"]
     else:
         raise Exception("无法获取股票信息")
 
