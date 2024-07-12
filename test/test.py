@@ -10,9 +10,9 @@ from mplfinance.original_flavor import candlestick_ohlc
 
 def macd(close_prices):
     # 计算kd指标
-    macdDIFF, macdDEA, macd = talib.MACDEXT(close_prices, fastperiod=12, fastmatype=1, slowperiod=26,
+    macdDIFF, macdDEA, macd = talib.MACDEXT(close_prices, fastperiod=10, fastmatype=1, slowperiod=23,
                                             slowmatype=1,
-                                            signalperiod=9, signalmatype=1)
+                                            signalperiod=8, signalmatype=1)
     macd = macd * 2
     return (macdDIFF, macdDEA, macd)
 
@@ -20,13 +20,14 @@ def macd(close_prices):
 def compute(title, code):
     sz50 = quick_stock.TradeIndexClient().daily(code)  # 深证50
     sz50 = pd.DataFrame(sz50)
-    mac, signal, hist = macd(sz50["end"])
+    macdDIFF, macdDEA, macdMacd = macd(sz50["end"])
+
     return {
         "title": title,
         "data": sz50,
-        "macd": mac,
-        "signal": signal,
-        "hist": hist,
+        "macd": macdMacd,
+        "diff": macdDIFF,
+        "dea": macdDEA,
     }
 
 
@@ -35,8 +36,8 @@ def draw(data, fig, i):
     sz50 = pd.DataFrame(data["data"])
     # mac, signal, hist = macd(sz50["end"])
     mac = data["macd"]
-    hist = data["hist"]
-    signal = data["signal"]
+    hist = data["diff"]
+    signal = data["dea"]
 
     dates = sz50["date_at"][-120:]
     open_prices = sz50["start"][-120:]
@@ -72,26 +73,29 @@ def draw(data, fig, i):
 if __name__ == '__main__':
     # indexes = quick_stock.TradeIndexClient().get_all_index()
     # print(indexes[indexes[""] ==""][:20])
-    #
-    # data = []
-    # data.append(compute("sz50", "0.399850"))
-    # data.append(compute("a50", "1.000016"))
-    # data.append(compute("kc50", "1.000688"))
-    # data.append(compute("hs300", "1.000300"))
-    # data.append(compute("zz500", "1.000905"))
-    # data.append(compute("zz1000", "1.000852"))
-    # data.append(compute("zz2000", "2.932000"))
-    #
-    # fig = plt.figure(figsize=(20, 16), )
-    # i = 1
-    # for item in data:
-    #     fig, i = draw(item, fig, i)
-    # plt.show()
 
-    all_concept = quick_stock.TradeConceptClient().get_all_concept()
+    data = []
+    data.append(compute("sz50", "0.399850"))
+    data.append(compute("a50", "1.000016"))
+    data.append(compute("kc50", "1.000688"))
+    data.append(compute("hs300", "1.000300"))
+    data.append(compute("zz500", "1.000905"))
+    data.append(compute("zz1000", "1.000852"))
+    data.append(compute("zz2000", "2.932000"))
 
-    for item in all_concept["code"]:
-        # print(item)
-        df = quick_stock.TradeConceptClient().get_all_concept_stock(item)
+    fig = plt.figure(figsize=(20, 16), )
+    i = 1
+    for item in data:
+        fig, i = draw(item, fig, i)
+    plt.show()
+
+    # all_concept = quick_stock.TradeConceptClient().get_all_concept()
+    #
+    # for row in all_concept.itertuples():
+    #     df = quick_stock.TradeConceptClient().weekly(row.code)
+    #     macdDIFF, macdDEA, macdMacd = macd(df["end"])
+    #
+    #     if macdDIFF.iloc[-1] > macdDIFF.iloc[-2] and macdMacd.iloc[-1] > macdMacd.iloc[-2]:
+    #         print(row)
 
     print(11)
