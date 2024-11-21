@@ -15,7 +15,7 @@ class TradeIndexClient:
         """
         :return: list - string
         """
-        df = self.dClient.select("select * from mc_index_basic where exp_date is not NULL")
+        df = self.dClient.select("select * from mc_index_basic where exp_date is  NULL")
         if df.empty or datetime.date.today().day == 1 :
             df = TradeIndex().get_all()
             time.sleep(30)

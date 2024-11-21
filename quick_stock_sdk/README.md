@@ -6,3 +6,6 @@ A quick stock SDK for retrieving stock prices and information.
 
 You can install this module using pip:
 
+
+ python setup.py sdist bdist_wheel  
+twine upload dist/*              
