@@ -140,12 +140,24 @@ def queryMaxId(cursor, type):
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
-    return values['tid']
+    return values[0]['tid']
 
 
 def saveData(cursor, data):
     for item in data:
-        cursor.execute('INSERT INTO user (tid, content, created_at, type) VALUES (?, ?, ?, ?)', (item['id'], item['text'],item['created_at'], item['type'],  ))
+        cursor.execute('INSERT INTO m_cls (tid, content, created_at, type) VALUES (?, ?, ?, ?)',
+                       (item['id'], item['text'], item['created_at'], item['type'],))
+
+
+def queryData(cursor):
+    cursor.execute('SELECT tid FROM m_cls WHERE commit is null order by id desc')
+    values = cursor.fetchall()
+    return values
+
+
+def saveCommit(cursor, id, commit):
+    cursor.execute('update m_cls set commit = ? where id = ?', (commit, id,))
+
 
 if __name__ == "__main__":
-  pass
+    pass
