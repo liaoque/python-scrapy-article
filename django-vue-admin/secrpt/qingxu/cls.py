@@ -1,5 +1,6 @@
 import requests
 from datetime import datetime
+
 # https://www.cls.cn/v3/depth/home/assembled/1000?app=CailianpressWeb&os=web&sv=8.4.6&sign=9f8797a1f4de66c2370f7a03990d2737
 
 
@@ -32,8 +33,10 @@ from datetime import datetime
         }
 
 """
+
+
 # 财联社头条
-def clstop(page, start, end):
+def clstop(page):
     url = "https://www.cls.cn/v3/depth/home/assembled/1000?app=CailianpressWeb&os=web&sv=8.4.6&sign=9f8797a1f4de66c2370f7a03990d2737&page=" + str(
         page)
     headers = {
@@ -49,24 +52,24 @@ def clstop(page, start, end):
             data2.append({
                 "id": item2["article_id"],
                 "text": item2["brief"],
-                "created_at": item2["ctime"]
+                "created_at": item2["ctime"],
+                "type": 1,
             })
-    for item in item["depth_list"]:
+    for item in data["depth_list"]:
         data2.append({
             "id": item["article_id"],
             "text": item["brief"],
-            "created_at": item["ctime"]
+            "created_at": item["ctime"],
+            "type": 1,
         })
 
     if len(data2) == 0:
         return []
 
-    if data2[len(data2) - 1]["created_at"] < end:
-        data2.extend(clstop(page + 1, start, end))
     return data
 
 
-def clsaa(page, start, end):
+def clsaa(page):
     url = "https://www.cls.cn/v3/depth/home/assembled/1003?app=CailianpressWeb&os=web&sv=8.4.6&sign=9f8797a1f4de66c2370f7a03990d2737&page=" + str(
         page)
     headers = {
@@ -82,23 +85,67 @@ def clsaa(page, start, end):
             data2.append({
                 "id": item2["article_id"],
                 "text": item2["brief"],
-                "created_at": item2["ctime"]
+                "created_at": item2["ctime"],
+                "type": 2,
             })
-    for item in item["depth_list"]:
+    for item2 in data["depth_list"]:
         data2.append({
-            "id": item["article_id"],
-            "text": item["brief"],
-            "created_at": item["ctime"]
+            "id": item2["article_id"],
+            "text": item2["brief"],
+            "created_at": item2["ctime"],
+            "type": 2,
         })
 
     if len(data2) == 0:
         return []
-
-    if data2[len(data2) - 1]["created_at"] < end:
-        data2.extend(clstop(page + 1, start, end))
     return data
 
+
+def run(cursor):
+    data = []
+
+    # 查最大的id
+    minIdTop = queryMaxId(cursor, 1)
+    minIdaa = queryMaxId(cursor, 2)
+    ids = []
+
+    for i in range(100):
+
+        # 爬头条, 找到id相同的位置
+        data2 = clstop(i)
+        for item in data2:
+            if item['id'] in ids:
+                continue
+            if item["id"] == minIdTop:
+                break
+            data.append(item)
+            ids.append(item['id'])
+
+        # 爬A, 找到id相同的位置
+        data2 = clsaa(i)
+        for item in data2:
+            if item['id'] in ids:
+                continue
+            if item["id"] == minIdaa:
+                break
+            data.append(item)
+            ids.append(item['id'])
+
+    if len(data) > 0:
+        saveData(cursor, data)
+
+
+def queryMaxId(cursor, type):
+    cursor.execute('SELECT tid FROM m_cls WHERE type=? order by id desc', (type,))
+    values = cursor.fetchall()
+    if len(values) == 0:
+        return 0
+    return values['tid']
+
+
+def saveData(cursor, data):
+    for item in data:
+        cursor.execute('INSERT INTO user (tid, content, created_at, type) VALUES (?, ?, ?, ?)', (item['id'], item['text'],item['created_at'], item['type'],  ))
+
 if __name__ == "__main__":
-    start = ""
-    end = ""
-    clstop(1, start, end)
+  pass
