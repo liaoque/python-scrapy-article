@@ -1,3 +1,5 @@
+from turtle import up, down
+
 import requests
 from datetime import datetime
 
@@ -75,6 +77,7 @@ def saveData(cursor, data):
         cursor.execute('INSERT INTO m_weibo (tid, content, created_at, type) VALUES (?, ?, ?, ?)',
                        (item['id'], item['text'], item['created_at'], item['type'],))
 
+
 def queryData(cursor):
     cursor.execute('SELECT tid FROM m_weibo WHERE commit is null order by id desc')
     values = cursor.fetchall()
@@ -83,6 +86,29 @@ def queryData(cursor):
 
 def saveCommit(cursor, id, commit):
     cursor.execute('update m_weibo set commit = ? where id = ?', (commit, id,))
+
+
+def queryCommitPoint(cursor, created_at):
+    cursor.execute('SELECT count(commit) c FROM m_weibo where created_at = ? order by id desc', (created_at))
+    values = cursor.fetchall()
+    if len(values) == 0:
+        return 0
+    total = values[0]['c']
+
+    cursor.execute('SELECT count(commit) c FROM m_weibo  where commit =1 and created_at = ? order by id desc', (created_at))
+    values = cursor.fetchall()
+    if len(values) == 0:
+        up = 0
+    else:
+        up = values[0]['c']
+
+    cursor.execute('SELECT count(commit) c FROM m_weibo  where commit =0 and created_at = ? order by id desc', (created_at))
+    values = cursor.fetchall()
+    if len(values) == 0:
+        down = 0
+    else:
+        down = values[0]['c']
+    return (up - down) / total
 
 
 if __name__ == "__main__":
