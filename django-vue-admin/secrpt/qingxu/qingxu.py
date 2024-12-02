@@ -22,6 +22,8 @@ def compute():
     cls.queryCommitPoint(cursor, d)
     weibo.queryCommitPoint(cursor, d)
     xueqiu.queryCommitPoint(cursor, d)
+    dfcf.queryCommitPoint(cursor, d)
+
 
     # 关闭Cursor:
     cursor.close()
