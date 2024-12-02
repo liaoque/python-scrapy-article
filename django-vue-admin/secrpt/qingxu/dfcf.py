@@ -103,3 +103,20 @@ def run(cursor):
         "cc_down": cc["down"],
     })
     pass
+
+
+def queryCommitPoint(cursor, created_at):
+    cursor.execute('SELECT * FROM m_dfcf where created_at = ? order by id desc', (created_at))
+    values = cursor.fetchall()
+    if len(values) == 0:
+        return {
+            "kd": 0,
+            "jg": 0,
+            "cc": 0,
+        }
+    values = values[0]
+    return {
+        "kd": (values["kd_up"] - values["kd_down"]) / (values["kd_up"] + values["kd_flat"] + values["kd_down"]),
+        "jg": (values["jg_up"] - values["jg_down"]) / (values["jg_up"] + values["jg_flat"] + values["jg_down"]),
+        "cc": (values["cc_up"] - values["cc_down"]) / (values["cc_up"] + values["cc_flat"] + values["cc_down"]),
+    }

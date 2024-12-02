@@ -3,7 +3,7 @@ import dfcf
 import weibo
 import xueqiu
 import sqlite3
-
+import datetime
 
 def compute():
     conn = sqlite3.connect('qingxu.db')
@@ -17,6 +17,11 @@ def compute():
     weibo.run(cursor)
     xueqiu.run(cursor)
 
+    d = datetime.datetime.now().strftime('%Y-%m-%d')
+
+    cls.queryCommitPoint(cursor, d)
+    weibo.queryCommitPoint(cursor, d)
+    xueqiu.queryCommitPoint(cursor, d)
 
     # 关闭Cursor:
     cursor.close()
@@ -34,4 +39,5 @@ def init(cursor):
 
 
 if __name__ == "__main__":
-    compute()
+    d = datetime.datetime.now().strftime('%Y-%m-%d')
+    print(d)
