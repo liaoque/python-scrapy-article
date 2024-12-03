@@ -4,6 +4,7 @@ import weibo
 import xueqiu
 import sqlite3
 import datetime
+import baidu
 
 def compute():
     conn = sqlite3.connect('qingxu.db')
@@ -16,6 +17,7 @@ def compute():
     dfcf.run(cursor)
     weibo.run(cursor)
     xueqiu.run(cursor)
+
 
     d = datetime.datetime.now().strftime('%Y-%m-%d')
 
@@ -37,6 +39,7 @@ def init(cursor):
     cursor.execute('CREATE TABLE IF NOT EXISTS m_weibo (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, commit TEXT)')
     cursor.execute('CREATE TABLE IF NOT EXISTS m_xueqiu (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, commit TEXT)')
     cursor.execute('CREATE TABLE IF NOT EXISTS m_dfcf (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, kd_up TEXT, kd_flat TEXT, kd_down TEXT, jg_up TEXT, jg_flat TEXT, jg_down TEXT, cc_up TEXT, cc_flat TEXT, cc_down TEXT,type integer, created_at TEXT)')
+    cursor.execute('CREATE TABLE IF NOT EXISTS m_baidu (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, shangzheng TEXT,  created_at TEXT)')
     pass
 
 

@@ -55,7 +55,7 @@ def chicang():
 
 
 def queryId(cursor, tid, type, created_at):
-    cursor.execute('SELECT id FROM m_dfcf WHERE type=? and created_at order by id desc', (tid, type, created_at))
+    cursor.execute('SELECT id FROM m_dfcf WHERE type=? and created_at order by id desc limit 1', (tid, type, created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
@@ -106,7 +106,7 @@ def run(cursor):
 
 
 def queryCommitPoint(cursor, created_at):
-    cursor.execute('SELECT * FROM m_dfcf where created_at = ? order by id desc', (created_at))
+    cursor.execute('SELECT * FROM m_dfcf where created_at = ? order by id desc limit 1', (created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         return {

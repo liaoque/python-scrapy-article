@@ -49,7 +49,7 @@ def run(cursor):
 
 
 def queryMaxId(cursor):
-    cursor.execute('SELECT tid FROM m_xueqiu  order by id desc')
+    cursor.execute('SELECT tid FROM m_xueqiu  order by id desc limit 1' )
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
@@ -73,20 +73,20 @@ def saveCommit(cursor, id, commit):
 
 
 def queryCommitPoint(cursor, created_at):
-    cursor.execute('SELECT count(commit) c FROM m_xueqiu where created_at = ? order by id desc', (created_at))
+    cursor.execute('SELECT count(commit) c FROM m_xueqiu where created_at = ? order by id desc limit 1', (created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
     total = values[0]['c']
 
-    cursor.execute('SELECT count(commit) c FROM m_xueqiu  where commit =1 and created_at = ? order by id desc', (created_at))
+    cursor.execute('SELECT count(commit) c FROM m_xueqiu  where commit =1 and created_at = ? order by id desc limit 1', (created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         up = 0
     else:
         up = values[0]['c']
 
-    cursor.execute('SELECT count(commit) c FROM m_xueqiu  where commit =0 and created_at = ? order by id desc', (created_at))
+    cursor.execute('SELECT count(commit) c FROM m_xueqiu  where commit =0 and created_at = ? order by id desc limit 1', (created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         down = 0
