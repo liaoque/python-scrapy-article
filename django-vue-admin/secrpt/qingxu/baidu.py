@@ -1,10 +1,13 @@
 import requests
-from datetime import datetime
+from datetime import datetime,timedelta
+from sklearn.preprocessing import MinMaxScaler
 
 
-def baiduzhishu():
-    d = datetime.now().strftime("%Y-%m-%d")
-    url = "https://index.baidu.com/api/SearchApi/index?area=0&word=[[%7B%22name%22:%22%E4%B8%8A%E8%AF%81%E6%8C%87%E6%95%B0%22,%22wordType%22:1%7D]]&startDate=" + d + "&endDate=" + d
+def baiduzhishu(keyword):
+    end = datetime.now().strftime("%Y-%m-%d")
+    start = datetime.now() - timedelta(days=3650)
+    start = start.strftime("%Y-%m-%d")
+    url = "https://index.baidu.com/api/SearchApi/index?area=0&word=[[{\"name\":\""+keyword+"\",\"wordType\":1}]]&startDate=" + start + "&endDate=" + end
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'cookie': 'BDUSS=WZ-THk1cFppOUZva0hFeUd0RXNUbUlGd3JEWXp0SjZkeElBa2xpNG55SGFQUTVuSVFBQUFBJCQAAAAAAAAAAAEAAAD5bRGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANqw5mbasOZme; ',
@@ -32,14 +35,16 @@ def baiduzhishu():
     wise = dcode(codes3["data"], wise)
     return {
         "all": all,
-        "pc": pc,
-        "wise": wise,
+        # "pc": pc,
+        # "wise": wise,
     }
 
 
-def baiduzixun():
-    d = datetime.now().strftime("%Y-%m-%d")
-    url = "https://index.baidu.com/api/FeedSearchApi/getFeedIndex?area=0&word=[[%7B%22name%22:%22%E4%B8%8A%E8%AF%81%E6%8C%87%E6%95%B0%22,%22wordType%22:1%7D]]&startDate=" + d + "&endDate=" + d
+def baiduzixun(keyword):
+    end = datetime.now().strftime("%Y-%m-%d")
+    start = datetime.now() - timedelta(days=3650)
+    start = start.strftime("%Y-%m-%d")
+    url = "https://index.baidu.com/api/FeedSearchApi/getFeedIndex?area=0&word=[[{\"name\":\""+keyword+"\",\"wordType\":1}]]&startDate=" + start + "&endDate=" + end
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'cookie': 'BDUSS=WZ-THk1cFppOUZva0hFeUd0RXNUbUlGd3JEWXp0SjZkeElBa2xpNG55SGFQUTVuSVFBQUFBJCQAAAAAAAAAAAEAAAD5bRGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANqw5mbasOZme; ',
@@ -82,6 +87,36 @@ def dcode(t, e):
 
     return ''.join(r)
 
-print(baiduzixun())
+def queryMaxDate(cursor, yesterday):
+    cursor.execute('SELECT id FROM m_baidu where  created_at = ? limit 1', (yesterday))
+    values = cursor.fetchall()
+    if len(values) == 0:
+        return None
+    return values[0]
 
+def run(cursor):
+    # 获取当前日期和时间
+    now = datetime.now()
+
+    # 计算前一天的日期
+    yesterday = now - timedelta(days=1)
+
+    # 查最大的id
+    data = queryMaxDate(cursor, yesterday.strftime("%Y-%m-%d"))
+    if data is None:
+        return data["trend_shangzheng"], data["trend_shangzhengzixun"]
+
+    shangzheng = baiduzhishu("上证指数")["all"]
+    shangzhengzixun = baiduzixun("上证指数")["all"]
+
+    # 均值回归
+    scaler = MinMaxScaler()
+    trend_shangzheng = scaler.fit_transform(shangzheng).flatten()[-1]  # 最新值
+    trend_shangzhengzixun = scaler.fit_transform(shangzhengzixun).flatten()[-1]  # 最新值
+
+    cursor.execute('INSERT INTO m_baidu (shangzheng, shangzhengzixun, created_at) VALUES (?, ?, ?)',
+                   (trend_shangzheng, trend_shangzhengzixun, yesterday,))
+
+
+    return trend_shangzheng, trend_shangzhengzixun
 
