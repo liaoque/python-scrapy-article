@@ -1,5 +1,8 @@
 import requests
-from datetime import datetime
+from common import dingding
+
+import sys
+print(sys.path)
 
 # https://www.cls.cn/v3/depth/home/assembled/1000?app=CailianpressWeb&os=web&sv=8.4.6&sign=9f8797a1f4de66c2370f7a03990d2737
 
@@ -45,7 +48,12 @@ def clstop(page):
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
     }
     response = requests.get(url, headers=headers)
-    data = response.json()["data"]
+    res = response.json()
+    if "errno" in res:
+        dingding.dingding("clstop "+response.text)
+        return
+    print(response.json())
+    data = res["data"]
     data2 = []
     for item in data["top_article"]:
         for item2 in item["article_rec"]:
@@ -78,7 +86,11 @@ def clsaa(page):
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
     }
     response = requests.get(url, headers=headers)
-    data = response.json()["data"]
+    res = response.json()
+    if "errno" in res:
+        dingding.dingding("clstop " + response.text)
+        return
+    data = res["data"]
     data2 = []
     for item in data["top_article"]:
         for item2 in item["article_rec"]:

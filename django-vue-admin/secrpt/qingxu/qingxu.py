@@ -1,11 +1,16 @@
-import cls
-import dfcf
-import weibo
-import xueqiu
+import sys
+import os
 import sqlite3
 import datetime
-import baidu
 
+# 获取当前文件的目录
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# 获取上一级目录
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+
+
+from qingxu import cls,dfcf,weibo,xueqiu,baidu
 
 def compute():
     conn = sqlite3.connect('qingxu.db')
@@ -43,21 +48,21 @@ def compute():
     #                           trend_shangzhengzixun * weight_xueqiu)
     # print(f"当前股票情绪指数为：{sentiment_index}")
 
-    # 关闭Cursor:
-    cursor.close()
 
     # 提交事务:
     conn.commit()
+    # 关闭Cursor:
+    cursor.close()
     conn.close()
 
 
 def init(cursor):
     cursor.execute(
-        'CREATE TABLE IF NOT EXISTS m_cls (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, commit TEXT)')
+        'CREATE TABLE IF NOT EXISTS m_cls (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, `commited` TEXT)')
     cursor.execute(
-        'CREATE TABLE IF NOT EXISTS m_weibo (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, commit TEXT)')
+        'CREATE TABLE IF NOT EXISTS m_weibo (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, commited TEXT)')
     cursor.execute(
-        'CREATE TABLE IF NOT EXISTS m_xueqiu (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, commit TEXT)')
+        'CREATE TABLE IF NOT EXISTS m_xueqiu (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, commited TEXT)')
     cursor.execute(
         'CREATE TABLE IF NOT EXISTS m_dfcf (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, kd_up TEXT, kd_flat TEXT, kd_down TEXT, jg_up TEXT, jg_flat TEXT, jg_down TEXT, cc_up TEXT, cc_flat TEXT, cc_down TEXT,type integer, created_at TEXT)')
     cursor.execute(
@@ -76,5 +81,4 @@ def queryMaxDate(cursor, yesterday):
 
 
 if __name__ == "__main__":
-    d = datetime.datetime.now().strftime('%Y-%m-%d')
-    print(d)
+    compute()
