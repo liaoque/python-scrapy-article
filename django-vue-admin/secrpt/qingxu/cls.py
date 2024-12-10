@@ -53,7 +53,7 @@ def parse(data):
 
     for item in data["top_article"]:
         if len(item["article_rec"]) == 0:
-            ctime = datetime.datetime.utcfromtimestamp(item["ctime"]).strftime("%Y-%m-%d")
+            ctime = datetime.datetime.utcfromtimestamp(item["ctime"]).strftime("%Y-%m-%d %H:%M:%S")
             data2.append({
                 "id": item["id"],
                 "text": item["title"] + item["brief"],
@@ -62,7 +62,7 @@ def parse(data):
             })
             continue
         for item2 in item["article_rec"]:
-            ctime = datetime.datetime.utcfromtimestamp(item2["ctime"]).strftime("%Y-%m-%d")
+            ctime = datetime.datetime.utcfromtimestamp(item2["ctime"]).strftime("%Y-%m-%d %H:%M:%S")
             data2.append({
                 "id": item2["article_id"],
                 "text": item2["name"] + item2["brief"],
@@ -70,7 +70,7 @@ def parse(data):
                 "type": 1,
             })
     for item in data["depth_list"]:
-        ctime = datetime.datetime.utcfromtimestamp(item["ctime"]).strftime("%Y-%m-%d")
+        ctime = datetime.datetime.utcfromtimestamp(item["ctime"]).strftime("%Y-%m-%d %H:%M:%S")
         data2.append({
             "id": item["id"],
             "text": item["title"] + item["brief"],

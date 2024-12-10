@@ -24,7 +24,7 @@ def weibo(page):
                     data.append({
                         "id": item2["mblog"]["id"],
                         "text": item2["mblog"]["text"],
-                        "created_at": datetime.strptime(item2["mblog"]["created_at"], time_format),
+                        "created_at": datetime.strptime(item2["mblog"]["created_at"], time_format).strftime("%Y-%m-%d %H:%M:%S"),
                         "type": 1
                     })
             continue
@@ -32,7 +32,7 @@ def weibo(page):
             data.append({
                 "id": item["mblog"]["id"],
                 "text": item["mblog"]["text"],
-                "created_at": datetime.strptime(item["mblog"]["created_at"], time_format),
+                "created_at": datetime.strptime(item["mblog"]["created_at"], time_format).strftime("%Y-%m-%d %H:%M:%S"),
                 "type": 1
             })
     if len(data) == 0:
