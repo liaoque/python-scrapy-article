@@ -2,7 +2,7 @@ from turtle import up, down
 
 import requests
 from datetime import datetime
-
+import config
 
 def weibo(page):
     url = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D1%26q%3D%E4%B8%8A%E8%AF%81%E6%8C%87%E6%95%B0%26t%3D&page_type=searchall&page=" + str(
@@ -42,6 +42,8 @@ def weibo(page):
 
 
 def run(cursor):
+    if config.checkDefault("weibo"):
+        return
     data = []
 
     # 查最大的id

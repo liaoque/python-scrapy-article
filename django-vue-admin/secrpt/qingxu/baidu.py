@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime,timedelta
 from sklearn.preprocessing import MinMaxScaler
-
+import config
 
 def baiduzhishu(keyword):
     end = datetime.now().strftime("%Y-%m-%d")

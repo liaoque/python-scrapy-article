@@ -1,5 +1,5 @@
 import requests
-
+import config
 
 # https://xueqiu.com/query/v1/symbol/search/status.json?count=10&comment=0&symbol=SH000001&hl=0&source=all&sort=&page=1&q=&type=12&md5__1038=n4%2BxcDyDBDRD9jbD%2FD0YoY0QQeqmTvIhypD
 # https://xueqiu.com/query/v1/symbol/search/status.json?count=10&comment=0&symbol=SH000001&hl=0&source=all&sort=&page=2&q=&type=12&md5__1038=n4jxR7exBCe05DI5YK0%3DGOQFqYvc4D%3DFWWa4D
@@ -26,6 +26,8 @@ def xueqiu(page):
 
 
 def run(cursor):
+    if config.checkDefault("xueqiu"):
+        return
     data = []
 
     # 查最大的id

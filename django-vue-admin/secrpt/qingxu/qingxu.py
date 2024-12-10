@@ -3,24 +3,26 @@ import os
 import sqlite3
 import datetime
 
-# 获取当前文件的目录
 current_dir = os.path.dirname(os.path.abspath(__file__))
-# 获取上一级目录
 parent_dir = os.path.dirname(current_dir)
+# 设置根目录是secrpt
 sys.path.insert(0, parent_dir)
 
 
 from qingxu import cls,dfcf,weibo,xueqiu,baidu
 
+
 def compute():
+
     conn = sqlite3.connect('qingxu.db')
     # 创建一个Cursor:
     cursor = conn.cursor()
 
     init(cursor)
 
-    cls.run(cursor)
     dfcf.run(cursor)
+    cls.run(cursor)
+
     weibo.run(cursor)
     xueqiu.run(cursor)
     trend_shangzheng, trend_shangzhengzixun = baidu.run(cursor)

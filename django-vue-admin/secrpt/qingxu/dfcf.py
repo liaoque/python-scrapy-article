@@ -1,4 +1,6 @@
 import requests
+import config
+import datetime
 
 
 # 看空看多
@@ -55,7 +57,8 @@ def chicang():
 
 
 def queryId(cursor, tid, type, created_at):
-    cursor.execute('SELECT id FROM m_dfcf WHERE type=? and created_at order by id desc limit 1', (tid, type, created_at))
+    cursor.execute('SELECT id FROM m_dfcf WHERE tid=? and type=? and created_at = ? order by id desc limit 1',
+                   (tid, type, created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
@@ -86,11 +89,14 @@ def saveData(cursor, id, item):
 
 
 def run(cursor):
-    jd = jgkd()
-    kd = kanduo()
-    cc = chicang()
+    if datetime.date.today().weekday() > 4:
+        return
 
-    id = queryId(cursor, 1, 1, "")
+    jd = jgkd()  # 机构持仓
+    kd = kanduo()  # 看多
+    cc = chicang()  # 看
+    created_at = datetime.date.today().strftime("%Y-%m-%d")
+    id = queryId(cursor, "1", 1, created_at)
     saveData(cursor, id, {
         "kd_up": jd["up"],
         "kd_flat": jd["flat"],
@@ -101,6 +107,7 @@ def run(cursor):
         "cc_up": cc["up"],
         "cc_flat": cc["flat"],
         "cc_down": cc["down"],
+        "created_at": created_at,
     })
     pass
 
