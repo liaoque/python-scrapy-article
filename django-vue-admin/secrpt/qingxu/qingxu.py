@@ -20,12 +20,14 @@ def compute():
 
     init(cursor)
 
-    # dfcf.run(cursor)
-    # cls.run(cursor)
-    #
-    # weibo.run(cursor)
-    # xueqiu.run(cursor)
-    trend_shangzheng, trend_shangzhengzixun = baidu.run(cursor)
+    dfcf.run(cursor)
+    cls.run(cursor)
+
+    weibo.run(cursor)
+    xueqiu.run(cursor)
+    # 提交事务:
+    conn.commit()
+    # trend_shangzheng, trend_shangzhengzixun = baidu.run(cursor)
 
     d = datetime.datetime.now().strftime('%Y-%m-%d')
 
@@ -36,10 +38,10 @@ def compute():
     weight_shangzheng = 0.07
     weight_shangzhengzixun = 0.07
 
-    cls_sentiment = cls.queryCommitPoint(cursor, d)
-    weibo_sentiment = weibo.queryCommitPoint(cursor, d)
-    xueqiu_sentiment = xueqiu.queryCommitPoint(cursor, d)
-    dfcf_sentiment = dfcf.queryCommitPoint(cursor, d)
+    # cls_sentiment = cls.queryCommitPoint(cursor, d)
+    # weibo_sentiment = weibo.queryCommitPoint(cursor, d)
+    # xueqiu_sentiment = xueqiu.queryCommitPoint(cursor, d)
+    # dfcf_sentiment = dfcf.queryCommitPoint(cursor, d)
 
     #
     # sentiment_index = (weight_weibo * weibo_sentiment) + (
@@ -51,8 +53,7 @@ def compute():
     # print(f"当前股票情绪指数为：{sentiment_index}")
 
 
-    # 提交事务:
-    conn.commit()
+
     # 关闭Cursor:
     cursor.close()
     conn.close()

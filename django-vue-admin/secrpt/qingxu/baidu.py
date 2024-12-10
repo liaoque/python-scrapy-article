@@ -1,13 +1,15 @@
 import requests
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 from sklearn.preprocessing import MinMaxScaler
 import config
+import numpy as np
+
 
 def baiduzhishu(keyword):
-    end = datetime.now().strftime("%Y-%m-%d")
+    end = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
     start = datetime.now() - timedelta(days=3650)
     start = start.strftime("%Y-%m-%d")
-    url = "https://index.baidu.com/api/SearchApi/index?area=0&word=[[{\"name\":\""+keyword+"\",\"wordType\":1}]]&startDate=" + start + "&endDate=" + end
+    url = "https://index.baidu.com/api/SearchApi/index?area=0&word=[[{\"name\":\"" + keyword + "\",\"wordType\":1}]]&startDate=" + start + "&endDate=" + end
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'cookie': 'BDUSS=WZ-THk1cFppOUZva0hFeUd0RXNUbUlGd3JEWXp0SjZkeElBa2xpNG55SGFQUTVuSVFBQUFBJCQAAAAAAAAAAAEAAAD5bRGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANqw5mbasOZme; ',
@@ -20,6 +22,7 @@ def baiduzhishu(keyword):
         return
 
     dat = codes2["data"]["userIndexes"][0]["all"]["data"]
+    endDate = codes2["data"]["userIndexes"][0]["all"]["endDate"]
     pc = codes2["data"]["userIndexes"][0]["pc"]["data"]
     wise = codes2["data"]["userIndexes"][0]["wise"]["data"]
     uniqid = codes2["data"]["uniqid"]
@@ -34,17 +37,18 @@ def baiduzhishu(keyword):
     pc = dcode(codes3["data"], pc)
     wise = dcode(codes3["data"], wise)
     return {
-        "all": all,
+        "all": all.split(","),
+        "endDate": endDate,
         # "pc": pc,
         # "wise": wise,
     }
 
 
 def baiduzixun(keyword):
-    end = datetime.now().strftime("%Y-%m-%d")
-    start = datetime.now() - timedelta(days=3650)
+    end = (datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")
+    start = datetime.now() - timedelta(days=1800)
     start = start.strftime("%Y-%m-%d")
-    url = "https://index.baidu.com/api/FeedSearchApi/getFeedIndex?area=0&word=[[{\"name\":\""+keyword+"\",\"wordType\":1}]]&startDate=" + start + "&endDate=" + end
+    url = "https://index.baidu.com/api/FeedSearchApi/getFeedIndex?area=0&word=[[{\"name\":\"" + keyword + "\",\"wordType\":1}]]&startDate=" + start + "&endDate=" + end
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'cookie': 'BDUSS=WZ-THk1cFppOUZva0hFeUd0RXNUbUlGd3JEWXp0SjZkeElBa2xpNG55SGFQUTVuSVFBQUFBJCQAAAAAAAAAAAEAAAD5bRGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANqw5mbasOZme; ',
@@ -67,8 +71,9 @@ def baiduzixun(keyword):
 
     all = dcode(codes3["data"], dat)
     return {
-        "all": all,
+        "all": all.split(","),
     }
+
 
 def dcode(t, e):
     if not t:
@@ -87,6 +92,7 @@ def dcode(t, e):
 
     return ''.join(r)
 
+
 def queryMaxDate(cursor, yesterday):
     cursor.execute('SELECT id FROM m_baidu where  created_at = ? limit 1', (yesterday,))
     values = cursor.fetchall()
@@ -94,29 +100,37 @@ def queryMaxDate(cursor, yesterday):
         return None
     return values[0]
 
+
 def run(cursor):
+    # 控制每小时更新一次
+    # if datetime.now().minute != 0:
+    #     return 0, 0
+
     # 获取当前日期和时间
     now = datetime.now()
 
-    # 计算前一天的日期
-    yesterday = now - timedelta(days=1)
-
-    # 查最大的id
-    data = queryMaxDate(cursor, yesterday.strftime("%Y-%m-%d"))
-    if data is not None:
-        return data["trend_shangzheng"], data["trend_shangzhengzixun"]
+    # # 计算前一天的日期
+    # yesterday = now - timedelta(days=1)
+    #
+    # # 查最大的id
+    # data = queryMaxDate(cursor, yesterday.strftime("%Y-%m-%d"))
+    # if data is not None:
+    #     return data["trend_shangzheng"], data["trend_shangzhengzixun"]
 
     shangzheng = baiduzhishu("上证指数")["all"]
     shangzhengzixun = baiduzixun("上证指数")["all"]
+    shangzheng = np.array(shangzheng)
+    shangzhengzixun = np.array(shangzhengzixun)
+    # Reshape the data to have a single feature
+    shangzheng_reshaped = shangzheng.reshape(-1, 1)
+    shangzhengzixun_reshaped = shangzhengzixun.reshape(-1, 1)
 
     # 均值回归
     scaler = MinMaxScaler()
-    trend_shangzheng = scaler.fit_transform(shangzheng).flatten()[-1]  # 最新值
-    trend_shangzhengzixun = scaler.fit_transform(shangzhengzixun).flatten()[-1]  # 最新值
+    trend_shangzheng = scaler.fit_transform(shangzheng_reshaped).flatten()[-1]  # 最新值
+    trend_shangzhengzixun = scaler.fit_transform(shangzhengzixun_reshaped).flatten()[-1]  # 最新值
 
-    cursor.execute('INSERT INTO m_baidu (shangzheng, shangzhengzixun, created_at) VALUES (?, ?, ?)',
-                   (trend_shangzheng, trend_shangzhengzixun, yesterday,))
-
+    # cursor.execute('INSERT INTO m_baidu (shangzheng, shangzhengzixun, created_at) VALUES (?, ?, ?)',
+    #                (trend_shangzheng, trend_shangzhengzixun, yesterday,))
 
     return trend_shangzheng, trend_shangzhengzixun
-
