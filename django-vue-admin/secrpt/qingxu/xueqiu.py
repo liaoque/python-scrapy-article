@@ -1,6 +1,6 @@
 import requests
 import config
-
+from datetime import datetime
 # https://xueqiu.com/query/v1/symbol/search/status.json?count=10&comment=0&symbol=SH000001&hl=0&source=all&sort=&page=1&q=&type=12&md5__1038=n4%2BxcDyDBDRD9jbD%2FD0YoY0QQeqmTvIhypD
 # https://xueqiu.com/query/v1/symbol/search/status.json?count=10&comment=0&symbol=SH000001&hl=0&source=all&sort=&page=2&q=&type=12&md5__1038=n4jxR7exBCe05DI5YK0%3DGOQFqYvc4D%3DFWWa4D
 
@@ -16,10 +16,12 @@ def xueqiu(page):
     cards = response.json()["list"]
     data = []
     for item in cards:
+        created_at = datetime.utcfromtimestamp(int(item["created_at"]/1000)).strftime("%Y-%m-%d %H:%M:%S")
+
         data.append({
             "id": item["id"],
             "text": item["text"],
-            "created_at": item["created_at"],
+            "created_at": created_at,
             "type": 1
         })
     return data
@@ -34,7 +36,7 @@ def run(cursor):
     weiboIdTop = queryMaxId(cursor)
     ids = []
 
-    for i in range(100):
+    for i in range(10):
 
         # 爬微博, 找到id相同的位置
         data2 = xueqiu(i)
@@ -57,9 +59,15 @@ def queryMaxId(cursor):
         return 0
     return values[0]['tid']
 
+def exits(cursor, id, type):
+    cursor.execute('SELECT tid FROM m_xueqiu where tid = ? and type = ? order by id desc', (id, type,))
+    values = cursor.fetchall()
+    return len(values) > 0
 
 def saveData(cursor, data):
     for item in data:
+        if exits(cursor, item['id'], item['type']):
+            continue
         cursor.execute('INSERT INTO m_xueqiu (tid, content, created_at, type) VALUES (?, ?, ?, ?)',
                        (item['id'], item['text'], item['created_at'], item['type'],))
 

@@ -179,7 +179,7 @@ def saveData(cursor, data):
 
 
 def exits(cursor, id, type):
-    cursor.execute('SELECT tid FROM m_cls where id = ? and type = ? order by id desc', (id, type,))
+    cursor.execute('SELECT tid FROM m_cls where tid = ? and type = ? order by id desc', (id, type,))
     values = cursor.fetchall()
     return len(values) > 0
 

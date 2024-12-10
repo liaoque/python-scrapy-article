@@ -88,7 +88,7 @@ def dcode(t, e):
     return ''.join(r)
 
 def queryMaxDate(cursor, yesterday):
-    cursor.execute('SELECT id FROM m_baidu where  created_at = ? limit 1', (yesterday))
+    cursor.execute('SELECT id FROM m_baidu where  created_at = ? limit 1', (yesterday,))
     values = cursor.fetchall()
     if len(values) == 0:
         return None
@@ -103,7 +103,7 @@ def run(cursor):
 
     # 查最大的id
     data = queryMaxDate(cursor, yesterday.strftime("%Y-%m-%d"))
-    if data is None:
+    if data is not None:
         return data["trend_shangzheng"], data["trend_shangzhengzixun"]
 
     shangzheng = baiduzhishu("上证指数")["all"]

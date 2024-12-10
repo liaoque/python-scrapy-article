@@ -20,11 +20,11 @@ def compute():
 
     init(cursor)
 
-    dfcf.run(cursor)
-    cls.run(cursor)
-
-    weibo.run(cursor)
-    xueqiu.run(cursor)
+    # dfcf.run(cursor)
+    # cls.run(cursor)
+    #
+    # weibo.run(cursor)
+    # xueqiu.run(cursor)
     trend_shangzheng, trend_shangzhengzixun = baidu.run(cursor)
 
     d = datetime.datetime.now().strftime('%Y-%m-%d')
