@@ -185,7 +185,7 @@ def exits(cursor, id, type):
 
 
 def queryData(cursor):
-    cursor.execute('SELECT tid FROM m_cls WHERE commit is null order by id desc')
+    cursor.execute('SELECT tid,content FROM m_cls WHERE commit is null order by id desc')
     values = cursor.fetchall()
     return values
 

@@ -73,7 +73,7 @@ def saveData(cursor, data):
 
 
 def queryData(cursor):
-    cursor.execute('SELECT tid FROM m_xueqiu WHERE commit is null order by id desc')
+    cursor.execute('SELECT tid,content FROM m_xueqiu WHERE commit is null order by id desc')
     values = cursor.fetchall()
     return values
 

@@ -9,24 +9,33 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
 
-from qingxu import cls,dfcf,weibo,xueqiu,baidu
+from qingxu import cls,dfcf,weibo,xueqiu,baidu,gpt
 
 
 def compute():
 
     conn = sqlite3.connect('qingxu.db')
+    conn.row_factory = sqlite3.Row
     # 创建一个Cursor:
     cursor = conn.cursor()
 
-    init(cursor)
 
-    dfcf.run(cursor)
-    cls.run(cursor)
+    # init(cursor)
+    #
+    # cls.run(cursor)
+    # weibo.run(cursor)
+    # xueqiu.run(cursor)
+    #
+    # dfcf.run(cursor)
+    # baidu.run(cursor)
 
-    weibo.run(cursor)
-    xueqiu.run(cursor)
+
     # 提交事务:
     conn.commit()
+
+    gpt.run(cursor)
+    conn.commit()
+    
     # trend_shangzheng, trend_shangzhengzixun = baidu.run(cursor)
 
     d = datetime.datetime.now().strftime('%Y-%m-%d')

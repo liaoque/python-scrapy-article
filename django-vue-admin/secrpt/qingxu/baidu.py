@@ -6,8 +6,8 @@ import numpy as np
 
 
 def baiduzhishu(keyword):
-    end = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
-    start = datetime.now() - timedelta(days=3650)
+    end = (datetime.now() - timedelta(days=0)).strftime("%Y-%m-%d")
+    start = datetime.now() - timedelta(days=200)
     start = start.strftime("%Y-%m-%d")
     url = "https://index.baidu.com/api/SearchApi/index?area=0&word=[[{\"name\":\"" + keyword + "\",\"wordType\":1}]]&startDate=" + start + "&endDate=" + end
     headers = {
@@ -45,8 +45,8 @@ def baiduzhishu(keyword):
 
 
 def baiduzixun(keyword):
-    end = (datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")
-    start = datetime.now() - timedelta(days=1800)
+    end = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+    start = datetime.now() - timedelta(days=200)
     start = start.strftime("%Y-%m-%d")
     url = "https://index.baidu.com/api/FeedSearchApi/getFeedIndex?area=0&word=[[{\"name\":\"" + keyword + "\",\"wordType\":1}]]&startDate=" + start + "&endDate=" + end
     headers = {
@@ -117,8 +117,8 @@ def run(cursor):
     # if data is not None:
     #     return data["trend_shangzheng"], data["trend_shangzhengzixun"]
 
-    shangzheng = baiduzhishu("上证指数")["all"]
-    shangzhengzixun = baiduzixun("上证指数")["all"]
+    shangzheng = baiduzhishu("a股")["all"]
+    shangzhengzixun = baiduzixun("a股")["all"]
     shangzheng = np.array(shangzheng)
     shangzhengzixun = np.array(shangzhengzixun)
     # Reshape the data to have a single feature

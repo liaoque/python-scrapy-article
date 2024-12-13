@@ -24,7 +24,9 @@ def commitMsg(msg):
 
     msg = msg.apply(clean_text)
     msg = msg.apply(tokenize)
-
+    msg = msg +"""
+    
+    """
     return msg
 
 
@@ -44,17 +46,17 @@ def gpt(msg):
 def run(cursor):
     data = cls.queryData(cursor)
     for item in data:
-        commit = gpt(item['text'])
+        commit = gpt(item['content'])
         cls.saveCommit(cursor, item['id'], commit)
 
     data = weibo.queryData(cursor)
     for item in data:
-        commit = gpt(item['text'])
+        commit = gpt(item['content'])
         weibo.saveCommit(cursor, item['id'], commit)
 
     data = xueqiu.queryData(cursor)
     for item in data:
-        commit = gpt(item['text'])
+        commit = gpt(item['content'])
         xueqiu.saveCommit(cursor, item['id'], commit)
 
     pass
