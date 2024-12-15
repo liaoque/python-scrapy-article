@@ -1,6 +1,8 @@
 import requests
 import config
 from datetime import datetime
+from common import dingding,clean
+
 # https://xueqiu.com/query/v1/symbol/search/status.json?count=10&comment=0&symbol=SH000001&hl=0&source=all&sort=&page=1&q=&type=12&md5__1038=n4%2BxcDyDBDRD9jbD%2FD0YoY0QQeqmTvIhypD
 # https://xueqiu.com/query/v1/symbol/search/status.json?count=10&comment=0&symbol=SH000001&hl=0&source=all&sort=&page=2&q=&type=12&md5__1038=n4jxR7exBCe05DI5YK0%3DGOQFqYvc4D%3DFWWa4D
 
@@ -68,6 +70,7 @@ def saveData(cursor, data):
     for item in data:
         if exits(cursor, item['id'], item['type']):
             continue
+        item['text'] = clean.clean_text(item['text'])
         cursor.execute('INSERT INTO m_xueqiu (tid, content, created_at, type) VALUES (?, ?, ?, ?)',
                        (item['id'], item['text'], item['created_at'], item['type'],))
 

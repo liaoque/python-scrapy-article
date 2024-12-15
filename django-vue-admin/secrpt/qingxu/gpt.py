@@ -14,6 +14,7 @@ stop_words = set(stopwords.words('chinese'))  # 需要下载中文停用词表
 
 
 def clean_text(text):
+    text = re.sub(r'<[^>]+>', '', text)
     text = re.sub(r'\s+', ' ', text)  # 去除多余空格
     text = re.sub(r'[^\w\s]', '', text)  # 去除标点符号
     # 进一步清洗可以根据需要添加

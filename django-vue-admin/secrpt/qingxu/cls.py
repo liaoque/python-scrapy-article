@@ -1,5 +1,5 @@
 import requests
-from common import dingding
+from common import dingding,clean
 
 import sys
 import config
@@ -174,6 +174,7 @@ def saveData(cursor, data):
     for item in data:
         if exits(cursor, item['id'], item['type']):
             continue
+        item['text'] = clean.clean_text(item['text'])
         cursor.execute('INSERT INTO m_cls (tid, content, created_at, type) VALUES (?, ?, ?, ?)',
                        (item['id'], item['text'], item['created_at'], item['type'],))
 

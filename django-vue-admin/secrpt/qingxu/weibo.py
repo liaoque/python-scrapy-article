@@ -3,7 +3,7 @@ from turtle import up, down
 import requests
 from datetime import datetime
 import config
-
+from common import dingding,clean
 
 def weibo(page):
     url = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D1%26q%3D%E4%B8%8A%E8%AF%81%E6%8C%87%E6%95%B0%26t%3D&page_type=searchall&page=" + str(
@@ -16,7 +16,7 @@ def weibo(page):
     response = requests.get(url, headers=headers)
     res = response.json()
     if res["ok"] != 1:
-        print(res)
+        dingding.dingding("weibo stop " + response.text)
         return []
     cards = res["data"]["cards"]
 
@@ -63,7 +63,6 @@ def run(cursor):
 
         # 爬微博, 找到id相同的位置
         data2 = weibo(i)
-        print(data2)
         for item in data2:
             if item['id'] in ids:
                 continue
@@ -95,6 +94,7 @@ def saveData(cursor, data):
     for item in data:
         if exits(cursor, item['id'], item['type']):
             continue
+        item['text'] = clean.clean_text(item['text'])
         cursor.execute('INSERT INTO m_weibo (tid, content, created_at, type) VALUES (?, ?, ?, ?)',
                        (item['id'], item['text'], item['created_at'], item['type'],))
 
