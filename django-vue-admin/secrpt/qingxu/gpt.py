@@ -7,6 +7,7 @@ import jieba
 import nltk
 import time
 from nltk.corpus import stopwords
+import sqlite3
 
 nltk.download('stopwords')
 stop_words = set(stopwords.words('chinese'))  # 需要下载中文停用词表
@@ -47,20 +48,22 @@ def gpt(msg):
     return codes2
 
 
-def run(cursor):
+def run(cursor, conn):
     data = cls.queryData(cursor)
     for item in data:
         codes2 = gpt(item['content'])
         if "data" in codes2 and "content" in codes2["data"]:
             content2 = content = codes2["data"]["content"]
             if "积极" in content2:
-                content == "1"
+                content = "1"
             elif "中性" in content2:
-                content == "0"
+                content = "0"
             elif "消极" in content2:
-                content == "-1"
+                content = "-1"
+            elif content2 not in [0, 1, -1, "0", "1", "-1"]:
+                content = "0"
             cls.saveCommit(cursor, item['tid'], content)
-
+            conn.commit()
 
     data = weibo.queryData(cursor)
     for item in data:
@@ -68,12 +71,15 @@ def run(cursor):
         if "data" in codes2 and "content" in codes2["data"]:
             content2 = content = codes2["data"]["content"]
             if "积极" in content2:
-                content == "1"
+                content = "1"
             elif "中性" in content2:
-                content == "0"
+                content = "0"
             elif "消极" in content2:
-                content == "-1"
+                content = "-1"
+            elif content2 not in [0, 1, -1, "0", "1", "-1"]:
+                content = "0"
             weibo.saveCommit(cursor, item['tid'], content)
+            conn.commit()
 
     data = xueqiu.queryData(cursor)
     for item in data:
@@ -81,11 +87,30 @@ def run(cursor):
         if "data" in codes2 and "content" in codes2["data"]:
             content2 = content = codes2["data"]["content"]
             if "积极" in content2:
-                content == "1"
+                content = "1"
             elif "中性" in content2:
-                content == "0"
+                content = "0"
             elif "消极" in content2:
-                content == "-1"
+                content = "-1"
+            elif content2  not in [0,1,-1, "0", "1", "-1"]:
+                content = "0"
             xueqiu.saveCommit(cursor, item['tid'], content)
+            conn.commit()
 
     pass
+
+
+def compute():
+
+    conn = sqlite3.connect('qingxu.db')
+    conn.row_factory = sqlite3.Row
+    # 创建一个Cursor:
+    cursor = conn.cursor()
+
+    gpt.run(cursor, conn)
+
+    cursor.close()
+    conn.close()
+
+if __name__ == "__main__":
+    compute()
