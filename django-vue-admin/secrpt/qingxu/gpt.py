@@ -5,6 +5,7 @@ import xueqiu
 import re
 import jieba
 import nltk
+import time
 from nltk.corpus import stopwords
 
 nltk.download('stopwords')
@@ -33,6 +34,7 @@ def commitMsg(msg):
 
 
 def gpt(msg):
+    time.sleep(1)
     url = "http://ss.qq2021.com/v1/tmp/message"
     headers = {
         'Content-Type': 'application/json',
