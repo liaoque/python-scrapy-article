@@ -34,7 +34,7 @@ def commitMsg(msg):
 
 
 def gpt(msg):
-    time.sleep(1)
+    time.sleep(3)
     url = "http://ss.qq2021.com/v1/tmp/message"
     headers = {
         'Content-Type': 'application/json',
