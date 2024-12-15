@@ -52,18 +52,40 @@ def run(cursor):
     for item in data:
         codes2 = gpt(item['content'])
         if "data" in codes2 and "content" in codes2["data"]:
-            cls.saveCommit(cursor, item['tid'], codes2["data"]["content"])
+            content2 = content = codes2["data"]["content"]
+            if "积极" in content2:
+                content == "1"
+            elif "中性" in content2:
+                content == "0"
+            elif "消极" in content2:
+                content == "-1"
+            cls.saveCommit(cursor, item['tid'], content)
+
 
     data = weibo.queryData(cursor)
     for item in data:
         codes2 = gpt(item['content'])
         if "data" in codes2 and "content" in codes2["data"]:
-            weibo.saveCommit(cursor, item['tid'], codes2["data"]["content"])
+            content2 = content = codes2["data"]["content"]
+            if "积极" in content2:
+                content == "1"
+            elif "中性" in content2:
+                content == "0"
+            elif "消极" in content2:
+                content == "-1"
+            weibo.saveCommit(cursor, item['tid'], content)
 
     data = xueqiu.queryData(cursor)
     for item in data:
         codes2 = gpt(item['content'])
         if "data" in codes2 and "content" in codes2["data"]:
-            xueqiu.saveCommit(cursor, item['tid'], codes2["data"]["content"])
+            content2 = content = codes2["data"]["content"]
+            if "积极" in content2:
+                content == "1"
+            elif "中性" in content2:
+                content == "0"
+            elif "消极" in content2:
+                content == "-1"
+            xueqiu.saveCommit(cursor, item['tid'], content)
 
     pass
