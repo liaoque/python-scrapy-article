@@ -20,14 +20,14 @@ def compute():
     cursor = conn.cursor()
 
 
-    # init(cursor)
-    #
-    # cls.run(cursor)
-    # weibo.run(cursor)
-    # xueqiu.run(cursor)
-    #
-    # dfcf.run(cursor)
-    # baidu.run(cursor)
+    init(cursor)
+
+    cls.run(cursor)
+    weibo.run(cursor)
+    xueqiu.run(cursor)
+
+    dfcf.run(cursor)
+    baidu.run(cursor)
 
 
     # 提交事务:
@@ -35,7 +35,7 @@ def compute():
 
     gpt.run(cursor)
     conn.commit()
-    
+
     # trend_shangzheng, trend_shangzhengzixun = baidu.run(cursor)
 
     d = datetime.datetime.now().strftime('%Y-%m-%d')
