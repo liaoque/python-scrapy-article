@@ -8,7 +8,7 @@ import numpy as np
 def baiduzhishu(keyword):
     end = (datetime.now() - timedelta(days=0)).strftime("%Y-%m-%d")
     start = datetime.now() - timedelta(days=200)
-    start = start.strftime("%Y-%m-%d")
+    start = "2019-01-01"
     url = "https://index.baidu.com/api/SearchApi/index?area=0&word=[[{\"name\":\"" + keyword + "\",\"wordType\":1}]]&startDate=" + start + "&endDate=" + end
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -47,7 +47,7 @@ def baiduzhishu(keyword):
 def baiduzixun(keyword):
     end = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
     start = datetime.now() - timedelta(days=200)
-    start = start.strftime("%Y-%m-%d")
+    start = "2019-01-01"
     url = "https://index.baidu.com/api/FeedSearchApi/getFeedIndex?area=0&word=[[{\"name\":\"" + keyword + "\",\"wordType\":1}]]&startDate=" + start + "&endDate=" + end
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -61,6 +61,7 @@ def baiduzixun(keyword):
         return
 
     dat = codes2["data"]["index"][0]["data"]
+    endDate = codes2["data"]["index"][0]["endDate"]
     uniqid = codes2["data"]["uniqid"]
 
     url = "https://index.baidu.com/Interface/ptbk?uniqid=" + uniqid
@@ -72,6 +73,7 @@ def baiduzixun(keyword):
     all = dcode(codes3["data"], dat)
     return {
         "all": all.split(","),
+        "endDate":endDate
     }
 
 
@@ -116,9 +118,12 @@ def run(cursor):
     # data = queryMaxDate(cursor, yesterday.strftime("%Y-%m-%d"))
     # if data is not None:
     #     return data["trend_shangzheng"], data["trend_shangzhengzixun"]
-
-    shangzheng = baiduzhishu("a股")["all"]
-    shangzhengzixun = baiduzixun("a股")["all"]
+    baiduzhishu2= baiduzhishu("a股")
+    shangzheng = baiduzhishu2["all"]
+    endDate = baiduzhishu2["endDate"]
+    baiduzixun2= baiduzixun("a股")
+    shangzhengzixun = baiduzixun2["all"]
+    endDateZiXun = baiduzixun2["endDate"]
     shangzheng = np.array(shangzheng)
     shangzhengzixun = np.array(shangzhengzixun)
     # Reshape the data to have a single feature
@@ -130,7 +135,25 @@ def run(cursor):
     trend_shangzheng = scaler.fit_transform(shangzheng_reshaped).flatten()[-1]  # 最新值
     trend_shangzhengzixun = scaler.fit_transform(shangzhengzixun_reshaped).flatten()[-1]  # 最新值
 
+    saveData(cursor, endDate, 1, trend_shangzheng)
+    saveData(cursor, endDateZiXun, 2, trend_shangzhengzixun)
+
     # cursor.execute('INSERT INTO m_baidu (shangzheng, shangzhengzixun, created_at) VALUES (?, ?, ?)',
-    #                (trend_shangzheng, trend_shangzhengzixun, yesterday,))
+    #                (trend_shangzheng, trend_shangzhengzixun, endDate,))
 
     return trend_shangzheng, trend_shangzhengzixun
+
+
+def saveData(cursor, endDate, zz_type, zhishu):
+    if exits(cursor, endDate, zz_type):
+        cursor.execute('update m_baidu set zhishu = ? where created_at = ? and zz_type = ?',
+                       (zhishu, endDate, zz_type,))
+        return
+    cursor.execute('INSERT INTO m_baidu ( zhishu, created_at, zz_type) VALUES ( ?, ?, ?)',
+                   (zhishu, endDate, zz_type,))
+
+
+def exits(cursor, created_at, type):
+    cursor.execute('SELECT id FROM m_baidu where created_at = ? and zz_type = ? order by id desc', (created_at, type,))
+    values = cursor.fetchall()
+    return len(values) > 0
