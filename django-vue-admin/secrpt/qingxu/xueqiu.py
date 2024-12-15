@@ -73,30 +73,30 @@ def saveData(cursor, data):
 
 
 def queryData(cursor):
-    cursor.execute('SELECT tid,content FROM m_xueqiu WHERE commit is null order by id desc')
+    cursor.execute('SELECT tid,content FROM m_xueqiu WHERE commited is null order by id desc')
     values = cursor.fetchall()
     return values
 
 
 def saveCommit(cursor, id, commit):
-    cursor.execute('update m_xueqiu set commit = ? where id = ?', (commit, id,))
+    cursor.execute('update m_xueqiu set commited = ? where id = ?', (commited, id,))
 
 
 def queryCommitPoint(cursor, created_at):
-    cursor.execute('SELECT count(commit) c FROM m_xueqiu where created_at = ? order by id desc limit 1', (created_at))
+    cursor.execute('SELECT count(commited) c FROM m_xueqiu where created_at = ? order by id desc limit 1', (created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
     total = values[0]['c']
 
-    cursor.execute('SELECT count(commit) c FROM m_xueqiu  where commit =1 and created_at = ? order by id desc limit 1', (created_at))
+    cursor.execute('SELECT count(commited) c FROM m_xueqiu  where commited =1 and created_at = ? order by id desc limit 1', (created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         up = 0
     else:
         up = values[0]['c']
 
-    cursor.execute('SELECT count(commit) c FROM m_xueqiu  where commit =0 and created_at = ? order by id desc limit 1', (created_at))
+    cursor.execute('SELECT count(commited) c FROM m_xueqiu  where commited =0 and created_at = ? order by id desc limit 1', (created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         down = 0
