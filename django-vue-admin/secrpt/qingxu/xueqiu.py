@@ -79,7 +79,7 @@ def queryData(cursor):
 
 
 def saveCommit(cursor, id, commit):
-    cursor.execute('update m_xueqiu set commited = ? where id = ?', (commited, id,))
+    cursor.execute('update m_xueqiu set commited = ? where id = ?', (commit, id,))
 
 
 def queryCommitPoint(cursor, created_at):
