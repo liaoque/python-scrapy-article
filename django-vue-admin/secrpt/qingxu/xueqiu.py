@@ -7,7 +7,7 @@ from common import dingding,clean
 # https://xueqiu.com/query/v1/symbol/search/status.json?count=10&comment=0&symbol=SH000001&hl=0&source=all&sort=&page=2&q=&type=12&md5__1038=n4jxR7exBCe05DI5YK0%3DGOQFqYvc4D%3DFWWa4D
 
 def xueqiu(page):
-    url = "https://xueqiu.com/query/v1/symbol/search/status.json?count=10&symbol=SH000001&md5__1038=eqRxcQqQqiwO3DsD7%2Bq0%3D3GQgg7f%3DD7TcGD&page=" + str(
+    url = "https://xueqiu.com/query/v1/symbol/search/status.json?count=100&symbol=SH000001&md5__1038=eqRxcQqQqiwO3DsD7%2Bq0%3D3GQgg7f%3DD7TcGD&page=" + str(
         page)
     headers = {
         "cookie": "u=4493850983;",
@@ -45,8 +45,8 @@ def run(cursor):
         for item in data2:
             if item['id'] in ids:
                 continue
-            if item["id"] == weiboIdTop:
-                break
+            # if item["id"] == weiboIdTop:
+            #     break
             data.append(item)
             ids.append(item['id'])
 

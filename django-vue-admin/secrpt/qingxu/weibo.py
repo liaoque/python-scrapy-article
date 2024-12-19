@@ -66,9 +66,9 @@ def run(cursor):
         for item in data2:
             if item['id'] in ids:
                 continue
-            if item["id"] == weiboIdTop:
-                b = True
-                break
+            # if item["id"] == weiboIdTop:
+            #     b = True
+            #     break
             data.append(item)
             ids.append(item['id'])
 

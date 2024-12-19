@@ -14,7 +14,7 @@ from qingxu import cls,dfcf,weibo,xueqiu,baidu,gpt
 
 def compute():
 
-    conn = sqlite3.connect('qingxu.db')
+    conn = sqlite3.connect('qingxu.db', isolation_level=None)
     conn.row_factory = sqlite3.Row
     # 创建一个Cursor:
     cursor = conn.cursor()
@@ -29,9 +29,6 @@ def compute():
     dfcf.run(cursor)
     baidu.run(cursor)
 
-
-    # 提交事务:
-    conn.commit()
 
     # 关闭Cursor:
     cursor.close()
