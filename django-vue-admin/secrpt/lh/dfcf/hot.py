@@ -57,6 +57,12 @@ def expandList(categoryType = '13'):
 
 
 def rankToday(code, v):
+    """
+    人气排名
+    :param code:
+    :param v:
+    :return:
+    """
     url = "https://gbcdn.dfcfw.com/rank/today/%s.js?type=0&v=%s"%(code, v)
     response = requests.get(url, headers=headers)
     t = response.content.decode("utf-8")[15:-1]
@@ -64,6 +70,12 @@ def rankToday(code, v):
     return ts
 
 def rankHistory(code, v):
+    """
+    历史趋势
+    :param code:
+    :param v:
+    :return:
+    """
     url = "https://gbcdn.dfcfw.com/rank/history/year/%s.js?type=0&v=%s"%(code, v)
     response = requests.get(url, headers=headers)
     t = response.content.decode("utf-8")[17:-1]
@@ -71,6 +83,13 @@ def rankHistory(code, v):
     return ts
 
 def fansToday(code, v):
+    """
+    新晋粉丝：近30日内，仅在近5日发生过上述行为的用户
+    粉丝特征根据东方财富端内海量用户对该股票的浏览行为与股吧互动行为统计得出
+    :param code:
+    :param v:
+    :return:
+    """
     url = "https://gbcdn.dfcfw.com/rank/fanstoday/%s.js?v=%s"%(code, v)
     response = requests.get(url, headers=headers)
     t = response.content.decode("utf-8")[19:-1]
@@ -78,6 +97,12 @@ def fansToday(code, v):
     return ts
 
 def fansHistory(code, v):
+    """
+    铁杆粉丝：近30日内，不仅在近5日发生过上述行为的用户
+    :param code:
+    :param v:
+    :return:
+    """
     url = "https://gbcdn.dfcfw.com/rank/fanshistory/year/%s.js?v=%s"%(code, v)
     response = requests.get(url, headers=headers)
     t = response.content.decode("utf-8")[21:-1]
