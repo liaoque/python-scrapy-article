@@ -2,7 +2,8 @@ from turtle import up, down
 
 import requests
 from datetime import datetime
-
+import config
+from common import dingding,clean
 
 def weibo(page):
     url = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D1%26q%3D%E4%B8%8A%E8%AF%81%E6%8C%87%E6%95%B0%26t%3D&page_type=searchall&page=" + str(
@@ -13,7 +14,11 @@ def weibo(page):
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
     }
     response = requests.get(url, headers=headers)
-    cards = response.json()["data"]["cards"]
+    res = response.json()
+    if res["ok"] != 1:
+        dingding.dingding("weibo stop " + response.text)
+        return []
+    cards = res["data"]["cards"]
 
     data = []
     time_format = '%a %b %d %H:%M:%S %z %Y'
@@ -24,7 +29,8 @@ def weibo(page):
                     data.append({
                         "id": item2["mblog"]["id"],
                         "text": item2["mblog"]["text"],
-                        "created_at": datetime.strptime(item2["mblog"]["created_at"], time_format),
+                        "created_at": datetime.strptime(item2["mblog"]["created_at"], time_format).strftime(
+                            "%Y-%m-%d %H:%M:%S"),
                         "type": 1
                     })
             continue
@@ -32,7 +38,7 @@ def weibo(page):
             data.append({
                 "id": item["mblog"]["id"],
                 "text": item["mblog"]["text"],
-                "created_at": datetime.strptime(item["mblog"]["created_at"], time_format),
+                "created_at": datetime.strptime(item["mblog"]["created_at"], time_format).strftime("%Y-%m-%d %H:%M:%S"),
                 "type": 1
             })
     if len(data) == 0:
@@ -42,21 +48,27 @@ def weibo(page):
 
 
 def run(cursor):
+    if config.checkDefault("weibo"):
+        return
     data = []
 
     # 查最大的id
     weiboIdTop = queryMaxId(cursor)
     ids = []
+    b = False
+    for i in range(10):
 
-    for i in range(100):
+        if b:
+            break
 
         # 爬微博, 找到id相同的位置
         data2 = weibo(i)
         for item in data2:
             if item['id'] in ids:
                 continue
-            if item["id"] == weiboIdTop:
-                break
+            # if item["id"] == weiboIdTop:
+            #     b = True
+            #     break
             data.append(item)
             ids.append(item['id'])
 
@@ -65,44 +77,55 @@ def run(cursor):
 
 
 def queryMaxId(cursor):
-    cursor.execute('SELECT tid FROM m_weibo  order by id desc')
+    cursor.execute('SELECT tid FROM m_weibo  order by id desc limit 1')
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
     return values[0]['tid']
 
 
+def exits(cursor, id, type):
+    cursor.execute('SELECT tid FROM m_weibo where tid = ? and type = ? order by id desc', (id, type,))
+    values = cursor.fetchall()
+    return len(values) > 0
+
+
 def saveData(cursor, data):
     for item in data:
+        if exits(cursor, item['id'], item['type']):
+            continue
+        item['text'] = clean.clean_text(item['text'])
         cursor.execute('INSERT INTO m_weibo (tid, content, created_at, type) VALUES (?, ?, ?, ?)',
                        (item['id'], item['text'], item['created_at'], item['type'],))
 
 
 def queryData(cursor):
-    cursor.execute('SELECT tid FROM m_weibo WHERE commit is null order by id desc')
+    cursor.execute('SELECT tid,content FROM m_weibo WHERE commited is null order by id desc')
     values = cursor.fetchall()
     return values
 
 
 def saveCommit(cursor, id, commit):
-    cursor.execute('update m_weibo set commit = ? where id = ?', (commit, id,))
+    cursor.execute('update m_weibo set commited = ? where id = ?', (commit, id,))
 
 
 def queryCommitPoint(cursor, created_at):
-    cursor.execute('SELECT count(commit) c FROM m_weibo where created_at = ? order by id desc', (created_at))
+    cursor.execute('SELECT count(commited) c FROM m_weibo where created_at = ? order by id desc limit 1', (created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
     total = values[0]['c']
 
-    cursor.execute('SELECT count(commit) c FROM m_weibo  where commit =1 and created_at = ? order by id desc', (created_at))
+    cursor.execute('SELECT count(commited) c FROM m_weibo  where commited =1 and created_at = ? order by id desc limit 1',
+                   (created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         up = 0
     else:
         up = values[0]['c']
 
-    cursor.execute('SELECT count(commit) c FROM m_weibo  where commit =0 and created_at = ? order by id desc', (created_at))
+    cursor.execute('SELECT count(commited) c FROM m_weibo  where commited =0 and created_at = ? order by id desc limit 1',
+                   (created_at))
     values = cursor.fetchall()
     if len(values) == 0:
         down = 0
