@@ -5,6 +5,10 @@ from datetime import datetime
 from lh.dfcf import decode
 
 # https://guba.eastmoney.com/rank/
+headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+    }
 
 def hotStockList(listType = '0', type = '0', page = '0', v=''):
     """
@@ -24,10 +28,7 @@ def hotStockList(listType = '0', type = '0', page = '0', v=''):
     https://gbcdn.dfcfw.com/rank/popularityList.js?type=%s&sort=%s&page=%s&v=%s
     """%(type, sort, page, v)
 
-    headers = {
-        "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
-    }
+
     response = requests.get(url,  headers=headers)
     t = response.content.decode("utf-8")[20:-1]
     ts = decode.cbcDecode(t)
@@ -55,4 +56,32 @@ def expandList(categoryType = '13'):
     return  []
 
 
-hotStockList()
+def rankToday(code, v):
+    url = "https://gbcdn.dfcfw.com/rank/today/%s.js?type=0&v=%s"%(code, v)
+    response = requests.get(url, headers=headers)
+    t = response.content.decode("utf-8")[15:-1]
+    ts = decode.cbcDecode(t)
+    return ts
+
+def rankHistory(code, v):
+    url = "https://gbcdn.dfcfw.com/rank/history/year/%s.js?type=0&v=%s"%(code, v)
+    response = requests.get(url, headers=headers)
+    t = response.content.decode("utf-8")[17:-1]
+    ts = decode.cbcDecode(t)
+    return ts
+
+def fansToday(code, v):
+    url = "https://gbcdn.dfcfw.com/rank/fanstoday/%s.js?v=%s"%(code, v)
+    response = requests.get(url, headers=headers)
+    t = response.content.decode("utf-8")[19:-1]
+    ts = decode.cbcDecode(t)
+    return ts
+
+def fansHistory(code, v):
+    url = "https://gbcdn.dfcfw.com/rank/fanshistory/year/%s.js?v=%s"%(code, v)
+    response = requests.get(url, headers=headers)
+    t = response.content.decode("utf-8")[21:-1]
+    ts = decode.cbcDecode(t)
+    return ts
+
+# hotStockList()
