@@ -83,6 +83,7 @@ urlpatterns = (
             path("apiLogin/", ApiLogin.as_view()),
 
             path("api/wb/", include("dvadmin.wb.urls")),
+            path("api/lh/", include("dvadmin.lh.urls")),
         ]
         + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
         + static(settings.STATIC_URL, document_root=settings.STATIC_URL)
