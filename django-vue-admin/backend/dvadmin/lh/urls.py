@@ -11,10 +11,12 @@ from django.urls import path
 # from dvadmin.wb.views.config import Config
 # from dvadmin.wb.views.base import BaseView
 
-form dvadmin.lh.views.bangdan import BangDanView
+from dvadmin.lh.views.bangdan import BangDanView
+from dvadmin.lh.views.lsqs import LsqsView
 
 urlpatterns = [
     path('bangdan', BangDanView.as_view()),
+    path('lsqs', LsqsView.as_view()),
     # path('yuan_yin', YuanYinView.as_view()),
     # path('result', ResultView.as_view()),
     # path('gns', ZhuXianGnsView.as_view()),

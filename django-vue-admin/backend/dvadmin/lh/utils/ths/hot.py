@@ -19,9 +19,7 @@ def hotStockList(list_type = 'normal'):
     if list_type == 'normal':
         type = 'hour'
 
-    url = """
-    https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/stock?stock_type=a&type=%s&list_type=%s
-    """%(type, list_type)
+    url = """https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/stock?stock_type=a&type=%s&list_type=%s"""%(type, list_type)
 
     headers = {
         "Content-Type": "application/json",
