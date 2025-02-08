@@ -125,6 +125,14 @@ const frameIn = [{
       },
       component: _import('zzx/bkqd/index')
     },
+    {
+      path: 'bkxz',
+      name: 'bkxz',
+      meta: {
+        auth: true
+      },
+      component: _import('zzx/bkxz/index')
+    },
   ]
 }]
 
