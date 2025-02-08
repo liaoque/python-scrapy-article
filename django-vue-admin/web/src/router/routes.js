@@ -100,7 +100,23 @@ const frameIn = [{
         auth: true
       },
       component: _import('wb/charts/index')
-    }
+    },
+    {
+      path: 'bang_dan',
+      name: 'bang_dan',
+      meta: {
+        auth: true
+      },
+      component: _import('zzx/bd/index')
+    },
+    {
+      path: 'dfcf_rq',
+      name: 'dfcf_rq',
+      meta: {
+        auth: true
+      },
+      component: _import('zzx/dfcf/rq/index')
+    },
   ]
 }]
 
