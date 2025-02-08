@@ -117,6 +117,14 @@ const frameIn = [{
       },
       component: _import('zzx/dfcf/rq/index')
     },
+    {
+      path: 'bkqd',
+      name: 'bkqd',
+      meta: {
+        auth: true
+      },
+      component: _import('zzx/bkqd/index')
+    },
   ]
 }]
 
