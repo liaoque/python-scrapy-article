@@ -32,12 +32,62 @@ class BangDanView(View):
     def get(self, request, *args, **kwargs):
         name = request.GET.get('name')
         if name == 'ths':
-           data = ths.hotStockList()
+            data = ths.hotStockList()
+            data = data["data"]["stock_list"]
+            data = [{
+                'code': item["code"],
+                'name': item["name"],
+                'fudu': item["rise_and_fall"],
+                'now_price': 0,
+                'date': "",
+                'bk': ",".join([ str(item)for item in item["tag"]["concept_tag"]]),
+                'reason': item.get("analyse", ""),
+                'riseDay': item["tag"].get("popularity_tag", ""),
+                'ranking': item["order"],
+                'totalCount': item["rate"],
+                'change_rank': 0,
+            } for item in data]
+
         elif name == 'dfcf':
             data =  dfcf.hotStockList()
+            dataInfo = dfcf.getExtInfoList([item['code'] for item in data])
+            data2 = dfcf.hotStockList(page=1)
+            dataInfo2 = dfcf.getExtInfoList([item['code'] for item in data2])
+            data = data + data2
+            dataInfo = dataInfo["data"]["diff"] + dataInfo2["data"]["diff"]
+            dataInfo = [(item["f12"], item) for item in dataInfo]
+            dataInfo = dict(dataInfo)
+            data = [ {
+                'code': item["code"],
+                'change_rank': item["changeNumber"],
+                'name': dataInfo[item["code"]]["f14"],
+                'fudu': dataInfo[item["code"]]["f3"],
+                'now_price': dataInfo[item["code"]]["f2"],
+                'date': item['exactTime'],
+                'bk': "",
+                'reason': "",
+                'riseDay': "",
+                'ranking': item["rankNumber"],
+                'totalCount': "",
+            } for item in data]
+
+
+
         elif name == 'tdx':
             data = tdx.hotStockList()
-
+            data = [ {
+                'code': item[1],
+                'name': item[2],
+                'fudu': item[3],
+                'now_price': item[4],
+                'date': item[5],
+                'bk': ",".join([ str(item["name"])for item in json.loads(item[6])]),
+                'reason': item[7],
+                'riseDay': item[8],
+                'ranking': item[10],
+                'totalCount': item[11],
+                'change_rank': 0,
+            } for item in data[3:]]
 
 
         # current_time = request.GET.get('current_time')
@@ -46,7 +96,7 @@ class BangDanView(View):
         return JsonResponse({
             "code": 2000,
             "msg": "success",
-            "data": data
+            "data": data[:30]
         })
 
     def post(self, request, *args, **kwargs):
