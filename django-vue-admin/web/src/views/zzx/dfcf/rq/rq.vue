@@ -11,7 +11,7 @@
         <el-button type="primary" @click="initGetJJ">查询</el-button>
       </el-form-item>
     </el-form>
-    <div id="jj" :options="jj.chartOptions" style="height:300px"></div>
+    <div id="jj" :options="jj.chartOptions" style="height:400px"></div>
   </el-card>
 </template>
 
@@ -58,6 +58,8 @@ export default {
             nameLocation: 'middle'
           },
           yAxis: {
+            minInterval: 50,
+            maxInterval: 200,
             inverse: true
           },
           series: [{
