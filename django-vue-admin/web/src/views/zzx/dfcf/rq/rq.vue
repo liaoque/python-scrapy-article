@@ -58,7 +58,7 @@ export default {
             nameLocation: 'middle'
           },
           yAxis: {
-            minInterval: 50,
+            minInterval: 10,
             maxInterval: 200,
             inverse: true
           },
