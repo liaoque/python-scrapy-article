@@ -37,8 +37,22 @@ export default {
           ],
           title: { text: '历史趋势' },
           tooltip: {
-            trigger: 'axis'
+            trigger: 'axis',
+            position: function (pt) {
+              return [pt[0], '10%'];
+            }
           },
+          dataZoom: [
+            {
+              type: 'inside',
+              start: 80,
+              end: 100
+            },
+            {
+              start: 80,
+              end: 100
+            }
+          ],
           xAxis: {
             type: 'category',
             nameLocation: 'middle'
