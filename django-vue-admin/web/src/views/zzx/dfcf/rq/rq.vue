@@ -183,7 +183,7 @@ export default {
             yAxisIndex: 2,
             itemStyle: {
               color: function (params) {
-                return params.value >= 0 ? '#00da3c' : '#ec0000';
+                return params.value >= 0 ? '#ec0000' : '#00da3c'
               }
             }
           }
