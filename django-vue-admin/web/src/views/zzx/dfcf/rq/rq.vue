@@ -44,7 +44,7 @@ export default {
           const data2 = data.data.klines.map(item => {
             item = item.split(',')
             // [开盘价, 收盘价, 最低价, 最高价]
-            return [item[0], item[1], item[2], item[4], item[3]]
+            return [item[0], item[1], item[2], item[4], item[3], item[8]]
           }).filter(item => item[0] >= d)
 
           // this.jj.chartOptions2.dataset[0].source = [['price', 'date']].concat(data2)
@@ -56,7 +56,7 @@ export default {
     },
 
     getKOption (rawData, popularityData) {
-      const macdData =  this.$util.macd.calculateMACD(popularityData)
+      const macdData = this.$util.macd.calculateMACD(popularityData)
       console.log(macdData)
       return {
         tooltip: {
@@ -130,7 +130,7 @@ export default {
             yAxisIndex: 0,
             name: 'K 线图',
             type: 'candlestick',
-            data: rawData.map((item, index) => [item[1], item[2], item[3], item[4]]),
+            data: rawData.map((item, index) => [item[1], item[2], item[3], item[4], item[5]]),
             itemStyle: {
               color: '#ec0000',
               color0: '#00da3c',
@@ -156,7 +156,7 @@ export default {
           {
             name: 'DIFF',
             type: 'line',
-            data: macdData.DIFF,
+            data: macdData.DIF,
             xAxisIndex: 1,
             yAxisIndex: 2,
             itemStyle: {
