@@ -61,6 +61,24 @@ export default {
       return {
         tooltip: {
           trigger: 'axis',
+          formatter: function (params) {
+            console.log(params)
+            var result = params[0].name + '<br>' // 日期
+            params.forEach(function (item) {
+              if (item.seriesName === 'K 线图') {
+                var data = item.data
+                var open = data[1] // 开盘价
+                var close = data[2] // 收盘价
+                var changeRate = ((close - open) / open * 100).toFixed(2) + '%' // 涨跌幅
+                result +=
+                  '开盘价: ' + open + '<br>' +
+                  '收盘价: ' + close + '<br>' +
+                  '涨跌幅: ' + changeRate + '<br>'
+              }
+            })
+            return result
+          },
+
           axisPointer: {
             type: 'cross'
           }
