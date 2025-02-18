@@ -37,9 +37,9 @@ export default {
     async initGetJJ () {
       await api.GetList(this.jj.code).then((data) => {
         const d = data.data[0].date
-        const popularityData = data.data.map(item => item.rank)
+        let popularityData = data.data //
         api.GetGjList(this.jj.code).then((data) => {
-          console.log(data.data.name)
+          // console.log(data.data.name)
           this.jj.name = data.data.name
           const data2 = data.data.klines.map(item => {
             item = item.split(',')
@@ -47,8 +47,22 @@ export default {
             return [item[0], item[1], item[2], item[4], item[3], item[8]]
           }).filter(item => item[0] >= d)
 
-          // this.jj.chartOptions2.dataset[0].source = [['price', 'date']].concat(data2)
-          // console.log(data2)
+          const popularityDataMap = popularityData.reduce((acc, item) => {
+            acc[item.date] = item
+            return acc
+          }, {})
+
+          const startDate = new Date(d)
+          const endDate = new Date(popularityData[popularityData.length - 1].date)
+
+          // 根据开始和结束日期填充一个日期数组
+          const dateList = this.$util.fillDateList(startDate, endDate)
+
+          // 根据日期数组，补充 popularityDataMap 中缺的数据
+          popularityData = this.$util.fillDayData(dateList, popularityDataMap)
+
+          const dates = data2.map(item => item[0])
+          popularityData = popularityData.filter(item => dates.includes(item.date)).map(item => item.rank)
           const option = this.getKOption(data2, popularityData)
           this.myChart.setOption(option)
         })
@@ -57,7 +71,7 @@ export default {
 
     getKOption (rawData, popularityData) {
       const macdData = this.$util.macd.calculateMACD(popularityData)
-      console.log(macdData)
+      // console.log(macdData)
       return {
         tooltip: {
           trigger: 'axis',
@@ -74,7 +88,7 @@ export default {
                 var close = data[2] // 收盘价
                 var min = data[4] // 收盘价
                 var max = data[3] // 收盘价
-                var changeRate = data[5]+ '%' // 涨跌幅
+                var changeRate = data[5] + '%' // 涨跌幅
                 result +=
                   '开盘价: ' + open + '<br>' +
                   '收盘价: ' + close + '<br>' +

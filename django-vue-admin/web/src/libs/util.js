@@ -4,6 +4,7 @@ import log from './util.log'
 import dayjs from 'dayjs'
 import filterParams from './util.params'
 import macd from './util.macd'
+
 const util = {
   cookies,
   db,
@@ -196,5 +197,56 @@ util.formatBytes = function (bytes, decimals = 2) {
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
+
+util.fillDateList = function (startDate, endDate) {
+// 计算两个日期之间的毫秒数差值
+  const timeDifference = endDate - startDate
+  // 将毫秒数转换为天数
+  const dayDifference = timeDifference / (1000 * 60 * 60 * 24)
+
+  const dateList = []
+  for (let i = 0; i < dayDifference; i++) {
+    const currentDate = startDate.getTime() + i * 1000 * 60 * 60 * 24
+    // 创建一个新的 Date 对象
+    const date = new Date(currentDate)
+    // 获取年份、月份和日期
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0') // 月份从0开始，所以需要加1
+    const day = String(date.getDate()).padStart(2, '0')
+
+    // 拼接成所需的格式
+    dateList.push(`${year}-${month}-${day}`)
+  }
+
+  return dateList
+}
+
+util.fillDayData = function (dateList, popularityDataMap) {
+  return dateList.map((item, key) => {
+    if (item in popularityDataMap) {
+      return JSON.parse(JSON.stringify(popularityDataMap[item]))
+    }
+    if (key === 0) {
+      while (++key) {
+        if (dateList[key] in popularityDataMap) {
+          const d = JSON.parse(JSON.stringify(popularityDataMap[dateList[key]]))
+          d.date = item
+          return d
+        }
+      }
+    }
+
+    while (--key) {
+      if (dateList[key] in popularityDataMap) {
+        const d = JSON.parse(JSON.stringify(popularityDataMap[dateList[key]]))
+        d.date = item
+        return d
+      }
+    }
+  })
+}
+
+
+
 
 export default util
