@@ -62,17 +62,24 @@ export default {
         tooltip: {
           trigger: 'axis',
           formatter: function (params) {
-            console.log(params)
+            // console.log(params)
             var result = params[0].name + '<br>' // 日期
             params.forEach(function (item) {
+              if (item.seriesName === '人气') {
+                result += '人气: ' + item.data
+              }
               if (item.seriesName === 'K 线图') {
                 var data = item.data
                 var open = data[1] // 开盘价
                 var close = data[2] // 收盘价
-                var changeRate = ((close - open) / open * 100).toFixed(2) + '%' // 涨跌幅
+                var min = data[4] // 收盘价
+                var max = data[3] // 收盘价
+                var changeRate = data[5]+ '%' // 涨跌幅
                 result +=
                   '开盘价: ' + open + '<br>' +
                   '收盘价: ' + close + '<br>' +
+                  '最高价: ' + min + '<br>' +
+                  '最低价: ' + max + '<br>' +
                   '涨跌幅: ' + changeRate + '<br>'
               }
             })
