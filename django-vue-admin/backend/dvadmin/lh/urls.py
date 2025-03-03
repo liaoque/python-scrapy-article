@@ -13,10 +13,12 @@ from django.urls import path
 
 from dvadmin.lh.views.bangdan import BangDanView
 from dvadmin.lh.views.lsqs import LsqsView
+from dvadmin.lh.views.chanlun import ChanlunView
 
 urlpatterns = [
     path('bangdan', BangDanView.as_view()),
     path('lsqs', LsqsView.as_view()),
+    path('chanlun', ChanlunView.as_view()),
     # path('yuan_yin', YuanYinView.as_view()),
     # path('result', ResultView.as_view()),
     # path('gns', ZhuXianGnsView.as_view()),
