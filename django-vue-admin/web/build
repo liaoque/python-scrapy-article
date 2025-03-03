@@ -1,0 +1,19 @@
+由于 OpenSSL 3.0 的更严格默认设置，一些旧的加密算法（例如 Terser 可能内部使用的算法）被禁用了，
+从而导致了 error:0308010C:digital envelope routines::unsupported 的错误。
+
+
+设置环境变量
+在启动构建或开发服务器之前，可以设置环境变量 NODE_OPTIONS 为 --openssl-legacy-provider，以允许使用旧的加密算法。
+
+
+- Linux/macOS:
+export NODE_OPTIONS=--openssl-legacy-provider
+npm run build  # 或者你启动项目的命令
+
+- Windows (cmd):
+set NODE_OPTIONS=--openssl-legacy-provider
+npm run build
+
+- Windows (PowerShell):
+$env:NODE_OPTIONS="--openssl-legacy-provider"
+npm run build

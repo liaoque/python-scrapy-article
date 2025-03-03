@@ -9,9 +9,10 @@
 
       <el-form-item>
         <el-button type="primary" @click="initGetJJ">查询</el-button>
+        <el-tag v-show="jj.name" >{{ jj.name }}</el-tag>
       </el-form-item>
     </el-form>
-    <div id="jj" :options="jj.chartOptions" style="height:300px"></div>
+    <div id="jj" :options="jj.chartOptions" style="height:500px"></div>
   </el-card>
 </template>
 
@@ -27,115 +28,208 @@ export default {
       jj: {
         count: 120,
         macd: {},
-        code: '600839',
-        chartOptions: {
-          dataset: [
-            {
-              id: 'rank',
-              source: []
-            }
-          ],
-          title: { text: '历史趋势' },
-          tooltip: {
-            trigger: 'axis'
-          },
-          xAxis: {
-            type: 'category',
-            nameLocation: 'middle'
-          },
-          yAxis: {
-            inverse: true
-          },
-          series: [{
-            type: 'line',
-            datasetId: 'rank',
-            showSymbol: false,
-            encode: {
-              x: 'date',
-              y: 'rank',
-              itemName: 'date',
-              tooltip: ['rank']
-            }
-          }]
-          // legend: {
-          //   data: ['rank']
-          // },
-          //
-          // tooltip: {},
-          // xAxis: { type: 'category', data: [] },
-          // yAxis: [{
-          //   inverse: true,
-          //   // 第一个y轴（默认左侧）
-          //   axisLine: {
-          //     lineStyle: {
-          //       color: '#aaa',
-          //       width: 1
-          //     }
-          //   },
-          //   axisLabel: {
-          //     textStyle: {
-          //       color: '#333',
-          //       fontSize: 12
-          //     }
-          //   },
-          //   splitLine: {
-          //     lineStyle: {
-          //       color: '#ddd',
-          //       type: 'dotted',
-          //       width: 1
-          //     }
-          //   }
-          // }],
-          // series: []
-        }
+        name: '',
+        code: '600839'
       }
     }
   },
   methods: {
-    initGetJJ () {
-      api.GetList(this.jj.code).then((data) => {
-        // console.log(data)
-        this.jj.data = data.data
-        this.jj.chartOptions.dataset[0].source = [['rank', 'date']].concat(this.jj.data.map(item => [item.rank, item.date]))
-        // console.log(this.jj.chartOptions)
-        // this.jj.macd = this.$util.macd.calculateMACD(amount)
-        // this.jj.chartOptions.xAxis.data = this.jj.data.map(item => item.date)
-        // // console.log(this.jj.chartOptions.xAxis.data )
-        //
-        // // if (this.jj.count != -1) {
-        // //   this.jj.chartOptions.xAxis.data = this.jj.chartOptions.xAxis.data.slice(this.jj.data.length - this.jj.count)
-        // // }
-        // const lineSeries = this.getLineSeries('rank', rank)
-        // lineSeries.yAxisIndex = 0
-        // lineSeries.color = 'red'
-        // // lineSeries.showSymbol = false
-        // console.log(lineSeries)
-        // this.jj.data.map(item => {})
-        // this.jj.chartOptions.series = [lineSeries]
-        // this.jj.chartOptions.series = this.getMacdSeries().concat(lineSeries).concat(this.getBarSeries())
-        this.myChart.setOption(this.jj.chartOptions)
+    async initGetJJ () {
+      await api.GetList(this.jj.code).then((data) => {
+        const d = data.data[0].date
+        let popularityData = data.data //
+        api.GetGjList(this.jj.code).then((data) => {
+          // console.log(data.data.name)
+          this.jj.name = data.data.name
+          const data2 = data.data.klines.map(item => {
+            item = item.split(',')
+            // [开盘价, 收盘价, 最低价, 最高价]
+            return [item[0], item[1], item[2], item[4], item[3], item[8]]
+          }).filter(item => item[0] >= d)
+
+          const popularityDataMap = popularityData.reduce((acc, item) => {
+            acc[item.date] = item
+            return acc
+          }, {})
+
+          const startDate = new Date(d)
+          const endDate = new Date(popularityData[popularityData.length - 1].date)
+
+          // 根据开始和结束日期填充一个日期数组
+          const dateList = this.$util.fillDateList(startDate, endDate)
+
+          // 根据日期数组，补充 popularityDataMap 中缺的数据
+          popularityData = this.$util.fillDayData(dateList, popularityDataMap)
+
+          const dates = data2.map(item => item[0])
+          popularityData = popularityData.filter(item => dates.includes(item.date)).map(item => item.rank)
+          const option = this.getKOption(data2, popularityData)
+          this.myChart.setOption(option)
+        })
       })
     },
 
-    getLineSeries (name, data) {
-      const series = {
-        name: name,
-        type: 'line',
-        symbol: 'circle',
-        smooth: true,
-        showSymbol: true,
-        showAllSymbol: false,
-        data: []
-      }
-      for (let i = 0; i < this.jj.data.length; i++) {
-        series.data.push(data[i])
-      }
-      // if (this.jj.count != -1) {
-      //   series.data = series.data.slice(this.jj.data.length - this.jj.count)
-      // }
+    getKOption (rawData, popularityData) {
+      const macdData = this.$util.macd.calculateMACD(popularityData)
+      // console.log(macdData)
+      return {
+        tooltip: {
+          trigger: 'axis',
+          formatter: function (params) {
+            // console.log(params)
+            var result = params[0].name + '<br>' // 日期
+            params.forEach(function (item) {
+              if (item.seriesName === '人气') {
+                result += '人气: ' + item.data
+              }
+              if (item.seriesName === 'K 线图') {
+                var data = item.data
+                var open = data[1] // 开盘价
+                var close = data[2] // 收盘价
+                var min = data[4] // 收盘价
+                var max = data[3] // 收盘价
+                var changeRate = data[5] + '%' // 涨跌幅
+                result +=
+                  '开盘价: ' + open + '<br>' +
+                  '收盘价: ' + close + '<br>' +
+                  '最高价: ' + min + '<br>' +
+                  '最低价: ' + max + '<br>' +
+                  '涨跌幅: ' + changeRate + '<br>'
+              }
+            })
+            return result
+          },
 
-      return series
+          axisPointer: {
+            type: 'cross'
+          }
+        },
+        dataZoom: [
+          {
+            type: 'inside',
+            start: 80,
+            end: 100
+          },
+          {
+            start: 80,
+            end: 100
+          }
+        ],
+        grid: [
+          {
+            left: '10%',
+            right: '10%',
+            top: '10%',
+            height: '50%' // K 线图区域
+          },
+          {
+            left: '10%',
+            right: '10%',
+            top: '65%',
+            height: '20%' // MACD 图区域
+          }
+        ],
+
+        xAxis: [
+          {
+            type: 'category',
+            data: rawData.map((item, index) => item[0]),
+            boundaryGap: false,
+            gridIndex: 0 // 第一个 x 轴
+          },
+          {
+            type: 'category',
+            data: rawData.map((item, index) => item[0]),
+            boundaryGap: false,
+            gridIndex: 1 // 第2个 x 轴
+          }
+        ],
+        yAxis: [
+          {
+            scale: true,
+            name: '价格',
+            gridIndex: 0, // 第一个 y 轴
+            position: 'left'
+          },
+          {
+            scale: true,
+            name: '人气',
+            inverse: true,
+            gridIndex: 0, // 第2个 y 轴
+            position: 'right'
+          },
+          {
+            scale: true,
+            gridIndex: 1 // 第三个 y 轴（MACD 图）
+          }
+        ],
+        series: [
+          {
+            xAxisIndex: 0,
+            yAxisIndex: 0,
+            name: 'K 线图',
+            type: 'candlestick',
+            data: rawData.map((item, index) => [item[1], item[2], item[3], item[4], item[5]]),
+            itemStyle: {
+              color: '#ec0000',
+              color0: '#00da3c',
+              borderColor: '#8A0000',
+              borderColor0: '#008F28'
+            }
+          },
+          {
+            xAxisIndex: 0,
+            yAxisIndex: 1, // 使用第二个 y 轴
+            name: '人气',
+            type: 'line',
+            data: popularityData,
+            itemStyle: {
+              color: '#5470C6' // 折线颜色
+            },
+            lineStyle: {
+              width: 2
+            },
+            smooth: true // 是否平滑曲线
+          },
+          // MACD 折线图（DIFF）
+          {
+            name: 'DIFF',
+            type: 'line',
+            data: macdData.DIF,
+            xAxisIndex: 1,
+            yAxisIndex: 2,
+            itemStyle: {
+              color: '#FF7F50'
+            }
+          },
+          // MACD 折线图（DEA）
+          {
+            name: 'DEA',
+            type: 'line',
+            data: macdData.DEA,
+            xAxisIndex: 1,
+            yAxisIndex: 2,
+            itemStyle: {
+              color: '#00BFFF'
+            }
+          },
+          // MACD 柱状图
+          {
+            name: 'MACD',
+            type: 'bar',
+            data: macdData.MACD,
+            xAxisIndex: 1,
+            yAxisIndex: 2,
+            itemStyle: {
+              color: function (params) {
+                return params.value >= 0 ? '#ec0000' : '#00da3c'
+              }
+            }
+          }
+        ]
+      }
     }
+
   },
   mounted () {
     this.myChart = this.$echarts.init(document.getElementById('jj'))
