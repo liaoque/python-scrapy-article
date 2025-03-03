@@ -27,7 +27,7 @@ class ChanlunView(View):
     def get(self, request, *args, **kwargs):
         code = request.GET.get('code')
         data = gp.GetGjList(code)
-        data = [ item.slice(",") for item in data["data"]["klines"]]
+        data = [ item.split(",") for item in data["data"]["klines"]]
         df = pd.DataFrame({
             'date': [item[0] for item in data],
             'open': [item[1] for item in data],
