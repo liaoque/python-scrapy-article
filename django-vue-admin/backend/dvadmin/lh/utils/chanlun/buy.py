@@ -11,7 +11,7 @@ def detect_breakthrough_signal(kline_df, pivot, confirmation_count=3):
 
     # 最近K线的最后一个收盘价
     final_close = recent['close'].iloc[-1]
-    final_date = recent.index[-1].strftime('%Y-%m-%d')
+    final_date = recent.index[-1]
 
     # 看多突破
     if (recent['close'] > pivot['H_pivot']).all():
@@ -46,7 +46,7 @@ def detect_divergence_signal(bi_list):
         if (min(curr['start_value'], curr['end_value']) > min(prev['start_value'], prev['end_value']) and
             max(curr['start_value'], curr['end_value']) < max(prev['start_value'], prev['end_value'])):
             signals.append({
-                'time': curr['end_index'].strftime('%Y-%m-%d'),
+                'time': curr['end_index'],
                 'price': curr['end_value'],
                 'type': 'buy',
                 'reason': '上升背驰'
@@ -59,7 +59,7 @@ def detect_divergence_signal(bi_list):
         if (max(curr['start_value'], curr['end_value']) < max(prev['start_value'], prev['end_value']) and
             min(curr['start_value'], curr['end_value']) > min(prev['start_value'], prev['end_value'])):
             signals.append({
-                'time': curr['end_index'].strftime('%Y-%m-%d'),
+                'time': curr['end_index'],
                 'price': curr['end_value'],
                 'type': 'sell',
                 'reason': '下降背驰'
@@ -104,7 +104,7 @@ if __name__ == '__main__':
         'close': [101, 104, 106, 109, 111, 114, 116, 119, 121, 124]
     }
     kline_df = pd.DataFrame(kline_data).set_index('date')
-
+    # print(kline_df.index[-1])
     # 示例中枢
     pivots = [{
         'start_index': dates[1],
