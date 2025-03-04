@@ -1,138 +1,121 @@
 import pandas as pd
 
-
 def detect_breakthrough_signal(kline_df, pivot, confirmation_count=3):
     """
-    检测中枢突破信号
-
-    参数：
-      kline_df: pd.DataFrame，最新的K线数据，要求至少包含'close'列，按时间升序排列
-      pivot: dict，最后一个有效中枢信息，包含 'L_pivot'（中枢下界）和 'H_pivot'（中枢上界）
-      confirmation_count: int，用于确认突破的连续K线数量（默认3根）
-
-    返回：
-      dict，包含可能的突破信号：
-        'bullish_breakthrough': True 表示看多（买入）信号
-        'bearish_breakthrough': True 表示看空（卖出）信号
+    检测中枢突破信号，返回带价格和时间的信号数组
     """
-    signals = {}
+    signals = []
     recent = kline_df.tail(confirmation_count)
     if recent.empty:
         return signals
 
-    # 看多突破信号：最新确认K线的收盘价均高于中枢上界
-    if (recent['close'] > pivot['H_pivot']).all():
-        signals['bullish_breakthrough'] = True
+    # 最近K线的最后一个收盘价
+    final_close = recent['close'].iloc[-1]
+    final_date = recent.index[-1].strftime('%Y-%m-%d')
 
-    # 看空突破信号：最新确认K线的收盘价均低于中枢下界
+    # 看多突破
+    if (recent['close'] > pivot['H_pivot']).all():
+        signals.append({
+            'time': final_date,
+            'price': final_close,
+            'type': 'buy',
+            'reason': '突破中枢'
+        })
+
+    # 看空突破
     if (recent['close'] < pivot['L_pivot']).all():
-        signals['bearish_breakthrough'] = True
+        signals.append({
+            'time': final_date,
+            'price': final_close,
+            'type': 'sell',
+            'reason': '突破中枢'
+        })
 
     return signals
-
 
 def detect_divergence_signal(bi_list):
     """
-    检测背驰信号（Divergence Signal）
-
-    参数：
-      bi_list: list，包含构造好的“笔”，每个笔为字典，至少包含：
-               'start_value', 'end_value', 'direction'
-               其中价格区间统一定义为：[min(start_value, end_value), max(start_value, end_value)]
-
-    返回：
-      dict，包含可能的背驰信号：
-         'bullish_divergence': True 表示看多背驰（买入）信号
-         'bearish_divergence': True 表示看空背驰（卖出）信号
+    检测背驰信号，返回带价格和时间的信号数组
     """
-    signals = {}
+    signals = []
 
-    # 分离上升笔与下降笔
-    upward_pens = [pen for pen in bi_list if pen.get('direction') == 'up']
-    downward_pens = [pen for pen in bi_list if pen.get('direction') == 'down']
-
-    # 看多背驰：适用于下降趋势中出现的上升笔
-    # 要求当前上升笔低点抬高（L_curr > L_prev），但高点未能创新高（H_curr < H_prev）
+    # 上升背驰检测
+    upward_pens = [pen for pen in bi_list if pen['direction'] == 'up']
     if len(upward_pens) >= 2:
-        pen_prev = upward_pens[-2]
-        pen_curr = upward_pens[-1]
-        L_prev = min(pen_prev['start_value'], pen_prev['end_value'])
-        H_prev = max(pen_prev['start_value'], pen_prev['end_value'])
-        L_curr = min(pen_curr['start_value'], pen_curr['end_value'])
-        H_curr = max(pen_curr['start_value'], pen_curr['end_value'])
-        if (L_curr > L_prev) and (H_curr < H_prev):
-            signals['bullish_divergence'] = True
+        prev, curr = upward_pens[-2], upward_pens[-1]
+        if (min(curr['start_value'], curr['end_value']) > min(prev['start_value'], prev['end_value']) and
+            max(curr['start_value'], curr['end_value']) < max(prev['start_value'], prev['end_value'])):
+            signals.append({
+                'time': curr['end_index'].strftime('%Y-%m-%d'),
+                'price': curr['end_value'],
+                'type': 'buy',
+                'reason': '上升背驰'
+            })
 
-    # 看空背驰：适用于上升趋势中出现的下降笔
-    # 要求当前下降笔高点降低（H_curr < H_prev），但低点未创新低（L_curr > L_prev）
+    # 下降背驰检测
+    downward_pens = [pen for pen in bi_list if pen['direction'] == 'down']
     if len(downward_pens) >= 2:
-        pen_prev = downward_pens[-2]
-        pen_curr = downward_pens[-1]
-        L_prev = min(pen_prev['start_value'], pen_prev['end_value'])
-        H_prev = max(pen_prev['start_value'], pen_prev['end_value'])
-        L_curr = min(pen_curr['start_value'], pen_curr['end_value'])
-        H_curr = max(pen_curr['start_value'], pen_curr['end_value'])
-        if (H_curr < H_prev) and (L_curr > L_prev):
-            signals['bearish_divergence'] = True
+        prev, curr = downward_pens[-2], downward_pens[-1]
+        if (max(curr['start_value'], curr['end_value']) < max(prev['start_value'], prev['end_value']) and
+            min(curr['start_value'], curr['end_value']) > min(prev['start_value'], prev['end_value'])):
+            signals.append({
+                'time': curr['end_index'].strftime('%Y-%m-%d'),
+                'price': curr['end_value'],
+                'type': 'sell',
+                'reason': '下降背驰'
+            })
 
     return signals
-
 
 def generate_trading_signals(kline_df, pivots, bi_list, confirmation_count=3):
     """
-    根据中枢突破和背驰两个条件生成买卖点信号
+    生成所有买卖点信号（带价格和时间）
 
-    参数：
-      kline_df: pd.DataFrame，最新的K线数据
-      pivots: list，已识别的中枢列表（按照时间顺序排列）
-      bi_list: list，已构造的笔列表
-      confirmation_count: int，用于中枢突破信号确认的K线数量（默认3根）
-
-    返回：
-      dict，包含检测到的信号。可能的信号有：
-         'bullish_breakthrough', 'bearish_breakthrough',
-         'bullish_divergence', 'bearish_divergence'
+    返回:
+        signals: list，格式：
+        [
+            {'time': '2022-01-08', 'price': 115, 'type': 'buy', 'reason': '突破中枢'},
+            {'time': '2022-01-09', 'price': 112, 'type': 'sell', 'reason': '下降背驰'}
+        ]
     """
-    signals = {}
+    all_signals = []
 
-    # 1. 中枢突破信号：以最后一个有效中枢作为参考
     if pivots:
         last_pivot = pivots[-1]
-        pivot_signals = detect_breakthrough_signal(kline_df, last_pivot, confirmation_count=confirmation_count)
-        signals.update(pivot_signals)
+        breakthrough_signals = detect_breakthrough_signal(kline_df, last_pivot, confirmation_count)
+        all_signals.extend(breakthrough_signals)
 
-    # 2. 背驰信号
     divergence_signals = detect_divergence_signal(bi_list)
-    signals.update(divergence_signals)
+    all_signals.extend(divergence_signals)
 
-    return signals
-
+    return all_signals
 
 # ----------------------------
-# 示例：利用模拟数据演示信号检测
+# 示例数据和演示（可以直接运行）
+
 if __name__ == '__main__':
-    # 模拟部分K线数据（实际数据应为从行情接口获取的A股K线数据）
+    # 示例K线数据
     dates = pd.date_range(start='2022-01-01', periods=10, freq='D')
-    data = {
+    kline_data = {
         'date': dates,
         'open': [100, 102, 105, 107, 110, 112, 115, 117, 120, 122],
         'high': [102, 105, 107, 110, 112, 115, 117, 120, 122, 125],
         'low': [98, 100, 103, 105, 108, 110, 113, 115, 118, 120],
         'close': [101, 104, 106, 109, 111, 114, 116, 119, 121, 124]
     }
-    kline_df = pd.DataFrame(data).set_index('date')
+    kline_df = pd.DataFrame(kline_data).set_index('date')
 
-    # 假设已识别的中枢（示例数据）
+    # 示例中枢
     pivots = [{
         'start_index': dates[1],
         'end_index': dates[5],
-        'L_pivot': 105,  # 假设中枢下界
-        'H_pivot': 115,  # 假设中枢上界
+        'L_pivot': 105,
+        'H_pivot': 115,
         'strokes': None,
         'stroke_count': 3
     }]
 
-    # 假设已构造的笔（bi）数据，示例中包含几段上升和下降笔
+    # 示例笔
     bi_list = [
         {'start_index': dates[0], 'end_index': dates[1], 'start_value': 100, 'end_value': 104, 'direction': 'up'},
         {'start_index': dates[1], 'end_index': dates[2], 'start_value': 104, 'end_value': 106, 'direction': 'up'},
@@ -142,7 +125,9 @@ if __name__ == '__main__':
         {'start_index': dates[5], 'end_index': dates[6], 'start_value': 111, 'end_value': 110, 'direction': 'down'},
     ]
 
-    # 检测信号
-    signals = generate_trading_signals(kline_df, pivots, bi_list, confirmation_count=3)
-    print("检测到的交易信号：")
-    print(signals)
+    # 生成信号
+    signals = generate_trading_signals(kline_df, pivots, bi_list)
+
+    print("\n--- 生成的买卖点信号 ---")
+    for s in signals:
+        print(s)
