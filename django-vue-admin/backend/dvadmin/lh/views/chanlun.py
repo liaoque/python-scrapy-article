@@ -27,13 +27,13 @@ class ChanlunView(View):
     def get(self, request, *args, **kwargs):
         code = request.GET.get('code')
         data = gp.GetGjList(code)
-        data = [ item.slice(",") for item in data["data"]["klines"]]
+        data = [ item.split(",") for item in data["data"]["klines"]]
         df = pd.DataFrame({
             'date': [item[0] for item in data],
-            'open': [item[1] for item in data],
-            'high': [item[3] for item in data],
-            'low': [item[4] for item in data],
-            'close': [item[2] for item in data],
+            'open': [float(item[1]) for item in data],
+            'high': [float(item[3])  for item in data],
+            'low': [float(item[4])  for item in data],
+            'close': [float(item[2])  for item in data],
         })
         df.set_index('date', inplace=True)
         bi_list = bi.bi(df)
