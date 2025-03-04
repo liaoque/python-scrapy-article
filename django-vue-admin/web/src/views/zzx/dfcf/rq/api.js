@@ -1,6 +1,6 @@
 import { request } from '@/api/service'
 
-export  function GetList (code) {
+export function GetList (code) {
   return request({
     url: '/api/lh/lsqs',
     method: 'get',
@@ -8,7 +8,7 @@ export  function GetList (code) {
   })
 }
 
-export  function GetGjList (code) {
+export function GetGjList (code) {
   let prefix = '0.'
   const code3 = code.substr(0,3)
   if (code3 === '688'){
@@ -22,8 +22,6 @@ export  function GetGjList (code) {
   } else if (code3.substr(0, 2) === '60'){
     prefix = '1.'
   }
-
-
 
   return request({
     url: 'https://push2his.eastmoney.com/api/qt/stock/kline/get',
@@ -79,5 +77,13 @@ export function GetYuanYin (today, fd, yd) {
     url: '/api/wb/yuan_yin?current_time=' + today + '&fd=' + fd + '&yd=' + yd,
     method: 'get',
     data: { current_time: today }
+  })
+}
+
+export function GetChanLun (code) {
+  return request({
+    url: 'http://192.168.112.57:30080/api/lh/chanlun',
+    method: 'get',
+    params: { code: code }
   })
 }

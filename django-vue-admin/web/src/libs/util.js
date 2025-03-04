@@ -205,7 +205,7 @@ util.fillDateList = function (startDate, endDate) {
   const dayDifference = timeDifference / (1000 * 60 * 60 * 24)
 
   const dateList = []
-  for (let i = 0; i < dayDifference; i++) {
+  for (let i = 0; i <= dayDifference; i++) {
     const currentDate = startDate.getTime() + i * 1000 * 60 * 60 * 24
     // 创建一个新的 Date 对象
     const date = new Date(currentDate)

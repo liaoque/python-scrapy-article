@@ -1,72 +1,43 @@
 <template>
-  <el-card
-    class="card-view"
-  >
-    <el-form :inline="true" :model="jj" class="demo-form-inline">
-      <el-form-item label="股票代码">
-        <el-input v-model="jj.code"></el-input>
-      </el-form-item>
-
-      <el-form-item>
-        <el-button type="primary" @click="initGetJJ">查询</el-button>
-        <el-tag v-show="jj.name" >{{ jj.name }}</el-tag>
-      </el-form-item>
-    </el-form>
-    <div id="jj" :options="jj.chartOptions" style="height:500px"></div>
-  </el-card>
+  <div id="rq" style="height:500px"></div>
 </template>
 
 <script>
-import * as api from './api'
 
 export default {
+  name: 'rq',
   props: [
-    'tableData'
   ],
   data () {
     return {
-      jj: {
-        count: 120,
-        macd: {},
-        name: '',
-        code: '600839'
-      }
+      // jj: {
+      //   count: 120,
+      //   macd: {},
+      //   name: '',
+      //   code: '600839'
+      // }
     }
   },
   methods: {
-    async initGetJJ () {
-      await api.GetList(this.jj.code).then((data) => {
-        const d = data.data[0].date
-        let popularityData = data.data //
-        api.GetGjList(this.jj.code).then((data) => {
-          // console.log(data.data.name)
-          this.jj.name = data.data.name
-          const data2 = data.data.klines.map(item => {
-            item = item.split(',')
-            // [开盘价, 收盘价, 最低价, 最高价]
-            return [item[0], item[1], item[2], item[4], item[3], item[8]]
-          }).filter(item => item[0] >= d)
+    render (data2, d, popularityData) {
+      const popularityDataMap = popularityData.reduce((acc, item) => {
+        acc[item.date] = item
+        return acc
+      }, {})
 
-          const popularityDataMap = popularityData.reduce((acc, item) => {
-            acc[item.date] = item
-            return acc
-          }, {})
+      const startDate = new Date(d)
+      const endDate = new Date(popularityData[popularityData.length - 1].date)
+      console.log(endDate)
+      // 根据开始和结束日期填充一个日期数组
+      const dateList = this.$util.fillDateList(startDate, endDate)
 
-          const startDate = new Date(d)
-          const endDate = new Date(popularityData[popularityData.length - 1].date)
+      // 根据日期数组，补充 popularityDataMap 中缺的数据
+      popularityData = this.$util.fillDayData(dateList, popularityDataMap)
 
-          // 根据开始和结束日期填充一个日期数组
-          const dateList = this.$util.fillDateList(startDate, endDate)
-
-          // 根据日期数组，补充 popularityDataMap 中缺的数据
-          popularityData = this.$util.fillDayData(dateList, popularityDataMap)
-
-          const dates = data2.map(item => item[0])
-          popularityData = popularityData.filter(item => dates.includes(item.date)).map(item => item.rank)
-          const option = this.getKOption(data2, popularityData)
-          this.myChart.setOption(option)
-        })
-      })
+      const dates = data2.map(item => item[0])
+      popularityData = popularityData.filter(item => dates.includes(item.date)).map(item => item.rank)
+      const option = this.getKOption(data2, popularityData)
+      this.myChart.setOption(option)
     },
 
     getKOption (rawData, popularityData) {
@@ -232,7 +203,7 @@ export default {
 
   },
   mounted () {
-    this.myChart = this.$echarts.init(document.getElementById('jj'))
+    this.myChart = this.$echarts.init(document.getElementById('rq'))
   }
 }
 </script>

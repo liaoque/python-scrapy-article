@@ -5,7 +5,7 @@
     </template>
     <d2-container type="card">
       <el-row>
-        <rq></rq>
+        <gp></gp>
       </el-row>
       <el-row>
 <!--        <dapan></dapan>-->
@@ -26,7 +26,7 @@ export default {
     }
   },
   components: {
-    rq: () => import('./rq.vue'), // 这里填写实际的组件路径
+    gp: () => import('./gp.vue'), // 这里填写实际的组件路径
     // dapan: () => import('./dapan.vue'), // 这里填写实际的组件路径
   },
   methods: {
