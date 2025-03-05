@@ -31,6 +31,13 @@ def detect_local_extrema(series, window=3):
         # 判断局部低点：当前点小于前后所有点
         elif current < prev.min() and current < nxt.min():
             extrema.append({'index': series.index[i], 'type': 'low', 'value': current})
+
+    current = series.iloc[-1]
+    if current > extrema[-1]['value']:
+        extrema.append({'index': series.index[-1], 'type': 'high', 'value': current})
+    if current < extrema[-1]['value']:
+        extrema.append({'index': series.index[-1], 'type': 'low', 'value': current})
+
     return extrema
 
 
