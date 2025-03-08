@@ -12,7 +12,7 @@ from dvadmin.lh.utils.baostock import gp as baostockgp
 import pandas as pd
 import numpy as np
 from django.views import View
-
+from datetime import datetime
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -42,15 +42,17 @@ class ChanlunView(View):
 
         data = baostockgp.GetGjList(code, data[0][0], data[-1][0], 30)
         df = pd.DataFrame({
-            'date': [item[1] for item in data],
+            'date': [ datetime.strptime(item[1],  '%Y%m%d%H%M%S%f').strftime('%Y-%m-%d %H:%M:%S') for item in data],
             'open': [float(item[3]) for item in data],
             'high': [float(item[4]) for item in data],
             'low': [float(item[5]) for item in data],
             'close': [float(item[6]) for item in data],
         })
+        df.set_index('date', inplace=True)
         bi_list30 = bi.bi(df)
 
         pivots = zhongshu.construct_zhongshu(bi_list30, min_strokes=3)
+        pivots = zhongshu.convert_30m_pivot_to_daily(pivots)
         signals = buy.generate_trading_signals(df, pivots, bi_list30, confirmation_count=3)
 
         return JsonResponse({

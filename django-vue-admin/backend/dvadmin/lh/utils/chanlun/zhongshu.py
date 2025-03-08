@@ -83,6 +83,19 @@ def construct_zhongshu(bi_list, min_strokes=3):
         i = j
     return pivots
 
+def convert_30m_pivot_to_daily(zhongshu_30m):
+    daily_pivots = []
+    for zs in zhongshu_30m:
+        start_date = zs['start_index'][:10]
+        end_date = zs['end_index'][:10]
+        daily_pivots.append({
+            'start_index': start_date,
+            'end_index': end_date,
+            'L_pivot': round(zs['L_pivot'], 3),
+            'H_pivot': round(zs['H_pivot'], 3),
+        })
+    return daily_pivots
+
 
 # ----------------------------
 # 示例：利用前面构造的“笔”数据进行中枢识别
