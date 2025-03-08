@@ -54,6 +54,7 @@ class ChanlunView(View):
         pivots = zhongshu.construct_zhongshu(bi_list30, min_strokes=3)
         signals = buy.generate_trading_signals(df, pivots, bi_list30, confirmation_count=3)
         pivots = zhongshu.convert_30m_pivot_to_daily(pivots)
+        signals = buy.convert_30m_signal_to_daily(signals)
         return JsonResponse({
             "code": 2000,
             "msg": "success",

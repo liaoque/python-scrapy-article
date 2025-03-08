@@ -90,6 +90,18 @@ def generate_trading_signals(kline_df, pivots, bi_list, confirmation_count=3):
 
     return all_signals
 
+def convert_30m_signal_to_daily(signal):
+    daily_pivots = []
+    for zs in signal:
+        start_date = zs['time'][:10]
+        daily_pivots.append({
+            'time': start_date,
+            'type': zs['type'],
+            'reason': zs['reason'],
+            'price': round(zs['price'], 3),
+        })
+    return daily_pivots
+
 # ----------------------------
 # 示例数据和演示（可以直接运行）
 
