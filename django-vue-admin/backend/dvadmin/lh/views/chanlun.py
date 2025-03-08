@@ -42,11 +42,11 @@ class ChanlunView(View):
 
         data = baostockgp.GetGjList(code, data[0][0], data[-1][0], 30)
         df = pd.DataFrame({
-            'date': [item['time'] for item in data],
-            'open': [float(item['open']) for item in data],
-            'high': [float(item['high']) for item in data],
-            'low': [float(item['low']) for item in data],
-            'close': [float(item['close']) for item in data],
+            'date': [item['0'] for item in data],
+            'open': [float(item['3']) for item in data],
+            'high': [float(item['4']) for item in data],
+            'low': [float(item['5']) for item in data],
+            'close': [float(item['6']) for item in data],
         })
         bi_list30 = bi.bi(df)
 
