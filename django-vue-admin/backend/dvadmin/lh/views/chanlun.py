@@ -8,9 +8,11 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from dvadmin.lh.utils.dfcf import gp as gp
 from dvadmin.lh.utils.chanlun import bi, buy, zhongshu
+from dvadmin.lh.baostock import gp as baostockgp
 import pandas as pd
 import numpy as np
 from django.views import View
+
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -37,8 +39,19 @@ class ChanlunView(View):
         })
         df.set_index('date', inplace=True)
         bi_list = bi.bi(df)
-        pivots = zhongshu.construct_zhongshu(bi_list, min_strokes=3)
-        signals = buy.generate_trading_signals(df, pivots, bi_list, confirmation_count=3)
+
+        data = baostockgp.GetGjList(code, data[0][0], data[-1][0], 30)
+        df = pd.DataFrame({
+            'date': [item['time'] for item in data],
+            'open': [float(item['open']) for item in data],
+            'high': [float(item['high']) for item in data],
+            'low': [float(item['low']) for item in data],
+            'close': [float(item['close']) for item in data],
+        })
+        bi_list30 = bi.bi(df)
+
+        pivots = zhongshu.construct_zhongshu(bi_list30, min_strokes=3)
+        signals = buy.generate_trading_signals(df, pivots, bi_list30, confirmation_count=3)
 
         return JsonResponse({
             "code": 2000,
