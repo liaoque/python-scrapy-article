@@ -8,7 +8,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from dvadmin.lh.utils.dfcf import gp as gp
 from dvadmin.lh.utils.chanlun import bi, buy, zhongshu
-from dvadmin.lh.baostock import gp as baostockgp
+from dvadmin.lh.utils.baostock import gp as baostockgp
 import pandas as pd
 import numpy as np
 from django.views import View
