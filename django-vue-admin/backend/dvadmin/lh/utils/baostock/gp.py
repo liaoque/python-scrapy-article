@@ -14,6 +14,7 @@ def GetGjList (code, start, end, frequency) :
     elif (code3[0:2] == '60'):
         prefix = 'sh.'
     lg = bs.login()
+    frequency = str(frequency)
     rs = bs.query_history_k_data_plus(prefix +code,
                                       "date,time,code,open,high,low,close,volume,amount,adjustflag",
                                       start_date=start, end_date=end,
