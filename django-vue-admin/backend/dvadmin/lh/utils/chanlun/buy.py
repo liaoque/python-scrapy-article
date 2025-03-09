@@ -1,94 +1,96 @@
 import pandas as pd
+import numpy as np
+import talib
 
-def detect_breakthrough_signal(kline_df, pivot, confirmation_count=3):
-    """
-    检测中枢突破信号，返回带价格和时间的信号数组
-    """
+def detect_breakthrough_signal(kline_df, pivot, confirmation_count=3, min_breakthrough_ratio=0.005):
     signals = []
     recent = kline_df.tail(confirmation_count)
     if recent.empty:
         return signals
 
-    # 最近K线的最后一个收盘价
     final_close = recent['close'].iloc[-1]
     final_date = recent.index[-1]
 
-    # 看多突破
-    if (recent['close'] > pivot['H_pivot']).all():
+    # 看多突破 (增加突破幅度要求)
+    if (recent['close'] > pivot['H_pivot']).all() and \
+       (final_close - pivot['H_pivot']) / pivot['H_pivot'] >= min_breakthrough_ratio:
         signals.append({
             'time': final_date,
             'price': final_close,
             'type': 'buy',
-            'reason': '突破中枢'
+            'reason': '突破中枢(增强版)'
         })
 
-    # 看空突破
-    if (recent['close'] < pivot['L_pivot']).all():
+    # 看空突破 (增加突破幅度要求)
+    if (recent['close'] < pivot['L_pivot']).all() and \
+       (pivot['L_pivot'] - final_close) / pivot['L_pivot'] >= min_breakthrough_ratio:
         signals.append({
             'time': final_date,
             'price': final_close,
-            'type': 'sell',
-            'reason': '突破中枢'
+            'reason': '突破中枢(增强版)'
         })
 
     return signals
 
-def detect_divergence_signal(bi_list):
-    """
-    检测背驰信号，返回带价格和时间的信号数组
-    """
+
+def detect_divergence_signal(bi_list, kline_df):
     signals = []
 
-    # 上升背驰检测
+    # 计算MACD（TA-Lib示例）
+    kline_df['macd'], kline_df['macd_signal'], kline_df['macd_hist'] = talib.MACD(kline_df['close'])
+
+    # 上升背驰（加入MACD确认）
     upward_pens = [pen for pen in bi_list if pen['direction'] == 'up']
     if len(upward_pens) >= 2:
         prev, curr = upward_pens[-2], upward_pens[-1]
-        if (min(curr['start_value'], curr['end_value']) > min(prev['start_value'], prev['end_value']) and
-            max(curr['start_value'], curr['end_value']) < max(prev['start_value'], prev['end_value'])):
-            signals.append({
-                'time': curr['end_index'],
-                'price': curr['end_value'],
-                'type': 'buy',
-                'reason': '上升背驰'
-            })
+        L_prev, H_prev = min(prev['start_value'], prev['end_value']), max(prev['start_value'], prev['end_value'])
+        L_curr, H_curr = min(curr['start_value'], curr['end_value']), max(curr['start_value'], curr['end_value'])
 
-    # 下降背驰检测
+        # 背驰条件
+        if L_curr > L_prev and H_curr < H_prev:
+            # MACD确认（动能减弱）
+            if kline_df.loc[curr['end_index'], 'macd_hist'] < kline_df.loc[prev['end_index'], 'macd_hist']:
+                signals.append({
+                    'time': curr['end_index'],
+                    'price': curr['end_value'],
+                    'type': 'buy',
+                    'reason': '上升背驰(MACD确认)'
+                })
+
+    # 下降背驰（MACD辅助）
     downward_pens = [pen for pen in bi_list if pen['direction'] == 'down']
     if len(downward_pens) >= 2:
         prev, curr = downward_pens[-2], downward_pens[-1]
-        if (max(curr['start_value'], curr['end_value']) < max(prev['start_value'], prev['end_value']) and
-            min(curr['start_value'], curr['end_value']) > min(prev['start_value'], prev['end_value'])):
-            signals.append({
-                'time': curr['end_index'],
-                'price': curr['end_value'],
-                'type': 'sell',
-                'reason': '下降背驰'
-            })
+        L_prev, H_prev = min(prev['start_value'], prev['end_value']), max(prev['start_value'], prev['end_value'])
+        L_curr, H_curr = min(curr['start_value'], curr['end_value']), max(curr['start_value'], curr['end_value'])
+
+        if H_curr < H_prev and L_curr > L_prev:
+            # MACD确认（动能减弱）
+            if kline_df.loc[curr['end_index'], 'macd_hist'] > kline_df.loc[prev['end_index'], 'macd_hist']:
+                signals.append({
+                    'time': curr['end_index'],
+                    'price': curr['end_value'],
+                    'type': 'sell',
+                    'reason': '下降背驰(MACD确认)'
+                })
 
     return signals
 
-def generate_trading_signals(kline_df, pivots, bi_list, confirmation_count=3):
-    """
-    生成所有买卖点信号（带价格和时间）
 
-    返回:
-        signals: list，格式：
-        [
-            {'time': '2022-01-08', 'price': 115, 'type': 'buy', 'reason': '突破中枢'},
-            {'time': '2022-01-09', 'price': 112, 'type': 'sell', 'reason': '下降背驰'}
-        ]
-    """
+def generate_trading_signals(kline_df, pivots, bi_list, confirmation_count=3, min_breakthrough_ratio=0.005):
     all_signals = []
 
     if pivots:
         last_pivot = pivots[-1]
-        breakthrough_signals = detect_breakthrough_signal(kline_df, last_pivot, confirmation_count)
+        breakthrough_signals = detect_breakthrough_signal(
+            kline_df, last_pivot, confirmation_count, min_breakthrough_ratio)
         all_signals.extend(breakthrough_signals)
 
-    divergence_signals = detect_divergence_signal(bi_list)
+    divergence_signals = detect_divergence_signal(bi_list, kline_df)
     all_signals.extend(divergence_signals)
 
     return all_signals
+
 
 def convert_30m_signal_to_daily(signal):
     daily_pivots = []
