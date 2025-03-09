@@ -80,16 +80,25 @@ def detect_divergence_signal(bi_list, kline_df):
 def generate_trading_signals(kline_df, pivots, bi_list, confirmation_count=3, min_breakthrough_ratio=0.005):
     all_signals = []
 
-    if pivots:
-        last_pivot = pivots[-1]
+    # 遍历所有历史中枢，生成突破信号
+    for pivot in pivots:
         breakthrough_signals = detect_breakthrough_signal(
-            kline_df, last_pivot, confirmation_count, min_breakthrough_ratio)
+            kline_df.loc[pivot['end_index']:],  # 从中枢结束日开始往后检测
+            pivot,
+            confirmation_count,
+            min_breakthrough_ratio
+        )
         all_signals.extend(breakthrough_signals)
 
+    # 检测所有历史的背驰信号
     divergence_signals = detect_divergence_signal(bi_list, kline_df)
     all_signals.extend(divergence_signals)
 
+    # 按信号时间排序（方便查看历史顺序）
+    all_signals.sort(key=lambda x: x['time'])
+
     return all_signals
+
 
 
 
