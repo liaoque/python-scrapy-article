@@ -27,6 +27,7 @@ def detect_breakthrough_signal(kline_df, pivot, confirmation_count=3, min_breakt
         signals.append({
             'time': final_date,
             'price': final_close,
+            'type': 'sell',
             'reason': '突破中枢(增强版)'
         })
 
@@ -76,7 +77,6 @@ def detect_divergence_signal(bi_list, kline_df):
 
     return signals
 
-
 def generate_trading_signals(kline_df, pivots, bi_list, confirmation_count=3, min_breakthrough_ratio=0.005):
     all_signals = []
 
@@ -90,6 +90,7 @@ def generate_trading_signals(kline_df, pivots, bi_list, confirmation_count=3, mi
     all_signals.extend(divergence_signals)
 
     return all_signals
+
 
 
 def convert_30m_signal_to_daily(signal):
