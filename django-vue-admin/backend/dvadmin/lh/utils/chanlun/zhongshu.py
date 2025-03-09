@@ -1,3 +1,54 @@
+
+import numpy as np
+
+def construct_zhongshu_with_tolerance(bi_list, kline_df, min_strokes=3, tolerance_ratio=0.02):
+    pivots = []
+    n = len(bi_list)
+    i = 0
+    while i < n - 1:
+        candidate_strokes = [bi_list[i], bi_list[i+1]]
+        candidate_L = max(min(bi_list[i]['start_value'], bi_list[i]['end_value']),
+                          min(bi_list[i+1]['start_value'], bi_list[i+1]['end_value']))
+        candidate_H = min(max(bi_list[i]['start_value'], bi_list[i]['end_value']),
+                          max(bi_list[i+1]['start_value'], bi_list[i+1]['end_value']))
+
+        if candidate_L > candidate_H:
+            i += 1
+            continue
+
+        j = i + 2
+        while j < n:
+            bi_j = bi_list[j]
+            L_j = min(bi_j['start_value'], bi_j['end_value'])
+            H_j = max(bi_j['start_value'], bi_j['end_value'])
+
+            new_candidate_L = max(candidate_L, L_j)
+            new_candidate_H = min(candidate_H, H_j)
+
+            if new_candidate_L <= new_candidate_H:
+                candidate_L, candidate_H = new_candidate_L, new_candidate_H
+                candidate_strokes.append(bi_j)
+                j += 1
+            else:
+                break
+
+        if len(candidate_strokes) >= min_strokes:
+            # 动态扩展容差
+            atr = (kline_df['high'] - kline_df['low']).mean()
+            candidate_L -= atr * tolerance_ratio
+            candidate_H += atr * tolerance_ratio
+
+            pivot = {
+                'start_index': candidate_strokes[0]['start_index'],
+                'end_index': candidate_strokes[-1]['end_index'],
+                'L_pivot': round(candidate_L, 2),
+                'H_pivot': round(candidate_H, 2),
+                'stroke_count': len(candidate_strokes)
+            }
+            pivots.append(pivot)
+        i = j
+    return pivots
+
 def construct_zhongshu(bi_list, min_strokes=3):
     """
     根据连续的笔构造中枢。
