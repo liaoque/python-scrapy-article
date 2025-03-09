@@ -4,34 +4,46 @@ import talib
 
 def detect_breakthrough_signal(kline_df, pivot, confirmation_count=3, min_breakthrough_ratio=0.005):
     signals = []
-    recent = kline_df.tail(confirmation_count)
-    if recent.empty:
-        return signals
 
-    final_close = recent['close'].iloc[-1]
-    final_date = recent.index[-1]
+    try:
+        pivot_end_pos = kline_df.index.get_loc(pivot['end_index']) + 1
+    except KeyError:
+        # 如果pivot end不在K线索引中，跳过
+        return None
 
-    # 看多突破 (增加突破幅度要求)
-    if (recent['close'] > pivot['H_pivot']).all() and \
-       (final_close - pivot['H_pivot']) / pivot['H_pivot'] >= min_breakthrough_ratio:
-        signals.append({
-            'time': final_date,
-            'price': final_close,
-            'type': 'buy',
-            'reason': '突破中枢(增强版)'
-        })
+    # 从pivot结束后的下一个K线开始检测
+    for i in range(pivot_end_pos, len(kline_df) - confirmation_count + 1):
+        recent = kline_df.iloc[i:i + confirmation_count]
+        if len(recent) < confirmation_count:
+            break
 
-    # 看空突破 (增加突破幅度要求)
-    if (recent['close'] < pivot['L_pivot']).all() and \
-       (pivot['L_pivot'] - final_close) / pivot['L_pivot'] >= min_breakthrough_ratio:
-        signals.append({
-            'time': final_date,
-            'price': final_close,
-            'type': 'sell',
-            'reason': '突破中枢(增强版)'
-        })
+        final_close = recent['close'].iloc[-1]
+        final_date = recent.index[-1]
+
+        # 看多突破
+        if (recent['close'] > pivot['H_pivot']).all() and \
+           (final_close - pivot['H_pivot']) / pivot['H_pivot'] >= min_breakthrough_ratio:
+            signals.append({
+                'time': final_date,
+                'price': final_close,
+                'type': 'buy',
+                'reason': '突破中枢(向上)'
+            })
+            break  # 确认突破后结束本中枢检测
+
+        # 看空突破
+        if (recent['close'] < pivot['L_pivot']).all() and \
+           (pivot['L_pivot'] - final_close) / pivot['L_pivot'] >= min_breakthrough_ratio:
+            signals.append({
+                'time': final_date,
+                'price': final_close,
+                'type': 'sell',
+                'reason': '突破中枢(向下)'
+            })
+            break
 
     return signals
+
 
 
 def detect_divergence_signal(bi_list, kline_df):
@@ -83,12 +95,13 @@ def generate_trading_signals(kline_df, pivots, bi_list, confirmation_count=3, mi
     # 遍历所有历史中枢，生成突破信号
     for pivot in pivots:
         breakthrough_signals = detect_breakthrough_signal(
-            kline_df.loc[pivot['end_index']:],  # 从中枢结束日开始往后检测
+            kline_df,  # 从中枢结束日开始往后检测
             pivot,
             confirmation_count,
             min_breakthrough_ratio
         )
-        all_signals.extend(breakthrough_signals)
+        if breakthrough_signals:
+            all_signals.extend(breakthrough_signals)
 
     # 检测所有历史的背驰信号
     divergence_signals = detect_divergence_signal(bi_list, kline_df)
