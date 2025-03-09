@@ -51,7 +51,7 @@ class ChanlunView(View):
         df.set_index('date', inplace=True)
         bi_list30 = bi.bi(df)
 
-        pivots = zhongshu.construct_zhongshu(bi_list30, min_strokes=3)
+        pivots = zhongshu.construct_zhongshu_with_tolerance(bi_list30, kline_df=df)
         signals = buy.generate_trading_signals(df, pivots, bi_list30, confirmation_count=3)
         pivots = zhongshu.convert_30m_pivot_to_daily(pivots)
         signals = buy.convert_30m_signal_to_daily(signals)
