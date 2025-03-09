@@ -117,8 +117,8 @@ export default {
             markPoint: {
               data: result.signalPoints,
               label: {
-                formatter: '{b}',
-                color: '#fff'
+                // formatter: '{b}',
+                // color: '#fff'
               }
             }
           },
