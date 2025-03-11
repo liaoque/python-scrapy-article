@@ -2,27 +2,21 @@
 
 def init(cursor):
     cursor.execute(
-        'CREATE TABLE IF NOT EXISTS m_cls (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, `commited` TEXT)')
+        'CREATE TABLE IF NOT EXISTS m_vix ('
+        'id integer NOT NULL PRIMARY KEY AUTOINCREMENT,'
+        ' code TEXT, vix TEXT, created_at TEXT)')
 
     pass
 
 
 def query(cursor, d, code):
-    cursor.execute('SELECT tid FROM m_cls WHERE type=? order by id desc limit 1', (type,))
+    cursor.execute('SELECT id FROM m_vix WHERE code=? and created_at=? limit 1', (code,d))
     return cursor.fetchone()
 
 
 def update(cursor, id, vix):
-    cursor.execute('SELECT tid FROM m_cls WHERE type=? order by id desc limit 1', (type,))
-    values = cursor.fetchone()
-    if len(values) == 0:
-        return 0
-    return 1
+    cursor.execute('update m_vix set vix=? WHERE id=? order by id desc limit 1', (vix, id))
 
 
 def insert(cursor, code, d, vix):
-    cursor.execute('SELECT tid FROM m_cls WHERE type=? order by id desc limit 1', (type,))
-    values = cursor.fetchone()
-    if len(values) == 0:
-        return 0
-    return 1
+    cursor.execute('insert into m_vix (code, vix, created_at) VALUES (?, ?, ?)', (code, d, vix,))
