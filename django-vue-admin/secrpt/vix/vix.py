@@ -2,7 +2,10 @@ import numpy as np
 import pandas as pd
 import requests
 from datetime import datetime, timedelta
-
+import os
+import sys
+import sqlite3
+import vixdb
 
 # VIX计算函数
 def calculate_vix(option_df_near, option_df_next, r, T1_days, T2_days):
@@ -115,12 +118,38 @@ date_str_next = next_month.strftime('%Y%m')
 res =  get_gz_rate()
 r = res['result']['data'][0]['EMM00588704']
 
-etf300_vix = getQq('1.510300', date_str,date_str_next, r )
+
 etf50_vix = getQq('1.510050', date_str,date_str_next, r )
 etf500_vix = getQq('1.510500', date_str,date_str_next, r )
 etfkc_vix = getQq('1.588000', date_str,date_str_next, r )
 
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+# 设置根目录是secrpt
+sys.path.insert(0, parent_dir)
 
-print(etf300_vix, etf50_vix, etf500_vix, etfkc_vix)
+
+def compute():
+    conn = sqlite3.connect('../sqlitefile/vix.db')
+    conn.row_factory = sqlite3.Row
+    # 创建一个Cursor:
+    cursor = conn.cursor()
+
+    vixdb.init(cursor)
+
+    code = '1.510300'
+    etf300_vix = getQq(code, date_str, date_str_next, r)
+    row = vixdb.query(cursor,  d.strftime('%Y%m%d'), code)
+    if row:
+        vixdb.query(cursor, row['id'], etf300_vix)
+    else:
+        vixdb.insert(cursor, code, d.strftime('%Y%m%d'),  etf300_vix)
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+
 
