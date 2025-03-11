@@ -133,6 +133,14 @@ const frameIn = [{
       },
       component: _import('zzx/bkxz/index')
     },
+    {
+      path: 'dfcf_zhishu',
+      name: 'dfcf_zhishu',
+      meta: {
+        auth: true
+      },
+      component: _import('zzx/dfcf/zhishu/index')
+    },
   ]
 }]
 

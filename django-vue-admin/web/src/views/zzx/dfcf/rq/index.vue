@@ -21,7 +21,7 @@ import {d2CrudPlus} from 'd2-crud-plus'
 export default {
   name: 'dfcf_rq',
   mixins: [d2CrudPlus.crud],
-  data() {
+  data () {
     return {
     }
   },

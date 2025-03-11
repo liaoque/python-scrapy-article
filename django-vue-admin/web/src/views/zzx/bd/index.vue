@@ -90,13 +90,11 @@
           </template>
         </el-table-column>
 
-
       </el-table>
     </el-drawer>
 
   </d2-container>
 </template>
-
 
 <style scoped>
 .green{
@@ -107,7 +105,6 @@
 }
 </style>
 
-
 <script>
 import * as api from './api'
 import { d2CrudPlus } from 'd2-crud-plus'
@@ -116,12 +113,12 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
-      right:{
+      right: {
         index: -1,
         drawer: false,
         direction: 'rtl',
         title: '',
-        data:[]
+        data: []
       },
       left: {
         bd: [
@@ -152,7 +149,7 @@ export default {
     // ShouBan: () => import('./shou_ban.vue') // 这里填写实际的组件路径
   },
   methods: {
-    selectBd(bg, index) {
+    selectBd (bg, index) {
       this.right.drawer = true
       this.right.index = index
       this.right.title = bg.title
@@ -214,4 +211,3 @@ export default {
   }
 }
 </script>
-
