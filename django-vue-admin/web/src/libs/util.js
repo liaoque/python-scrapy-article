@@ -246,6 +246,70 @@ util.fillDayData = function (dateList, popularityDataMap) {
   })
 }
 
+// eslint-disable-next-line camelcase
+util.calculateVix = function (optionNear, optionNext, r, T1days, T2days) {
+  console.log(optionNear, optionNext, r, T1days, T2days)
+  // eslint-disable-next-line camelcase
+  const T1 = T1days / 365
+  // eslint-disable-next-line camelcase
+  const T2 = T2days / 365
+  const T30 = 30 / 365
+
+  // 计算远期价格 F
+  function forwardPrice (data, r, T) {
+    let minDiff = Infinity
+    let K0 = 0
+    let callPrice = 0
+    let putPrice = 0
+
+    data.forEach(item => {
+      const diff = Math.abs(item.call - item.put)
+      if (diff < minDiff) {
+        minDiff = diff
+        K0 = item.K
+        callPrice = item.call
+        putPrice = item.put
+      }
+    })
+
+    const F = K0 + Math.exp(r * T) * (callPrice - putPrice)
+    return { F, K0 }
+  }
+
+  // 计算方差 sigma^2
+  function calculateVariance (data, F, K0, r, T) {
+    let sum = 0
+
+    data.forEach((item, index) => {
+      let deltaK
+      if (index === 0) {
+        deltaK = data[1].K - item.K
+      } else if (index === data.length - 1) {
+        deltaK = item.K - data[index - 1].K
+      } else {
+        deltaK = (data[index + 1].K - data[index - 1].K) / 2
+      }
+
+      const Q = item.K < K0 ? item.put : (item.K > K0 ? item.call : (item.call + item.put) / 2)
+      sum += (deltaK / (item.K ** 2)) * Math.exp(r * T) * Q
+    })
+
+    const sigmaSq = (2 / T) * sum - (1 / T) * ((F / K0 - 1) ** 2)
+    return sigmaSq
+  }
+
+  const { F: F1, K0: K01 } = forwardPrice(optionNear, r, T1)
+  const { F: F2, K0: K02 } = forwardPrice(optionNext, r, T2)
+
+  const sigma1Sq = calculateVariance(optionNear, F1, K01, r, T1)
+  const sigma2Sq = calculateVariance(optionNext, F2, K02, r, T2)
+
+  // 插值得到30天方差
+  const sigma30Sq = ((T2 - T30) / (T2 - T1)) * sigma1Sq + ((T30 - T1) / (T2 - T1)) * sigma2Sq
+
+  // 计算VIX
+  return 100 * Math.sqrt(sigma30Sq)
+}
 
 
 
