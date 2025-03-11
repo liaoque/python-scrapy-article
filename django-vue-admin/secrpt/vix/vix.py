@@ -119,15 +119,21 @@ res =  get_gz_rate()
 r = res['result']['data'][0]['EMM00588704']
 
 
-etf50_vix = getQq('1.510050', date_str,date_str_next, r )
-etf500_vix = getQq('1.510500', date_str,date_str_next, r )
-etfkc_vix = getQq('1.588000', date_str,date_str_next, r )
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 # 设置根目录是secrpt
 sys.path.insert(0, parent_dir)
+
+
+def getQqForDb(cursor, code):
+    etf300_vix = getQq(code, date_str, date_str_next, r)
+    row = vixdb.query(cursor, d.strftime('%Y%m%d'), code)
+    if row:
+        vixdb.query(cursor, row['id'], etf300_vix)
+    else:
+        vixdb.insert(cursor, code, d.strftime('%Y%m%d'), etf300_vix)
 
 
 def compute():
@@ -138,13 +144,10 @@ def compute():
 
     vixdb.init(cursor)
 
-    code = '1.510300'
-    etf300_vix = getQq(code, date_str, date_str_next, r)
-    row = vixdb.query(cursor,  d.strftime('%Y%m%d'), code)
-    if row:
-        vixdb.query(cursor, row['id'], etf300_vix)
-    else:
-        vixdb.insert(cursor, code, d.strftime('%Y%m%d'),  etf300_vix)
+    getQqForDb('1.510300')
+    getQqForDb('1.510050')
+    getQqForDb('1.510500')
+    getQqForDb('1.588000')
 
     conn.commit()
 
@@ -153,3 +156,5 @@ def compute():
 
 
 
+if __name__ == "__main__":
+    compute()

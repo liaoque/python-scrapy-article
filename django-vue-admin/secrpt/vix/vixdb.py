@@ -19,4 +19,4 @@ def update(cursor, id, vix):
 
 
 def insert(cursor, code, d, vix):
-    cursor.execute('insert into m_vix (code, vix, created_at) VALUES (?, ?, ?)', (code, d, vix,))
+    cursor.execute('insert into m_vix (code, vix, created_at) VALUES (?, ?, ?)', (code, vix,  d,))
