@@ -164,7 +164,7 @@ export default {
     }
   },
   mounted() {
-    this.myChart = this.$echarts.init(document.getElementById('jj'))
+    // this.myChart = this.$echarts.init(document.getElementById('jj'))
 
   }
 }

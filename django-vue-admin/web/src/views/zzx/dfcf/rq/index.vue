@@ -16,7 +16,8 @@
 
 <script>
 import * as api from './api'
-import {d2CrudPlus} from 'd2-crud-plus'
+import { d2CrudPlus } from 'd2-crud-plus'
+import { crudOptions } from './crud'
 
 export default {
   name: 'dfcf_rq',
@@ -31,7 +32,7 @@ export default {
   },
   methods: {
     getCrudOptions () {
-      return {}
+      return crudOptions(this)
     },
     pageRequest(query) {
       return {}

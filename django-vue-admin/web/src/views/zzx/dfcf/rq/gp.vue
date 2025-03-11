@@ -60,7 +60,8 @@ export default {
 
   },
   mounted () {
-    this.myChart = this.$echarts.init(document.getElementById('jj'))
+    // console.log(document.getElementById('jj'), "11111111111111111")
+    // this.myChart = this.$echarts.init(document.getElementById('jj'))
   }
 }
 </script>
