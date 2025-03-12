@@ -1,4 +1,5 @@
 from os.path import dirname
+from time import sleep
 
 import numpy as np
 import pandas as pd
@@ -53,12 +54,12 @@ def calculate_vix(option_df_near, option_df_next, r, T1_days, T2_days):
     return VIX
 
 def get_gz_rate():
-    url = 'https://datacenter-web.eastmoney.com/api/data/v1/get?callback=&reportName=RPTA_WEB_TREASURYYIELD&columns=ALL&sortColumns=SOLAR_DATE&sortTypes=-1&token=&pageNumber=1&pageSize=1&_='
+    url = 'http://datacenter-web.eastmoney.com/api/data/v1/get?callback=&reportName=RPTA_WEB_TREASURYYIELD&columns=ALL&sortColumns=SOLAR_DATE&sortTypes=-1&token=&pageNumber=1&pageSize=1&_='
     response = requests.get(url)
     return response.json()
 
 def get_etf_qq_list_date(code):
-    url = 'https://push2.eastmoney.com/api/qt/stock/get'
+    url = 'http://push2.eastmoney.com/api/qt/stock/get'
     params = {
         'cb': '',
         'ut': '',
@@ -70,7 +71,7 @@ def get_etf_qq_list_date(code):
     return response.json()
 
 def get_etf_qq_list(code, date):
-    url = 'https://push2.eastmoney.com/api/qt/slist/get'
+    url = 'http://push2.eastmoney.com/api/qt/slist/get'
     params = {
         'np': 1,
         'fltt': 1,
@@ -138,7 +139,8 @@ def getQqForDb(cursor, code):
     else:
         vixdb.insert(cursor, code, d.strftime('%Y%m%d'), etf300_vix)
 
-    dingding.dingding(d.strftime('%Y%m%d') + "----"+code + ";vix;"+str(etf300_vix))
+    dingding.dingding(d.strftime('%Y%m%d') + "----"+code + ";vix;"+str(round(etf300_vix, 3)))
+    sleep(1)
     return etf300_vix
 
 
