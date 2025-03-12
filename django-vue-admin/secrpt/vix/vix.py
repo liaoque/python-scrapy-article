@@ -131,7 +131,7 @@ def getQqForDb(cursor, code):
     etf300_vix = getQq(code, date_str, date_str_next, r)
     row = vixdb.query(cursor, d.strftime('%Y%m%d'), code)
     if row:
-        vixdb.query(cursor, row['id'], etf300_vix)
+        vixdb.update(cursor, row['id'], etf300_vix)
     else:
         vixdb.insert(cursor, code, d.strftime('%Y%m%d'), etf300_vix)
 
@@ -144,10 +144,10 @@ def compute():
 
     vixdb.init(cursor)
 
-    getQqForDb('1.510300')
-    getQqForDb('1.510050')
-    getQqForDb('1.510500')
-    getQqForDb('1.588000')
+    getQqForDb(cursor,'1.510300')
+    getQqForDb(cursor, '1.510050')
+    getQqForDb(cursor, '1.510500')
+    getQqForDb(cursor,'1.588000')
 
     conn.commit()
 

@@ -15,7 +15,7 @@ def query(cursor, d, code):
 
 
 def update(cursor, id, vix):
-    cursor.execute('update m_vix set vix=? WHERE id=? order by id desc limit 1', (vix, id))
+    cursor.execute('update m_vix set vix=? WHERE id=? ', (vix, id))
 
 
 def insert(cursor, code, d, vix):

@@ -1,0 +1,1 @@
+cd /alidata/python/python-scrapy-article-master/stock && /alidata/python/venv/bin/python manage.py compute_shares
