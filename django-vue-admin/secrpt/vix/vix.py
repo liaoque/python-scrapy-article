@@ -1,3 +1,4 @@
+import time
 from os.path import dirname
 from time import sleep
 
@@ -139,8 +140,9 @@ def getQqForDb(cursor, code):
     else:
         vixdb.insert(cursor, code, d.strftime('%Y%m%d'), etf300_vix)
 
-    dingding.dingding(d.strftime('%Y%m%d') + "----"+code + ";vix;"+str(round(etf300_vix, 3)))
-    sleep(1)
+    if time.strftime("%H") in [ '09', '12', '15']:
+        dingding.dingding(d.strftime('%Y%m%d') + "----"+code + ";vix;"+str(round(etf300_vix, 3)))
+        sleep(1)
     return etf300_vix
 
 
