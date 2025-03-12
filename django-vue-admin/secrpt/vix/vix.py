@@ -8,6 +8,7 @@ import os
 import sys
 import sqlite3
 import vixdb
+from common import dingding
 
 # VIX计算函数
 def calculate_vix(option_df_near, option_df_next, r, T1_days, T2_days):
@@ -136,6 +137,9 @@ def getQqForDb(cursor, code):
         vixdb.update(cursor, row['id'], etf300_vix)
     else:
         vixdb.insert(cursor, code, d.strftime('%Y%m%d'), etf300_vix)
+
+    dingding.dingding(code + ";vix;"+str(etf300_vix))
+    return etf300_vix
 
 
 def compute():
