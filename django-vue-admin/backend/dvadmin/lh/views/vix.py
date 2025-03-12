@@ -48,8 +48,8 @@ class VixView(View):
         cursor.execute(sql, (code, d))
         etf688 = cursor.fetchall()
 
-        # cursor.close()
-        # conn.close()
+        cursor.close()
+        conn.close()
 
 
         return JsonResponse({
