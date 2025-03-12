@@ -139,7 +139,7 @@ def getQqForDb(cursor, code):
 
 
 def compute():
-    dbname = dirname(dirname(dirname(__file__))) + "/backend/db.sqlite3"
+    dbname = dirname(dirname(dirname(__file__))) + "/backend/vix.db"
     conn = sqlite3.connect(dbname)
     conn.row_factory = sqlite3.Row
     # 创建一个Cursor:
