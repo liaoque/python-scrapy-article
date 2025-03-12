@@ -25,10 +25,21 @@ class VixView(View):
 
     def get(self, request, *args, **kwargs):
         dbname = dirname(dirname(dirname(__file__))) + "/backend/vix.db"
+        d = datetime.now()
+        date_str = d.strftime('%Y%m01')
         # conn = sqlite3.connect(dbname)
         # conn.row_factory = sqlite3.Row
         # cursor = conn.cursor()
-        #
+
+        code = '1.510300'
+        sql = "SELECT * FROM m_vix WHERE code=? and created_at>=? "
+        # cursor.execute(sql, (code, d))
+        # cursor.fetchone()
+
+        code = '1.510050'
+        code = '1.510500'
+        code = '1.588000'
+
         # cursor.close()
         # conn.close()
 
@@ -38,6 +49,7 @@ class VixView(View):
             "msg": "success",
             "data": {
                 "dbname": dbname,
+                "date_str": date_str,
             }
         })
 
