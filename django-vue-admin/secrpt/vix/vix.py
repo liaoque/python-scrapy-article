@@ -1,3 +1,5 @@
+from os.path import dirname
+
 import numpy as np
 import pandas as pd
 import requests
@@ -137,7 +139,8 @@ def getQqForDb(cursor, code):
 
 
 def compute():
-    conn = sqlite3.connect('../sqlitefile/vix.db')
+    dbname = dirname(dirname(dirname(__file__))) + "/backend/db.sqlite3"
+    conn = sqlite3.connect(dbname)
     conn.row_factory = sqlite3.Row
     # 创建一个Cursor:
     cursor = conn.cursor()
