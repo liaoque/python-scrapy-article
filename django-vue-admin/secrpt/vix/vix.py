@@ -138,7 +138,7 @@ def getQqForDb(cursor, code):
     else:
         vixdb.insert(cursor, code, d.strftime('%Y%m%d'), etf300_vix)
 
-    dingding.dingding(code + ";vix;"+str(etf300_vix))
+    dingding.dingding(d.strftime('%Y%m%d') + "----"+code + ";vix;"+str(etf300_vix))
     return etf300_vix
 
 
