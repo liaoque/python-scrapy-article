@@ -27,18 +27,26 @@ class VixView(View):
         dbname = dirname(dirname(dirname(__file__))) + "/backend/vix.db"
         d = datetime.now()
         date_str = d.strftime('%Y%m01')
-        # conn = sqlite3.connect(dbname)
-        # conn.row_factory = sqlite3.Row
-        # cursor = conn.cursor()
+        conn = sqlite3.connect(dbname)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
 
         code = '1.510300'
         sql = "SELECT * FROM m_vix WHERE code=? and created_at>=? "
-        # cursor.execute(sql, (code, d))
-        # cursor.fetchone()
+        cursor.execute(sql, (code, d))
+        etf300 = cursor.fetchall()
 
         code = '1.510050'
+        cursor.execute(sql, (code, d))
+        etf50 = cursor.fetchall()
+
         code = '1.510500'
+        cursor.execute(sql, (code, d))
+        etf500 = cursor.fetchall()
+
         code = '1.588000'
+        cursor.execute(sql, (code, d))
+        etf688 = cursor.fetchall()
 
         # cursor.close()
         # conn.close()
@@ -50,6 +58,10 @@ class VixView(View):
             "data": {
                 "dbname": dbname,
                 "date_str": date_str,
+                "etf300": etf300,
+                "etf50": etf50,
+                "etf500": etf500,
+                "etf688": etf688,
             }
         })
 
