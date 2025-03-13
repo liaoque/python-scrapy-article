@@ -136,12 +136,12 @@ def getExtInfoList(data):
     return response.json()
 
 def dfcfCode(code):
-    if  code[:3] in  ["600", "601", "603"]:
+    if  code[:3] in  ["600", "601", "603", "605"]:
         return "1."+code
     return  "0."+code
 
 
 def dfcfCode2(code):
-    if  code[:3] in  ["600", "601", "603"]:
+    if  code[:3] in  ["600", "601", "603",  "605"]:
         return "SH"+code
     return  "SZ"+code
