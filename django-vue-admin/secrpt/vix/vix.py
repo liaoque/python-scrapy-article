@@ -1,13 +1,15 @@
-import time
 from os.path import dirname
-from time import sleep
+import sys
+project_dir = dirname(dirname(__file__))
+sys.path.append(project_dir)
 
+import time
+from time import sleep
 import numpy as np
 import pandas as pd
 import requests
 from datetime import datetime, timedelta
 import os
-import sys
 import sqlite3
 import vixdb
 from common import dingding
@@ -140,7 +142,7 @@ def getQqForDb(cursor, code):
     else:
         vixdb.insert(cursor, code, d.strftime('%Y%m%d'), etf300_vix)
 
-    if time.strftime("%H") in [ '09', '12', '15']:
+    if time.strftime("%H") in [ '09', '12', '14']:
         dingding.dingding(d.strftime('%Y%m%d') + "----"+code + ";vix;"+str(round(etf300_vix, 3)))
         sleep(1)
     return etf300_vix
