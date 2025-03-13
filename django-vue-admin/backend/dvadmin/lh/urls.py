@@ -19,6 +19,7 @@ urlpatterns = [
     path('bangdan', BangDanView.as_view()),
     path('lsqs', LsqsView.as_view()),
     path('chanlun', ChanlunView.as_view()),
+    path('vix', VixView.as_view()),
     # path('yuan_yin', YuanYinView.as_view()),
     # path('result', ResultView.as_view()),
     # path('gns', ZhuXianGnsView.as_view()),
