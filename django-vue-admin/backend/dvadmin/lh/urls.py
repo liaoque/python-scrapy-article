@@ -14,6 +14,7 @@ from django.urls import path
 from dvadmin.lh.views.bangdan import BangDanView
 from dvadmin.lh.views.lsqs import LsqsView
 from dvadmin.lh.views.chanlun import ChanlunView
+from dvadmin.lh.views.vix import VixView
 
 urlpatterns = [
     path('bangdan', BangDanView.as_view()),
