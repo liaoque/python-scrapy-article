@@ -24,7 +24,7 @@ class VixView(View):
     # self.client.close()
 
     def get(self, request, *args, **kwargs):
-        dbname = dirname(dirname(dirname(__file__))) + "/backend/vix.db"
+        dbname = dirname(dirname(dirname(dirname(__file__)))) + "/vix.db"
         d = datetime.now()
         date_str = d.strftime('%Y%m01')
         conn = sqlite3.connect(dbname)
@@ -58,10 +58,10 @@ class VixView(View):
             "data": {
                 "dbname": dbname,
                 "date_str": date_str,
-                "etf300": etf300,
-                "etf50": etf50,
-                "etf500": etf500,
-                "etf688": etf688,
+                "etf300": [dict(item) for item in etf300],
+                "etf50": [dict(item) for item in etf50],
+                "etf500": [dict(item) for item in etf500],
+                "etf688": [dict(item) for item in etf688],
             }
         })
 
