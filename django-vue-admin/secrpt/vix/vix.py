@@ -1,5 +1,6 @@
 from os.path import dirname
 import sys
+
 project_dir = dirname(dirname(__file__))
 sys.path.append(project_dir)
 
@@ -13,6 +14,7 @@ import os
 import sqlite3
 import vixdb
 from common import dingding
+
 
 # VIX计算函数
 def calculate_vix(option_df_near, option_df_next, r, T1_days, T2_days):
@@ -56,10 +58,12 @@ def calculate_vix(option_df_near, option_df_next, r, T1_days, T2_days):
 
     return VIX
 
+
 def get_gz_rate():
     url = 'http://datacenter-web.eastmoney.com/api/data/v1/get?callback=&reportName=RPTA_WEB_TREASURYYIELD&columns=ALL&sortColumns=SOLAR_DATE&sortTypes=-1&token=&pageNumber=1&pageSize=1&_='
     response = requests.get(url)
     return response.json()
+
 
 def get_etf_qq_list_date(code):
     url = 'http://push2.eastmoney.com/api/qt/stock/get'
@@ -72,6 +76,7 @@ def get_etf_qq_list_date(code):
     }
     response = requests.get(url, params=params)
     return response.json()
+
 
 def get_etf_qq_list(code, date):
     url = 'http://push2.eastmoney.com/api/qt/slist/get'
@@ -93,40 +98,45 @@ def get_etf_qq_list(code, date):
     response = requests.get(url, params=params)
     return response.json()
 
+
 def getQq(code, date_str, dateStrNext, r):
     etf300_date = get_etf_qq_list_date(code)
     etf300 = get_etf_qq_list(code, date_str)
     etf300_next = get_etf_qq_list(code, dateStrNext)
+
     option_df_near = pd.DataFrame({
-        'K':  [ item['f161'] for item in etf300['data']['diff']],
-        'call':  [ item['f2'] / 1000 for item in etf300['data']['diff']],
-        'put':  [ item['f341'] / 1000 for item in etf300['data']['diff']],
+        'K': [item['f161'] for item in etf300['data']['diff'] if str(item["f2"]) != '-' and str(item["f341"]) != '-'],
+        'call': [item['f2'] / 1000 for item in etf300['data']['diff'] if
+                 str(item["f2"]) != '-' and str(item["f341"]) != '-'],
+        'put': [item['f341'] / 1000 for item in etf300['data']['diff'] if
+                str(item["f2"]) != '-' and str(item["f341"]) != '-'],
     })
 
     option_df_next = pd.DataFrame({
-        'K': [item['f161'] for item in etf300_next['data']['diff']],
-        'call': [item['f2'] / 1000 for item in etf300_next['data']['diff']],
-        'put': [item['f341'] / 1000 for item in etf300_next['data']['diff']],
+        'K': [item['f161'] for item in etf300_next['data']['diff'] if
+              str(item["f2"]) != '-' and str(item["f341"]) != '-'],
+        'call': [item['f2'] / 1000 for item in etf300_next['data']['diff'] if
+                 str(item["f2"]) != '-' and str(item["f341"]) != '-'],
+        'put': [item['f341'] / 1000 for item in etf300_next['data']['diff'] if
+                str(item["f2"]) != '-' and str(item["f341"]) != '-'],
     })
 
     etf300_vix = calculate_vix(
         option_df_near,
         option_df_next,
         r,
-       etf300_date['data']['optionExpireInfo'][0]['days'],
-       etf300_date['data']['optionExpireInfo'][1]['days'])
+        etf300_date['data']['optionExpireInfo'][0]['days'],
+        etf300_date['data']['optionExpireInfo'][1]['days'])
     return etf300_vix
+
 
 d = datetime.now()
 date_str = d.strftime('%Y%m')
 next_month = (d + timedelta(days=32)).replace(day=1)
 date_str_next = next_month.strftime('%Y%m')
 
-res =  get_gz_rate()
+res = get_gz_rate()
 r = res['result']['data'][0]['EMM00588704']
-
-
-
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
@@ -142,8 +152,8 @@ def getQqForDb(cursor, code):
     else:
         vixdb.insert(cursor, code, d.strftime('%Y%m%d'), etf300_vix)
 
-    if time.strftime("%H") in [ '09', '12', '14']:
-        dingding.dingding(d.strftime('%Y%m%d') + "----"+code + ";vix;"+str(round(etf300_vix, 3)))
+    if time.strftime("%H") in ['09', '12', '14']:
+        dingding.dingding(d.strftime('%Y%m%d') + "----" + code + ";vix;" + str(round(etf300_vix, 3)))
         sleep(1)
     return etf300_vix
 
@@ -157,16 +167,15 @@ def compute():
 
     vixdb.init(cursor)
 
-    getQqForDb(cursor,'1.510300')
+    getQqForDb(cursor, '1.510300')
     getQqForDb(cursor, '1.510050')
     getQqForDb(cursor, '1.510500')
-    getQqForDb(cursor,'1.588000')
+    getQqForDb(cursor, '1.588000')
 
     conn.commit()
 
     cursor.close()
     conn.close()
-
 
 
 if __name__ == "__main__":
