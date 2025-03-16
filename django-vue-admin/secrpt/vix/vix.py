@@ -142,9 +142,10 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 # 设置根目录是secrpt
 sys.path.insert(0, parent_dir)
-
+message_str = d.strftime('%Y%m%d')
 
 def getQqForDb(cursor, code):
+    global message_str
     etf300_vix = getQq(code, date_str, date_str_next, r)
     row = vixdb.query(cursor, d.strftime('%Y%m%d'), code)
     if row:
@@ -153,7 +154,8 @@ def getQqForDb(cursor, code):
         vixdb.insert(cursor, code, d.strftime('%Y%m%d'), etf300_vix)
 
     if time.strftime("%H") in ['09', '12', '14']:
-        dingding.dingding(d.strftime('%Y%m%d') + "----" + code + ";vix;" + str(round(etf300_vix, 3)))
+        message_str = message_str + "\n"  + code + ";vix;" + str(round(etf300_vix, 3))
+
         sleep(1)
     return etf300_vix
 
@@ -173,7 +175,8 @@ def compute():
     getQqForDb(cursor, '1.588000')
 
     conn.commit()
-
+    if len(message_str):
+        dingding.dingding(message_str)
     cursor.close()
     conn.close()
 
