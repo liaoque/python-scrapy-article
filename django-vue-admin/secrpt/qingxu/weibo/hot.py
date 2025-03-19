@@ -4,10 +4,6 @@ def fetch_weibo_cardlist(api_url, headers=None, params=None):
     # 如果未提供 headers，则使用默认 headers
     if headers is None:
         headers = {
-            "X-Validator": "RZx6PjBGqzbcJTpIcTu93bzneOpnsf/he8RFzwxNYqQ=",
-            "X-Log-Uid": "3579224031",
-            "X-Sessionid": "2bee6664-60b8-4412-adb9-4bdc82728150",
-            "User-Agent": "SM-G9810_7.1.2_weibo_11.6.0_android",
             "Authorization": "WB-SUT _2A95K3CEXDeRxGeVL7FsT8irMyD2IHXVnyDPfrDV6PUJbkdANLWn7kWpNTD9Yt3tLUsvIradO2GvMEYkO9OJ4q-3P",
             "Host": "api.weibo.cn",
             "Connection": "Keep-Alive",
