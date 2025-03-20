@@ -1,5 +1,5 @@
 import requests
-import cls
+from qingxu.cls import cls
 import weibo
 import xueqiu
 import re
