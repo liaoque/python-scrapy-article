@@ -14,7 +14,7 @@ import os
 import sqlite3
 import vixdb
 from common import dingding
-
+import calendar
 
 # VIX计算函数
 def calculate_vix(option_df_near, option_df_next, r, T1_days, T2_days):
@@ -58,8 +58,23 @@ def calculate_vix(option_df_near, option_df_next, r, T1_days, T2_days):
 
     return VIX
 
-
 def get_gz_rate():
+    """
+    中国国债收益率30年
+    "EMM00166462": "中国国债收益率5年",
+    "EMM00166466": "中国国债收益率10年",
+    "EMM00166469": "中国国债收益率30年",
+    "EMM00588704": "中国国债收益率2年",
+    "EMM01276014": "中国国债收益率10年-2年",
+    "EMG00001306": "美国国债收益率2年",
+    "EMG00001308": "美国国债收益率5年",
+    "EMG00001310": "美国国债收益率10年",
+    "EMG00001312": "美国国债收益率30年",
+    "EMG01339436": "美国国债收益率10年-2年",
+    "EMM00000024": "中国GDP年增率",
+    "EMG00159635": "美国GDP年增率",
+    :return:
+    """
     url = 'http://datacenter-web.eastmoney.com/api/data/v1/get?callback=&reportName=RPTA_WEB_TREASURYYIELD&columns=ALL&sortColumns=SOLAR_DATE&sortTypes=-1&token=&pageNumber=1&pageSize=1&_='
     response = requests.get(url)
     return response.json()
@@ -129,11 +144,26 @@ def getQq(code, date_str, dateStrNext, r):
         etf300_date['data']['optionExpireInfo'][1]['days'])
     return etf300_vix
 
+def getQqName(code):
+    """
+    获取期权合约时间
+    :param code:
+    :return:
+    """
+    url = 'https://push2.eastmoney.com/api/qt/stock/get?cb=&ut=&mspt=1&secid='+code+'&_=1743274258232'
+    response = requests.get(url)
+    return response.json()
 
+def get_next_month(d):
+    last_day = d.replace(day=calendar.monthrange(d.year, d.month)[1])
+    next_month = last_day + timedelta(days=1)
+    return next_month.replace(day=1)
+
+#
 d = datetime.now()
-date_str = d.strftime('%Y%m')
-next_month = (d + timedelta(days=32)).replace(day=1)
-date_str_next = next_month.strftime('%Y%m')
+# date_str = d.strftime('%Y%m')
+# next_month = get_next_month(d)
+# date_str_next = next_month.strftime('%Y%m')
 
 res = get_gz_rate()
 r = res['result']['data'][0]['EMM00588704']
@@ -146,6 +176,11 @@ message_str = d.strftime('%Y%m%d')
 
 def getQqForDb(cursor, code):
     global message_str
+    qq = getQqName(code)
+    optionExpireInfo = qq["data"]["optionExpireInfo"]
+    date_str = str(optionExpireInfo[0]["date"])[:6]
+    date_str_next = str(optionExpireInfo[1]["date"])[:6]
+
     etf300_vix = getQq(code, date_str, date_str_next, r)
     row = vixdb.query(cursor, d.strftime('%Y%m%d'), code)
     if row:
@@ -175,7 +210,7 @@ def compute():
     getQqForDb(cursor, '1.588000')
 
     conn.commit()
-    if len(message_str):
+    if len(message_str) == 8:
         dingding.dingding(message_str)
     cursor.close()
     conn.close()
