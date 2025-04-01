@@ -210,7 +210,7 @@ def compute():
     getQqForDb(cursor, '1.588000')
 
     conn.commit()
-    if len(message_str) <= 8:
+    if len(message_str) > 8:
         dingding.dingding(message_str)
     cursor.close()
     conn.close()
