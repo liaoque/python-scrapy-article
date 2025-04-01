@@ -54,13 +54,37 @@ def jijinTop10All(s):
                 codes[itemTop2['zcCode']] = 1
             else:
                 codes[itemTop2['zcCode']] = codes[itemTop2['zcCode']] + 1
+    return codes
+
+
 
 
 if __name__ == '__main__':
+    codes = jijinTop10All("所属上证50基金, 100日涨跌幅，排除c类基金")
+
+    allSum = sum([value for key, value in codes.items()])
+    print(codes.keys())
+
+    codes = jijinTop10All("所属沪深300基金, 100日涨跌幅，排除c类基金")
+
+    allSum = sum([value for key, value in codes.items()])
+    print(codes.keys())
+
+    codes = jijinTop10All("所属中证500基金, 100日涨跌幅，排除c类基金")
+
+    allSum = sum([value for key, value in codes.items()])
+    print(codes.keys())
+
     codes = jijinTop10All("所属中证1000基金, 100日涨跌幅，排除c类基金")
 
     allSum = sum([value for key, value in codes.items()])
     print(codes.keys())
+
+    codes = jijinTop10All("同花顺主题分类是科创板, 100日涨跌幅，排除c类基金")
+
+    allSum = sum([value for key, value in codes.items()])
+    print(codes.keys())
+
 
     # 取雪球聊天记录
 
