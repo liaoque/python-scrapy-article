@@ -1,4 +1,5 @@
 # 羊毛
+import json
 import sys
 import os
 import sqlite3
@@ -14,7 +15,7 @@ from common import dingding
 
 
 # 关键字
-keywords = ["如有点亮满足天数"]
+keywords = [["面包"],["婴儿床"], ["黄盖"], ["收纳抽屉"], ["拐杖"], ["狮王", ["齿力佳","皓乐齿"]]]
 
 
 def init(cursor):
@@ -33,8 +34,27 @@ def saveStock(cursor, weibos):
                 (item['weiboid'], item['containerid'], item['content'], 1, item['created_at'], item['scheme'])
             )
             for keyword in keywords:
-                if keyword in item['content']:
-                    dingding.dingding("找到包含 %s  ： %s" % (keyword, item['content']))
+                isSend = False
+                for kw in keyword:
+
+                    # 如果元素是字符串，那么只要匹配失败，就直接失败
+                    if isinstance(kw, str):
+                        isSend = kw in item['content']
+                        if isSend == False:
+                            break
+
+                    elif isinstance(kw, list):
+
+                        # 如果是list， 只要list里面有一个成功就成功
+                        for kw2 in kw:
+                            orKw = kw2 in item['content']
+                            if orKw:
+                                isSend = True
+                                break
+
+                    if isSend == False:
+                        continue
+                    dingding.dingding("找到包含 %s  ： %s" % (json.dumps(keyword), item['content']))
 
 
 def compute():
