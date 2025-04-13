@@ -15,7 +15,7 @@ def saveStock(cursor, s, type):
     codes = jijinTop10All("所属上证50基金, 100日涨跌幅，排除c类基金")
     for (code, num) in codes:
         cursor.execute('insert into m_stock (code , num , type , created_at )values(?,?,?,?)',
-                       code, num, string(type), datetime.datetime.now().strftime('%Y-%m-%d'))
+                       code, num, str(type), datetime.datetime.now().strftime('%Y-%m-%d'))
 
 def compute():
     conn = sqlite3.connect('qingxu2.db')
