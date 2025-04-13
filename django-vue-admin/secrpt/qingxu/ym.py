@@ -54,7 +54,8 @@ def saveStock(cursor, weibos):
 
                     if isSend == False:
                         continue
-                    dingding.dingding("找到包含 %s  ： %s" % (json.dumps(keyword), item['content']))
+                    dingding.dingding("找到包含 %s  ： %s  :  %s" %
+                                      (json.dumps(keyword), item['content'], item['scheme']))
 
 
 def compute():
