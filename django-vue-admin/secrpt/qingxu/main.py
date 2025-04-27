@@ -25,10 +25,10 @@ def compute():
     res = init(cursor)
     if res:
         saveStock(cursor, "所属上证50基金, 100日涨跌幅，排除c类基金", "50")
-        saveStock(cursor, "所属上证50基金, 所属沪深300基金，排除c类基金", "300")
-        saveStock(cursor, "所属上证50基金, 所属中证500基金，排除c类基金", "500")
-        saveStock(cursor, "所属上证50基金, 所属中证1000基金，排除c类基金", "1000")
-        saveStock(cursor, "所属上证50基金, 同花顺主题分类是科创板，排除c类基金", "kc")
+        saveStock(cursor, "所属沪深300基金，排除c类基金", "300")
+        saveStock(cursor, "所属中证500基金，排除c类基金", "500")
+        saveStock(cursor, "所属中证1000基金，排除c类基金", "1000")
+        saveStock(cursor, "同花顺主题分类是科创板，排除c类基金", "kc")
 
     # 查股票
     # 根据股票查雪球
