@@ -1,10 +1,12 @@
 import configparser
+import os
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
 # 创建ConfigParser对象
 config = configparser.ConfigParser()
 
 # 读取INI文件
-config.read('config.ini')
+d = config.read(current_dir+'/config.ini')
 
 
 def getConfig():

@@ -1,7 +1,6 @@
 import sys
 import os
 import sqlite3
-import datetime
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
@@ -9,12 +8,13 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
 
-from qingxu import cls,dfcf,weibo,xueqiu,baidu,gpt
+from qingxu import cls
+from qingxu.v1 import baidu,dfcf,weibo,xueqiu
 
 
 def compute():
 
-    conn = sqlite3.connect('qingxu.db', isolation_level=None)
+    conn = sqlite3.connect(parent_dir + '/sqlitefile/v1/qingxu.db', isolation_level=None)
     conn.row_factory = sqlite3.Row
     # 创建一个Cursor:
     cursor = conn.cursor()

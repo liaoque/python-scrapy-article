@@ -1,8 +1,6 @@
 import requests
 from common import dingding,clean
-
-import sys
-import config
+from qingxu import config
 import hashlib
 import datetime
 
@@ -177,6 +175,9 @@ def saveData(cursor, data):
         item['text'] = clean.clean_text(item['text'])
         cursor.execute('INSERT INTO m_cls (tid, content, created_at, type) VALUES (?, ?, ?, ?)',
                        (item['id'], item['text'], item['created_at'], item['type'],))
+        cursor.execute('INSERT INTO m_qingxu_report (table_id, table_name, created_at, isrun) VALUES (?, ?, ?, ?)',
+                       (cursor.lastrowid, "m_cls", item['created_at'], 0,))
+
 
 
 def exits(cursor, id, type):

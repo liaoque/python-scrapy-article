@@ -59,7 +59,7 @@ def saveStock(cursor, weibos):
 
 
 def compute():
-    conn = sqlite3.connect('ym.db', isolation_level=None)
+    conn = sqlite3.connect(parent_dir + '/sqlitefile/ym.db', isolation_level=None)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
