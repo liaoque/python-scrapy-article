@@ -1,5 +1,5 @@
 import requests
-import config
+from qingxu import config
 import datetime
 
 

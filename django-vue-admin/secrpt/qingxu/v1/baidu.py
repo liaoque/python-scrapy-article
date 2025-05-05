@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 from sklearn.preprocessing import MinMaxScaler
-import config
+from qingxu import config
 import numpy as np
 
 

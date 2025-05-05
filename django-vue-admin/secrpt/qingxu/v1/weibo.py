@@ -2,7 +2,7 @@ from turtle import up, down
 
 import requests
 from datetime import datetime
-import config
+from qingxu import config
 from common import dingding,clean
 
 def weibo(page):
@@ -97,6 +97,8 @@ def saveData(cursor, data):
         item['text'] = clean.clean_text(item['text'])
         cursor.execute('INSERT INTO m_weibo (tid, content, created_at, type) VALUES (?, ?, ?, ?)',
                        (item['id'], item['text'], item['created_at'], item['type'],))
+        cursor.execute('INSERT INTO m_qingxu_report (table_id, table_name, created_at, isrun) VALUES (?, ?, ?, ?)',
+                       (cursor.lastrowid, "m_weibo", item['created_at'], 0,))
 
 
 def queryData(cursor):

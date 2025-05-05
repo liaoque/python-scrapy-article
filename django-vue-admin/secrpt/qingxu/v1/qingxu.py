@@ -4,12 +4,13 @@ import sqlite3
 import datetime
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
+parent_dir = os.path.dirname(os.path.dirname(current_dir))
 # 设置根目录是secrpt
 sys.path.insert(0, parent_dir)
 
 
-from qingxu import cls,dfcf,weibo,xueqiu,baidu,gpt
+from qingxu.v1 import dfcf,weibo,xueqiu,baidu,gpt
+from qingxu.cls import cls
 
 
 def compute():
@@ -25,15 +26,16 @@ def compute():
     cls.run(cursor)
     weibo.run(cursor)
     xueqiu.run(cursor)
-
+    #
     dfcf.run(cursor)
     baidu.run(cursor)
-
+    gpt.run(cursor)
 
     # 提交事务:
     conn.commit()
 
-    gpt.run(cursor)
+
+    # gpt.run(cursor)
     conn.commit()
 
     # trend_shangzheng, trend_shangzhengzixun = baidu.run(cursor)
@@ -81,6 +83,9 @@ def init(cursor):
         'CREATE TABLE IF NOT EXISTS m_baidu (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, zhishu TEXT, zz_type integer , created_at TEXT)')
     cursor.execute(
         'CREATE TABLE IF NOT EXISTS m_qingxu (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, qingxu TEXT,  created_at TEXT)')
+    cursor.execute(
+        'CREATE TABLE IF NOT EXISTS m_qingxu_report (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, table_name TEXT, table_id integer, isrun integer,  point integer, created_at TEXT)')
+
     pass
 
 
@@ -91,6 +96,11 @@ def queryMaxDate(cursor, yesterday):
         return None
     return values[0]
 
+
+def queryRrport(cursor):
+    cursor.execute('SELECT id FROM m_qingxu_report where  isrun = 0 limit 20')
+    values = cursor.fetchall()
+    return values
 
 if __name__ == "__main__":
     compute()
