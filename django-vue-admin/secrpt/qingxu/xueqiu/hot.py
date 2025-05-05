@@ -11,7 +11,7 @@ import execjs
 def hot(last_id='', page=1):
     url = "https://xueqiu.com/statuses/hot/listV3.json"
     headers = {
-        "cookie": "xq_a_token=2fe06220d598cc4ed7eea51561ff55d09e7d797a",
+        "cookie": "xq_a_token=03e5fa2f7b05e5086ee61a943a151625ececb6e2",
         "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
     }
     params = {
