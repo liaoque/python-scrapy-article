@@ -5,6 +5,14 @@ import nltk
 import time
 from nltk.corpus import stopwords
 import sqlite3
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(os.path.dirname(current_dir))
+# 设置根目录是secrpt
+sys.path.insert(0, parent_dir)
+
 
 nltk.download('stopwords')
 stop_words = set(stopwords.words('chinese'))  # 需要下载中文停用词表
@@ -85,7 +93,7 @@ def run(cursor):
 
 def compute():
 
-    conn = sqlite3.connect('v1/qingxu.db', isolation_level=None)
+    conn = sqlite3.connect(parent_dir + '/sqlitefile/v1/qingxu.db', isolation_level=None)
     conn.row_factory = sqlite3.Row
     # 创建一个Cursor:
     cursor = conn.cursor()
