@@ -14,7 +14,7 @@ from qingxu.cls import cls
 
 
 def compute():
-
+    print(parent_dir + '/sqlitefile/v1/qingxu.db')
     conn = sqlite3.connect(parent_dir + '/sqlitefile/v1/qingxu.db')
     conn.row_factory = sqlite3.Row
     # 创建一个Cursor:
