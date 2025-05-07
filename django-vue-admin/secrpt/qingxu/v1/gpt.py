@@ -14,7 +14,7 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.insert(0, parent_dir)
 
 
-nltk.download('stopwords')
+# nltk.download('stopwords')
 stop_words = set(stopwords.words('chinese'))  # 需要下载中文停用词表
 
 
