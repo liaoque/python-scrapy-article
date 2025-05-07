@@ -54,7 +54,7 @@ def gpt(msg):
     return codes2
 
 def queryRrport(cursor):
-    cursor.execute('SELECT id FROM m_qingxu_report where  isrun = 0 limit 20')
+    cursor.execute('SELECT * FROM m_qingxu_report where  isrun = 0 limit 20')
     values = cursor.fetchall()
     return values
 
