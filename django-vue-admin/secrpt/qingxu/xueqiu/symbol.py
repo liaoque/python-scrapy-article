@@ -1,3 +1,5 @@
+import os
+
 import requests
 from datetime import datetime, timezone
 from urllib.parse import urlencode, quote_plus
@@ -21,7 +23,8 @@ def symbolCode(symbol, page):
 
     query_string = urlencode(params)
     url = f"{url}?{query_string}"
-    ctx = execjs.compile(open('./sign/sign.js').read())
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    ctx = execjs.compile(open(current_dir + '/sign/sign.js').read())
     md51038 = ctx.call('signNew', quote_plus(url))
     url = f"{url}&md5__1038={md51038}"
 

@@ -3,7 +3,7 @@ import re
 import jieba
 import nltk
 import time
-# from nltk.corpus import stopwords
+from nltk.corpus import stopwords
 import sqlite3
 import os
 import sys
@@ -14,8 +14,8 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.insert(0, parent_dir)
 
 
-# nltk.download('stopwords')
-# stop_words = set(stopwords.words('chinese'))  # 需要下载中文停用词表
+nltk.download('stopwords')
+stop_words = set(stopwords.words('chinese'))  # 需要下载中文停用词表
 
 
 def clean_text(text):
