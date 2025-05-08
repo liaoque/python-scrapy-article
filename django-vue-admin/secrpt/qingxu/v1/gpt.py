@@ -7,6 +7,7 @@ from nltk.corpus import stopwords
 import sqlite3
 import os
 import sys
+import json
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(os.path.dirname(current_dir))
@@ -68,6 +69,20 @@ def commitMsg(msg):
     msg = tokenize(msg)
     return msg
 
+def extract_msg(data_str):
+    lines = data_str.strip().split('\n')
+    for line in lines:
+        if line.startswith("data:"):
+            # 去掉前缀 "data:" 并去除多余的空格
+            json_str = line[len("data:"):].strip()
+            if json_str.startswith("{") and json_str.endswith("}"):
+                try:
+                    data = json.loads(json_str)
+                    if isinstance(data, dict) and 'msg' in data:
+                        return data['msg']
+                except json.JSONDecodeError:
+                    continue
+    return ""
 
 def gpt(msg):
     time.sleep(3)
@@ -88,7 +103,9 @@ def gpt(msg):
         "options": {"imageIntention": {"needIntentionModel": True, "backendUpdateFlag": 2, "intentionStatus": True}},
         "multimedia": [], "agentId": "naQivTmsDa", "supportHint": 1, "version": "v2", "chatModelId": "deep_seek_v3"
     }, headers=headers)
-    codes2 = response.json()
+    codes2 = response.content()
+    codes2 = extract_msg(codes2)
+    print(codes2)
     # 回答异常就直接返回数据错误，丁丁提示
     return codes2
 
