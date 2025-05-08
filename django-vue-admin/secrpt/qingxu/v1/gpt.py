@@ -1,6 +1,6 @@
 import requests
 import re
-# import jieba
+import jieba
 # import nltk
 import time
 # from nltk.corpus import stopwords
@@ -27,8 +27,8 @@ def clean_text(text):
     return text
 
 
-# def tokenize(text):
-#     return ' '.join(jieba.cut(text))
+def tokenize(text):
+    return ' '.join(jieba.cut(text))
 
 
 """
