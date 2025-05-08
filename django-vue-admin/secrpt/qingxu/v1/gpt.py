@@ -89,7 +89,8 @@ def queryRrport(cursor):
     return values
 
 def queryContent(cursor, table_name, table_id):
-    cursor.execute('SELECT content FROM ? where  id = ? limit 1', (table_name, table_id))
+    query = f'SELECT content FROM {table_name} WHERE id = ? LIMIT 1'
+    cursor.execute(query, (table_id,))
     values = cursor.fetchall()
     return values[0]
 
