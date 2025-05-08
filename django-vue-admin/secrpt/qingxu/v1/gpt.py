@@ -1,9 +1,9 @@
 import requests
 import re
-import jieba
-import nltk
+# import jieba
+# import nltk
 import time
-from nltk.corpus import stopwords
+# from nltk.corpus import stopwords
 import sqlite3
 import os
 import sys
@@ -16,7 +16,7 @@ sys.path.insert(0, parent_dir)
 
 
 # nltk.download('stopwords')
-stop_words = set(stopwords.words('chinese'))  # 需要下载中文停用词表
+# stop_words = set(stopwords.words('chinese'))  # 需要下载中文停用词表
 
 
 def clean_text(text):
@@ -27,8 +27,8 @@ def clean_text(text):
     return text
 
 
-def tokenize(text):
-    return ' '.join(jieba.cut(text))
+# def tokenize(text):
+#     return ' '.join(jieba.cut(text))
 
 
 """
@@ -66,7 +66,7 @@ def tokenize(text):
 
 def commitMsg(msg):
     msg = clean_text(msg)
-    msg = tokenize(msg)
+    # msg = tokenize(msg)
     return msg
 
 def extract_msg(data_str):
@@ -86,11 +86,10 @@ def extract_msg(data_str):
 
 def gpt(msg):
     time.sleep(3)
-    url = "https://cc01.plusai.io/backend-api/conversation"
+    url = "https://yuanbao.tencent.com/api/chat/e3468e7d-b4aa-4049-bf9d-770d6d645570"
     headers = {
-        "cookie": "_qimei_uuid42=1930f0e351a100b5ad5b0914f5ff5167b143766102;",
-        'Content-Type': 'application/json',
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+        "Host": "yuanbao.tencent.com",
+        "cookie": "hy_user=CIhCqbC6T5voiJRk; hy_token=h1nxijKasHsn4fUxgFQiqu6LYWrMB5fquv5djhn4rffbWXNgUWx4U8Hl0gDeByUX; hy_source=web"
     }
     #
     msg = commitMsg(msg)
@@ -103,9 +102,8 @@ def gpt(msg):
         "options": {"imageIntention": {"needIntentionModel": True, "backendUpdateFlag": 2, "intentionStatus": True}},
         "multimedia": [], "agentId": "naQivTmsDa", "supportHint": 1, "version": "v2", "chatModelId": "deep_seek_v3"
     }, headers=headers)
-    codes2 = response.content()
+    codes2 = response.content.decode("utf-8")
     codes2 = extract_msg(codes2)
-    print(codes2)
     # 回答异常就直接返回数据错误，丁丁提示
     return codes2
 
@@ -161,4 +159,4 @@ def compute():
     conn.close()
 
 if __name__ == "__main__":
-    compute()
+    gpt("习近平同俄罗斯总统普京会谈①双方就中俄关系和国际问题深入交换意见，一致同意深化战略协作，推动中俄关系稳定、健康、高水平发展。②习近平强调中俄双方要坚持合作大方向，排除外部干扰，让合作“稳”的基础更坚实、“进”的动能更充足。普京表示坚定奉行一个中国原则，在台湾问题上始终支持中方立场。")
