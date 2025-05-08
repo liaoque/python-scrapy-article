@@ -134,15 +134,19 @@ def run(cursor):
             codes2 = gpt(qc['content'])
             if "data" in codes2 and "content" in codes2["data"]:
                 point = content2 = codes2["data"]["content"]
+                if "过热" in content2:
+                    point = "2"
                 if "积极" in content2:
                     point = "1"
                 elif "中性" in content2:
                     point = "0"
                 elif "消极" in content2:
                     point = "-1"
-                elif content2 not in [0, 1, -1, "0", "1", "-1"]:
+                elif "过冷" in content2:
+                    point = "-2"
+                elif content2 not in [0, 1, -1, 2, -2, "0", "1", "-1", "2", "-2"]:
                     point = "0"
-            savePoint(cursor, item['id'], point)
+                savePoint(cursor, item['id'], point)
     pass
 
 
