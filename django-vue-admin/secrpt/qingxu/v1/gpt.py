@@ -106,8 +106,8 @@ def run(cursor):
         for item in reports:
             table_name = item['table_name']
             table_id = item['table_id']
-            content = queryContent(cursor, table_name, table_id)
-            codes2 = gpt(content)
+            qc = queryContent(cursor, table_name, table_id)
+            codes2 = gpt(qc['content'])
             if "data" in codes2 and "content" in codes2["data"]:
                 point = content2 = codes2["data"]["content"]
                 if "积极" in content2:
