@@ -71,14 +71,23 @@ def commitMsg(msg):
 
 def gpt(msg):
     time.sleep(3)
-    url = "http://ss.qq2021.com/v1/tmp/message"
+    url = "https://cc01.plusai.io/backend-api/conversation"
     headers = {
+        "cookie": "_qimei_uuid42=1930f0e351a100b5ad5b0914f5ff5167b143766102;",
         'Content-Type': 'application/json',
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
     }
-
+    #
     msg = commitMsg(msg)
-    response = requests.post(url, json={"prompt": msg, 'user_id':"0"}, headers=headers)
+    response = requests.post(url, json={
+        "model": "gpt_175B_0404",
+        "prompt": msg,
+        "plugin": "Adaptive",
+        "displayPrompt": msg,
+        "displayPromptType": 1,
+        "options": {"imageIntention": {"needIntentionModel": True, "backendUpdateFlag": 2, "intentionStatus": True}},
+        "multimedia": [], "agentId": "naQivTmsDa", "supportHint": 1, "version": "v2", "chatModelId": "deep_seek_v3"
+    }, headers=headers)
     codes2 = response.json()
     # 回答异常就直接返回数据错误，丁丁提示
     return codes2
