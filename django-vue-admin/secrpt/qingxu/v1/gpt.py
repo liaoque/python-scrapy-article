@@ -52,7 +52,7 @@ def extract_msg(data_str):
                     continue
     return ""
 
-def gpt(msg):
+def gpt(id, msg):
     time.sleep(3)
     codes2 = reqGpt(id, msg)
     codes2 = extract_msg(codes2)
