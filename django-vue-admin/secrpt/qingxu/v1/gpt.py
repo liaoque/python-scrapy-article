@@ -156,7 +156,7 @@ def compute():
     conn.row_factory = sqlite3.Row
     # 创建一个Cursor:
     cursor = conn.cursor()
-
+    cursor.execute('PRAGMA journal_mode=WAL;')
     gpt.run(cursor, conn)
 
     cursor.close()
