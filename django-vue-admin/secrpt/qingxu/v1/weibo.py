@@ -16,7 +16,8 @@ def weibo(page):
     response = requests.get(url, headers=headers)
     res = response.json()
     if res["ok"] != 1:
-        dingding.dingding("weibo stop " + response.text)
+        if "这里还没有内容" not in response.content.decode("utf-8"):
+            dingding.dingding("weibo stop " + response.content.decode("utf-8"))
         return []
     cards = res["data"]["cards"]
 
