@@ -151,8 +151,7 @@ def run(cursor):
 
 
 def compute():
-
-    conn = sqlite3.connect(parent_dir + '/sqlitefile/v1/qingxu.db', isolation_level=None)
+    conn = sqlite3.connect(parent_dir + '/sqlitefile/v1/qingxu.db')
     conn.row_factory = sqlite3.Row
     # 创建一个Cursor:
     cursor = conn.cursor()
