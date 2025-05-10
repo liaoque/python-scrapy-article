@@ -29,7 +29,7 @@ def compute():
     #
     dfcf.run(cursor)
     baidu.run(cursor)
-    gpt.run(cursor)
+    # gpt.run(cursor)
 
     # 提交事务:
     conn.commit()
