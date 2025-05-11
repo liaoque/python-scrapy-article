@@ -1,6 +1,6 @@
 import requests
 import re
-# import jieba
+import jieba
 # import nltk
 import time
 # from nltk.corpus import stopwords
@@ -8,6 +8,7 @@ import sqlite3
 import os
 import sys
 import json
+import qingxu.chat.anget as chat
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(os.path.dirname(current_dir))
@@ -52,12 +53,6 @@ def extract_msg(data_str):
                     continue
     return ""
 
-def gpt(id, msg):
-    time.sleep(3)
-    codes2 = reqGpt(id, msg)
-    codes2 = extract_msg(codes2)
-    # 回答异常就直接返回数据错误，丁丁提示
-    return codes2
 
 def reqCreateChat():
     url = "https://yuanbao.tencent.com/api/user/agent/conversation/create"
@@ -71,22 +66,7 @@ def reqCreateChat():
     data = response.json()
     return data['id']
 
-def reqGpt(id, msg):
-    url = "https://yuanbao.tencent.com/api/chat/" + id
-    headers = {
-        "Host": "yuanbao.tencent.com",
-        "cookie": "hy_user=CIhCqbC6T5voiJRk; hy_token=h1nxijKasHsn4fUxgFQiqu6LYWrMB5fquv5djhn4rffbWXNgUWx4U8Hl0gDeByUX; hy_source=web"
-    }
-    response = requests.post(url, json={
-        "model": "gpt_175B_0404",
-        "prompt": msg,
-        "plugin": "Adaptive",
-        "displayPrompt": msg,
-        "displayPromptType": 1,
-        "options": {"imageIntention": {"needIntentionModel": True, "backendUpdateFlag": 2, "intentionStatus": True}},
-        "multimedia": [], "agentId": "naQivTmsDa", "supportHint": 1, "version": "v2", "chatModelId": "deep_seek_v3"
-    }, headers=headers)
-    return response.content.decode("utf-8")
+
 
 def queryRrport(cursor):
     cursor.execute('SELECT * FROM m_qingxu_report where  isrun = 0 limit 20')
@@ -133,10 +113,9 @@ def run(cursor):
         判断结果：过冷
         依据：文本中“情绪极度低迷”“交易几乎停滞”“市场预期一片黯淡”等词汇和语句表明市场情绪过冷。
     - Initialization: 在第一次对话中，请直接输出以下：您好，我是金融市场情绪分析专家。我将根据您提供的A股市场相关文本内容，为您判断情绪是过热、积极、中性、消极还是过冷。请提供您需要分析的文本内容。
-    
     """
 
-    reqGpt(id, msg)
+    chat.reqGpt(id, msg)
     while (True):
         reports = queryRrport(cursor)
         if len(reports) == 0:
@@ -146,7 +125,7 @@ def run(cursor):
             table_name = item['table_name']
             table_id = item['table_id']
             qc = queryContent(cursor, table_name, table_id)
-            codes2 = gpt(id, qc['content'])
+            codes2 = chat.gpt(id, qc['content'])
             if "data" in codes2 and "content" in codes2["data"]:
                 point = content2 = codes2["data"]["content"]
                 if "过热" in content2 or "强烈积极" in content2 :
