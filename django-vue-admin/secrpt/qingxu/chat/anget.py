@@ -1,8 +1,8 @@
 import requests
 import json
 import time
-import yuanbao.gpt as yuanbao
-import qianwen.gpt as qianwen
+import qingxu.chat.yuanbao.gpt as yuanbao
+import qingxu.chat.qianwen.gpt as qianwen
 
 current_gpt = "yuanbao"
 
