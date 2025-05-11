@@ -8,13 +8,14 @@ import sqlite3
 import os
 import sys
 import json
-import qingxu.chat.anget as chat
+
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(os.path.dirname(current_dir))
 # 设置根目录是secrpt
 sys.path.insert(0, parent_dir)
 
+import qingxu.chat.anget as chat
 
 # nltk.download('stopwords')
 # stop_words = set(stopwords.words('chinese'))  # 需要下载中文停用词表

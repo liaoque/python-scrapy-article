@@ -9,7 +9,7 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.insert(0, parent_dir)
 
 
-from qingxu.v1 import dfcf,weibo,xueqiu,baidu,gpt
+from qingxu.v1 import dfcf,weibo,xueqiu,baidu
 from qingxu.cls import cls
 
 
