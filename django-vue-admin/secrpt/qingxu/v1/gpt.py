@@ -100,7 +100,7 @@ def queryContent(cursor, table_name, table_id):
     return values[0]
 
 def savePoint(cursor, id, point):
-    cursor.execute('update m_qingxu_report set point = ? where id = ?', (point, id,))
+    cursor.execute('update m_qingxu_report set point = ? and isrun = 1 where id = ?', (point, id,))
 
 def run(cursor):
     id = reqCreateChat()
