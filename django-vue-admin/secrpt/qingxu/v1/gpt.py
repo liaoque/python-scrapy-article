@@ -130,6 +130,7 @@ def run(cursor):
 
             # if "data" in codes2 and "content" in codes2["data"]:
             #     point = content2 = codes2["data"]["content"]
+            point = 0
             content2 = codes2
             if "过热" in content2 or "强烈积极" in content2 :
                 point = "2"
