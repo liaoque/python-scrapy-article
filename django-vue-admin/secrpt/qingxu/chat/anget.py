@@ -33,6 +33,8 @@ def gpt(id, msg):
     global current_gpt
     if current_gpt == "yuanbao":
         msg = yuanbao.gpt(id, msg)
+        if "今日提问次数已达上限，请明日再试" in msg:
+            current_gpt = "qianwen"
     else:
         msg = qianwen.gpt(id, msg)
     # 回答异常就直接返回数据错误，丁丁提示
