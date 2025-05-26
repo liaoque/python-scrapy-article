@@ -141,6 +141,14 @@ const frameIn = [{
       },
       component: _import('zzx/dfcf/zhishu/index')
     },
+    {
+      path: 'yq',
+      name: 'yq',
+      meta: {
+        auth: true
+      },
+      component: _import('zzx/yq/index')
+    }
   ]
 }]
 
