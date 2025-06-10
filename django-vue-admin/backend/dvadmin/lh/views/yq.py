@@ -40,8 +40,9 @@ class YQView(View):
         })
 
     def post(self, request, *args, **kwargs):
-        current_time = request.POST.get('current_time')
-        data = request.POST.get('data')
+        body_data = json.loads(request.body)
+        current_time = body_data.get('current_time')
+        data = body_data.get('data')
         if current_time is None or current_time == "":
             return JsonResponse({"error": "current_time must"})
         table = self.db['yq']  # 选择你的数据
