@@ -36,7 +36,7 @@ class YQView(View):
         return JsonResponse({
             "code": 2000,
             "msg": "success",
-            "data": res
+            "data": res.get("data")
         })
 
     def post(self, request, *args, **kwargs):
