@@ -111,7 +111,7 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': "wb",
         'CLIENT': {
-            'host': DATABASE_HOST_MO,
+            'host': "127.0.0.1",
             'port': 27017,
         }
     }
