@@ -40,7 +40,7 @@ def fetch_and_save(date_str: str):
     coll = client[config['db_name']]["limitup_records"]
     #
     saved = 0
-    date_str = [ item for key, item in dall[0].items() if "首次涨停时间" in key][0]
+    date_str = [ key.replace("首次涨停时间[", "").replace("]", "")  for key, item in dall[0].items() if "首次涨停时间" in key][0]
     suffix = f'[{date_str}]'
 
     for entry in dall:
