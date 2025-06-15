@@ -148,6 +148,14 @@ const frameIn = [{
         auth: true
       },
       component: _import('zzx/yq/index')
+    },
+    {
+      path: 'gz',
+      name: 'gz',
+      meta: {
+        auth: true
+      },
+      component: _import('zzx/gz/index')
     }
   ]
 }]
