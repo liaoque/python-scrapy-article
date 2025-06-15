@@ -1,6 +1,6 @@
 import requests
 import re
-import jieba
+# import jieba
 # import nltk
 import time
 # from nltk.corpus import stopwords
@@ -28,9 +28,9 @@ def clean_text(text):
     # 进一步清洗可以根据需要添加
     return text
 
-
-def tokenize(text):
-    return ' '.join(jieba.cut(text))
+#
+# def tokenize(text):
+#     return ' '.join(jieba.cut(text))
 
 
 
@@ -59,7 +59,7 @@ def reqCreateChat():
     url = "https://yuanbao.tencent.com/api/user/agent/conversation/create"
     headers = {
         "Host": "yuanbao.tencent.com",
-        "cookie": "hy_user=CIhCqbC6T5voiJRk; hy_token=h1nxijKasHsn4fUxgFQiqu6LYWrMB5fquv5djhn4rffbWXNgUWx4U8Hl0gDeByUX; hy_source=web"
+        "cookie": "hy_user=34489ef062c24625982e512b51d0dad2; hy_token=lR06RvjUp+tcvcp7EFNyWoLTZ+Y0av1uHqneBhyaZYeW22WU13XdJKlkXcEx7Nyg/DycQatJDIPQmgsc0hiPXQ==; hy_source=web"
     }
     response = requests.post(url, json={
         "agentId": "naQivTmsDa",
@@ -81,9 +81,9 @@ def queryContent(cursor, table_name, table_id):
     return values[0]
 
 def savePoint(cursor, id, point):
-    cursor.execute('update m_qingxu_report set point = ? and isrun = 1 where id = ?', (point, id,))
+    cursor.execute('update m_qingxu_report set point = ? , isrun = 1 where id = ?', (point, id,))
 
-def run(cursor):
+def run(cursor, conn):
     id = reqCreateChat()
     msg = """
     - Role: 金融市场情绪分析专家
@@ -145,6 +145,7 @@ def run(cursor):
             elif content2 not in [0, 1, -1, 2, -2, "0", "1", "-1", "2", "-2"]:
                 return
             savePoint(cursor, item['id'], point)
+            conn.commit()
     pass
 
 
@@ -154,7 +155,8 @@ def compute():
     # 创建一个Cursor:
     cursor = conn.cursor()
     cursor.execute('PRAGMA journal_mode=WAL;')
-    run(cursor)
+    run(cursor, conn)
+
 
     cursor.close()
     conn.close()

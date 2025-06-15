@@ -2,11 +2,12 @@ import requests
 import json
 import time
 
+
 def reqGpt(id, msg):
     url = "https://yuanbao.tencent.com/api/chat/" + id
     headers = {
         "Host": "yuanbao.tencent.com",
-        "cookie": "hy_user=CIhCqbC6T5voiJRk; hy_token=h1nxijKasHsn4fUxgFQiqu6LYWrMB5fquv5djhn4rffbWXNgUWx4U8Hl0gDeByUX; hy_source=web"
+        "cookie": "hy_user=34489ef062c24625982e512b51d0dad2; hy_token=lR06RvjUp+tcvcp7EFNyWoLTZ+Y0av1uHqneBhyaZYeW22WU13XdJKlkXcEx7Nyg/DycQatJDIPQmgsc0hiPXQ==; hy_source=web"
     }
     response = requests.post(url, json={
         "model": "gpt_175B_0404",
