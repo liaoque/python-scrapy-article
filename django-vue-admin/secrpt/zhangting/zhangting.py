@@ -25,7 +25,7 @@ def fetch_and_save(date_str: str):
     1) 按日期（YYYYMMDD）调用接口
     2) 将接口返回的 'datas' 中的每条记录 upsert 到 MongoDB
     """
-    s = "%s涨停股票，首次涨停时间，最终涨停时间，连续涨停天数，涨停原因，涨停封单量，涨停封单额，涨停封成比，涨停封流比，涨停开板次数，几天几板，涨停类型，所属概念，所属行业，涨停日期" %(date_str)
+    s = "%s涨停股票，首次涨停时间，最终涨停时间，连续涨停天数，涨停原因，涨停封单量，涨停封单额，涨停封成比，涨停封流比，涨停开板次数，几天几板，涨停类型，所属概念，所属行业" %(date_str)
     dall = wencai(s,1)
     print("==========================================================")
     print(s)
@@ -40,7 +40,7 @@ def fetch_and_save(date_str: str):
     coll = client[config['db_name']]["limitup_records"]
     #
     saved = 0
-    date_str = [ item for key, item in dall[0].items() if "涨停日期" in key][0]
+    date_str = [ item for key, item in dall[0].items() if "首次涨停时间" in key][0]
     suffix = f'[{date_str}]'
 
     for entry in dall:
@@ -53,6 +53,10 @@ def fetch_and_save(date_str: str):
         last_key = f"最终涨停时间{suffix}"
         vol_key = f"涨停封单量{suffix}"
         ratio_key = f"涨停封单量占成交量比{suffix}"
+
+        dde = 0
+        if "最新dde大单净额" in entry:
+            dde = entry['最新dde大单净额']
 
         # 显式把所有我们关注的列都取出来
         record = {
@@ -68,7 +72,7 @@ def fetch_and_save(date_str: str):
 
             # 封单 & 市值等
             # 'a_share_market_value': float(entry[f"a股市值(不含限售股){suffix}"]),
-            # 'dde_big_order': entry['最新dde大单净额'],
+            'dde_big_order': dde,
             # 'total_share_capital': float(entry[f"总股本{suffix}"]),
             # 'pe_ratio': float(entry[f"市盈率(pe){suffix}"]),
 
