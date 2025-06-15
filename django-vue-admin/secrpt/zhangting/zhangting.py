@@ -30,14 +30,15 @@ def fetch_and_save(date_str: str):
     print("==========================================================")
     print(s)
     print("==========================================================")
-    # 提取当日标识
-    date_obj = datetime.strptime(date_str, '%Y%m%d').date()
 
 
     # 连接 DB
     config = getConfig("default")
     client = MongoClient(config['uri'])
     coll = client[config['db_name']]["limitup_records"]
+
+    coll.delete_many({'date': date_str})
+
     #
     saved = 0
     date_str = [ key.replace("首次涨停时间[", "").replace("]", "")  for key, item in dall[0].items() if "首次涨停时间" in key][0]
@@ -110,33 +111,6 @@ def fetch_and_save(date_str: str):
     print(f"[{date_str}] 已保存 {saved} 条涨停记录。")
 
 
-
-# —— 3. 查找“共振”股票对 —— #
-def find_resonance(min_occurrences: int = 2):
-    """
-    定义“两支及以上股票在同一天涨停，且至少发生 min_occurrences 天”即为“共振”。
-    返回形如 { 'A-B': 3, 'C-D': 2, … } 的字典，数字表示共振天数。
-    """
-    config = getConfig("default")
-    client = MongoClient(config['uri'])
-    coll = client[config['db_name']]["limitup_records"]
-
-    # 读取所有记录的 (date, code)
-    cursor = coll.find({}, {'date': 1, 'code': 1})
-    date_map = {}
-    for r in cursor:
-        d = r['date']
-        date_map.setdefault(d, set()).add(r['code'])
-
-    # 统计每对组合出现的天数
-    pair_count = {}
-    for codes in date_map.values():
-        for a, b in combinations(sorted(codes), 2):
-            key = f"{a}-{b}"
-            pair_count[key] = pair_count.get(key, 0) + 1
-
-    # 只保留 ≥min_occurrences
-    return {pair: cnt for pair, cnt in pair_count.items() if cnt >= min_occurrences}
 
 
 # —— 4. 一键执行示例 —— #
