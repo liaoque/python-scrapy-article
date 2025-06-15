@@ -54,7 +54,7 @@ def fetch_and_save(date_str: str):
 
         # 显式把所有我们关注的列都取出来
         record = {
-            'date': date_obj,
+            'date': date_str,
             'code': code,
             'name': name,
 
@@ -95,7 +95,7 @@ def fetch_and_save(date_str: str):
 
         # upsert
         coll.update_one(
-            {'date': date_obj, 'code': code},
+            {'date': date_str, 'code': code},
             {'$set': record},
             upsert=True
         )
