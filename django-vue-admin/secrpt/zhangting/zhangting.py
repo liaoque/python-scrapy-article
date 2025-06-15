@@ -65,7 +65,7 @@ def fetch_and_save(date_str: str):
             'name': name,
 
             # 基本涨停信息
-            'price': float(entry['最新价']),
+            # 'price': float(entry['最新价']),
             'change_ratio': float(entry['最新涨跌幅']),
             'concepts': entry['所属概念'],
             # 'attributes_count': int(entry['所属概念数量']),
