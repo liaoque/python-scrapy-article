@@ -41,12 +41,19 @@ class ZhangTingView(View):
             print(f"目标日期 {current_time} 没有涨停股票数据")
             return JsonResponse({"error": "目标日期 {current_time} 没有涨停股票数据"})
 
-        recent_dates = table.distinct(
-            "date",
-            {"date": {"$lt": current_time}},  # 不包括目标日期本身
-            sort=[("date", -1)],
-            limit=30
-        )
+        recent_dates = list(table.aggregate([
+            {"$match": {"date": {"$lte": current_time}}},
+            {"$group": {"_id": "$date"}},
+            {"$sort": {"_id": -1}},
+            {"$limit": 30}
+        ]))
+        recent_dates = [d["_id"] for d in recent_dates]
+        # recent_dates = table.distinct(
+        #     "date",
+        #     {"date": {"$lt": current_time}},  # 不包括目标日期本身
+        #     sort=[("date", -1)],
+        #     limit=30
+        # )
 
         date_stock_map = {}  # {date: set(stock_codes)}
         for r in table.find({"date": {"$in": recent_dates}}, {'date': 1, 'code': 1}):
