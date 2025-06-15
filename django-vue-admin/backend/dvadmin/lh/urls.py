@@ -16,6 +16,7 @@ from dvadmin.lh.views.lsqs import LsqsView
 from dvadmin.lh.views.chanlun import ChanlunView
 from dvadmin.lh.views.vix import VixView
 from dvadmin.lh.views.yq import YQView
+from dvadmin.lh.views.zhangting import ZhangTingView
 
 urlpatterns = [
     path('bangdan', BangDanView.as_view()),
@@ -23,6 +24,7 @@ urlpatterns = [
     path('chanlun', ChanlunView.as_view()),
     path('vix', VixView.as_view()),
     path('yq', YQView.as_view()),
+    path('gz', ZhangTingView.as_view()),
     # path('yuan_yin', YuanYinView.as_view()),
     # path('result', ResultView.as_view()),
     # path('gns', ZhuXianGnsView.as_view()),
