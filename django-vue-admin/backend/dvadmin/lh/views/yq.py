@@ -33,6 +33,13 @@ class YQView(View):
             "current_time" : current_time
         }, {"data": 1})
 
+        if res is None:
+            return JsonResponse({
+                "code": 2000,
+                "msg": "success",
+                "data": []
+            })
+
         return JsonResponse({
             "code": 2000,
             "msg": "success",
