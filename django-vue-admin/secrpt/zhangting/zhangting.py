@@ -65,7 +65,7 @@ def fetch_and_save(date_str: str):
             # 'attributes_count': int(entry['所属概念数量']),
 
             # 封单 & 市值等
-            'a_share_market_value': float(entry[f"a股市值(不含限售股){suffix}"]),
+            # 'a_share_market_value': float(entry[f"a股市值(不含限售股){suffix}"]),
             'dde_big_order': entry['最新dde大单净额'],
             'total_share_capital': float(entry[f"总股本{suffix}"]),
             'pe_ratio': float(entry[f"市盈率(pe){suffix}"]),
