@@ -39,7 +39,7 @@ class ZhangTingView(View):
 
         if not target_day_stocks:
             print(f"目标日期 {current_time} 没有涨停股票数据")
-            return {}
+            return JsonResponse({"error": "目标日期 {current_time} 没有涨停股票数据"})
 
         recent_dates = table.distinct(
             "date",
