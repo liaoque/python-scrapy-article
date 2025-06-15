@@ -61,6 +61,9 @@ class ZhangTingView(View):
 
         resonance_pairs = {}
         for date, stocks in date_stock_map.items():
+            if date == current_time:
+                continue
+
             # 计算交集 - 即同时出现在目标日和历史日的股票
             common_stocks = target_day_stocks & stocks
 
