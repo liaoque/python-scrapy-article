@@ -144,11 +144,12 @@ if __name__ == '__main__':
     # 1) 拉取并存储 2025-06-13 的数据
 
     today = date.today()
-    i = 0
-    while(i < 60):
-        yesterday = today - timedelta(days=i)
-        fetch_and_save(yesterday.strftime("%Y%m%d"))
-        i += 1
+    fetch_and_save(today.strftime("%Y%m%d"))
+    # i = 0
+    # while(i < 60):
+    #     yesterday = today - timedelta(days=i)
+    #     fetch_and_save(yesterday.strftime("%Y%m%d"))
+    #     i += 1
 
 
 
