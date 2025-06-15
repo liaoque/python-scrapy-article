@@ -70,7 +70,7 @@ def reqCreateChat():
 
 
 def queryRrport(cursor):
-    cursor.execute('SELECT * FROM m_qingxu_report where  isrun = 0 limit 20')
+    cursor.execute('SELECT * FROM m_qingxu_report where  isrun = 0 limit 50')
     values = cursor.fetchall()
     return values
 
