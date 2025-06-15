@@ -11,6 +11,7 @@ from datetime import date, timedelta
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(os.path.dirname(current_dir))
 # 设置根目录是secrpt
+print(parent_dir)
 sys.path.insert(0, parent_dir)
 
 from common.wencai import wencai
