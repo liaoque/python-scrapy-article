@@ -47,10 +47,10 @@ def fetch_and_save(date_str: str):
         name = entry['股票简称']
 
         # 动态拼接带日期后缀的字段名
-        first_key = f"首次涨停时间[{suffix}]"
-        last_key = f"最终涨停时间[{suffix}]"
-        vol_key = f"涨停封单量[{suffix}]"
-        ratio_key = f"涨停封单量占成交量比[{suffix}]"
+        first_key = f"首次涨停时间{suffix}"
+        last_key = f"最终涨停时间{suffix}"
+        vol_key = f"涨停封单量{suffix}"
+        ratio_key = f"涨停封单量占成交量比{suffix}"
 
         # 显式把所有我们关注的列都取出来
         record = {
@@ -65,32 +65,32 @@ def fetch_and_save(date_str: str):
             # 'attributes_count': int(entry['所属概念数量']),
 
             # 封单 & 市值等
-            'a_share_market_value': float(entry[f"a股市值(不含限售股)[{suffix}]"]),
+            'a_share_market_value': float(entry[f"a股市值(不含限售股){suffix}"]),
             'dde_big_order': entry['最新dde大单净额'],
-            'total_share_capital': float(entry[f"总股本[{suffix}]"]),
-            'pe_ratio': float(entry[f"市盈率(pe)[{suffix}]"]),
+            'total_share_capital': float(entry[f"总股本{suffix}"]),
+            'pe_ratio': float(entry[f"市盈率(pe){suffix}"]),
 
             # 时间信息
             'first_limit_time': date_parser.parse(f"{date_str} {entry[first_key].strip()}"),
             'last_limit_time': date_parser.parse(f"{date_str} {entry[last_key].strip()}"),
 
             # 连续涨停天数 & 类型
-            'consecutive_days': int(entry[f"连续涨停天数[{suffix}]"]),
-            'limit_type': entry[f"涨停类型[{suffix}]"],
+            'consecutive_days': int(entry[f"连续涨停天数{suffix}"]),
+            'limit_type': entry[f"涨停类型{suffix}"],
 
             # 封单量/额
             'seal_order_volume': int(float(entry[vol_key])),
-            'seal_order_amount': float(entry[f"涨停封单额[{suffix}]"]),
+            'seal_order_amount': float(entry[f"涨停封单额{suffix}"]),
             'seal_order_ratio': float(entry[ratio_key]),
-            'seal_to_flow_ratio': float(entry[f"涨停封单量占流通a股比[{suffix}]"]),
+            'seal_to_flow_ratio': float(entry[f"涨停封单量占流通a股比{suffix}"]),
 
             # 涨停打开次数 & 概念、行业
-            'open_count': int(entry[f"涨停开板次数[{suffix}]"]),
-            'plate': entry[f"几天几板[{suffix}]"],
+            'open_count': int(entry[f"涨停开板次数{suffix}"]),
+            'plate': entry[f"几天几板{suffix}"],
             'industry': entry['所属同花顺行业'],
 
             # 明细数据（原 JSON 字符串）
-            'detail_data': entry[f"涨停明细数据[{suffix}]"],
+            'detail_data': entry[f"涨停明细数据{suffix}"],
         }
 
         # upsert
