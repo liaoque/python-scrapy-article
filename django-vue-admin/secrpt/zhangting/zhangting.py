@@ -4,8 +4,7 @@ from dateutil import parser as date_parser
 from itertools import combinations
 import os
 import sys
-from common.wencai import wencai
-from common.database import getConfig
+
 from datetime import date, timedelta
 
 
@@ -14,6 +13,8 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 # 设置根目录是secrpt
 sys.path.insert(0, parent_dir)
 
+from common.wencai import wencai
+from common.database import getConfig
 
 
 
