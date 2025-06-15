@@ -6,6 +6,8 @@ import os
 import sys
 from common.wencai import wencai
 from common.database import getConfig
+from datetime import date, timedelta
+
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(os.path.dirname(current_dir))
@@ -131,13 +133,22 @@ def find_resonance(min_occurrences: int = 2):
 # —— 4. 一键执行示例 —— #
 if __name__ == '__main__':
     # 1) 拉取并存储 2025-06-13 的数据
-    fetch_and_save('20250613')
 
-    # 2) 查找共振（至少两天共振）
-    resonances = find_resonance(min_occurrences=2)
-    if resonances:
-        print("检测到以下“共振”组合（天数 ≥2）：")
-        for pair, days in resonances.items():
-            print(f"  {pair}: 共振 {days} 天")
-    else:
-        print("当前数据库中暂无满足 ≥2 天共振的股票对。")
+    today = date.today()
+    i = 0
+    while(i < 60):
+        yesterday = today - timedelta(days=i)
+        fetch_and_save(yesterday.strftime("%Y%m%d"))
+        i += 1
+
+
+
+    #
+    # # 2) 查找共振（至少两天共振）
+    # resonances = find_resonance(min_occurrences=2)
+    # if resonances:
+    #     print("检测到以下“共振”组合（天数 ≥2）：")
+    #     for pair, days in resonances.items():
+    #         print(f"  {pair}: 共振 {days} 天")
+    # else:
+    #     print("当前数据库中暂无满足 ≥2 天共振的股票对。")
