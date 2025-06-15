@@ -42,6 +42,7 @@ def fetch_and_save(date_str: str):
     suffix = f'[{date_str}]'
 
     for entry in dall:
+        print(entry)
         code = entry['股票代码']
         name = entry['股票简称']
 
