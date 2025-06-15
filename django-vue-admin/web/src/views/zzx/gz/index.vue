@@ -18,49 +18,49 @@
 
       <!-- 两列布局展示表格 -->
       <el-row :gutter="20" class="table-row">
-        <div v-if="loading" class="loading">
-          <i class="el-icon-loading"></i> 加载中...
-        </div>
-        <div v-if="error" class="error">{{ error }}</div>
-
-        <el-table
-          v-if="resonanceData && sortedDates.length"
-          :data="tableData"
-          stripe
-          border
-          style="width: 100%; margin-top: 20px;"
-        >
-          <!-- 第一列显示股票名称 -->
-          <el-table-column
-            prop="name"
-            label="股票"
-            fixed="left"
-            width="180"
-          />
-          <!-- 动态列: 每个日期 -->
-          <el-table-column
-            v-for="date in sortedDates"
-            :key="date"
-            :prop="date"
-            :label="formatDisplayDate(date)"
-            align="center"
+        <el-col :span="24" >
+          <div v-if="loading" class="loading">
+            <i class="el-icon-loading"></i> 加载中...
+          </div>
+          <div v-if="error" class="error">{{ error }}</div>
+          <el-table
+            v-if="resonanceData && sortedDates.length"
+            :data="tableData"
+            stripe
+            border
+            style="width: 100%; margin-top: 20px;"
           >
-            <template slot-scope="{ row }">
-              <i
-                v-if="row[date]"
-                class="el-icon-circle-check"
-                style="color: #67C23A"
-              />
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <div
-          v-if="resonanceData && !sortedDates.length"
-          class="no-data"
-        >
-          未查询到共振记录
-        </div>
+            <!-- 第一列显示股票名称 -->
+            <el-table-column
+              prop="name"
+              label="股票"
+              fixed="left"
+              width="180"
+            />
+            <!-- 动态列: 每个日期 -->
+            <el-table-column
+              v-for="date in sortedDates"
+              :key="date"
+              :prop="date"
+              :label="formatDisplayDate(date)"
+              align="center"
+            >
+              <template slot-scope="{ row }">
+                <i
+                  v-if="row[date]"
+                  class="el-icon-circle-check"
+                  style="color: #67C23A"
+                />
+              </template>
+            </el-table-column>
+          </el-table>
+          <div
+            v-if="resonanceData && !sortedDates.length"
+            class="no-data"
+          >
+            未查询到共振记录
+          </div>
+        </el-col>
       </el-row>
 
     </div>
