@@ -66,9 +66,9 @@ def fetch_and_save(date_str: str):
 
             # 封单 & 市值等
             # 'a_share_market_value': float(entry[f"a股市值(不含限售股){suffix}"]),
-            'dde_big_order': entry['最新dde大单净额'],
-            'total_share_capital': float(entry[f"总股本{suffix}"]),
-            'pe_ratio': float(entry[f"市盈率(pe){suffix}"]),
+            # 'dde_big_order': entry['最新dde大单净额'],
+            # 'total_share_capital': float(entry[f"总股本{suffix}"]),
+            # 'pe_ratio': float(entry[f"市盈率(pe){suffix}"]),
 
             # 时间信息
             'first_limit_time': date_parser.parse(f"{date_str} {entry[first_key].strip()}"),
@@ -90,7 +90,7 @@ def fetch_and_save(date_str: str):
             'industry': entry['所属同花顺行业'],
 
             # 明细数据（原 JSON 字符串）
-            'detail_data': entry[f"涨停明细数据{suffix}"],
+            # 'detail_data': entry[f"涨停明细数据{suffix}"],
         }
 
         # upsert
