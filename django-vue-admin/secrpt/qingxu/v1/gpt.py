@@ -134,7 +134,7 @@ def run(cursor, conn):
             content2 = codes2
             if "过热" in content2 or "强烈积极" in content2 :
                 point = "2"
-            if "积极" in content2:
+            elif "积极" in content2:
                 point = "1"
             elif "中性" in content2:
                 point = "0"
