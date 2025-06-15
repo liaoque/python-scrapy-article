@@ -72,7 +72,7 @@ def fetch_and_save(date_str: str):
 
             # 封单 & 市值等
             # 'a_share_market_value': float(entry[f"a股市值(不含限售股){suffix}"]),
-            'dde_big_order': dde,
+            # 'dde_big_order': dde,
             # 'total_share_capital': float(entry[f"总股本{suffix}"]),
             # 'pe_ratio': float(entry[f"市盈率(pe){suffix}"]),
 
