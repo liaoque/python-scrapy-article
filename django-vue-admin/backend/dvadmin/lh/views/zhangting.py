@@ -33,9 +33,11 @@ class ZhangTingView(View):
 
         table = self.db['limitup_records']  # 选择你的数据
 
+        names = {}
         target_day_stocks = set()
-        for r in table.find({"date": current_time}, {'code': 1}):
+        for r in table.find({"date": current_time}, {'code': 1, 'name': 1}):
             target_day_stocks.add(r['code'])
+            names[r['code']] = r['name']
 
         if not target_day_stocks:
             print(f"目标日期 {current_time} 没有涨停股票数据")
@@ -73,7 +75,10 @@ class ZhangTingView(View):
         return JsonResponse({
             "code": 2000,
             "msg": "success",
-            "data": resonance_pairs
+            "data": {
+                'names' : names,
+                'resonance_pairs' : resonance_pairs,
+            }
         })
 
     def post(self, request, *args, **kwargs):
