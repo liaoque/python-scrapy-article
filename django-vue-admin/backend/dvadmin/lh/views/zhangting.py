@@ -65,7 +65,7 @@ class ZhangTingView(View):
             common_stocks = target_day_stocks & stocks
 
             if len(common_stocks) >= 2:  # 至少有2只股票同时出现
-                resonance_pairs[date] = common_stocks
+                resonance_pairs[date] = list(common_stocks)
 
         return JsonResponse({
             "code": 2000,
