@@ -114,6 +114,15 @@ DATABASES = {
             'host': "127.0.0.1",
             'port': 27017,
         }
+    },
+    'mg': {
+        'ENGINE': 'djongo',
+        'NAME': 'stock_db',  # 替换为你的MongoDB数据库名称
+        'ENFORCE_SCHEMA': False,       # 如果设置为True，Django将尝试强制执行模型的schema
+        'CLIENT': {
+            'host': 'localhost',  # 替换为你的MongoDB主机地址，通常是localhost或IP地址
+            'port': 27017,               # MongoDB默认端口是27017
+        }
     }
 }
 AUTH_USER_MODEL = "system.Users"
