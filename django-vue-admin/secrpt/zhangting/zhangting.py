@@ -82,7 +82,7 @@ def fetch_and_save(date_str: str):
             'last_limit_time': date_parser.parse(f"{date_str} {entry[last_key].strip()}"),
 
             # 连续涨停天数 & 类型
-            'consecutive_days': int(entry[f"连续涨停天数{suffix}"]),
+            'consecutive_days': (entry[f"连续涨停天数{suffix}"]),
             'limit_type': entry[f"涨停类型{suffix}"],
 
             # 封单量/额
@@ -92,7 +92,7 @@ def fetch_and_save(date_str: str):
             'seal_to_flow_ratio': float(entry[f"涨停封单量占流通a股比{suffix}"]),
 
             # 涨停打开次数 & 概念、行业
-            'open_count': int(entry[f"涨停开板次数{suffix}"]),
+            'open_count': (entry[f"涨停开板次数{suffix}"]),
             'plate': entry[f"几天几板{suffix}"],
             'industry': entry['所属同花顺行业'],
 
