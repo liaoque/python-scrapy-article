@@ -67,12 +67,10 @@ class ZhangTingView(View):
             target_day_stocks.add(r['code'])
             names[r['code']] = r['name']
 
-        if not target_day_stocks:
-            print(f"目标日期 {current_time} 没有涨停股票数据")
-            return JsonResponse({"error": "目标日期 {current_time} 没有涨停股票数据"})
-
-        resonance_pairs = resonancePairs(table, current_time, target_day_stocks)
-        resonance_pairs_d = resonancePairs(table_d, current_time, target_day_stocks)
+        resonance_pairs = resonance_pairs_d = []
+        if  target_day_stocks:
+            resonance_pairs = resonancePairs(table, current_time, target_day_stocks)
+            resonance_pairs_d = resonancePairs(table_d, current_time, target_day_stocks)
 
         return JsonResponse({
             "code": 2000,
