@@ -15,6 +15,33 @@ from application.settings import DATABASES
 from itertools import combinations
 
 
+def resonancePairs(table, current_time, target_day_stocks):
+    recent_dates = list(table.aggregate([
+        {"$match": {"date": {"$lte": current_time}}},
+        {"$group": {"_id": "$date"}},
+        {"$sort": {"_id": -1}},
+        {"$limit": 30}
+    ]))
+    recent_dates = [d["_id"] for d in recent_dates]
+
+    date_stock_map = {}  # {date: set(stock_codes)}
+    for r in table.find({"date": {"$in": recent_dates}}, {'date': 1, 'code': 1}):
+        date_stock_map.setdefault(r['date'], set()).add(r['code'])
+
+    resonance_pairs = {}
+    for date, stocks in date_stock_map.items():
+        if date == current_time:
+            continue
+
+        # 计算交集 - 即同时出现在目标日和历史日的股票
+        common_stocks = target_day_stocks & stocks
+
+        if len(common_stocks) >= 2:  # 至少有2只股票同时出现
+            resonance_pairs[date] = list(common_stocks)
+
+    return resonance_pairs
+
+
 @method_decorator(csrf_exempt, name='dispatch')
 class ZhangTingView(View):
     def __init__(self, **kwargs):
@@ -32,6 +59,7 @@ class ZhangTingView(View):
             return JsonResponse({"error": "current_time must"})
 
         table = self.db['limitup_records']  # 选择你的数据
+        table_d = self.db['limitdown_records']  # 选择你的数据
 
         names = {}
         target_day_stocks = set()
@@ -43,34 +71,8 @@ class ZhangTingView(View):
             print(f"目标日期 {current_time} 没有涨停股票数据")
             return JsonResponse({"error": "目标日期 {current_time} 没有涨停股票数据"})
 
-        recent_dates = list(table.aggregate([
-            {"$match": {"date": {"$lte": current_time}}},
-            {"$group": {"_id": "$date"}},
-            {"$sort": {"_id": -1}},
-            {"$limit": 30}
-        ]))
-        recent_dates = [d["_id"] for d in recent_dates]
-        # recent_dates = table.distinct(
-        #     "date",
-        #     {"date": {"$lt": current_time}},  # 不包括目标日期本身
-        #     sort=[("date", -1)],
-        #     limit=30
-        # )
-
-        date_stock_map = {}  # {date: set(stock_codes)}
-        for r in table.find({"date": {"$in": recent_dates}}, {'date': 1, 'code': 1}):
-            date_stock_map.setdefault(r['date'], set()).add(r['code'])
-
-        resonance_pairs = {}
-        for date, stocks in date_stock_map.items():
-            if date == current_time:
-                continue
-
-            # 计算交集 - 即同时出现在目标日和历史日的股票
-            common_stocks = target_day_stocks & stocks
-
-            if len(common_stocks) >= 2:  # 至少有2只股票同时出现
-                resonance_pairs[date] = list(common_stocks)
+        resonance_pairs = resonancePairs(table, current_time, target_day_stocks)
+        resonance_pairs_d = resonancePairs(table_d, current_time, target_day_stocks)
 
         return JsonResponse({
             "code": 2000,
@@ -78,6 +80,7 @@ class ZhangTingView(View):
             "data": {
                 'names' : names,
                 'resonance_pairs' : resonance_pairs,
+                'resonance_pairs_d' : resonance_pairs_d,
             }
         })
 
