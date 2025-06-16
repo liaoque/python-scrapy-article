@@ -169,7 +169,7 @@ def fetch_and_save2(date_str: str):
             'last_limit_time': date_parser.parse(f"{date_str} {entry[last_key].strip()}"),
 
             # 连续跌停天数 & 类型
-            'consecutive_days': int(entry[f"连续跌停天数{suffix}"]),
+            'consecutive_days': (entry[f"连续跌停天数{suffix}"]),
             'limit_type': entry[f"跌停类型{suffix}"],
 
             # 封单量/额
