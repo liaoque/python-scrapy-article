@@ -203,18 +203,18 @@ if __name__ == '__main__':
 
     today = date.today()
     fetch_and_save(today.strftime("%Y%m%d"))
-    i = 1
-    while(i < 61):
-        yesterday = today - timedelta(days=i)
-        fetch_and_save(yesterday.strftime("%Y%m%d"))
-        i += 1
+    # i = 1
+    # while(i < 61):
+    #     yesterday = today - timedelta(days=i)
+    #     fetch_and_save(yesterday.strftime("%Y%m%d"))
+    #     i += 1
 
     fetch_and_save2(today.strftime("%Y%m%d"))
-    i = 1
-    while(i < 61):
-        yesterday = today - timedelta(days=i)
-        fetch_and_save2(yesterday.strftime("%Y%m%d"))
-        i += 1
+    # i = 1
+    # while(i < 61):
+    #     yesterday = today - timedelta(days=i)
+    #     fetch_and_save2(yesterday.strftime("%Y%m%d"))
+    #     i += 1
 
 
     #
