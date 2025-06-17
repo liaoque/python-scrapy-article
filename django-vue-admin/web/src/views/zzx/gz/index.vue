@@ -47,9 +47,13 @@
             >
               <template slot-scope="{ row }">
                 <i
-                  v-if="row[date]"
+                  v-if="row.u[date]"
                   class="el-icon-circle-check"
-                  style="color: #67C23A"
+                  style="color: #67C23A;font-size:14px;"
+                />
+                <i v-else-if="row.d[date]"
+                  class="el-icon-circle-check"
+                  style="color: red;font-size:14px;"
                 />
               </template>
             </el-table-column>
@@ -92,12 +96,19 @@ export default {
       if (!this.resonanceData) return []
       // 按日期降序或你希望的顺序
       return Object.keys(this.resonanceData.resonance_pairs)
-        .sort((a, b) => b.localeCompare(a))
+        .sort((a, b) => a.localeCompare(b))
+    },
+    sortedDatesDown () {
+      if (!this.resonanceData) return []
+      // 按日期降序或你希望的顺序
+      return Object.keys(this.resonanceData.resonance_pairs_d)
+        .sort((a, b) => a.localeCompare(b))
     },
     // eslint-disable-next-line vue/no-unused-components
     tableData () {
       if (!this.resonanceData) return []
       const pairs = this.resonanceData.resonance_pairs
+      const pairsD = this.resonanceData.resonance_pairs_d
       const names = this.resonanceData.names
       // 收集所有在选定日期区间里出现的股票
       const codeSet = new Set()
@@ -107,9 +118,12 @@ export default {
       const codes = Array.from(codeSet).sort()
       // 构造行数据
       return codes.map(code => {
-        const row = { name: `${code} ${names[code] || ''}` }
+        const row = { name: `${code} ${names[code] || ''}`, u: {}, d: {} }
         this.sortedDates.forEach(date => {
-          row[date] = (pairs[date] || []).includes(code)
+          row.u[date] = (pairs[date] || []).includes(code)
+        })
+        this.sortedDatesDown.forEach(date => {
+          row.d[date] = (pairsD[date] || []).includes(code)
         })
         return row
       })
@@ -130,7 +144,7 @@ export default {
       this.loading = true
       this.resonanceData = null
       try {
-        const res = await api.getStockPanel({ current_time: this.selectedDate.replaceAll("-", "") })
+        const res = await api.getStockPanel({ current_time: this.selectedDate.replaceAll('-', '') })
         console.log(res)
         if (res.code === 2000) {
           this.resonanceData = res.data

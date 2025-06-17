@@ -288,38 +288,39 @@ export default {
         console.log('<UNK>', expectedVal)
 
         let label = '超出范围'
+        const kaiPan = (row.open - prev.close) / prev.close * 100
         const idx2 = buckets.findIndex(item => item.s <= expectedVal && expectedVal < item.e)
         if (idx2 === 0) {
-          if (row.open >= buckets[0].s) {
+          if (kaiPan >= buckets[0].s) {
             label = '符合预期'
           }
 
-          if (row.open >= buckets[1].s) {
+          if (kaiPan >= buckets[1].s) {
             label = '高于预期'
           }
 
-          if (row.open >= buckets[2].s) {
+          if (kaiPan >= buckets[2].s) {
             label = '超预期'
           }
         } else if (idx2 === 5) {
-          if (row.open >= buckets[5].s) {
+          if (kaiPan >= buckets[5].s) {
             label = '符合预期'
           }
 
-          if (row.open >= buckets[4].s) {
+          if (kaiPan >= buckets[4].s) {
             label = '低于预期'
           }
 
-          if (row.open >= buckets[3].s) {
+          if (kaiPan >= buckets[3].s) {
             label = '远低于预期'
           }
-        } else if (row.open >= buckets[idx2 + 1].s) {
+        } else if (kaiPan >= buckets[idx2 + 1].s) {
           label = '符合预期'
-        } else if (row.open >= buckets[idx2 + 2].s) {
+        } else if (kaiPan >= buckets[idx2 + 2].s) {
           label = '超预期'
-        } else if (row.open >= buckets[idx2 - 1].s) {
+        } else if (kaiPan >= buckets[idx2 - 1].s) {
           label = '低于预期'
-        } else if (row.open >= buckets[idx2 - 2].s) {
+        } else if (kaiPan >= buckets[idx2 - 2].s) {
           label = '远低于预期'
         } else {
           label = '符合预期'
