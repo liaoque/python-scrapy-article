@@ -64,6 +64,8 @@ class ZhangTingView(View):
         names = {}
         target_day_stocks = set()
         for r in table.find({"date": current_time}, {'code': 1, 'name': 1}):
+            if "ST" in r['name']:
+                continue
             target_day_stocks.add(r['code'])
             names[r['code']] = r['name']
 
