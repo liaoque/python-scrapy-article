@@ -17,7 +17,7 @@ from itertools import combinations
 
 def resonancePairs(table, current_time, target_day_stocks):
     recent_dates = list(table.aggregate([
-        {"$match": {"date": {"$lte": current_time}}},
+        {"$match": {"date": {"$gte": current_time}}},
         {"$group": {"_id": "$date"}},
         {"$sort": {"_id": -1}},
         {"$limit": 30}
