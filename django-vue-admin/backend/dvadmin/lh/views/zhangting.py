@@ -13,7 +13,7 @@ from pymongo import MongoClient
 from os.path import dirname
 from application.settings import DATABASES
 from itertools import combinations
-
+from collections import OrderedDict
 
 def resonancePairs(table, current_time, target_day_stocks):
     recent_dates = list(table.aggregate([
@@ -38,7 +38,10 @@ def resonancePairs(table, current_time, target_day_stocks):
 
         if len(common_stocks) >= 2:  # 至少有2只股票同时出现
             resonance_pairs[date] = list(common_stocks)
+    sorted_resonance_pairs = OrderedDict(sorted(resonance_pairs.items(), key=lambda item: item[0]))
 
+    # If you want to convert it back to a regular dict (optional)
+    resonance_pairs = dict(sorted_resonance_pairs)
     return resonance_pairs
 
 
