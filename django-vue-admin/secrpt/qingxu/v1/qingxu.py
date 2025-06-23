@@ -20,7 +20,7 @@ def compute():
         host=mc['host'],
         user=mc['user'],
         passwd=mc['passwd'],  # mysqlclient 使用 passwd 而不是 password
-        db=mc['qingxu'],
+        db=mc['db'],
     )
     cursor = conn.cursor()
 
