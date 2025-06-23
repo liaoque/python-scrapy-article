@@ -4,6 +4,12 @@ database_config = {
         "uri" :  'mongodb://localhost:27017/',
         "db_name": "stock_db",
         # 'limitup_records' :"limitup_records"
+    },
+    'mysql' :{
+        'host' :"",
+        'user' :"",
+        'passwd' :"",
+        'db' :"qingxu",
     }
 }
 

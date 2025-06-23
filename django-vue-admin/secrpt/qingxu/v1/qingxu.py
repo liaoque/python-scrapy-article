@@ -1,6 +1,6 @@
 import sys
 import os
-import sqlite3
+import MySQLdb  # 修改为 MySQLdb
 import datetime
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -8,37 +8,32 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 # 设置根目录是secrpt
 sys.path.insert(0, parent_dir)
 
-
-from qingxu.v1 import dfcf,weibo,xueqiu,baidu
+from qingxu.v1 import dfcf, weibo, xueqiu, baidu
 from qingxu.cls import cls
+from common.database import getConfig
 
 
 def compute():
-    print(parent_dir + '/sqlitefile/v1/qingxu.db')
-    conn = sqlite3.connect(parent_dir + '/sqlitefile/v1/qingxu.db')
-    conn.row_factory = sqlite3.Row
-    # 创建一个Cursor:
+    # print(parent_dir + '/mysql/v1/qingxu.db')
+    mc = getConfig('mysql')
+    conn = MySQLdb.connect(
+        host=mc['host'],
+        user=mc['user'],
+        passwd=mc['passwd'],  # mysqlclient 使用 passwd 而不是 password
+        db=mc['qingxu'],
+    )
     cursor = conn.cursor()
-    cursor.execute('PRAGMA journal_mode=WAL;')
 
     init(cursor)
 
     cls.run(cursor)
     weibo.run(cursor)
     xueqiu.run(cursor)
-    #
     dfcf.run(cursor)
     baidu.run(cursor)
-    # gpt.run(cursor)
 
     # 提交事务:
     conn.commit()
-
-
-    # gpt.run(cursor)
-    conn.commit()
-
-    # trend_shangzheng, trend_shangzhengzixun = baidu.run(cursor)
 
     d = datetime.datetime.now().strftime('%Y-%m-%d')
 
@@ -49,48 +44,88 @@ def compute():
     weight_shangzheng = 0.07
     weight_shangzhengzixun = 0.07
 
-    # cls_sentiment = cls.queryCommitPoint(cursor, d)
-    # weibo_sentiment = weibo.queryCommitPoint(cursor, d)
-    # xueqiu_sentiment = xueqiu.queryCommitPoint(cursor, d)
-    # dfcf_sentiment = dfcf.queryCommitPoint(cursor, d)
-
-    #
-    # sentiment_index = (weight_weibo * weibo_sentiment) + (
-    #         cls_sentiment * weight_cls) + (
-    #                           xueqiu_sentiment * weight_xueqiu) + (
-    #                           dfcf_sentiment * weight_trend) + (
-    #                           trend_shangzheng * weight_trend) + (
-    #                           trend_shangzhengzixun * weight_xueqiu)
-    # print(f"当前股票情绪指数为：{sentiment_index}")
-
-
-
-    # 关闭Cursor:
     cursor.close()
     conn.close()
 
 
 def init(cursor):
-    cursor.execute(
-        'CREATE TABLE IF NOT EXISTS m_cls (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, `commited` TEXT)')
-    cursor.execute(
-        'CREATE TABLE IF NOT EXISTS m_weibo (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, commited TEXT)')
-    cursor.execute(
-        'CREATE TABLE IF NOT EXISTS m_xueqiu (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, content TEXT, created_at TEXT, type integer, commited TEXT)')
-    cursor.execute(
-        'CREATE TABLE IF NOT EXISTS m_dfcf (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, tid TEXT, kd_up TEXT, kd_flat TEXT, kd_down TEXT, jg_up TEXT, jg_flat TEXT, jg_down TEXT, cc_up TEXT, cc_flat TEXT, cc_down TEXT,type integer, created_at TEXT)')
-    cursor.execute(
-        'CREATE TABLE IF NOT EXISTS m_baidu (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, zhishu TEXT, zz_type integer , created_at TEXT)')
-    cursor.execute(
-        'CREATE TABLE IF NOT EXISTS m_qingxu (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, qingxu TEXT,  created_at TEXT)')
-    cursor.execute(
-        'CREATE TABLE IF NOT EXISTS m_qingxu_report (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, table_name TEXT, table_id integer, isrun integer,  point integer, created_at TEXT)')
-
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS m_cls (
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            tid TEXT, 
+            content TEXT, 
+            created_at DATETIME, 
+            type INT, 
+            commited TEXT
+        )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS m_weibo (
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            tid TEXT, 
+            content TEXT, 
+            created_at DATETIME, 
+            type INT, 
+            commited TEXT
+        )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS m_xueqiu (
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            tid TEXT, 
+            content TEXT, 
+            created_at DATETIME, 
+            type INT, 
+            commited TEXT
+        )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS m_dfcf (
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            tid TEXT, 
+            kd_up TEXT, 
+            kd_flat TEXT, 
+            kd_down TEXT, 
+            jg_up TEXT, 
+            jg_flat TEXT, 
+            jg_down TEXT, 
+            cc_up TEXT, 
+            cc_flat TEXT, 
+            cc_down TEXT, 
+            type INT, 
+            created_at DATETIME
+        )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS m_baidu (
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            zhishu TEXT, 
+            zz_type INT, 
+            created_at DATETIME
+        )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS m_qingxu (
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            qingxu TEXT, 
+            created_at DATETIME
+        )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS m_qingxu_report (
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            table_name TEXT, 
+            table_id INT, 
+            isrun INT, 
+            point INT, 
+            created_at DATETIME
+        )
+    ''')
     pass
 
 
 def queryMaxDate(cursor, yesterday):
-    cursor.execute('SELECT id FROM m_qingxu where  created_at = ? limit 1', (yesterday))
+    cursor.execute('SELECT id FROM m_qingxu where created_at = %s limit 1', (yesterday,))
     values = cursor.fetchall()
     if len(values) == 0:
         return None
@@ -98,9 +133,10 @@ def queryMaxDate(cursor, yesterday):
 
 
 def queryRrport(cursor):
-    cursor.execute('SELECT id FROM m_qingxu_report where  isrun = 0 limit 20')
+    cursor.execute('SELECT id FROM m_qingxu_report where isrun = 0 limit 20')
     values = cursor.fetchall()
     return values
+
 
 if __name__ == "__main__":
     compute()
