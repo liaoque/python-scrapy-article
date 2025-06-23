@@ -57,7 +57,7 @@ def isInit(cursor):
     :param cursor:
     :return:
     """
-    cursor.execute('SELECT id FROM m_stock limit 1')
+    cursor.execute('SELECT id,created_at FROM m_stock limit 1')
     values = cursor.fetchall()
     if len(values) == 0:
         return True
