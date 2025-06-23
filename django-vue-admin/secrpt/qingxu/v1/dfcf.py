@@ -57,8 +57,11 @@ def chicang():
 
 
 def queryId(cursor, tid, type, created_at):
-    cursor.execute('SELECT id FROM m_dfcf WHERE tid=? and type=? and created_at = ? order by id desc limit 1',
-                   (tid, type, created_at))
+    cursor.execute(
+        'SELECT id FROM m_dfcf WHERE tid=%s AND type=%s AND created_at = %s ORDER BY id DESC LIMIT 1',
+        (tid, type, created_at)
+    )
+
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
@@ -67,25 +70,26 @@ def queryId(cursor, tid, type, created_at):
 
 def saveData(cursor, id, item):
     if id == 0:
-        cursor.execute('INSERT INTO m_dfcf' +
-                       ' (tid, kd_up, kd_flat,kd_down, jg_up, jg_flat,jg_down, cc_up, cc_flat,cc_down,type,created_at) ' +
-                       ' VALUES (?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?) ',
-                       (id,
-                        item['kd_up'], item['kd_flat'], item['kd_down'],
-                        item['jg_up'], item['jg_flat'], item['jg_down'],
-                        item['cc_up'], item['cc_flat'], item['cc_down'],
-                        1, item['created_at']))
+        cursor.execute(
+            'INSERT INTO m_dfcf (tid, kd_up, kd_flat, kd_down, jg_up, jg_flat, jg_down, cc_up, cc_flat, cc_down, type, created_at) ' +
+            'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+            (id,
+             item['kd_up'], item['kd_flat'], item['kd_down'],
+             item['jg_up'], item['jg_flat'], item['jg_down'],
+             item['cc_up'], item['cc_flat'], item['cc_down'],
+             1, item['created_at'])
+        )
     else:
-        cursor.execute('update m_dfcf set ' +
-                       'kd_up = ?, kd_flat = ?, kd_down = ?, ' +
-                       'jg_up = ?, jg_flat = ?, jg_down = ?, ' +
-                       'cc_up = ?, cc_flat = ?, cc_down = ? where id = ?',
-                       (
-                           item['kd_up'], item['kd_flat'], item['kd_down'],
-                           item['jg_up'], item['jg_flat'], item['jg_down'],
-                           item['cc_up'], item['cc_flat'], item['cc_down'],
-                           id
-                       ))
+        cursor.execute(
+            'UPDATE m_dfcf SET ' +
+            'kd_up = %s, kd_flat = %s, kd_down = %s, ' +
+            'jg_up = %s, jg_flat = %s, jg_down = %s, ' +
+            'cc_up = %s, cc_flat = %s, cc_down = %s ' +
+            'WHERE id = %s',
+            (item['kd_up'], item['kd_flat'], item['kd_down'],
+             item['jg_up'], item['jg_flat'], item['jg_down'],
+             item['cc_up'], item['cc_flat'], item['cc_down'],
+             id))
 
 
 def run(cursor):
@@ -113,7 +117,10 @@ def run(cursor):
 
 
 def queryCommitPoint(cursor, created_at):
-    cursor.execute('SELECT * FROM m_dfcf where created_at = ? order by id desc limit 1', (created_at))
+    cursor.execute(
+        'SELECT * FROM m_dfcf WHERE created_at = %s ORDER BY id DESC LIMIT 1',
+        (created_at,)
+    )
     values = cursor.fetchall()
     if len(values) == 0:
         return {

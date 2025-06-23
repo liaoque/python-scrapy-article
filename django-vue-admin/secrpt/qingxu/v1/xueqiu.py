@@ -41,7 +41,10 @@ def queryMaxId(cursor):
     return values[0]['tid']
 
 def exits(cursor, id, type):
-    cursor.execute('SELECT tid FROM m_xueqiu where tid = ? and type = ? order by id desc', (id, type,))
+    cursor.execute(
+        'SELECT tid FROM m_xueqiu WHERE tid = %s AND type = %s ORDER BY id DESC',
+        (id, type)
+    )
     values = cursor.fetchall()
     return len(values) > 0
 
@@ -50,37 +53,52 @@ def saveData(cursor, data):
         if exits(cursor, item['id'], item['type']):
             continue
         item['text'] = clean.clean_text(item['text'])
-        cursor.execute('INSERT INTO m_xueqiu (tid, content, created_at, type) VALUES (?, ?, ?, ?)',
-                       (item['id'], item['text'], item['created_at'], item['type'],))
-        cursor.execute('INSERT INTO m_qingxu_report (table_id, table_name, created_at, isrun) VALUES (?, ?, ?, ?)',
-                       (cursor.lastrowid, "m_xueqiu", item['created_at'], 0,))
-
+        cursor.execute(
+            'INSERT INTO m_xueqiu (tid, content, created_at, type) VALUES (%s, %s, %s, %s)',
+            (item['id'], item['text'], item['created_at'], item['type'])
+        )
+        cursor.execute(
+            'INSERT INTO m_qingxu_report (table_id, table_name, created_at, isrun) VALUES (%s, %s, %s, %s)',
+            (cursor.lastrowid, "m_xueqiu", item['created_at'], 0)
+        )
 
 def queryData(cursor):
-    cursor.execute('SELECT tid,content FROM m_xueqiu WHERE commited is null order by id desc')
+    cursor.execute('SELECT tid,content FROM m_xueqiu WHERE commited IS NULL ORDER BY id DESC')
     values = cursor.fetchall()
     return values
 
 
 def saveCommit(cursor, id, commit):
-    cursor.execute('update m_xueqiu set commited = ? where id = ?', (commit, id,))
+    cursor.execute(
+        'UPDATE m_xueqiu SET commited = %s WHERE id = %s',
+        (commit, id)
+    )
 
 
 def queryCommitPoint(cursor, created_at):
-    cursor.execute('SELECT count(commited) c FROM m_xueqiu where created_at = ? order by id desc limit 1', (created_at))
+    cursor.execute(
+        'SELECT COUNT(commited) c FROM m_xueqiu WHERE created_at = %s ORDER BY id DESC LIMIT 1',
+        (created_at,)
+    )
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
     total = values[0]['c']
 
-    cursor.execute('SELECT count(commited) c FROM m_xueqiu  where commited =1 and created_at = ? order by id desc limit 1', (created_at))
+    cursor.execute(
+        'SELECT COUNT(commited) c FROM m_xueqiu WHERE commited = 1 AND created_at = %s ORDER BY id DESC LIMIT 1',
+        (created_at,)
+    )
     values = cursor.fetchall()
     if len(values) == 0:
         up = 0
     else:
         up = values[0]['c']
 
-    cursor.execute('SELECT count(commited) c FROM m_xueqiu  where commited =0 and created_at = ? order by id desc limit 1', (created_at))
+    cursor.execute(
+        'SELECT COUNT(commited) c FROM m_xueqiu WHERE commited = 0 AND created_at = %s ORDER BY id DESC LIMIT 1',
+        (created_at,)
+    )
     values = cursor.fetchall()
     if len(values) == 0:
         down = 0
