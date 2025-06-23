@@ -8,7 +8,7 @@ import sqlite3
 import os
 import sys
 import json
-
+import MySQLdb  # 修改为 MySQLdb
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(os.path.dirname(current_dir))
@@ -16,6 +16,7 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.insert(0, parent_dir)
 
 import qingxu.chat.anget as chat
+from common.database import getConfig
 
 # nltk.download('stopwords')
 # stop_words = set(stopwords.words('chinese'))  # 需要下载中文停用词表
@@ -75,13 +76,17 @@ def queryRrport(cursor):
     return values
 
 def queryContent(cursor, table_name, table_id):
-    query = f'SELECT content FROM {table_name} WHERE id = ? LIMIT 1'
+    query = f'SELECT content FROM {table_name} WHERE id = %s LIMIT 1'
     cursor.execute(query, (table_id,))
+    # values = cursor.fetchall()
+    # query = f'SELECT content FROM {table_name} WHERE id = ? LIMIT 1'
+    # cursor.execute(query, (table_id,))
     values = cursor.fetchall()
-    return values[0]
+    return values[0][0] if values else None  # Access the actual content
 
 def savePoint(cursor, id, point):
-    cursor.execute('update m_qingxu_report set point = ? , isrun = 1 where id = ?', (point, id,))
+    query = 'UPDATE m_qingxu_report SET point = %s, isrun = 1 WHERE id = %s'
+    cursor.execute(query, (point, id))
 
 def run(cursor, conn):
     id = reqCreateChat()
@@ -150,11 +155,20 @@ def run(cursor, conn):
 
 
 def compute():
-    conn = sqlite3.connect(parent_dir + '/sqlitefile/v1/qingxu.db')
-    conn.row_factory = sqlite3.Row
-    # 创建一个Cursor:
+    mc = getConfig('mysql')
+    conn = MySQLdb.connect(
+        host=mc['host'],
+        user=mc['user'],
+        passwd=mc['passwd'],  # mysqlclient 使用 passwd 而不是 password
+        db=mc['db'],
+    )
     cursor = conn.cursor()
-    cursor.execute('PRAGMA journal_mode=WAL;')
+
+    # conn = sqlite3.connect(parent_dir + '/sqlitefile/v1/qingxu.db')
+    # conn.row_factory = sqlite3.Row
+    # 创建一个Cursor:
+    # cursor = conn.cursor()
+    # cursor.execute('PRAGMA journal_mode=WAL;')
     run(cursor, conn)
 
 
