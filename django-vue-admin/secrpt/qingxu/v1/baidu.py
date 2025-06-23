@@ -96,7 +96,10 @@ def dcode(t, e):
 
 
 def queryMaxDate(cursor, yesterday):
-    cursor.execute('SELECT id FROM m_baidu where  created_at = ? limit 1', (yesterday,))
+    cursor.execute(
+        'SELECT id FROM m_baidu WHERE created_at = %s LIMIT 1',
+        (yesterday,)
+    )
     values = cursor.fetchall()
     if len(values) == 0:
         return None
@@ -146,14 +149,20 @@ def run(cursor):
 
 def saveData(cursor, endDate, zz_type, zhishu):
     if exits(cursor, endDate, zz_type):
-        cursor.execute('update m_baidu set zhishu = ? where created_at = ? and zz_type = ?',
-                       (zhishu, endDate, zz_type,))
+        cursor.execute(
+            'UPDATE m_baidu SET zhishu = %s WHERE created_at = %s AND zz_type = %s',
+            (zhishu, endDate, zz_type)
+        )
         return
-    cursor.execute('INSERT INTO m_baidu ( zhishu, created_at, zz_type) VALUES ( ?, ?, ?)',
-                   (zhishu, endDate, zz_type,))
+    cursor.execute(
+        'INSERT INTO m_baidu (zhishu, created_at, zz_type) VALUES (%s, %s, %s)',
+        (zhishu, endDate, zz_type))
 
 
-def exits(cursor, created_at, type):
-    cursor.execute('SELECT id FROM m_baidu where created_at = ? and zz_type = ? order by id desc', (created_at, type,))
+def exits(cursor, created_at, zz_type):
+    cursor.execute(
+        'SELECT id FROM m_baidu WHERE created_at = %s AND zz_type = %s ORDER BY id DESC',
+        (created_at, zz_type)
+    )
     values = cursor.fetchall()
     return len(values) > 0
