@@ -165,7 +165,7 @@ def queryMaxId(cursor, type):
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
-    return values[0]['tid']
+    return values[0][0]
 
 
 def saveData(cursor, data):
@@ -210,7 +210,8 @@ def queryCommitPoint(cursor, created_at):
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
-    total = values[0]['c']
+    # total = values[0]['c']
+    total = values[0][0] if values else 0
 
     cursor.execute(
         'SELECT count(commited) c FROM m_cls where commited =1 and created_at = %s order by id desc limit 1',
@@ -218,10 +219,11 @@ def queryCommitPoint(cursor, created_at):
     )
 
     values = cursor.fetchall()
-    if len(values) == 0:
-        up = 0
-    else:
-        up = values[0]['c']
+    up = values[0][0] if values else 0
+    # if len(values) == 0:
+    #     up = 0
+    # else:
+    #     up = values[0]['c']
 
     cursor.execute(
         'SELECT count(commited) c FROM m_cls where commited =0 and created_at = %s order by id desc limit 1',
@@ -229,10 +231,11 @@ def queryCommitPoint(cursor, created_at):
     )
 
     values = cursor.fetchall()
-    if len(values) == 0:
-        down = 0
-    else:
-        down = values[0]['c']
+    down = values[0][0] if values else 0
+    # if len(values) == 0:
+    #     down = 0
+    # else:
+    #     down = values[0]['c']
     return (up - down) / total
 
 
