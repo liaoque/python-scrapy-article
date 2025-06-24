@@ -83,7 +83,7 @@ def queryContent(cursor, table_name, table_id):
     # query = f'SELECT content FROM {table_name} WHERE id = ? LIMIT 1'
     # cursor.execute(query, (table_id,))
     values = cursor.fetchall()
-    return values[0]['content'] if values else None  # Access the actual content
+    return values[0] if values else None  # Access the actual content
 
 def savePoint(cursor, id, point):
     query = 'UPDATE m_qingxu_report SET point = %s, isrun = 1 WHERE id = %s'
