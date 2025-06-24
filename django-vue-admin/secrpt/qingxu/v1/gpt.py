@@ -9,6 +9,7 @@ import os
 import sys
 import json
 import MySQLdb  # 修改为 MySQLdb
+from MySQLdb.cursors import DictCursor  #
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(os.path.dirname(current_dir))
@@ -82,7 +83,7 @@ def queryContent(cursor, table_name, table_id):
     # query = f'SELECT content FROM {table_name} WHERE id = ? LIMIT 1'
     # cursor.execute(query, (table_id,))
     values = cursor.fetchall()
-    return values[0][0] if values else None  # Access the actual content
+    return values[0]['content'] if values else None  # Access the actual content
 
 def savePoint(cursor, id, point):
     query = 'UPDATE m_qingxu_report SET point = %s, isrun = 1 WHERE id = %s'
@@ -159,8 +160,10 @@ def compute():
     conn = MySQLdb.connect(
         host=mc['host'],
         user=mc['user'],
-        passwd=mc['passwd'],  # mysqlclient 使用 passwd 而不是 password
+        passwd=mc['passwd'],
         db=mc['db'],
+        charset='utf8mb4',
+        cursorclass=DictCursor  # 使用字典游标
     )
     cursor = conn.cursor()
 
