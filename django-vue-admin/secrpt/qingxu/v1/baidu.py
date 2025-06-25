@@ -8,7 +8,7 @@ from common import dingding,clean
 
 
 def baiduzhishu(keyword):
-    end = (datetime.now() - timedelta(days=0)).strftime("%Y-%m-%d")
+    end = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
     start = datetime.now() - timedelta(days=200)
     start = "2019-01-01"
     url = "https://index.baidu.com/api/SearchApi/index?area=0&word=[[{\"name\":\"" + keyword + "\",\"wordType\":1}]]&startDate=" + start + "&endDate=" + end
@@ -62,6 +62,7 @@ def baiduzixun(keyword):
     response = requests.get(url, headers=headers)
     codes2 = response.json()
     if codes2["status"] != 0:
+        dingding.dingding("请求百度咨询错误: " + response.content.decode("utf-8"))
         return
 
     dat = codes2["data"]["index"][0]["data"]
@@ -72,6 +73,7 @@ def baiduzixun(keyword):
     response = requests.get(url, headers=headers)
     codes3 = response.json()
     if codes3["status"] != 0:
+        dingding.dingding("请求百度咨询错误222: " + response.content.decode("utf-8"))
         return
 
     all = dcode(codes3["data"], dat)
@@ -127,6 +129,7 @@ def run(cursor):
     #     return data["trend_shangzheng"], data["trend_shangzhengzixun"]
     baiduzhishu2= baiduzhishu("a股")
     if baiduzhishu2 is None:
+
         return
     shangzheng = baiduzhishu2["all"]
     endDate = baiduzhishu2["endDate"]
