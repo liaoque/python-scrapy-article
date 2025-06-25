@@ -100,7 +100,8 @@ def run(cursor):
     kd = kanduo()  # 看多
     cc = chicang()  # 看
     created_at = datetime.date.today().strftime("%Y-%m-%d")
-    id = queryId(cursor, "1", 1, created_at)
+    tid = "0"
+    id = queryId(cursor, tid, 1, created_at)
     saveData(cursor, id, {
         "kd_up": jd["up"],
         "kd_flat": jd["flat"],
