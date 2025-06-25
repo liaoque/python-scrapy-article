@@ -114,8 +114,8 @@ def queryMaxDate(cursor, yesterday):
 
 def run(cursor):
     # 控制每小时更新一次
-    # if datetime.now().minute != 0:
-    #     return 0, 0
+    if datetime.now().minute != 0:
+        return 0, 0
 
     # 获取当前日期和时间
     now = datetime.now()
