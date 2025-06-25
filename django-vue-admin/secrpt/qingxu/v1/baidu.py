@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 from sklearn.preprocessing import MinMaxScaler
 from qingxu import config
 import numpy as np
+from common import dingding,clean
+
 
 
 def baiduzhishu(keyword):
@@ -19,6 +21,7 @@ def baiduzhishu(keyword):
     response = requests.get(url, headers=headers)
     codes2 = response.json()
     if codes2["status"] != 0:
+        dingding.dingding("请求百度指数错误: "+response.content.decode("utf-8"))
         return
 
     dat = codes2["data"]["userIndexes"][0]["all"]["data"]
@@ -31,6 +34,7 @@ def baiduzhishu(keyword):
     response = requests.get(url, headers=headers)
     codes3 = response.json()
     if codes3["status"] != 0:
+        dingding.dingding("请求百度指数错误2222: " + response.content.decode("utf-8"))
         return
 
     all = dcode(codes3["data"], dat)
