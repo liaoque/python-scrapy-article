@@ -126,6 +126,8 @@ def run(cursor):
     # if data is not None:
     #     return data["trend_shangzheng"], data["trend_shangzhengzixun"]
     baiduzhishu2= baiduzhishu("a股")
+    if baiduzhishu2 is None:
+        return
     shangzheng = baiduzhishu2["all"]
     endDate = baiduzhishu2["endDate"]
     baiduzixun2= baiduzixun("a股")
