@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+from datetime import datetime
 
 prefixMsg = """
     - Role: 金融市场情绪分析专家
@@ -35,48 +36,42 @@ prefixMsg = """
 
 
 def reqGpt(id, msg):
-    url = "https://chat.qwen.ai/api/v1/chats/new"
+    url = "https://chat.qwen.ai/api/v2/chat/completions?chat_id=f9df3655-1fa4-4dea-b1d5-c7028def11a4"
     headers = {
-        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU1MDI4MTA3LWY4ZjgtNGNiNC1iZWRiLTEyNzIzMThmM2E0NCIsImV4cCI6MTc0OTUyNTQwMH0.D6r8THlne4mHvjALJ5vtaT19WpgI3aff6vxP8d_ooNU",
-        "cookie": "ssxmod_itna=QqUxBiD=i=itGQIPYQiQ=G=D2Dm67CaqDzxC5iO8Du2xjKidNDUQX0=FEGcjQm0XDqhrqDDqtDlaO2YDSxD6HDK4GTwzp00234dUARPpNYnA4Ueo3+jrrcKzlDE03YsjDES3Aau/BDIDnneDQKDoxGkDiyoD09YoQ4DxrPD5xDTDWeDGDD3YUYwD0+ITzgIDzb+T0AIDYco5R2oDY56DAwIs9Yv64i3gtdDEE4vDiPGV4DWQ4i1fAoputxD0ZW0qfRADWchfQZoqKQDIPloCAoDFrL3xq0k59dbW9zMDCKwvmMhq3TvSR7XK2qbi1Gnr+0YUwYfGx8i8KDKGnDUirbqKmDojYx00DzGi8Dt4EOtbRY4Tz0wzW552lj5/n5VKhx0xx0w=awsYG5ZRPouYKbtb0tS24lYx974kiKbGtdSY3+DD; "
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU1MDI4MTA3LWY4ZjgtNGNiNC1iZWRiLTEyNzIzMThmM2E0NCIsImxhc3RfcGFzc3dvcmRfY2hhbmdlIjoxNzUwNjYwODczLCJleHAiOjE3NTUwOTUwNTJ9.dQCEAhw9wwkOuFoue223lKsRCRdtQNO0zWlJTg4dTYQ",
+        "cookie": "cna=mwOnILVg0wUCAXLYx7/3EVJW; _bl_uid=tpmweabLjtC207w0t3aLf7k8q8h3; cnaui=e5028107-f8f8-4cb4-bedb-1272318f3a44; aui=e5028107-f8f8-4cb4-bedb-1272318f3a44; x-ap=cn-hongkong; sca=f8416964; xlly_s=1; acw_tc=0a03e54a17525055257484522e5725bf08fe2328939ff5555a50c9dc687878; atpsida=31da50d06175572c1d60c627_1752506759_2; _gcl_au=1.1.2098384478.1746933145.531941089.1752506737.1752506760; isg=BOHhlETDLcXOR4Hkpvw56BAA8Kv7jlWAdKfovUOs9ercqjB8qt__UgQpDN4sVu24; tfstk=gRvsWa4sXEpe_L6Yc1mUFCZF42WXoDkzWosvqneaDOBOloT22sIaQcAXOE81WdWtmvIXPiVY6GKOpSTV21exocXXdEsX35KtSyKdcGp2_mfOptslBsANuN7fhnYSY4krUhxGnT3rzYPJgsbdE-IOHryd9iBfXe3D3dKGnt3UZJatChYMVcNeXtnCpiIVXtCAkJnCcg_AHNCYJWIRJtBAWRUL9GjVDrFOXDtd-iWAkECtA9QhDx_bCMo1-hi7CjGswDDjqweYHps19XR1JFdK0OC_9hb3HkhhY1OBXwwYHpdffiaVPvad8nKkM69jkr6DYQTXMU3U_Nd5VUsy7ve1HBLBF_KnPRb69FvfQ_D_rGOpV9QNeAZGydSXDg6-MkI9QBRP1BgThwJNVn1yTmF58IKHd69saojHQnpGaTHuWZReVKsXnqDBPnKkM69b5gW7UagCkSZCZ-sCzDiQiSfm_wBHBD_bK1IhYqoIA7-c6MjCxDiQiSfOxM7nADNy-; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU1MDI4MTA3LWY4ZjgtNGNiNC1iZWRiLTEyNzIzMThmM2E0NCIsImxhc3RfcGFzc3dvcmRfY2hhbmdlIjoxNzUwNjYwODczLCJleHAiOjE3NTUwOTg4NzF9.zO0sm9-Ru4Q3m93QUA90gljDmcUtYmxx8zxK7AnxJks; ssxmod_itna=QqUxBiD=i=itGQIPYQiQ=G=D2Dm67CaqDzxC5iO8Du2xjKidNDUQYT0=FrjljDDqKe/lpARYqgD0HpPwDA5Dnzx7YDt=Sa4q/RhhGXPQLjlxhKKLmYhXm=KIewkBd0mjHb9EHy/1S5joY0rz0YD884DKqGmD0=DAMeD7kmeKxGGf4GwDGoD34DiDDpKhQbD7gTQgen4N22o+lTDmSeKgBeDmdHDngTbpQWOxYPs2PGnWoWDAfi+xDfYxAta/QTCvDDBGR7eaxaDf+ra0/ee=KDuQ/et/eDLRaPwxB=KPtEQpHzDtdRTlpreoqrZLYojxpDMWoUehrjGpQG37GKjIxGh3xryjIGjDbCxtSpVnGCQ4UWRrBjr8R+GhrGXZcXVP0wnPlWT90p4lDQDIG7IrfqzlwzK2nn0KmheiGzlDbtAKYD; ssxmod_itna2=QqUxBiD=i=itGQIPYQiQ=G=D2Dm67CaqDzxC5iO8Du2xjKidNDUQYT0=FrjljDDqKe/lpARYqwDDcAee7/7DGa+jY8ur/KE=dyCg9cqY+3KfmDdSU/eD"
     }
     response = requests.post(url, json={
         "stream": True,
         "incremental_output": True,
-        "chat_type": "t2t",
+        "chat_id": "f9df3655-1fa4-4dea-b1d5-c7028def11a4",
+        "chat_mode": "normal",
         "model": "qwen3-30b-a3b",
-        "messages": [
-            {
-                "role": "user",
-                "content": prefixMsg,
-                "chat_type": "t2t",
-                "extra": {},
-                "feature_config": {"thinking_enabled": False, "output_schema": "phase"}
+        "parent_id": "722a1013-572e-49e6-ac3d-43567324bd1f",
+        "messages": [{
+            "fid": "d14be7f9-cbdd-44b1-b06c-8b96d6ebca7e",
+            "parentId": "722a1013-572e-49e6-ac3d-43567324bd1f",
+            "childrenIds": ["daa4912b-8edb-49cf-a3ce-560867eab871"],
+            "role": "user",
+            "content": msg,
+            "user_action": "chat",
+            "files": [],
+            "timestamp": time.mktime(datetime.now().timetuple()),
+            "models": ["qwen3-30b-a3b"],
+            "chat_type": "t2t",
+            "feature_config": {
+                "thinking_enabled": False,
+                "output_schema": "phase"
             },
-            {
-                "role": "assistant",
-                "content": "",
-                "chat_type": "t2t",
-                "feature_config": {"thinking_enabled": False, "output_schema": "phase"},
-                "content_list": [
-                    {"phase": "answer",
-                     "content": "您好，我是金融市场情绪分析专家。我将根据您提供的A股市场相关文本内容，为您判断情绪是过热、积极、中性、消极还是过冷。请提供您需要分析的文本内容。",
-                     "chat_type": "t2t"}
-                ]
+            "extra": {
+                "meta": {
+                    "subChatType": "t2t"
+                }
             },
-            {
-                "role": "user",
-                "content": msg,
-                "chat_type": "t2t",
-                "extra": {},
-                "feature_config": {"thinking_enabled": False, "output_schema": "phase"}
-            }
-        ],
-        "session_id": "2c54ed4a-e890-42d4-b976-f49b8bfebd88",
-        "chat_id": "9a230f0e-5e2d-4e98-9204-bbdfe667047b",
-        "id": "3dbce5ce-cf1c-40e3-bf79-1011ad6bf357",
-        "sub_chat_type": "t2t",
-        "chat_mode": "normal"
+            "sub_chat_type": "t2t",
+            "parent_id": "722a1013-572e-49e6-ac3d-43567324bd1f"
+        }],
+        "timestamp": time.mktime(datetime.now().timetuple()),
     }, headers=headers)
     return response.content.decode("utf-8")
 
