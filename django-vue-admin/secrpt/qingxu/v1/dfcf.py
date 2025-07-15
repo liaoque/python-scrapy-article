@@ -65,7 +65,7 @@ def queryId(cursor, tid, type, created_at):
     values = cursor.fetchall()
     if len(values) == 0:
         return 0
-    return values['id']
+    return values[0][0]
 
 
 def saveData(cursor, id, item):
