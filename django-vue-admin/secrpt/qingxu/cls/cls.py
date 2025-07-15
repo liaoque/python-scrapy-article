@@ -129,6 +129,7 @@ def run(cursor):
         return
     data = []
 
+    cleanAgain(cursor)
     # 查最大的id
     minIdTop = queryMaxId(cursor, 1)
     minIdaa = queryMaxId(cursor, 2)
@@ -158,6 +159,12 @@ def run(cursor):
 
     if len(data) > 0:
         saveData(cursor, data)
+
+def cleanAgain(cursor):
+    cursor.execute('delete from m_cls where id in (select id from (SELECT id, content, count(1) as a FROM `m_cls` GROUP BY content) t where a > 1)')
+    cursor.execute('delete from m_xueqiu where id in (select id from (SELECT id, content, count(1) as a FROM `m_xueqiu` GROUP BY content) t where a > 1)')
+    cursor.execute('delete from m_weibo  where id in (select id from (SELECT id, content, count(1) as a FROM `m_weibo` GROUP BY content) t where a > 1)')
+
 
 
 def queryMaxId(cursor, type):

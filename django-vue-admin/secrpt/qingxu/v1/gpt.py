@@ -89,6 +89,13 @@ def savePoint(cursor, id, point):
     query = 'UPDATE m_qingxu_report SET point = %s, isrun = 1 WHERE id = %s'
     cursor.execute(query, (point, id))
 
+def cleanAgain(cursor):
+    cursor.execute("DELETE FROM m_qingxu_report WHERE id IN ( SELECT id FROM ( SELECT qr.id FROM `m_qingxu_report` AS qr WHERE qr.table_name = 'm_cls' AND qr.table_id NOT IN ( SELECT w.id FROM `m_cls` AS w ) ) AS derived )")
+    cursor.execute("DELETE FROM m_qingxu_report WHERE id IN ( SELECT id FROM ( SELECT qr.id FROM `m_qingxu_report` AS qr WHERE qr.table_name = 'm_xueqiu' AND qr.table_id NOT IN ( SELECT w.id FROM `m_xueqiu` AS w ) ) AS derived )")
+    cursor.execute("DELETE FROM m_qingxu_report WHERE id IN ( SELECT id FROM ( SELECT qr.id FROM `m_qingxu_report` AS qr WHERE qr.table_name = 'm_weibo' AND qr.table_id NOT IN ( SELECT w.id FROM `m_weibo` AS w ) ) AS derived )")
+
+
+
 def run(cursor, conn):
     id = reqCreateChat()
     msg = """
