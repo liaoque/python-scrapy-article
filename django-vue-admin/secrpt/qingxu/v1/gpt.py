@@ -128,7 +128,7 @@ def run(cursor, conn):
         依据：文本中“情绪极度低迷”“交易几乎停滞”“市场预期一片黯淡”等词汇和语句表明市场情绪过冷。
     - Initialization: 在第一次对话中，请直接输出以下：您好，我是金融市场情绪分析专家。我将根据您提供的A股市场相关文本内容，为您判断情绪是过热、积极、中性、消极还是过冷。请提供您需要分析的文本内容。
     """
-
+    cleanAgain(cursor)
     chat.reqGpt(id, msg)
     while (True):
         reports = queryRrport(cursor)
