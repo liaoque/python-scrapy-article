@@ -67,7 +67,9 @@ def reqCreateChat():
         "agentId": "naQivTmsDa",
     }, headers=headers)
     data = response.json()
-    return data['id']
+    if 'id' in data:
+        return data['id']
+    return ""
 
 
 

@@ -10,6 +10,10 @@ current_gpt = "yuanbao"
 def reqGpt(id, msg):
     global current_gpt
 
+    if id == "":
+        current_gpt = "qianwen"
+        return msg
+
     if current_gpt == "yuanbao":
         msg = yuanbao.reqGpt(id, msg)
         if "今日提问次数已达上限，请明日再试" in msg:
