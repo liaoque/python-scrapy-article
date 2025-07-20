@@ -4,7 +4,7 @@ import time
 import qingxu.chat.yuanbao.gpt as yuanbao
 import qingxu.chat.qianwen.gpt as qianwen
 
-current_gpt = "yuanbao"
+current_gpt = "qianwen"
 
 
 def reqGpt(id, msg):
