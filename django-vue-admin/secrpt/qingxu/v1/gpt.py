@@ -96,6 +96,9 @@ def cleanAgain(cursor):
     cursor.execute("DELETE FROM m_qingxu_report WHERE id IN ( SELECT id FROM ( SELECT qr.id FROM `m_qingxu_report` AS qr WHERE qr.table_name = 'm_xueqiu' AND qr.table_id NOT IN ( SELECT w.id FROM `m_xueqiu` AS w ) ) AS derived )")
     cursor.execute("DELETE FROM m_qingxu_report WHERE id IN ( SELECT id FROM ( SELECT qr.id FROM `m_qingxu_report` AS qr WHERE qr.table_name = 'm_weibo' AND qr.table_id NOT IN ( SELECT w.id FROM `m_weibo` AS w ) ) AS derived )")
 
+def deleteContent(cursor, table_name, table_id):
+    query = f'delete FROM {table_name} WHERE id = %s LIMIT 1'
+    cursor.execute(query, (table_id))
 
 
 def run(cursor, conn):
