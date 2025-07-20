@@ -3,15 +3,16 @@ import json
 import time
 import qingxu.chat.yuanbao.gpt as yuanbao
 import qingxu.chat.qianwen.gpt as qianwen
+import qingxu.chat.chatgpt.gpt as chatgpt
 
-current_gpt = "qianwen"
+current_gpt = "chatgpt"
 
 
 def reqGpt(id, msg):
     global current_gpt
 
     if id == "":
-        current_gpt = "qianwen"
+        # current_gpt = "qianwen"
         return msg
 
     if current_gpt == "yuanbao":
@@ -35,7 +36,12 @@ def reqGpt(id, msg):
 
 def gpt(id, msg):
     global current_gpt
-    if current_gpt == "yuanbao":
+    if current_gpt == "chatgpt":
+        msg = chatgpt.gpt(id, msg)
+        if "今日提问次数已达上限，请明日再试" in msg:
+            current_gpt = "qianwen"
+            return gpt(id, msg)
+    elif current_gpt == "yuanbao":
         msg = yuanbao.gpt(id, msg)
         if "今日提问次数已达上限，请明日再试" in msg:
             current_gpt = "qianwen"
