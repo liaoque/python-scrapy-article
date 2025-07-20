@@ -164,6 +164,7 @@ def run(cursor, conn):
                 point = "-2"
             elif content2 not in [0, 1, -1, 2, -2, "0", "1", "-1", "2", "-2"]:
                 deleteContent(cursor, table_name, table_id)
+                conn.commit()
                 print("codes2 " + codes2)
                 return
             savePoint(cursor, item['id'], point)
