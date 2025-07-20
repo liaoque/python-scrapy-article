@@ -99,6 +99,8 @@ def cleanAgain(cursor):
 def deleteContent(cursor, table_name, table_id):
     query = f'delete FROM {table_name} WHERE id = %s LIMIT 1'
     cursor.execute(query, (table_id))
+    query = f'delete FROM m_qingxu_report WHERE table_id = %s and table_name = %s LIMIT 1'
+    cursor.execute(query, (table_id, table_name))
 
 
 def run(cursor, conn):
