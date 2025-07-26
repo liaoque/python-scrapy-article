@@ -4,9 +4,12 @@ import time
 import qingxu.chat.yuanbao.gpt as yuanbao
 import qingxu.chat.qianwen.gpt as qianwen
 import qingxu.chat.chatgpt.gpt as chatgpt
+from datetime import datetime
 
-current_gpt = "chatgpt"
-
+current_gpt = "qianwen"
+hour = datetime.now().hour
+if 0 <= hour <= 7:
+    current_gpt = "chatgpt"
 
 def reqGpt(id, msg):
     global current_gpt
