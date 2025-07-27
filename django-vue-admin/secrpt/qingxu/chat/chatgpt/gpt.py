@@ -114,6 +114,8 @@ def extract_msg(data_str):
 def gpt(id, msg):
     time.sleep(3)
     codes2 = reqGpt(id, msg)
+    if "当前会话已过期" in codes2:
+        return "当前会话已过期"
     codes2 = extract_msg(codes2)
     # 回答异常就直接返回数据错误，丁丁提示
     return codes2

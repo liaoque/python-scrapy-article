@@ -151,6 +151,8 @@ def run(cursor, conn):
             table_id = item['table_id']
             qc = queryContent(cursor, table_name, table_id)
             codes2 = chat.gpt(id, qc['content'])
+            if codes2 == "当前会话已过期":
+                break
             print(qc['content'])
             # if "data" in codes2 and "content" in codes2["data"]:
             #     point = content2 = codes2["data"]["content"]
