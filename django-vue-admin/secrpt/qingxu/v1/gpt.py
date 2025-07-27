@@ -138,11 +138,14 @@ def run(cursor, conn):
     """
     cleanAgain(cursor)
     chat.reqGpt(id, msg)
+    i = 0
     while (True):
+        if i > 30:
+            break
         reports = queryRrport(cursor)
         if len(reports) == 0:
             break
-
+        i = i + 1
         for item in reports:
             table_name = item['table_name']
             table_id = item['table_id']
