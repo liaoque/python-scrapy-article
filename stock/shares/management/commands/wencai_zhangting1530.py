@@ -119,7 +119,7 @@ class Command(BaseCommand):
     def saveD(self, d):
         date_obj = datetime.strptime(d["date"], '%Y%m%d')
         formatted_date = date_obj.strftime('%Y-%m-%d')
-        if SharesZhangTings.objects.filter(code_id=d["股票代码"], date_as=formatted_date).count():
+        if SharesZhangTings.objects.filter(code_id=d["股票代码"], date_as=formatted_date, morning=2).count():
             return
 
         sharesZhangTings = SharesZhangTings(
@@ -142,7 +142,7 @@ class Command(BaseCommand):
     def saveD2(self, d):
         date_obj = datetime.strptime(d["date"], '%Y%m%d')
         formatted_date = date_obj.strftime('%Y-%m-%d')
-        if SharesBlockGns.objects.filter(code_id=d["指数代码"], date_as=formatted_date).count():
+        if SharesBlockGns.objects.filter(code_id=d["指数代码"], date_as=formatted_date, morning=2).count():
             return
 
         if d["最低价"] is None:
