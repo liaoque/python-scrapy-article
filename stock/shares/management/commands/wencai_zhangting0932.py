@@ -135,7 +135,7 @@ class Command(BaseCommand):
             date_as=formatted_date,
             f32=d["f32"],
             gao_biao=d["gao_biao"],
-            morning=2
+            morning=1
         )
         sharesZhangTings.save()
 
@@ -157,6 +157,6 @@ class Command(BaseCommand):
             p_end=d["收盘价"],
             p_zhang_die_fu=d["涨跌幅"],
             date_as=formatted_date,
-            morning=2
+            morning=1
         )
         sharesZhangTings.save()

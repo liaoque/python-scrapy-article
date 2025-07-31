@@ -21,6 +21,7 @@ class SharesZhangTings(models.Model):
     date_as = models.DateField(help_text="创建时间") # 创建时间
     f32 = models.IntegerField(help_text="9点32分钟之前涨停") # 9点32分钟之前涨停
     gao_biao = models.IntegerField(help_text="高标票标记") # 9点32分钟之前涨停
+    morning = models.IntegerField(help_text="9点32分钟数据") # 1 是， 2不是
 
 
     class Meta:

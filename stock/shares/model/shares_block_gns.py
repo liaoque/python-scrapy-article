@@ -17,6 +17,7 @@ class SharesBlockGns(models.Model):
     p_end = models.FloatField(help_text="结束")
     p_zhang_die_fu = models.FloatField(help_text="涨跌幅")
     date_as = models.DateField(help_text="创建时间")
+    morning = models.IntegerField(help_text="9点32分钟数据")  # 1 是， 2不是
 
     class Meta:
         db_table = "mc_shares_block_gns"

@@ -166,6 +166,7 @@ class Migration(migrations.Migration):
                 ('date_as', models.TimeField(help_text='创建时间')),
                 ('f32', models.TimeField(help_text='9点32分钟之前涨停')),
                 ('gao_biao', models.TimeField(help_text='高标票标记')),
+                ('morning', models.TimeField(help_text='9点32分钟数据  1 是， 2不是')),
                 ('code', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shares.sharesname')),
             ],
             options={
@@ -290,6 +291,7 @@ class Migration(migrations.Migration):
                 ('p_end', models.IntegerField(help_text='结束')),
                 ('p_zhang_die_fu', models.IntegerField(help_text='涨跌幅')),
                 ('date_as', models.TimeField(help_text='创建时间')),
+                ('morning', models.TimeField(help_text='9点32分钟数据  1 是， 2不是')),
                 ('code', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shares.sharesname')),
             ],
             options={
