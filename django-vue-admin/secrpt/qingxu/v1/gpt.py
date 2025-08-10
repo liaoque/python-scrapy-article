@@ -169,11 +169,13 @@ def run(cursor, conn):
             elif "过冷" in content2 or "强烈消极" in content2:
                 point = "-2"
             elif content2 not in [0, 1, -1, 2, -2, "0", "1", "-1", "2", "-2"]:
+                if len(content2) == 0:
+                    print("codes2 " + codes2)
+                    return
+                point = "0"
                 # deleteContent(cursor, table_name, table_id)
                 # conn.commit()
-                print("codes2 " + codes2)
 
-                return
             savePoint(cursor, item['id'], point)
             conn.commit()
     pass
