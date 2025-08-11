@@ -77,6 +77,8 @@ def reqGpt(id, msg):
 
 
 def extract_msg(data_str):
+    if "Content security warning: input text data may contain inappropriate content!" in data_str:
+        return "Content security warning: input text data may contain inappropriate content!"
     lines = data_str.strip().split('\n')
     mdg = ""
     for line in lines:
