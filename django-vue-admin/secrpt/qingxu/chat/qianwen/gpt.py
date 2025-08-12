@@ -36,22 +36,22 @@ prefixMsg = """
 
 
 def reqGpt(id, msg):
-    url = "https://chat.qwen.ai/api/v2/chat/completions?chat_id=f9df3655-1fa4-4dea-b1d5-c7028def11a4"
+    url = "https://chat.qwen.ai/api/v2/chat/completions?chat_id=d44133a1-e688-4ea1-a01c-0b17a7be8130"
     headers = {
-        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU1MDI4MTA3LWY4ZjgtNGNiNC1iZWRiLTEyNzIzMThmM2E0NCIsImxhc3RfcGFzc3dvcmRfY2hhbmdlIjoxNzUwNjYwODczLCJleHAiOjE3NTUwOTUwNTJ9.dQCEAhw9wwkOuFoue223lKsRCRdtQNO0zWlJTg4dTYQ",
-        "cookie": "cna=mwOnILVg0wUCAXLYx7/3EVJW; _bl_uid=tpmweabLjtC207w0t3aLf7k8q8h3; cnaui=e5028107-f8f8-4cb4-bedb-1272318f3a44; aui=e5028107-f8f8-4cb4-bedb-1272318f3a44; x-ap=cn-hongkong; sca=f8416964; xlly_s=1; acw_tc=0a03e54a17525055257484522e5725bf08fe2328939ff5555a50c9dc687878; atpsida=31da50d06175572c1d60c627_1752506759_2; _gcl_au=1.1.2098384478.1746933145.531941089.1752506737.1752506760; isg=BOHhlETDLcXOR4Hkpvw56BAA8Kv7jlWAdKfovUOs9ercqjB8qt__UgQpDN4sVu24; tfstk=gRvsWa4sXEpe_L6Yc1mUFCZF42WXoDkzWosvqneaDOBOloT22sIaQcAXOE81WdWtmvIXPiVY6GKOpSTV21exocXXdEsX35KtSyKdcGp2_mfOptslBsANuN7fhnYSY4krUhxGnT3rzYPJgsbdE-IOHryd9iBfXe3D3dKGnt3UZJatChYMVcNeXtnCpiIVXtCAkJnCcg_AHNCYJWIRJtBAWRUL9GjVDrFOXDtd-iWAkECtA9QhDx_bCMo1-hi7CjGswDDjqweYHps19XR1JFdK0OC_9hb3HkhhY1OBXwwYHpdffiaVPvad8nKkM69jkr6DYQTXMU3U_Nd5VUsy7ve1HBLBF_KnPRb69FvfQ_D_rGOpV9QNeAZGydSXDg6-MkI9QBRP1BgThwJNVn1yTmF58IKHd69saojHQnpGaTHuWZReVKsXnqDBPnKkM69b5gW7UagCkSZCZ-sCzDiQiSfm_wBHBD_bK1IhYqoIA7-c6MjCxDiQiSfOxM7nADNy-; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU1MDI4MTA3LWY4ZjgtNGNiNC1iZWRiLTEyNzIzMThmM2E0NCIsImxhc3RfcGFzc3dvcmRfY2hhbmdlIjoxNzUwNjYwODczLCJleHAiOjE3NTUwOTg4NzF9.zO0sm9-Ru4Q3m93QUA90gljDmcUtYmxx8zxK7AnxJks; ssxmod_itna=QqUxBiD=i=itGQIPYQiQ=G=D2Dm67CaqDzxC5iO8Du2xjKidNDUQYT0=FrjljDDqKe/lpARYqgD0HpPwDA5Dnzx7YDt=Sa4q/RhhGXPQLjlxhKKLmYhXm=KIewkBd0mjHb9EHy/1S5joY0rz0YD884DKqGmD0=DAMeD7kmeKxGGf4GwDGoD34DiDDpKhQbD7gTQgen4N22o+lTDmSeKgBeDmdHDngTbpQWOxYPs2PGnWoWDAfi+xDfYxAta/QTCvDDBGR7eaxaDf+ra0/ee=KDuQ/et/eDLRaPwxB=KPtEQpHzDtdRTlpreoqrZLYojxpDMWoUehrjGpQG37GKjIxGh3xryjIGjDbCxtSpVnGCQ4UWRrBjr8R+GhrGXZcXVP0wnPlWT90p4lDQDIG7IrfqzlwzK2nn0KmheiGzlDbtAKYD; ssxmod_itna2=QqUxBiD=i=itGQIPYQiQ=G=D2Dm67CaqDzxC5iO8Du2xjKidNDUQYT0=FrjljDDqKe/lpARYqwDDcAee7/7DGa+jY8ur/KE=dyCg9cqY+3KfmDdSU/eD"
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM1OTIzMDY4LWIyYjItNGMzYy04YWYwLTkyYmNlZDA3M2Q0YSIsImxhc3RfcGFzc3dvcmRfY2hhbmdlIjoxNzU0OTgwMzUxLCJleHAiOjE3NTc1NzMyMjJ9.vG8FjR3t8YmOKqQcJ-HIeVAjV0R5cQ3ofhQrUOUsebY",
+        "cookie": "cna=mwOnILVg0wUCAXLYx7/3EVJW; _bl_uid=tpmweabLjtC207w0t3aLf7k8q8h3; x-ap=cn-hongkong; sca=433fe48d; xlly_s=1; acw_tc=0a03e54317549800410957538e2c4e8e5871db6ed35849d44d64c32015880c; _c_WBKFRo=laMcYu7QPe2m6sDnHFMDe3z1khbMhJWJbeEhfNz8; _nb_ioWEgULi=; cnaui=35923068-b2b2-4c3c-8af0-92bced073d4a; aui=35923068-b2b2-4c3c-8af0-92bced073d4a; _gcl_au=1.1.1978153344.1754898980.1729762429.1754980345.1754981206; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM1OTIzMDY4LWIyYjItNGMzYy04YWYwLTkyYmNlZDA3M2Q0YSIsImxhc3RfcGFzc3dvcmRfY2hhbmdlIjoxNzU0OTgwMzUxLCJleHAiOjE3NTc1NzMyMjJ9.vG8FjR3t8YmOKqQcJ-HIeVAjV0R5cQ3ofhQrUOUsebY; atpsida=5e8d0114fd2f34e70f54aabb_1754981282_26; tfstk=gqxE-C_D4gA_6HNsACIzgV-y2JsdPgljx315ELvld6fn93sPE1JzOe9WEgoPsQCHV_flj1Xka9bnpT2gI16DRvQHKgJGFQQhZ4Q3sgWDNeNl-6vgphR4VkGKJLqPVgcjGmiXp9IRqjtYm4Bu9tXYK06l-PjdF0iAVRnXppeMWLYypmwrP7DCE_Al-1jGH1X3K_AljPXAskXuxTViQTCGqk4ht1bGdTZhE_AkIAWPs_jl-QbiQTCGZgjoLdtD25W5-AVVgD0oWf7GipfaqoyAQw2kQzZTX0WhSsbiUuZSe97FipfitDYnwaRF8hiUM98M3nXewmEdxa8kAGxns0jMHFOhQQc4z1Y2v37XYjzAtHCJ_ZTEgkR29TANAnD-JwJcEKbD-YecBeAeja-seVQHkBTc7hGUXsYMQL_wWYUCNEBkwZKSMkCHEKKvlioUM98M3GSya7BG_XKJ874P-OBNGAkasKsFlk4JeVU8ywHdQsMh-zUR-s6NGAkayzQdgO5jKwf..; isg=BGlpVQKEJQLUYBkMbpQh8FjYeBPDNl1ozI-Q1QtcMdBE0obkV4VmOj-ElHZkyvWg; ssxmod_itna=QqUxBiD=i=itGQIPYQiQ=G=D2Dm67CaqDzxC5iO8Du2xjKidNDUQYHxDqy7P2Hwrp5NfjDqIrNKl75D/Yt4GzDiMPGhDBnAHoQCk5K4yFij+u5e8WOH+ey79BIkqNb0elDINF0n1P9UhLXV746e9OhrDAEoD7QDb4DyDGUTDG6rQeGGU4GwDGoD34DiDDpYEjbD7rn=VCneNrRofWWDmSeYgBeDmwHDnrnT6mn8xYpGyPGnWhWDA32wxDf3xAtaepu1vDDBm3OKaOaDf4ba9/eKTKDub/etePDLBapmxB=YdIotLXzDtLRTeQY2YOW3haE+hmSivrBpYQ+ZY+37GKnIxGxq=GdCw9Gxoi+djGdbG5CwKjqWfKXe61CqcWxcCmeWhwjNVxixb0r7G1iD/lTyBp4lDQYKN+I10TzBqGQGkGhs0T5mheiRPje59DxD; ssxmod_itna2=QqUxBiD=i=itGQIPYQiQ=G=D2Dm67CaqDzxC5iO8Du2xjKidNDUQYHxDqy7P2Hwrp5NfjDqIrNKl7eDA9=BF+r7f7D03qFi0S4q7mDGX3FscDk40yYd4Mq02YwglM205QY1CjBaVfRBxiLNuW3XHKDLPQeiySMhZQQhgSTUDEwQodjNDaCQc7Dq0F0TLb06GRQr2B2fVIwDeOLiT68YYHAnFuDjY8Pi4e1L5Ye6eUbA9Ba6Ljl256W=KPu3cR+yFhWbDrMBm1ZOlQLS+Etg=aZlm4+U5ZdTPsgfH9RWylqHVB8Aybit9bA4XExb8dyg=WO=YRG2iz3Ot77dVr7qoG2BKkgiqB3+BKBoKRoxeM=kj8yBGFEb0wWderNuzHhizl46fGzlx4dTDuNIhaFqtwhDyATIoKPnmw4T3eNd7O28DBYWpgQp3Gfopd3O0gOoiIdYFeGiIjQ/k7OZIc4i8WO73TKDQe64ORm6upgo8qYWvw5U6NOfrLEaKAxX1=Nu60a8RgPaSWD9GvkDM4r92=TFEHdsKCpxCpBgrau=kgTqFC72mp9G+tO4qbsqbN0fOTkQKQPAaNwua464faabvN+iVPC9PpheQ3Fh5PToL1EPoQGDMY84grDCSN1ayKOFy3KD=i23=Ad7xqNwD2aQfEYYRxlnMVoMLvd=0QKBWfyDHr/Zq7UfdS5q+pAYZj44Dq0pRTkzDfYMQielxnIdGDoD04pfDi4Y803m3mwKYSe3Yi0bwf06/wDQ=b4xumUhYAeXDbBYUhriKL+1A54oGD30Gs0Di4m7xkG17xeR1iDD"
     }
     response = requests.post(url, json={
         "stream": True,
         "incremental_output": True,
-        "chat_id": "f9df3655-1fa4-4dea-b1d5-c7028def11a4",
+        "chat_id": "d44133a1-e688-4ea1-a01c-0b17a7be8130",
         "chat_mode": "normal",
         "model": "qwen3-30b-a3b",
-        "parent_id": "722a1013-572e-49e6-ac3d-43567324bd1f",
+        "parent_id": "bf88e713-90c6-4656-9a15-6188130abb29",
         "messages": [{
-            "fid": "d14be7f9-cbdd-44b1-b06c-8b96d6ebca7e",
-            "parentId": "722a1013-572e-49e6-ac3d-43567324bd1f",
-            "childrenIds": ["daa4912b-8edb-49cf-a3ce-560867eab871"],
+            "fid": "a39d65e4-29b3-4b80-bc32-052323139d98",
+            "parentId": "bf88e713-90c6-4656-9a15-6188130abb29",
+            "childrenIds": ["2e6a78c3-2b4d-444e-a03c-0f4b756d1d3a"],
             "role": "user",
             "content": msg,
             "user_action": "chat",
@@ -69,7 +69,7 @@ def reqGpt(id, msg):
                 }
             },
             "sub_chat_type": "t2t",
-            "parent_id": "722a1013-572e-49e6-ac3d-43567324bd1f"
+            "parent_id": "bf88e713-90c6-4656-9a15-6188130abb29"
         }],
         "timestamp": time.mktime(datetime.now().timetuple()),
     }, headers=headers)
