@@ -25,10 +25,19 @@ def compute():
     cursor = conn.cursor()
 
     init(cursor)
+
     baidu.run(cursor)
+    conn.commit()
+
     cls.run(cursor)
+    conn.commit()
+
     weibo.run(cursor)
-    xueqiu.run(cursor)
+    conn.commit()
+
+    # xueqiu.run(cursor)
+    conn.commit()
+
     dfcf.run(cursor)
 
 
