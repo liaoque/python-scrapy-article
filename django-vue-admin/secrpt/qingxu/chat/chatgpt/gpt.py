@@ -7,14 +7,14 @@ def reqGpt(id, msg):
     url = "https://cc01.plusai.io/backend-api/conversation"
     headers = {
         "x-timestamp": "1753000624",
-        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTUzNjI1NjYsInN1YiI6IjMyZTdmOTVhZGMyYzQxNmM4ZTNiYzlmYTM2NWQ2MjdkIiwiaWF0IjoxNzU1MjI3NTY2LCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwic3Vic2NyaXB0aW9uX2lkIjoiNjVhOTA4NDI1NjQ2YTNjNGRlNjg5ODcyIiwiYWNjb3VudF9pZCI6IjY4NWJjZjU2Mzk0N2YzYWIwZWQxMTk1NCJ9.mrANRpErFEWGptftq8IrfM6U2bGlwE8hKV-DiNmMOSc",
-        "cookie": "oai-locale=en-US; oai-nav-state=1; oai-did=11f14f78-5f1b-4a21-accf-458b98c52533; oai-thread-sidebar=%22%257B%2522isOpen%2522%253Afalse%257D%22; __Secure-auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTY0MzcxNTksInN1YiI6IjMyZTdmOTVhZGMyYzQxNmM4ZTNiYzlmYTM2NWQ2MjdkIiwiaWF0IjoxNzU1MjI3NTU5LCJ0b2tlbl90eXBlIjoiYXV0aF90b2tlbiJ9.FrwsWTppEXc5GwO4a9OTefa5Jih0y3ZQELEIQv_xF6U; __Secure-access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTUzNjI1NjYsInN1YiI6IjMyZTdmOTVhZGMyYzQxNmM4ZTNiYzlmYTM2NWQ2MjdkIiwiaWF0IjoxNzU1MjI3NTY2LCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwic3Vic2NyaXB0aW9uX2lkIjoiNjVhOTA4NDI1NjQ2YTNjNGRlNjg5ODcyIiwiYWNjb3VudF9pZCI6IjY4NWJjZjU2Mzk0N2YzYWIwZWQxMTk1NCJ9.mrANRpErFEWGptftq8IrfM6U2bGlwE8hKV-DiNmMOSc; _account=f9f24477-3b6b-4a27-a298-c8663fd4edc5"
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTY0Mzg5NTAsInN1YiI6IjMyZTdmOTVhZGMyYzQxNmM4ZTNiYzlmYTM2NWQ2MjdkIiwiaWF0IjoxNzU2MzAzOTUwLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwic3Vic2NyaXB0aW9uX2lkIjoiNjVhOTA4NDI1NjQ2YTNjNGRlNjg5ODcyIiwiYWNjb3VudF9pZCI6IjY4YTk0YTAxNjk2NjNlMjg0YzZjZmNlMCJ9.N5gptslYGkESI24Kdk6ngRFmH_ULluihPUC5xqUP_aY",
+        "cookie": "oai-locale=en-US; oai-nav-state=1; oai-did=11f14f78-5f1b-4a21-accf-458b98c52533; oai-thread-sidebar=%22%257B%2522isOpen%2522%253Afalse%257D%22; __Secure-auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTY0MzcxNTksInN1YiI6IjMyZTdmOTVhZGMyYzQxNmM4ZTNiYzlmYTM2NWQ2MjdkIiwiaWF0IjoxNzU1MjI3NTU5LCJ0b2tlbl90eXBlIjoiYXV0aF90b2tlbiJ9.FrwsWTppEXc5GwO4a9OTefa5Jih0y3ZQELEIQv_xF6U; __Secure-access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTY0Mzg5NTAsInN1YiI6IjMyZTdmOTVhZGMyYzQxNmM4ZTNiYzlmYTM2NWQ2MjdkIiwiaWF0IjoxNzU2MzAzOTUwLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwic3Vic2NyaXB0aW9uX2lkIjoiNjVhOTA4NDI1NjQ2YTNjNGRlNjg5ODcyIiwiYWNjb3VudF9pZCI6IjY4YTk0YTAxNjk2NjNlMjg0YzZjZmNlMCJ9.N5gptslYGkESI24Kdk6ngRFmH_ULluihPUC5xqUP_aY; _account=f9f24477-3b6b-4a27-a298-c8663fd4edc5"
     }
     response = requests.post(url, json={
         "action": "variant",
         "messages": [
             {
-                "id": "aaa22765-9e30-4f3b-baba-585d7bfaeba1",
+                "id": "aaa23fde-c5a5-49c5-93a8-12d4f738bd4d",
                 "author": {"role": "user", "name": None, "metadata": {}},
                 "create_time": 1752997866.204491,
                 "update_time": None,
@@ -33,15 +33,15 @@ def reqGpt(id, msg):
                     "timestamp_": "absolute"
                 }, "recipient": "all", "channel": None
             }],
-            "conversation_id": "687c9fcd-3c00-8005-94ed-4c67dea4a4db",
-            "parent_message_id": "4e4dd461-704d-4605-bf88-fbb6d8aba55b",
+            "conversation_id": "68b0a204-3c10-832a-9494-f628eddc7b84",
+            "parent_message_id": "d83c2063-abd5-4581-911b-8ccd14ad68e2",
             "model": "gpt-4-1-mini", "timezone_offset_min": -480,
             "timezone": "Asia/Shanghai", "variant_purpose": "none",
             "history_and_training_disabled": False,
             "conversation_mode": {"kind": "primary_assistant", "plugin_ids": None},
             "force_paragen": False, "force_paragen_model_slug": "",
             "force_rate_limit": False, "reset_rate_limits": False,
-            "websocket_request_id": "ff10239b-8f62-49b7-811b-d2e7c3799f17",
+            "websocket_request_id": "ff53aa25-8a05-4899-a54d-0bbd783dab45",
             "supported_encodings": [], "conversation_origin": None,
             "client_contextual_info": {
                 "is_dark_mode": False,
