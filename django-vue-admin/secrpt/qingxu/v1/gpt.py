@@ -18,6 +18,7 @@ sys.path.insert(0, parent_dir)
 
 import qingxu.chat.anget as chat
 from common.database import getConfig
+from common.dingding import dingding
 
 # nltk.download('stopwords')
 # stop_words = set(stopwords.words('chinese'))  # 需要下载中文停用词表
@@ -152,6 +153,7 @@ def run(cursor, conn):
             qc = queryContent(cursor, table_name, table_id)
             codes2 = chat.gpt(id, qc['content'])
             if codes2 == "当前会话已过期":
+                dingding("gpt当前会话已过期")
                 break
             print(qc['content'])
             # if "data" in codes2 and "content" in codes2["data"]:
