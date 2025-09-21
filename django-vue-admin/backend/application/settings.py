@@ -123,6 +123,15 @@ DATABASES = {
             'host': 'localhost',  # 替换为你的MongoDB主机地址，通常是localhost或IP地址
             'port': 27017,               # MongoDB默认端口是27017
         }
+    },
+    'qingxu': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'qingxu',
+        "USER": DATABASE_USER,
+        "PASSWORD": DATABASE_PASSWORD,
+        "HOST": "127.0.0.1",
+        "PORT": 3396,
+        'ENFORCE_SCHEMA': False,       # 如果设置为True，Django将尝试强制执行模型的schema
     }
 }
 AUTH_USER_MODEL = "system.Users"
