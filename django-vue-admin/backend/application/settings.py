@@ -141,7 +141,7 @@ DATABASES = {
 AUTH_USER_MODEL = "system.Users"
 USERNAME_FIELD = "username"
 
-DATABASE_ROUTERS = ["config.db_router.AppRouter"]
+DATABASE_ROUTERS = ["application.db_router.AppRouter"]
 DATABASE_APPS_MAPPING = {
     "qingxu": "qingxu",   # ← 关键：app_label 要和 apps.py 里定义的一致
 }
