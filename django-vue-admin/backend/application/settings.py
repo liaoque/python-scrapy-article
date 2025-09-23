@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "captcha",
     'channels',
     "dvadmin.system",
+    "dvadmin.qingxu",
 ]
 
 MIDDLEWARE = [
