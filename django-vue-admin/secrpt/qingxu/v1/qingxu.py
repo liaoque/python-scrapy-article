@@ -21,6 +21,7 @@ def compute():
         user=mc['user'],
         passwd=mc['passwd'],  # mysqlclient 使用 passwd 而不是 password
         db=mc['db'],
+        init_command="SET time_zone = '+08:00'"  # 设置为东八区（北京时间）
     )
     cursor = conn.cursor()
 
