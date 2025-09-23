@@ -84,6 +84,8 @@ urlpatterns = (
 
             path("api/wb/", include("dvadmin.wb.urls")),
             path("api/lh/", include("dvadmin.lh.urls")),
+
+            path('api/qingxu/', include('dvadmin.qingxu.urls')),
         ]
         + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
         + static(settings.STATIC_URL, document_root=settings.STATIC_URL)

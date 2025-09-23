@@ -118,24 +118,33 @@ DATABASES = {
     'mg': {
         'ENGINE': 'djongo',
         'NAME': 'stock_db',  # 替换为你的MongoDB数据库名称
-        'ENFORCE_SCHEMA': False,       # 如果设置为True，Django将尝试强制执行模型的schema
+        'ENFORCE_SCHEMA': False,  # 如果设置为True，Django将尝试强制执行模型的schema
         'CLIENT': {
             'host': 'localhost',  # 替换为你的MongoDB主机地址，通常是localhost或IP地址
-            'port': 27017,               # MongoDB默认端口是27017
+            'port': 27017,  # MongoDB默认端口是27017
         }
     },
     'qingxu': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'qingxu',
-        "USER": DATABASE_USER,
-        "PASSWORD": DATABASE_PASSWORD,
+        "USER": 'qingxu',
+        "PASSWORD": 't5Nw83MHn2sbsJBW',
         "HOST": "127.0.0.1",
-        "PORT": 3396,
-        'ENFORCE_SCHEMA': False,       # 如果设置为True，Django将尝试强制执行模型的schema
+        "PORT": 3306,
+        'ENFORCE_SCHEMA': False,  # 如果设置为True，Django将尝试强制执行模型的schema
+        "OPTIONS": {
+            "charset": "utf8mb4",
+        },
     }
 }
 AUTH_USER_MODEL = "system.Users"
 USERNAME_FIELD = "username"
+
+DATABASE_ROUTERS = ["config.db_router.AppRouter"]
+DATABASE_APPS_MAPPING = {
+    "qingxu": "qingxu",   # ← 关键：app_label 要和 apps.py 里定义的一致
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -439,7 +448,7 @@ PLUGINS_URL_PATTERNS = []
 # from dvadmin_ak_sk.settings import *            # 秘钥管理管理
 # from dvadmin_tenants.settings import *          # 租户管理
 # from dvadmin_cloud_storage.settings import * # 云存储
-#from dvadmin_low_code_crud.settings import *  # 低代码操作
+# from dvadmin_low_code_crud.settings import *  # 低代码操作
 # ...
 
 # ********** 一键导入插件配置结束 **********
