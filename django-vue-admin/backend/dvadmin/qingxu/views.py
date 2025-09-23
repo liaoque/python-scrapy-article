@@ -6,6 +6,8 @@ from .serializers import MClsSerializer
 class MClsViewSet(viewsets.ModelViewSet):
     queryset = MCls.objects.all()     # 路由器会让它自动走 qingxu
     serializer_class = MClsSerializer
+    permission_classes = [AllowAny]  # 允许匿名
+    authentication_classes = []
     # permission_classes = [permissions.IsAuthenticated]  # 根据 dvadmin 权限策略调整
 
     def get_queryset(self):
