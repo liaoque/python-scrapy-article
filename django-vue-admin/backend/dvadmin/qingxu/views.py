@@ -1,14 +1,24 @@
 # apps/ext_models/views.py
+
+from rest_framework import viewsets
+from rest_framework.permissions import AllowAny   # 新增
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication  # 可选
+from django.utils.dateparse import parse_datetime, parse_date  # 新增
+from django.utils import timezone  # 新增
+from datetime import datetime, time  # 新增
+
+from .models import MCls
+from .serializers import MClsSerializer
+
 from rest_framework import viewsets, permissions
 from .models import MCls
 from .serializers import MClsSerializer
 
-class MClsViewSet(viewsets.ModelViewSet):
+class MClsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MCls.objects.all()     # 路由器会让它自动走 qingxu
     serializer_class = MClsSerializer
-    permission_classes = [AllowAny]  # 允许匿名
     authentication_classes = []
-    # permission_classes = [permissions.IsAuthenticated]  # 根据 dvadmin 权限策略调整
+    permission_classes = [AllowAny]  # 根据 dvadmin 权限策略调整
 
     def get_queryset(self):
         qs = super().get_queryset()
