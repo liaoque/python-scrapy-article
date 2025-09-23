@@ -20,6 +20,15 @@ class MClsViewSet(viewsets.ReadOnlyModelViewSet):
     authentication_classes = []
     permission_classes = [AllowAny]  # 根据 dvadmin 权限策略调整
 
+    # 开启排序（若全局 settings 里已有 OrderingFilter，这里可不写）
+    filter_backends = [OrderingFilter]
+
+    # 允许用户用 ?ordering=... 排的字段白名单
+    ordering_fields = ('id', 'created_at')
+
+    # 默认排序（用户不传 ?ordering 时用它）
+    ordering = ('-id')  # 再按 id 倒序
+
     def get_queryset(self):
         qs = super().get_queryset()
         request = self.request
