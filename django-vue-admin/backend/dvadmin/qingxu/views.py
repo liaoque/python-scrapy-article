@@ -13,6 +13,8 @@ from .serializers import MClsSerializer
 from rest_framework import viewsets, permissions
 from .models import MCls
 from .serializers import MClsSerializer
+from rest_framework.filters import OrderingFilter    # ← 关键
+
 
 class MClsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MCls.objects.all()     # 路由器会让它自动走 qingxu
