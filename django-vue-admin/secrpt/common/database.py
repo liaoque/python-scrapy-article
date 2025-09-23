@@ -6,9 +6,9 @@ database_config = {
         # 'limitup_records' :"limitup_records"
     },
     'mysql' :{
-        'host' :"",
-        'user' :"",
-        'passwd' :"",
+        'host' :"127.0.0.1",
+        'user' :"qingxu",
+        'passwd' :"t5Nw83MHn2sbsJBW",
         'db' :"qingxu",
     }
 }
