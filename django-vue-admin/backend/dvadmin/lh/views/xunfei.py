@@ -33,6 +33,9 @@ class XunFeiView(View):
             return JsonResponse({"error": "Invalid JSON"}, status=400)
 
         text = body.get("text")
+        XFYUN_API_KEY = body.get("XFYUN_API_KEY")
+        XFYUN_API_SECRET = body.get("XFYUN_API_SECRET")
+        XFYUN_APP_ID = body.get("XFYUN_APP_ID")
         vcn = body.get("vcn")
         if not text or not vcn:
             return JsonResponse({"error": "Missing required fields: text, vcn"}, status=400)
@@ -49,9 +52,9 @@ class XunFeiView(View):
         rdn = str(body.get("rdn", "0"))
         return_type = body.get("return", "base64")
 
-        ws_url = build_auth_url(WS_HOSTURL)
+        ws_url = build_auth_url(WS_HOSTURL, XFYUN_API_KEY, XFYUN_API_SECRET)
         payload = {
-            "common": {"app_id": os.getenv("XFYUN_APP_ID")},
+            "common": {"app_id": XFYUN_APP_ID},
             "business": {
                 "aue": aue, "sfl": sfl, "auf": auf, "vcn": vcn,
                 "speed": speed, "volume": volume, "pitch": pitch, "bgs": bgs,

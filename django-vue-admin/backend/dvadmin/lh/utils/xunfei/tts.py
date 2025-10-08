@@ -5,16 +5,13 @@ import hashlib
 from datetime import datetime, timezone
 from urllib.parse import urlparse, urlencode
 
-XFYUN_APP_ID = os.getenv("XFYUN_APP_ID")
-XFYUN_API_KEY = os.getenv("XFYUN_API_KEY")
-XFYUN_API_SECRET = os.getenv("XFYUN_API_SECRET")
-
 def rfc1123_now_utc() -> str:
     return datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-def build_auth_url(hosturl: str) -> str:
+
+def build_auth_url(hosturl: str, XFYUN_API_KEY: str, XFYUN_API_SECRET: str) -> str:
     """构建科大讯飞鉴权 URL（authorization/date/host 三参）"""
-    if not (XFYUN_APP_ID and XFYUN_API_KEY and XFYUN_API_SECRET):
+    if not (XFYUN_API_KEY and XFYUN_API_SECRET):
         raise RuntimeError("Missing XFYUN credentials in env")
 
     u = urlparse(hosturl)
@@ -45,6 +42,7 @@ def build_auth_url(hosturl: str) -> str:
     })
     return f"{hosturl}?{qs}"
 
+
 def infer_format(aue: str) -> str:
     aue = (aue or "").lower()
     if aue == "lame":
@@ -56,6 +54,7 @@ def infer_format(aue: str) -> str:
     if aue.startswith("speex"):
         return "speex"
     return "bin"
+
 
 def sample_rate_from_auf(auf: str) -> int:
     return 16000 if "16000" in (auf or "") else 8000
