@@ -111,7 +111,7 @@ class XunFeiView(View):
                     print(b64_all)
                     audio_data = base64.b64decode(b64_all, validate=True)  # 验证Base64格式
                 except base64.binascii.Error as e:
-                    raise RuntimeError(f"Invalid base64 data: {e}")
+                    return JsonResponse({"error": f"Invalid base64 data: {e}"}, status=500)
                 f.write(audio_data)
                 f.flush()  # 强制刷新缓冲区
                 os.fsync(f.fileno())  # 确保数据写入物理磁盘
