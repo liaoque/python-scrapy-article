@@ -83,6 +83,9 @@ class XunFeiView(View):
                         audio_chunks.append(data["audio"])
                     # if data.get("status") == 2:
                     #     return "".join(audio_chunks), sid
+
+                print(f"Connection closed. Total chunks: {len(audio_chunks)}")
+
             return "".join(audio_chunks), sid
 
         try:
@@ -108,7 +111,6 @@ class XunFeiView(View):
             filepath = SAVE_DIR / filename
             with open(filepath, "wb") as f:
                 try:
-                    print(b64_all)
                     audio_data = base64.b64decode(b64_all, validate=True)  # 验证Base64格式
                 except base64.binascii.Error as e:
                     return JsonResponse({"error": f"Invalid base64 data: {e}"}, status=500)
