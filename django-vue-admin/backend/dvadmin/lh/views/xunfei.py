@@ -71,6 +71,7 @@ class XunFeiView(View):
             async with websockets.connect(ws_url, max_size=None) as ws:
                 await ws.send(json.dumps(payload))
                 async for raw in ws:
+                    print(raw)
                     msg = json.loads(raw)
                     code = msg.get("code")
                     message = msg.get("message")
