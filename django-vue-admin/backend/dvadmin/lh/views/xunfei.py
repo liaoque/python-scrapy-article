@@ -1,6 +1,7 @@
 import os, json, base64, asyncio
 from uuid import uuid4
 from pathlib import Path
+import re
 import websockets
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -109,14 +110,26 @@ class XunFeiView(View):
             file_id = str(uuid4())
             filename = f"{file_id}.{fmt}"  # 避免非 ASCII 文件名
             filepath = SAVE_DIR / filename
+            raw_b64 = b64_all or ""
+            # 去掉所有空格、换行
+            clean = re.sub(r"\s+", "", raw_b64)
+
+            # 判断是否为 base64url 编码
+            decoder = base64.urlsafe_b64decode if ("-" in clean or "_" in clean) else base64.b64decode
+
+            # 自动补齐 Base64 长度
+            missing = (-len(clean)) % 4
+            if missing:
+                clean += "=" * missing
+            try:
+                audio_data = decoder(clean)  # 不用 validate=True
+            except (base64.binascii.Error, ValueError) as e:
+                return JsonResponse({"error": f"Base64 数据无效: {e}"}, status=500)
+
             with open(filepath, "wb") as f:
-                try:
-                    audio_data = base64.b64decode(b64_all, validate=True)  # 验证Base64格式
-                except base64.binascii.Error as e:
-                    return JsonResponse({"error": f"Invalid base64 data: {e}"}, status=500)
                 f.write(audio_data)
-                f.flush()  # 强制刷新缓冲区
-                os.fsync(f.fileno())  # 确保数据写入物理磁盘
+                f.flush()
+                os.fsync(f.fileno())
 
             url = f"/{filename}"
             return JsonResponse({"format": fmt, "sample_rate": sr, "audio_url": url, "sid": sid})
