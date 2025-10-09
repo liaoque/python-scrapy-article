@@ -81,8 +81,8 @@ class XunFeiView(View):
                     data = msg.get("data") or {}
                     if data.get("audio"):
                         audio_chunks.append(data["audio"])
-                    if data.get("status") == 2:
-                        return "".join(audio_chunks), sid
+                    # if data.get("status") == 2:
+                    #     return "".join(audio_chunks), sid
             return "".join(audio_chunks), sid
 
         try:
