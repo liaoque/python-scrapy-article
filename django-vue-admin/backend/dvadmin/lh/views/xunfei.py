@@ -8,7 +8,7 @@ from rest_framework.permissions import AllowAny  # 或者换成登录权限
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
-from dvadmin.lh.utils.xunfei import build_auth_url, infer_format, sample_rate_from_auf
+from dvadmin.lh.utils.xunfei.tts import build_auth_url, infer_format, sample_rate_from_auf
 
 SAVE_DIR = Path(os.getenv("SAVE_DIR", "media/public"))
 SAVE_DIR.mkdir(parents=True, exist_ok=True)
