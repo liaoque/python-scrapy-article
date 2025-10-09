@@ -1,7 +1,5 @@
-import os, json, base64, asyncio
 from uuid import uuid4
 from pathlib import Path
-import re
 import websockets
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -9,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from dvadmin.lh.utils.xunfei.tts import build_auth_url, infer_format, sample_rate_from_auf
+import os, json, base64, asyncio, re
 
 SAVE_DIR = Path(os.getenv("SAVE_DIR", "media/public"))
 SAVE_DIR.mkdir(parents=True, exist_ok=True)
@@ -93,12 +92,12 @@ class XunFeiView(View):
             b64_all, sid = asyncio.run(asyncio.wait_for(call_upstream(), timeout=TIMEOUT_SECONDS))
         except asyncio.TimeoutError:
             return JsonResponse({"error": "Upstream timeout"}, status=504)
-        except RuntimeError as re:
+        except RuntimeError as rer:
             # 上游错误直接透传
             try:
-                detail = json.loads(str(re))
+                detail = json.loads(str(rer))
             except Exception:
-                detail = {"error": str(re)}
+                detail = {"error": str(rer)}
             return JsonResponse(detail, status=500)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
