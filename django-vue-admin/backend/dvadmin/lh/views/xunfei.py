@@ -71,7 +71,6 @@ class XunFeiView(View):
             async with websockets.connect(ws_url, max_size=None) as ws:
                 await ws.send(json.dumps(payload))
                 async for raw in ws:
-                    print(raw)
                     msg = json.loads(raw)
                     code = msg.get("code")
                     message = msg.get("message")
@@ -108,7 +107,11 @@ class XunFeiView(View):
             filename = f"{file_id}.{fmt}"  # 避免非 ASCII 文件名
             filepath = SAVE_DIR / filename
             with open(filepath, "wb") as f:
-                audio_data = base64.b64decode(b64_all)
+                try:
+                    print(b64_all)
+                    audio_data = base64.b64decode(b64_all, validate=True)  # 验证Base64格式
+                except base64.binascii.Error as e:
+                    raise RuntimeError(f"Invalid base64 data: {e}")
                 f.write(audio_data)
                 f.flush()  # 强制刷新缓冲区
                 os.fsync(f.fileno())  # 确保数据写入物理磁盘
