@@ -13,7 +13,7 @@ SAVE_DIR = Path(os.getenv("SAVE_DIR", "media/public"))
 SAVE_DIR.mkdir(parents=True, exist_ok=True)
 
 WS_HOSTURL = "wss://tts-api.xfyun.cn/v2/tts"
-TIMEOUT_SECONDS = int(os.getenv("UPSTREAM_TIMEOUT", "20"))
+TIMEOUT_SECONDS = int(os.getenv("UPSTREAM_TIMEOUT", "60"))
 
 
 @method_decorator(csrf_exempt, name='dispatch')
