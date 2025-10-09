@@ -108,7 +108,11 @@ class XunFeiView(View):
             filename = f"{file_id}.{fmt}"  # 避免非 ASCII 文件名
             filepath = SAVE_DIR / filename
             with open(filepath, "wb") as f:
-                f.write(base64.b64decode(b64_all))
+                audio_data = base64.b64decode(b64_all)
+                f.write(audio_data)
+                f.flush()  # 强制刷新缓冲区
+                os.fsync(f.fileno())  # 确保数据写入物理磁盘
+
             url = f"/{filename}"
             return JsonResponse({"format": fmt, "sample_rate": sr, "audio_url": url, "sid": sid})
 
