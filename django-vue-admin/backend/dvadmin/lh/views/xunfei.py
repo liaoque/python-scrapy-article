@@ -3,10 +3,9 @@ from uuid import uuid4
 from pathlib import Path
 import websockets
 from django.http import JsonResponse
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny  # 或者换成登录权限
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.views import View
 
 from dvadmin.lh.utils.xunfei.tts import build_auth_url, infer_format, sample_rate_from_auf
 
