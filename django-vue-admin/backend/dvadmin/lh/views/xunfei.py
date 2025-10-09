@@ -66,8 +66,11 @@ class XunFeiView(View):
         }
 
         async def call_upstream():
-            audio_chunks = []
             sid = ""
+            done = False
+            # 直接写 bytes（而不是攒 base64 字符串）
+            chunks_bytes = []
+
             async with websockets.connect(ws_url, max_size=None) as ws:
                 await ws.send(json.dumps(payload))
                 async for raw in ws:
@@ -78,18 +81,36 @@ class XunFeiView(View):
                         sid = msg["sid"]
                     if code != 0:
                         raise RuntimeError(json.dumps({"error": message or "XFYun error", "code": code, "sid": sid}))
+
                     data = msg.get("data") or {}
-                    if data.get("audio"):
-                        audio_chunks.append(data["audio"])
-                    # if data.get("status") == 2:
-                    #     return "".join(audio_chunks), sid
+                    b64 = data.get("audio")
+                    if b64:
+                        # 和 demo 一样：每帧立刻解码成二进制
+                        # 注意：如果含有 '-'/'_'，用 urlsafe_b64decode 更稳妥
+                        decoder = base64.urlsafe_b64decode if ("-" in b64 or "_" in b64) else base64.b64decode
+                        try:
+                            # 去掉任何可能的空白后再解码
+                            b64 = "".join(b64.split())
+                            # 补齐 padding
+                            padding = (-len(b64)) % 4
+                            if padding:
+                                b64 += "=" * padding
+                            chunk = decoder(b64)
+                        except Exception as e:
+                            raise RuntimeError(json.dumps({"error": f"decode error: {e}", "sid": sid}))
+                        chunks_bytes.append(chunk)
 
-                print(f"Connection closed. Total chunks: {len(audio_chunks)}")
+                    if data.get("status") == 2:
+                        done = True
+                        break
 
-            return "".join(audio_chunks), sid
+            if not done:
+                raise RuntimeError(json.dumps({"error": "Upstream closed before final status=2", "sid": sid}))
+            # 返回纯二进制拼接后的 bytes
+            return b"".join(chunks_bytes), sid
 
         try:
-            b64_all, sid = asyncio.run(asyncio.wait_for(call_upstream(), timeout=TIMEOUT_SECONDS))
+            audio_bytes, sid = asyncio.run(asyncio.wait_for(call_upstream(), timeout=TIMEOUT_SECONDS))
         except asyncio.TimeoutError:
             return JsonResponse({"error": "Upstream timeout"}, status=504)
         except RuntimeError as rer:
@@ -109,28 +130,15 @@ class XunFeiView(View):
             file_id = str(uuid4())
             filename = f"{file_id}.{fmt}"  # 避免非 ASCII 文件名
             filepath = SAVE_DIR / filename
-            raw_b64 = b64_all or ""
-            # 去掉所有空格、换行
-            clean = re.sub(r"\s+", "", raw_b64)
 
-            # 判断是否为 base64url 编码
-            decoder = base64.urlsafe_b64decode if ("-" in clean or "_" in clean) else base64.b64decode
-
-            # 自动补齐 Base64 长度
-            missing = (-len(clean)) % 4
-            if missing:
-                clean += "=" * missing
-            try:
-                audio_data = decoder(clean)  # 不用 validate=True
-            except (base64.binascii.Error, ValueError) as e:
-                return JsonResponse({"error": f"Base64 数据无效: {e}"}, status=500)
 
             with open(filepath, "wb") as f:
-                f.write(audio_data)
+                f.write(audio_bytes)
                 f.flush()
                 os.fsync(f.fileno())
 
             url = f"/{filename}"
             return JsonResponse({"format": fmt, "sample_rate": sr, "audio_url": url, "sid": sid})
 
-        return JsonResponse({"format": fmt, "sample_rate": sr, "audio_base64": b64_all, "sid": sid})
+        audio_b64 = base64.b64encode(audio_bytes).decode("ascii")
+        return JsonResponse({"format": fmt, "sample_rate": sr, "audio_base64": audio_b64, "sid": sid})
