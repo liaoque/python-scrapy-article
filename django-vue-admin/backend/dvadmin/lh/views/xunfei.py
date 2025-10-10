@@ -137,7 +137,7 @@ class XunFeiView(View):
                 f.flush()
                 os.fsync(f.fileno())
 
-            url = f"/{filename}"
+            url = f"http://150.158.135.254:39181/media/public/{filename}"
             return JsonResponse({"format": fmt, "sample_rate": sr, "audio_url": url, "sid": sid})
 
         audio_b64 = base64.b64encode(audio_bytes).decode("ascii")
