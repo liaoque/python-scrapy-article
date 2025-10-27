@@ -9,7 +9,7 @@ def weibo(page):
     url = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D1%26q%3D%E4%B8%8A%E8%AF%81%E6%8C%87%E6%95%B0%26t%3D&page_type=searchall&page=" + str(
         page)
     headers = {
-        "cookie": "SUB=_2A25KQYrPDeRhGeVL7FsT8irMyD2IHXVpPoIHrDV8PUNbmtAGLWjSkW9NTD9Yt3m0jJK7Ip88YDDdqn-eC8TAC_r1;",
+        "cookie": "SUB=_2AkMfoxICf8NxqwFRmvwdy2zgaYp2yQnEieKp_-PZJRM3HRl-yT9yqlEntRB6NCM87RFyd5050LR2ZppackTDIDGg36cz;",
         'Content-Type': 'application/x-www-form-urlencoded',
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
     }
