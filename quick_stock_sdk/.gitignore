@@ -12,3 +12,4 @@ wb/polls/views/__pycache__/*
 quickstock/.pytest_cache
 release_config/.pytest_cache
 release_config/__pycache__
+/release_config/dist/*
