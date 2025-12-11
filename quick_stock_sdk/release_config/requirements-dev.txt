@@ -1,0 +1,31 @@
+# QuickStock SDK - 开发依赖
+# 包含核心依赖
+-r requirements.txt
+
+# 测试框架
+pytest>=6.0.0
+pytest-asyncio>=0.18.0
+pytest-cov>=2.12.0
+pytest-mock>=3.6.0
+pytest-xdist>=2.4.0
+
+# 代码质量工具
+black>=21.0.0
+flake8>=3.9.0
+mypy>=0.910
+isort>=5.9.0
+pre-commit>=2.15.0
+
+# 文档生成
+sphinx>=4.0.0
+sphinx-rtd-theme>=0.5.0
+myst-parser>=0.15.0
+
+# 构建和发布工具
+build>=0.7.0
+twine>=3.4.0
+wheel>=0.37.0
+setuptools>=45.0.0
+
+# 可选数据源（开发时安装）
+baostock>=0.8.0

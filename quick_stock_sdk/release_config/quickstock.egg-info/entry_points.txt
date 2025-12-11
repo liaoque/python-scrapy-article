@@ -1,0 +1,2 @@
+[console_scripts]
+quickstock = quickstock.cli:main

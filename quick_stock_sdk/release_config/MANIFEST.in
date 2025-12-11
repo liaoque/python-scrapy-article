@@ -1,0 +1,42 @@
+# 包含项目文档
+include ../README.md
+include ../LICENSE
+include ../CHANGELOG.md
+include requirements.txt
+include requirements-dev.txt
+
+# 包含配置文件
+include ../pytest.ini
+include pyproject.toml
+include ../.gitignore
+
+# 包含文档目录
+recursive-include ../docs *
+prune ../docs/_build
+
+# 包含示例代码
+recursive-include ../examples *.py
+
+# 包含测试文件
+recursive-include ../tests *.py
+
+# 包含类型提示文件
+include ../quickstock/py.typed
+
+# 排除不需要的文件
+exclude .DS_Store
+exclude Thumbs.db
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * *.so
+recursive-exclude * .git*
+recursive-exclude * .pytest_cache
+recursive-exclude * .mypy_cache
+recursive-exclude * .coverage
+recursive-exclude * htmlcov
+recursive-exclude * .tox
+recursive-exclude * .venv
+recursive-exclude * venv
+recursive-exclude * env
+recursive-exclude * .env
+recursive-exclude * release_config
