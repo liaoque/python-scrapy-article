@@ -1,0 +1,18 @@
+# 包含README文件
+include README.md
+
+# 包含requirements.txt
+include requirements.txt
+
+# 包含所有Python文件
+recursive-include . *.py
+
+# 包含测试文件
+recursive-include tests *
+
+# 包含文档文件
+recursive-include docs *.md
+
+# 排除__pycache__目录和*.pyc文件
+prune */__pycache__/
+exclude *.pyc

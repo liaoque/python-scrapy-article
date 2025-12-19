@@ -1,15 +1,130 @@
-weixin/__pycache__
-weixin/*/__pycache__
-.vscode
-.test/*
-build/*
-.idea
-config.ini
-.idea/*
-wb/polls/core/__pycache__/*
-wb/polls/views/__pycache__/*
-.pytest_cache
-quickstock/.pytest_cache
-release_config/.pytest_cache
-release_config/__pycache__
-/release_config/dist/*
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+env/
+venv/
+.env/
+.venv/
+ENV/
+environment/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Logs
+*.log
+logs/
+
+# Configuration
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test Coverage
+.coverage
+.coverage.*
+htmlcov/
+
+# Test Cache
+.pytest_cache/
+.pytest_cache/**/*
+
+# Test Cache
+.pytest_cache/
+
+# Temporary Files
+*.tmp
+*.temp
+.cache/
+
+# QuickStock Specific
+*.bak
+*.old
+
+# Additional Python files
+*.pyi
+*.pyd
+*.pyo
+
+# More IDE/Editor files
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+*.vs/
+
+# More Build and Distribution files
+*.whl
+MANIFEST
+
+# Documentation build files
+docs/_build/
+doc/_build/
+.sphinx/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.mdb
+*.accdb
+
+# Debug files
+*.pdb
+*.dmp
+core.*
+
+# Package manager files
+Pipfile.lock
+# requirements.txt 通常会保留在版本控制中，以便确保所有开发者使用相同的依赖版本
+# requirements.txt
+
+# More temporary and cache files
+.temp/
+*.swap
+.sass-cache/
+node_modules/
+
+# CI/CD files
+.github/workflows/
+.gitlab-ci.yml
+Jenkinsfile
+
+# Translation files
+*.mo
+*.pot
+
+# Localization
+*.lproj/
+
+# Windows specific
+*.lnk
+*.url
+
+# macOS specific
+.AppleDouble
+.LSOverride
+
+# Linux specific
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
