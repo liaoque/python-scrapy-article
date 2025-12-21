@@ -5,11 +5,9 @@ SDK客户端类
 """
 
 import asyncio
-from typing import Any, Optional
+from typing import Any, Optional, List
 import pandas as pd
 from .sources.baostock import BaostockSource
-from .errors import (ValidationError, NetworkError, 
-                     DataSourceError, DataNotFoundError)
 
 
 class QuickStockClient:
@@ -59,13 +57,13 @@ class QuickStockClient:
         """
         return await self.baostock.get_stock_basic(**kwargs)
     
-    def stock_daily(self, code: str, start_date: Optional[str] = None, 
+    def stock_daily(self, codes: List[str], start_date: Optional[str] = None, 
                    end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票日线数据（同步方法）
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -73,16 +71,16 @@ class QuickStockClient:
             包含股票日线数据的DataFrame
         """
         return self._run_async(self.baostock.get_stock_daily(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         ))
     
-    async def astock_daily(self, code: str, start_date: Optional[str] = None, 
+    async def astock_daily(self, codes: List[str], start_date: Optional[str] = None, 
                           end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票日线数据（异步方法）
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -90,16 +88,16 @@ class QuickStockClient:
             包含股票日线数据的DataFrame
         """
         return await self.baostock.get_stock_daily(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         )
     
-    def stock_minute(self, code: str, start_date: Optional[str] = None, 
+    def stock_minute(self, codes: List[str], start_date: Optional[str] = None, 
                     end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票分钟线数据（同步方法）
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -107,16 +105,16 @@ class QuickStockClient:
             包含股票分钟线数据的DataFrame
         """
         return self._run_async(self.baostock.get_stock_minute(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         ))
     
-    async def astock_minute(self, code: str, start_date: Optional[str] = None, 
+    async def astock_minute(self, codes: List[str], start_date: Optional[str] = None, 
                            end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票分钟线数据（异步方法）
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -124,16 +122,16 @@ class QuickStockClient:
             包含股票分钟线数据的DataFrame
         """
         return await self.baostock.get_stock_minute(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         )
     
-    def stock_weekly(self, code: str, start_date: Optional[str] = None, 
+    def stock_weekly(self, codes: List[str], start_date: Optional[str] = None, 
                     end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票周线数据（同步方法）
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -141,16 +139,16 @@ class QuickStockClient:
             包含股票周线数据的DataFrame
         """
         return self._run_async(self.baostock.get_stock_weekly(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         ))
     
-    async def astock_weekly(self, code: str, start_date: Optional[str] = None, 
+    async def astock_weekly(self, codes: List[str], start_date: Optional[str] = None, 
                            end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票周线数据（异步方法）
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -158,16 +156,16 @@ class QuickStockClient:
             包含股票周线数据的DataFrame
         """
         return await self.baostock.get_stock_weekly(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         )
     
-    def stock_monthly(self, code: str, start_date: Optional[str] = None, 
+    def stock_monthly(self, codes: List[str], start_date: Optional[str] = None, 
                      end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票月线数据（同步方法）
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -175,16 +173,16 @@ class QuickStockClient:
             包含股票月线数据的DataFrame
         """
         return self._run_async(self.baostock.get_stock_monthly(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         ))
     
-    async def astock_monthly(self, code: str, start_date: Optional[str] = None, 
+    async def astock_monthly(self, codes: List[str], start_date: Optional[str] = None, 
                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票月线数据（异步方法）
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -192,7 +190,7 @@ class QuickStockClient:
             包含股票月线数据的DataFrame
         """
         return await self.baostock.get_stock_monthly(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         )
     
     # ------------------------指数数据相关方法------------------------
@@ -233,13 +231,13 @@ class QuickStockClient:
         """
         return await self.baostock.get_index_basic(**kwargs)
     
-    def index_daily(self, code: str, start_date: Optional[str] = None, 
+    def index_daily(self, codes: List[str], start_date: Optional[str] = None, 
                    end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取指数日线数据（同步方法）
         
         Args:
-            code: 指数代码
+            codes: 指数代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -247,16 +245,16 @@ class QuickStockClient:
             包含指数日线数据的DataFrame
         """
         return self._run_async(self.baostock.get_index_daily(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         ))
     
-    async def aindex_daily(self, code: str, start_date: Optional[str] = None, 
+    async def aindex_daily(self, codes: List[str], start_date: Optional[str] = None, 
                           end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取指数日线数据（异步方法）
         
         Args:
-            code: 指数代码
+            codes: 指数代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -264,16 +262,16 @@ class QuickStockClient:
             包含指数日线数据的DataFrame
         """
         return await self.baostock.get_index_daily(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         )
     
-    def index_minute(self, code: str, start_date: Optional[str] = None, 
+    def index_minute(self, codes: List[str], start_date: Optional[str] = None, 
                     end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取指数分钟线数据（同步方法）
         
         Args:
-            code: 指数代码
+            codes: 指数代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -281,16 +279,16 @@ class QuickStockClient:
             包含指数分钟线数据的DataFrame
         """
         return self._run_async(self.baostock.get_index_minute(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         ))
     
-    async def aindex_minute(self, code: str, start_date: Optional[str] = None, 
+    async def aindex_minute(self, codes: List[str], start_date: Optional[str] = None, 
                            end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取指数分钟线数据（异步方法）
         
         Args:
-            code: 指数代码
+            codes: 指数代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -298,8 +296,80 @@ class QuickStockClient:
             包含指数分钟线数据的DataFrame
         """
         return await self.baostock.get_index_minute(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         )
+    
+    def index_weekly(self, codes: List[str], start_date: Optional[str] = None, 
+                    end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取指数周线数据（同步方法）
+        
+        Args:
+            codes: 指数代码列表
+            start_date: 开始日期，格式如'2024-01-01'
+            end_date: 结束日期，格式如'2024-01-31'
+            
+        Returns:
+            包含指数周线数据的DataFrame
+        """
+        return self._run_async(self.baostock.get_index_weekly(
+            codes, start_date, end_date, **kwargs
+        ))
+    
+    async def aindex_weekly(self, codes: List[str], start_date: Optional[str] = None, 
+                           end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取指数周线数据（异步方法）
+        
+        Args:
+            codes: 指数代码列表
+            start_date: 开始日期，格式如'2024-01-01'
+            end_date: 结束日期，格式如'2024-01-31'
+            
+        Returns:
+            包含指数周线数据的DataFrame
+        """
+        return await self.baostock.get_index_weekly(
+            codes, start_date, end_date, **kwargs
+        )
+    
+
+    
+    def index_monthly(self, codes: List[str], start_date: Optional[str] = None, 
+                     end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取指数月线数据（同步方法）
+        
+        Args:
+            codes: 指数代码列表
+            start_date: 开始日期，格式如'2024-01-01'
+            end_date: 结束日期，格式如'2024-01-31'
+            
+        Returns:
+            包含指数月线数据的DataFrame
+        """
+        return self._run_async(self.baostock.get_index_monthly(
+            codes, start_date, end_date, **kwargs
+        ))
+    
+    async def aindex_monthly(self, codes: List[str], start_date: Optional[str] = None, 
+                            end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取指数月线数据（异步方法）
+        
+        Args:
+            codes: 指数代码列表
+            start_date: 开始日期，格式如'2024-01-01'
+            end_date: 结束日期，格式如'2024-01-31'
+            
+        Returns:
+            包含指数月线数据的DataFrame
+        """
+        return await self.baostock.get_index_monthly(
+            codes, start_date, end_date, **kwargs
+        )
+    
+
     
     # ------------------------基金数据相关方法------------------------
     
@@ -321,13 +391,13 @@ class QuickStockClient:
         """
         return await self.baostock.get_fund_basic(**kwargs)
     
-    def fund_daily(self, code: str, start_date: Optional[str] = None, 
+    def fund_daily(self, codes: List[str], start_date: Optional[str] = None, 
                   end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取基金日线数据（同步方法）
         
         Args:
-            code: 基金代码
+            codes: 基金代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -335,16 +405,16 @@ class QuickStockClient:
             包含基金日线数据的DataFrame
         """
         return self._run_async(self.baostock.get_fund_daily(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
         ))
     
-    async def afund_daily(self, code: str, start_date: Optional[str] = None, 
+    async def afund_daily(self, codes: List[str], start_date: Optional[str] = None, 
                          end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取基金日线数据（异步方法）
         
         Args:
-            code: 基金代码
+            codes: 基金代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -352,5 +422,39 @@ class QuickStockClient:
             包含基金日线数据的DataFrame
         """
         return await self.baostock.get_fund_daily(
-            code, start_date, end_date, **kwargs
+            codes, start_date, end_date, **kwargs
+        )
+    
+    # ------------------------辅助数据相关方法------------------------
+    
+    def query_trade_dates(self, start_date: Optional[str] = None, 
+                          end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        查询交易日数据（同步方法）
+        
+        Args:
+            start_date: 开始日期，格式如'2024-01-01'
+            end_date: 结束日期，格式如'2024-01-31'
+            
+        Returns:
+            包含交易日数据的DataFrame
+        """
+        return self._run_async(self.baostock.query_trade_dates(
+            start_date, end_date, **kwargs
+        ))
+    
+    async def aquery_trade_dates(self, start_date: Optional[str] = None, 
+                               end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        查询交易日数据（异步方法）
+        
+        Args:
+            start_date: 开始日期，格式如'2024-01-01'
+            end_date: 结束日期，格式如'2024-01-31'
+            
+        Returns:
+            包含交易日数据的DataFrame
+        """
+        return await self.baostock.query_trade_dates(
+            start_date, end_date, **kwargs
         )

@@ -4,13 +4,51 @@ Baostock数据源实现
 基于Baostock API的数据源实现，提供股票、指数和基金数据的获取功能
 """
 
-from typing import Optional, Dict, Any
+from enum import Enum
+from typing import Optional, Dict, Any, List
 import pandas as pd
 from datetime import datetime, timedelta
 from ..errors import (DataSourceError, ValidationError, 
                      NetworkError, DataNotFoundError)
 from .base import BaseSource
 import baostock as bs
+
+
+# 证券类型枚举
+class SecurityType(Enum):
+    STOCK = 'stock'
+    INDEX = 'index'
+    OTHER = 'other'
+    CONVERTIBLE_BOND = 'convertible_bond'
+    ETF = 'etf'
+
+    @classmethod
+    def from_code(cls, code: str) -> str:
+        """根据Baostock返回的代码获取对应的证券类型"""
+        mapping = {
+            '1': cls.STOCK.value,
+            '2': cls.INDEX.value,
+            '3': cls.OTHER.value,
+            '4': cls.CONVERTIBLE_BOND.value,
+            '5': cls.ETF.value
+        }
+        return mapping.get(code, f'unknown({code})')
+
+
+# 上市状态枚举
+class ListingStatus(Enum):
+    LISTED = 'listed'
+    DELISTED = 'delisted'
+
+    @classmethod
+    def from_code(cls, code: str) -> str:
+        """根据Baostock返回的代码获取对应的上市状态"""
+        mapping = {
+            '1': cls.LISTED.value,
+            '0': cls.DELISTED.value
+        }
+        return mapping.get(code, f'unknown({code})')
+
 
 
 class BaostockSource(BaseSource):
@@ -27,6 +65,20 @@ class BaostockSource(BaseSource):
             name: 数据源名称
         """
         super().__init__(name)
+        self._batch_size = 100  # 分批获取的大小
+    
+    def _batch_codes(self, codes: List[str]) -> List[List[str]]:
+        """
+        将代码列表分批，每批不超过self._batch_size个
+        
+        Args:
+            codes: 代码列表
+            
+        Returns:
+            分批后的代码列表
+        """
+        for i in range(0, len(codes), self._batch_size):
+            yield codes[i:i + self._batch_size]
     
     async def _connect(self):
         """
@@ -79,54 +131,64 @@ class BaostockSource(BaseSource):
         
         return stock_data
     
-    async def get_stock_daily(self, code: str, start_date: Optional[str] = None, 
+    async def get_stock_daily(self, codes: List[str], start_date: Optional[str] = None, 
                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票日线数据
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期
             end_date: 结束日期
             
         Returns:
             包含股票日线数据的DataFrame
         """
+        # 验证参数
+        if not codes or not isinstance(codes, list):
+            raise ValidationError("股票代码列表不能为空且必须是列表类型")
+        
+        # 设置默认日期范围
+        if not end_date:
+            end_date = datetime.now().strftime('%Y-%m-%d')
+        if not start_date:
+            start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+        
         await self._connect()
         try:
-            # 验证参数
-            if not code:
-                raise ValidationError("股票代码不能为空")
-            
-            # 设置默认日期范围
-            if not end_date:
-                end_date = datetime.now().strftime('%Y-%m-%d')
-            if not start_date:
-                start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
-            
-            # 调用Baostock API获取日线数据
+            all_results = []
             fields = "date,code,open,high,low,close,volume"
-            rs = bs.query_history_k_data_plus(
-                code=code,
-                fields=fields,
-                start_date=start_date,
-                end_date=end_date,
-                frequency="d",
-                adjustflag="3"  # 不复权
-            )
             
-            if rs.error_code != '0':
-                raise DataSourceError(f"获取股票日线数据失败: {rs.error_msg}")
+            # 分批处理代码列表
+            for batch_codes in self._batch_codes(codes):
+                for code in batch_codes:
+                    # 调用Baostock API获取日线数据
+                    rs = bs.query_history_k_data_plus(
+                        code=code,
+                        fields=fields,
+                        start_date=start_date,
+                        end_date=end_date,
+                        frequency="d",
+                        adjustflag="3"  # 不复权
+                    )
+                    
+                    if rs.error_code != '0':
+                        raise DataSourceError(f"获取股票{code}日线数据失败: {rs.error_msg}")
+                    
+                    # 处理结果
+                    result_list = []
+                    while rs.next():
+                        result_list.append(rs.get_row_data())
+                    
+                    if result_list:
+                        df = pd.DataFrame(result_list, columns=rs.fields)
+                        all_results.append(df)
             
-            # 处理结果
-            result_list = []
-            while rs.next():
-                result_list.append(rs.get_row_data())
-            
-            if not result_list:
+            if not all_results:
                 return pd.DataFrame()
             
-            df = pd.DataFrame(result_list, columns=rs.fields)
+            # 合并所有结果
+            df = pd.concat(all_results, ignore_index=True)
             
             # 重命名列以匹配SDK规范
             df = df.rename(columns={
@@ -148,13 +210,13 @@ class BaostockSource(BaseSource):
         finally:
             await self._disconnect()
     
-    async def get_stock_minute(self, code: str, start_date: Optional[str] = None, 
+    async def get_stock_minute(self, codes: List[str], start_date: Optional[str] = None, 
                              end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票分钟线数据
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期
             end_date: 结束日期
             **kwargs:
@@ -163,46 +225,56 @@ class BaostockSource(BaseSource):
         Returns:
             包含股票分钟线数据的DataFrame
         """
+        # 验证参数
+        if not codes or not isinstance(codes, list):
+            raise ValidationError("股票代码列表不能为空且必须是列表类型")
+        
+        # 设置默认日期
+        if not end_date:
+            end_date = datetime.now().strftime('%Y-%m-%d')
+        if not start_date:
+            start_date = end_date
+        
+        # 获取分钟线频率参数
+        frequency = kwargs.get('frequency', '5')
+        if frequency not in ['5', '15', '30', '60']:
+            raise ValidationError(f"不支持的分钟线频率: {frequency}")
+        
         await self._connect()
         try:
-            # 验证参数
-            if not code:
-                raise ValidationError("股票代码不能为空")
-            
-            # 设置默认日期
-            if not end_date:
-                end_date = datetime.now().strftime('%Y-%m-%d')
-            if not start_date:
-                start_date = end_date
-            
-            # 获取分钟线频率参数
-            frequency = kwargs.get('frequency', '5')
-            if frequency not in ['5', '15', '30', '60']:
-                raise ValidationError(f"不支持的分钟线频率: {frequency}")
-            
-            # 调用Baostock API获取分钟线数据
+            all_results = []
             fields = "date,code,open,high,low,close,volume"
-            rs = bs.query_history_k_data_plus(
-                code=code,
-                fields=fields,
-                start_date=start_date,
-                end_date=end_date,
-                frequency=frequency,
-                adjustflag="3"  # 不复权
-            )
             
-            if rs.error_code != '0':
-                raise DataSourceError(f"获取股票分钟线数据失败: {rs.error_msg}")
+            # 分批处理代码列表
+            for batch_codes in self._batch_codes(codes):
+                for code in batch_codes:
+                    # 调用Baostock API获取分钟线数据
+                    rs = bs.query_history_k_data_plus(
+                        code=code,
+                        fields=fields,
+                        start_date=start_date,
+                        end_date=end_date,
+                        frequency=frequency,
+                        adjustflag="3"  # 不复权
+                    )
+                    
+                    if rs.error_code != '0':
+                        raise DataSourceError(f"获取股票{code}分钟线数据失败: {rs.error_msg}")
+                    
+                    # 处理结果
+                    result_list = []
+                    while rs.next():
+                        result_list.append(rs.get_row_data())
+                    
+                    if result_list:
+                        df = pd.DataFrame(result_list, columns=rs.fields)
+                        all_results.append(df)
             
-            # 处理结果
-            result_list = []
-            while rs.next():
-                result_list.append(rs.get_row_data())
-            
-            if not result_list:
+            if not all_results:
                 return pd.DataFrame()
             
-            df = pd.DataFrame(result_list, columns=rs.fields)
+            # 合并所有结果
+            df = pd.concat(all_results, ignore_index=True)
             
             # 重命名列以匹配SDK规范
             df = df.rename(columns={
@@ -224,54 +296,64 @@ class BaostockSource(BaseSource):
         finally:
             await self._disconnect()
     
-    async def get_stock_weekly(self, code: str, start_date: Optional[str] = None, 
+    async def get_stock_weekly(self, codes: List[str], start_date: Optional[str] = None, 
                              end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票周线数据
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期
             end_date: 结束日期
             
         Returns:
             包含股票周线数据的DataFrame
         """
+        # 验证参数
+        if not codes or not isinstance(codes, list):
+            raise ValidationError("股票代码列表不能为空且必须是列表类型")
+        
+        # 设置默认日期范围
+        if not end_date:
+            end_date = datetime.now().strftime('%Y-%m-%d')
+        if not start_date:
+            start_date = (datetime.now() - timedelta(days=180)).strftime('%Y-%m-%d')
+        
         await self._connect()
         try:
-            # 验证参数
-            if not code:
-                raise ValidationError("股票代码不能为空")
-            
-            # 设置默认日期范围
-            if not end_date:
-                end_date = datetime.now().strftime('%Y-%m-%d')
-            if not start_date:
-                start_date = (datetime.now() - timedelta(days=180)).strftime('%Y-%m-%d')
-            
-            # 调用Baostock API获取周线数据
+            all_results = []
             fields = "date,code,open,high,low,close,volume"
-            rs = bs.query_history_k_data_plus(
-                code=code,
-                fields=fields,
-                start_date=start_date,
-                end_date=end_date,
-                frequency="w",
-                adjustflag="3"  # 不复权
-            )
             
-            if rs.error_code != '0':
-                raise DataSourceError(f"获取股票周线数据失败: {rs.error_msg}")
+            # 分批处理代码列表
+            for batch_codes in self._batch_codes(codes):
+                for code in batch_codes:
+                    # 调用Baostock API获取周线数据
+                    rs = bs.query_history_k_data_plus(
+                        code=code,
+                        fields=fields,
+                        start_date=start_date,
+                        end_date=end_date,
+                        frequency="w",
+                        adjustflag="3"  # 不复权
+                    )
+                    
+                    if rs.error_code != '0':
+                        raise DataSourceError(f"获取股票{code}周线数据失败: {rs.error_msg}")
+                    
+                    # 处理结果
+                    result_list = []
+                    while rs.next():
+                        result_list.append(rs.get_row_data())
+                    
+                    if result_list:
+                        df = pd.DataFrame(result_list, columns=rs.fields)
+                        all_results.append(df)
             
-            # 处理结果
-            result_list = []
-            while rs.next():
-                result_list.append(rs.get_row_data())
-            
-            if not result_list:
+            if not all_results:
                 return pd.DataFrame()
             
-            df = pd.DataFrame(result_list, columns=rs.fields)
+            # 合并所有结果
+            df = pd.concat(all_results, ignore_index=True)
             
             # 重命名列以匹配SDK规范
             df = df.rename(columns={
@@ -293,54 +375,64 @@ class BaostockSource(BaseSource):
         finally:
             await self._disconnect()
     
-    async def get_stock_monthly(self, code: str, start_date: Optional[str] = None, 
+    async def get_stock_monthly(self, codes: List[str], start_date: Optional[str] = None, 
                                end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票月线数据
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期
             end_date: 结束日期
             
         Returns:
             包含股票月线数据的DataFrame
         """
+        # 验证参数
+        if not codes or not isinstance(codes, list):
+            raise ValidationError("股票代码列表不能为空且必须是列表类型")
+        
+        # 设置默认日期范围
+        if not end_date:
+            end_date = datetime.now().strftime('%Y-%m-%d')
+        if not start_date:
+            start_date = (datetime.now() - timedelta(days=365)).strftime('%Y-%m-%d')
+        
         await self._connect()
         try:
-            # 验证参数
-            if not code:
-                raise ValidationError("股票代码不能为空")
-            
-            # 设置默认日期范围
-            if not end_date:
-                end_date = datetime.now().strftime('%Y-%m-%d')
-            if not start_date:
-                start_date = (datetime.now() - timedelta(days=365)).strftime('%Y-%m-%d')
-            
-            # 调用Baostock API获取月线数据
+            all_results = []
             fields = "date,code,open,high,low,close,volume"
-            rs = bs.query_history_k_data_plus(
-                code=code,
-                fields=fields,
-                start_date=start_date,
-                end_date=end_date,
-                frequency="m",
-                adjustflag="3"  # 不复权
-            )
             
-            if rs.error_code != '0':
-                raise DataSourceError(f"获取股票月线数据失败: {rs.error_msg}")
+            # 分批处理代码列表
+            for batch_codes in self._batch_codes(codes):
+                for code in batch_codes:
+                    # 调用Baostock API获取月线数据
+                    rs = bs.query_history_k_data_plus(
+                        code=code,
+                        fields=fields,
+                        start_date=start_date,
+                        end_date=end_date,
+                        frequency="m",
+                        adjustflag="3"  # 不复权
+                    )
+                    
+                    if rs.error_code != '0':
+                        raise DataSourceError(f"获取股票{code}月线数据失败: {rs.error_msg}")
+                    
+                    # 处理结果
+                    result_list = []
+                    while rs.next():
+                        result_list.append(rs.get_row_data())
+                    
+                    if result_list:
+                        df = pd.DataFrame(result_list, columns=rs.fields)
+                        all_results.append(df)
             
-            # 处理结果
-            result_list = []
-            while rs.next():
-                result_list.append(rs.get_row_data())
-            
-            if not result_list:
+            if not all_results:
                 return pd.DataFrame()
             
-            df = pd.DataFrame(result_list, columns=rs.fields)
+            # 合并所有结果
+            df = pd.concat(all_results, ignore_index=True)
             
             # 重命名列以匹配SDK规范
             df = df.rename(columns={
@@ -395,29 +487,14 @@ class BaostockSource(BaseSource):
                 else:
                     market = '未知'
                 
-                # 证券类型映射
-                type_mapping = {
-                    '1': 'stock',
-                    '2': 'index',
-                    '3': 'other',
-                    '4': 'convertible_bond',
-                    '5': 'etf'
-                }
-                
-                # 上市状态映射
-                status_mapping = {
-                    '1': 'listed',
-                    '0': 'delisted'
-                }
-                
                 result_list.append({
                     'code': code,
                     'name': stock_name,
                     'market': market,
                     'listing_date': ipo_date,
                     'delisting_date': out_date,
-                    'security_type': type_mapping.get(stock_type, f'unknown({stock_type})'),
-                    'status': status_mapping.get(status, f'unknown({status})')
+                    'security_type': SecurityType.from_code(stock_type),
+                    'status': ListingStatus.from_code(status)
                 })
             
             df = pd.DataFrame(result_list)
@@ -438,54 +515,64 @@ class BaostockSource(BaseSource):
         index_data = all_stocks[all_stocks['security_type'] == 'index']
         return index_data
     
-    async def get_index_daily(self, code: str, start_date: Optional[str] = None, 
+    async def get_index_daily(self, codes: List[str], start_date: Optional[str] = None, 
                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取指数日线数据
         
         Args:
-            code: 指数代码
+            codes: 指数代码列表
             start_date: 开始日期
             end_date: 结束日期
             
         Returns:
             包含指数日线数据的DataFrame
         """
+        # 验证参数
+        if not codes or not isinstance(codes, list):
+            raise ValidationError("指数代码列表不能为空且必须是列表类型")
+        
+        # 设置默认日期范围
+        if not end_date:
+            end_date = datetime.now().strftime('%Y-%m-%d')
+        if not start_date:
+            start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+        
         await self._connect()
         try:
-            # 验证参数
-            if not code:
-                raise ValidationError("指数代码不能为空")
-            
-            # 设置默认日期范围
-            if not end_date:
-                end_date = datetime.now().strftime('%Y-%m-%d')
-            if not start_date:
-                start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
-            
-            # 调用Baostock API获取指数日线数据
+            all_results = []
             fields = "date,code,open,high,low,close,volume"
-            rs = bs.query_history_k_data_plus(
-                code=code,
-                fields=fields,
-                start_date=start_date,
-                end_date=end_date,
-                frequency="d",
-                adjustflag="3"  # 不复权
-            )
             
-            if rs.error_code != '0':
-                raise DataSourceError(f"获取指数日线数据失败: {rs.error_msg}")
+            # 分批处理代码列表
+            for batch_codes in self._batch_codes(codes):
+                for code in batch_codes:
+                    # 调用Baostock API获取指数日线数据
+                    rs = bs.query_history_k_data_plus(
+                        code=code,
+                        fields=fields,
+                        start_date=start_date,
+                        end_date=end_date,
+                        frequency="d",
+                        adjustflag="3"  # 不复权
+                    )
+                    
+                    if rs.error_code != '0':
+                        raise DataSourceError(f"获取指数{code}日线数据失败: {rs.error_msg}")
+                    
+                    # 处理结果
+                    result_list = []
+                    while rs.next():
+                        result_list.append(rs.get_row_data())
+                    
+                    if result_list:
+                        df = pd.DataFrame(result_list, columns=rs.fields)
+                        all_results.append(df)
             
-            # 处理结果
-            result_list = []
-            while rs.next():
-                result_list.append(rs.get_row_data())
-            
-            if not result_list:
+            if not all_results:
                 return pd.DataFrame()
             
-            df = pd.DataFrame(result_list, columns=rs.fields)
+            # 合并所有结果
+            df = pd.concat(all_results, ignore_index=True)
             
             # 重命名列以匹配SDK规范
             df = df.rename(columns={
@@ -507,13 +594,171 @@ class BaostockSource(BaseSource):
         finally:
             await self._disconnect()
     
-    async def get_index_minute(self, code: str, start_date: Optional[str] = None, 
+    async def get_index_weekly(self, codes: List[str], start_date: Optional[str] = None, 
+                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取指数周线数据
+        
+        Args:
+            codes: 指数代码列表
+            start_date: 开始日期
+            end_date: 结束日期
+            
+        Returns:
+            包含指数周线数据的DataFrame
+        """
+        # 验证参数
+        if not codes or not isinstance(codes, list):
+            raise ValidationError("指数代码列表不能为空且必须是列表类型")
+        
+        # 设置默认日期范围
+        if not end_date:
+            end_date = datetime.now().strftime('%Y-%m-%d')
+        if not start_date:
+            start_date = (datetime.now() - timedelta(days=180)).strftime('%Y-%m-%d')
+        
+        await self._connect()
+        try:
+            all_results = []
+            fields = "date,code,open,high,low,close,volume"
+            
+            # 分批处理代码列表
+            for batch_codes in self._batch_codes(codes):
+                for code in batch_codes:
+                    # 调用Baostock API获取指数周线数据
+                    rs = bs.query_history_k_data_plus(
+                        code=code,
+                        fields=fields,
+                        start_date=start_date,
+                        end_date=end_date,
+                        frequency="w",
+                        adjustflag="3"  # 不复权
+                    )
+                    
+                    if rs.error_code != '0':
+                        raise DataSourceError(f"获取指数{code}周线数据失败: {rs.error_msg}")
+                    
+                    # 处理结果
+                    result_list = []
+                    while rs.next():
+                        result_list.append(rs.get_row_data())
+                    
+                    if result_list:
+                        df = pd.DataFrame(result_list, columns=rs.fields)
+                        all_results.append(df)
+            
+            if not all_results:
+                return pd.DataFrame()
+            
+            # 合并所有结果
+            df = pd.concat(all_results, ignore_index=True)
+            
+            # 重命名列以匹配SDK规范
+            df = df.rename(columns={
+                'date': 'trade_date',
+                'code': 'code',
+                'volume': 'vol'
+            })
+            
+            # 保留需要的列
+            df = df[['code', 'trade_date', 'open', 'high', 'low', 'close', 'vol']]
+            
+            return df
+        except ValidationError:
+            raise
+        except Exception as e:
+            if isinstance(e, DataSourceError):
+                raise
+            raise DataSourceError(f"获取指数周线数据失败: {e}")
+        finally:
+            await self._disconnect()
+    
+    async def get_index_monthly(self, codes: List[str], start_date: Optional[str] = None, 
+                               end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取指数月线数据
+        
+        Args:
+            codes: 指数代码列表
+            start_date: 开始日期
+            end_date: 结束日期
+            
+        Returns:
+            包含指数月线数据的DataFrame
+        """
+        # 验证参数
+        if not codes or not isinstance(codes, list):
+            raise ValidationError("指数代码列表不能为空且必须是列表类型")
+        
+        # 设置默认日期范围
+        if not end_date:
+            end_date = datetime.now().strftime('%Y-%m-%d')
+        if not start_date:
+            start_date = (datetime.now() - timedelta(days=365)).strftime('%Y-%m-%d')
+        
+        await self._connect()
+        try:
+            all_results = []
+            fields = "date,code,open,high,low,close,volume"
+            
+            # 分批处理代码列表
+            for batch_codes in self._batch_codes(codes):
+                for code in batch_codes:
+                    # 调用Baostock API获取指数月线数据
+                    rs = bs.query_history_k_data_plus(
+                        code=code,
+                        fields=fields,
+                        start_date=start_date,
+                        end_date=end_date,
+                        frequency="m",
+                        adjustflag="3"  # 不复权
+                    )
+                    
+                    if rs.error_code != '0':
+                        raise DataSourceError(f"获取指数{code}月线数据失败: {rs.error_msg}")
+                    
+                    # 处理结果
+                    result_list = []
+                    while rs.next():
+                        result_list.append(rs.get_row_data())
+                    
+                    if result_list:
+                        df = pd.DataFrame(result_list, columns=rs.fields)
+                        all_results.append(df)
+            
+            if not all_results:
+                return pd.DataFrame()
+            
+            # 合并所有结果
+            df = pd.concat(all_results, ignore_index=True)
+            
+            # 重命名列以匹配SDK规范
+            df = df.rename(columns={
+                'date': 'trade_date',
+                'code': 'code',
+                'volume': 'vol'
+            })
+            
+            # 保留需要的列
+            df = df[['code', 'trade_date', 'open', 'high', 'low', 'close', 'vol']]
+            
+            return df
+        except ValidationError:
+            raise
+        except Exception as e:
+            if isinstance(e, DataSourceError):
+                raise
+            raise DataSourceError(f"获取指数月线数据失败: {e}")
+        finally:
+            await self._disconnect()
+    
+    async def get_index_minute(self, codes: List[str], start_date: Optional[str] = None, 
                              end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取指数分钟线数据
         
         Args:
-            code: 指数代码
+            codes: 指数代码列表
             start_date: 开始日期
             end_date: 结束日期
             **kwargs:
@@ -522,46 +767,56 @@ class BaostockSource(BaseSource):
         Returns:
             包含指数分钟线数据的DataFrame
         """
+        # 验证参数
+        if not codes or not isinstance(codes, list):
+            raise ValidationError("指数代码列表不能为空且必须是列表类型")
+        
+        # 设置默认日期
+        if not end_date:
+            end_date = datetime.now().strftime('%Y-%m-%d')
+        if not start_date:
+            start_date = end_date
+        
+        # 获取分钟线频率参数
+        frequency = kwargs.get('frequency', '5')
+        if frequency not in ['5', '15', '30', '60']:
+            raise ValidationError(f"不支持的分钟线频率: {frequency}")
+        
         await self._connect()
         try:
-            # 验证参数
-            if not code:
-                raise ValidationError("指数代码不能为空")
-            
-            # 设置默认日期
-            if not end_date:
-                end_date = datetime.now().strftime('%Y-%m-%d')
-            if not start_date:
-                start_date = end_date
-            
-            # 获取分钟线频率参数
-            frequency = kwargs.get('frequency', '5')
-            if frequency not in ['5', '15', '30', '60']:
-                raise ValidationError(f"不支持的分钟线频率: {frequency}")
-            
-            # 调用Baostock API获取指数分钟线数据
+            all_results = []
             fields = "date,code,open,high,low,close,volume"
-            rs = bs.query_history_k_data_plus(
-                code=code,
-                fields=fields,
-                start_date=start_date,
-                end_date=end_date,
-                frequency=frequency,
-                adjustflag="3"  # 不复权
-            )
             
-            if rs.error_code != '0':
-                raise DataSourceError(f"获取指数分钟线数据失败: {rs.error_msg}")
+            # 分批处理代码列表
+            for batch_codes in self._batch_codes(codes):
+                for code in batch_codes:
+                    # 调用Baostock API获取指数分钟线数据
+                    rs = bs.query_history_k_data_plus(
+                        code=code,
+                        fields=fields,
+                        start_date=start_date,
+                        end_date=end_date,
+                        frequency=frequency,
+                        adjustflag="3"  # 不复权
+                    )
+                    
+                    if rs.error_code != '0':
+                        raise DataSourceError(f"获取指数{code}分钟线数据失败: {rs.error_msg}")
+                    
+                    # 处理结果
+                    result_list = []
+                    while rs.next():
+                        result_list.append(rs.get_row_data())
+                    
+                    if result_list:
+                        df = pd.DataFrame(result_list, columns=rs.fields)
+                        all_results.append(df)
             
-            # 处理结果
-            result_list = []
-            while rs.next():
-                result_list.append(rs.get_row_data())
-            
-            if not result_list:
+            if not all_results:
                 return pd.DataFrame()
             
-            df = pd.DataFrame(result_list, columns=rs.fields)
+            # 合并所有结果
+            df = pd.concat(all_results, ignore_index=True)
             
             # 重命名列以匹配SDK规范
             df = df.rename(columns={
@@ -595,13 +850,13 @@ class BaostockSource(BaseSource):
         """
         raise NotImplementedError("Baostock不支持基金基础信息获取，请使用其他数据源")
     
-    async def get_fund_daily(self, code: str, start_date: Optional[str] = None, 
+    async def get_fund_daily(self, codes: List[str], start_date: Optional[str] = None, 
                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取基金日线数据
         
         Args:
-            code: 基金代码
+            codes: 基金代码列表
             start_date: 开始日期
             end_date: 结束日期
             
@@ -612,3 +867,107 @@ class BaostockSource(BaseSource):
             NotImplementedError: Baostock不支持基金数据获取
         """
         raise NotImplementedError("Baostock不支持基金日线数据获取，请使用其他数据源")
+
+    async def get_fund_minute(self, codes: List[str], start_date: Optional[str] = None, 
+                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取基金分钟线数据
+        
+        Args:
+            codes: 基金代码列表
+            start_date: 开始日期
+            end_date: 结束日期
+            
+        Returns:
+            包含基金分钟线数据的DataFrame
+            
+        Raises:
+            NotImplementedError: Baostock不支持基金数据获取
+        """
+        raise NotImplementedError("Baostock不支持基金分钟线数据获取，请使用其他数据源")
+
+    async def get_fund_weekly(self, codes: List[str], start_date: Optional[str] = None, 
+                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取基金周线数据
+        
+        Args:
+            codes: 基金代码列表
+            start_date: 开始日期
+            end_date: 结束日期
+            
+        Returns:
+            包含基金周线数据的DataFrame
+            
+        Raises:
+            NotImplementedError: Baostock不支持基金数据获取
+        """
+        raise NotImplementedError("Baostock不支持基金周线数据获取，请使用其他数据源")
+
+    async def get_fund_monthly(self, codes: List[str], start_date: Optional[str] = None, 
+                               end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取基金月线数据
+        
+        Args:
+            codes: 基金代码列表
+            start_date: 开始日期
+            end_date: 结束日期
+            
+        Returns:
+            包含基金月线数据的DataFrame
+            
+        Raises:
+            NotImplementedError: Baostock不支持基金数据获取
+        """
+        raise NotImplementedError("Baostock不支持基金月线数据获取，请使用其他数据源")
+
+    async def query_trade_dates(self, start_date: Optional[str] = None, 
+                               end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        查询交易日数据
+        
+        Args:
+            start_date: 开始日期，格式如'2024-01-01'
+            end_date: 结束日期，格式如'2024-01-31'
+            
+        Returns:
+            包含交易日数据的DataFrame
+        """
+        await self._connect()
+        try:
+            # 调用Baostock API查询交易日数据
+            rs = bs.query_trade_dates(
+                start_date=start_date,
+                end_date=end_date
+            )
+            
+            if rs.error_code != '0':
+                raise DataSourceError(f"获取交易日数据失败: {rs.error_msg}")
+            
+            # 处理结果
+            result_list = []
+            while rs.next():
+                result_list.append(rs.get_row_data())
+            
+            if not result_list:
+                return pd.DataFrame()
+            
+            df = pd.DataFrame(result_list, columns=rs.fields)
+            
+            # 重命名列以匹配SDK规范
+            df = df.rename(columns={
+                'calendar_date': 'trade_date',
+                'is_trading_day': 'is_trade_day'
+            })
+            
+            # 保留需要的列
+            df = df[['trade_date', 'is_trade_day']]
+            
+            return df
+        except Exception as e:
+            if isinstance(e, DataSourceError):
+                raise
+            raise DataSourceError(f"获取交易日数据失败: {e}")
+        finally:
+            await self._disconnect()

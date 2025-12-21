@@ -9,7 +9,7 @@ from .client import QuickStockClient
 from .errors import (QuickStockError, DataSourceError, ValidationError, 
                      AuthenticationError, NetworkError, DataNotFoundError)
 
-__version__ = "1.0.5"
+__version__ = "1.0.6"
 __all__ = [
     "QuickStockClient",
     "QuickStockError",

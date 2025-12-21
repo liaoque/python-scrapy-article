@@ -5,7 +5,7 @@
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 import pandas as pd
 
 
@@ -37,13 +37,13 @@ class BaseSource(ABC):
     
     # 股票日线数据
     @abstractmethod
-    async def get_stock_daily(self, code: str, start_date: Optional[str] = None, 
+    async def get_stock_daily(self, codes: List[str], start_date: Optional[str] = None, 
                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票日线数据
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -54,13 +54,13 @@ class BaseSource(ABC):
     
     # 股票分钟线数据
     @abstractmethod
-    async def get_stock_minute(self, code: str, start_date: Optional[str] = None, 
+    async def get_stock_minute(self, codes: List[str], start_date: Optional[str] = None, 
                              end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票分钟线数据
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -71,13 +71,13 @@ class BaseSource(ABC):
     
     # 股票周线数据
     @abstractmethod
-    async def get_stock_weekly(self, code: str, start_date: Optional[str] = None, 
+    async def get_stock_weekly(self, codes: List[str], start_date: Optional[str] = None, 
                              end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票周线数据
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -88,13 +88,13 @@ class BaseSource(ABC):
     
     # 股票月线数据
     @abstractmethod
-    async def get_stock_monthly(self, code: str, start_date: Optional[str] = None, 
+    async def get_stock_monthly(self, codes: List[str], start_date: Optional[str] = None, 
                                end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取股票月线数据
         
         Args:
-            code: 股票代码
+            codes: 股票代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -116,13 +116,13 @@ class BaseSource(ABC):
     
     # 指数日线数据
     @abstractmethod
-    async def get_index_daily(self, code: str, start_date: Optional[str] = None, 
+    async def get_index_daily(self, codes: List[str], start_date: Optional[str] = None, 
                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取指数日线数据
         
         Args:
-            code: 指数代码
+            codes: 指数代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -133,18 +133,52 @@ class BaseSource(ABC):
     
     # 指数分钟线数据
     @abstractmethod
-    async def get_index_minute(self, code: str, start_date: Optional[str] = None, 
+    async def get_index_minute(self, codes: List[str], start_date: Optional[str] = None, 
                              end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取指数分钟线数据
         
         Args:
-            code: 指数代码
+            codes: 指数代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
         Returns:
             包含指数分钟线数据的DataFrame
+        """
+        pass
+    
+    # 指数周线数据
+    @abstractmethod
+    async def get_index_weekly(self, codes: List[str], start_date: Optional[str] = None, 
+                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取指数周线数据
+        
+        Args:
+            codes: 指数代码列表
+            start_date: 开始日期，格式如'2024-01-01'
+            end_date: 结束日期，格式如'2024-01-31'
+            
+        Returns:
+            包含指数周线数据的DataFrame
+        """
+        pass
+    
+    # 指数月线数据
+    @abstractmethod
+    async def get_index_monthly(self, codes: List[str], start_date: Optional[str] = None, 
+                               end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取指数月线数据
+        
+        Args:
+            codes: 指数代码列表
+            start_date: 开始日期，格式如'2024-01-01'
+            end_date: 结束日期，格式如'2024-01-31'
+            
+        Returns:
+            包含指数月线数据的DataFrame
         """
         pass
     
@@ -161,13 +195,13 @@ class BaseSource(ABC):
     
     # 基金日线数据
     @abstractmethod
-    async def get_fund_daily(self, code: str, start_date: Optional[str] = None, 
+    async def get_fund_daily(self, codes: List[str], start_date: Optional[str] = None, 
                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取基金日线数据
         
         Args:
-            code: 基金代码
+            codes: 基金代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -178,13 +212,13 @@ class BaseSource(ABC):
     
     # 基金分钟线数据
     @abstractmethod
-    async def get_fund_minute(self, code: str, start_date: Optional[str] = None, 
+    async def get_fund_minute(self, codes: List[str], start_date: Optional[str] = None, 
                              end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取基金分钟线数据
         
         Args:
-            code: 基金代码
+            codes: 基金代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -195,13 +229,13 @@ class BaseSource(ABC):
     
     # 基金周线数据
     @abstractmethod
-    async def get_fund_weekly(self, code: str, start_date: Optional[str] = None, 
+    async def get_fund_weekly(self, codes: List[str], start_date: Optional[str] = None, 
                              end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取基金周线数据
         
         Args:
-            code: 基金代码
+            codes: 基金代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
@@ -212,17 +246,33 @@ class BaseSource(ABC):
     
     # 基金月线数据
     @abstractmethod
-    async def get_fund_monthly(self, code: str, start_date: Optional[str] = None, 
+    async def get_fund_monthly(self, codes: List[str], start_date: Optional[str] = None, 
                                end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
         """
         获取基金月线数据
         
         Args:
-            code: 基金代码
+            codes: 基金代码列表
             start_date: 开始日期，格式如'2024-01-01'
             end_date: 结束日期，格式如'2024-01-31'
             
         Returns:
             包含基金月线数据的DataFrame
+        """
+        pass
+    
+    # 交易日查询
+    @abstractmethod
+    async def query_trade_dates(self, start_date: Optional[str] = None, 
+                               end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        查询交易日数据
+        
+        Args:
+            start_date: 开始日期，格式如'2024-01-01'
+            end_date: 结束日期，格式如'2024-01-31'
+            
+        Returns:
+            包含交易日数据的DataFrame
         """
         pass
