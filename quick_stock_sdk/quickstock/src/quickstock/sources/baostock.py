@@ -157,7 +157,7 @@ class BaostockSource(BaseSource):
         await self._connect()
         try:
             all_results = []
-            fields = "date,code,open,high,low,close,volume"
+            fields = "date,code,open,high,low,close,preclose,volume,amount,adjustflag,turn,tradestatus,pctChg,isST,peTTM,pbMRQ,psTTM,pcfNcfTTM"
             
             # 分批处理代码列表
             for batch_codes in self._batch_codes(codes):
@@ -194,11 +194,19 @@ class BaostockSource(BaseSource):
             df = df.rename(columns={
                 'date': 'trade_date',
                 'code': 'code',
-                'volume': 'vol'
+                'volume': 'volume',
+                'preclose': 'preclose',
+                'amount': 'amount',
+                'adjustflag': 'adjustflag',
+                'turn': 'turn',
+                'tradestatus': 'tradestatus',
+                'pctChg': 'pctChg',
+                'isST': 'isST',
+                'peTTM': 'peTTM',
+                'pbMRQ': 'pbMRQ',
+                'psTTM': 'psTTM',
+                'pcfNcfTTM': 'pcfNcfTTM'
             })
-            
-            # 保留需要的列
-            df = df[['code', 'trade_date', 'open', 'high', 'low', 'close', 'vol']]
             
             return df
         except ValidationError:
@@ -243,7 +251,7 @@ class BaostockSource(BaseSource):
         await self._connect()
         try:
             all_results = []
-            fields = "date,code,open,high,low,close,volume"
+            fields = "date,time,code,open,high,low,close,volume,amount,adjustflag"
             
             # 分批处理代码列表
             for batch_codes in self._batch_codes(codes):
@@ -278,13 +286,13 @@ class BaostockSource(BaseSource):
             
             # 重命名列以匹配SDK规范
             df = df.rename(columns={
-                'date': 'datetime',
+                'date': 'trade_date',
+                'time': 'time',
                 'code': 'code',
-                'volume': 'vol'
+                'volume': 'volume',
+                'amount': 'amount',
+                'adjustflag': 'adjustflag'
             })
-            
-            # 保留需要的列
-            df = df[['code', 'datetime', 'open', 'high', 'low', 'close', 'vol']]
             
             return df
         except ValidationError:
@@ -322,7 +330,7 @@ class BaostockSource(BaseSource):
         await self._connect()
         try:
             all_results = []
-            fields = "date,code,open,high,low,close,volume"
+            fields = "date,code,open,high,low,close,volume,amount,adjustflag,turn,pctChg"
             
             # 分批处理代码列表
             for batch_codes in self._batch_codes(codes):
@@ -359,11 +367,12 @@ class BaostockSource(BaseSource):
             df = df.rename(columns={
                 'date': 'trade_date',
                 'code': 'code',
-                'volume': 'vol'
+                'volume': 'volume',
+                'amount': 'amount',
+                'adjustflag': 'adjustflag',
+                'turn': 'turn',
+                'pctChg': 'pctChg'
             })
-            
-            # 保留需要的列
-            df = df[['code', 'trade_date', 'open', 'high', 'low', 'close', 'vol']]
             
             return df
         except ValidationError:
@@ -401,7 +410,7 @@ class BaostockSource(BaseSource):
         await self._connect()
         try:
             all_results = []
-            fields = "date,code,open,high,low,close,volume"
+            fields = "date,code,open,high,low,close,volume,amount,adjustflag,turn,pctChg"
             
             # 分批处理代码列表
             for batch_codes in self._batch_codes(codes):
@@ -438,11 +447,12 @@ class BaostockSource(BaseSource):
             df = df.rename(columns={
                 'date': 'trade_date',
                 'code': 'code',
-                'volume': 'vol'
+                'volume': 'volume',
+                'amount': 'amount',
+                'adjustflag': 'adjustflag',
+                'turn': 'turn',
+                'pctChg': 'pctChg'
             })
-            
-            # 保留需要的列
-            df = df[['code', 'trade_date', 'open', 'high', 'low', 'close', 'vol']]
             
             return df
         except ValidationError:
@@ -541,7 +551,7 @@ class BaostockSource(BaseSource):
         await self._connect()
         try:
             all_results = []
-            fields = "date,code,open,high,low,close,volume"
+            fields = "date,code,open,high,low,close,preclose,volume,amount,pctChg"
             
             # 分批处理代码列表
             for batch_codes in self._batch_codes(codes):
@@ -578,11 +588,11 @@ class BaostockSource(BaseSource):
             df = df.rename(columns={
                 'date': 'trade_date',
                 'code': 'code',
-                'volume': 'vol'
+                'volume': 'volume',
+                'preclose': 'preclose',
+                'amount': 'amount',
+                'pctChg': 'pctChg'
             })
-            
-            # 保留需要的列
-            df = df[['code', 'trade_date', 'open', 'high', 'low', 'close', 'vol']]
             
             return df
         except ValidationError:
@@ -591,6 +601,84 @@ class BaostockSource(BaseSource):
             if isinstance(e, DataSourceError):
                 raise
             raise DataSourceError(f"获取指数日线数据失败: {e}")
+        finally:
+            await self._disconnect()
+    
+    async def get_index_minute(self, codes: List[str], start_date: Optional[str] = None, 
+                              end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
+        """
+        获取指数分钟线数据
+        
+        Args:
+            codes: 指数代码列表
+            start_date: 开始日期
+            end_date: 结束日期
+            **kwargs:
+                frequency: 分钟线频率，支持5/15/30/60，默认5分钟
+                
+        Returns:
+            包含指数分钟线数据的DataFrame
+        """
+        if not codes or not isinstance(codes, list):
+            raise ValidationError("指数代码列表不能为空且必须是列表类型")
+        
+        if not end_date:
+            end_date = datetime.now().strftime('%Y-%m-%d')
+        if not start_date:
+            start_date = end_date
+        
+        frequency = kwargs.get('frequency', '5')
+        if frequency not in ['5', '15', '30', '60']:
+            raise ValidationError(f"不支持的分钟线频率: {frequency}")
+        
+        await self._connect()
+        try:
+            all_results = []
+            fields = "date,time,code,open,high,low,close,volume,amount,adjustflag"
+            
+            for batch_codes in self._batch_codes(codes):
+                for code in batch_codes:
+                    rs = bs.query_history_k_data_plus(
+                        code=code,
+                        fields=fields,
+                        start_date=start_date,
+                        end_date=end_date,
+                        frequency=frequency,
+                        adjustflag="3"
+                    )
+                    
+                    if rs.error_code != '0':
+                        raise DataSourceError(f"获取指数{code}分钟线数据失败: {rs.error_msg}")
+                    
+                    result_list = []
+                    while rs.next():
+                        result_list.append(rs.get_row_data())
+                    
+                    if result_list:
+                        df = pd.DataFrame(result_list, columns=rs.fields)
+                        all_results.append(df)
+            
+            if not all_results:
+                return pd.DataFrame()
+            
+            df = pd.concat(all_results, ignore_index=True)
+            
+            df = df.rename(columns={
+                'date': 'trade_date',
+                'time': 'time',
+                'code': 'code',
+                'volume': 'volume',
+                'amount': 'amount',
+                'adjustflag': 'adjustflag'
+            })
+            
+            return df
+        except ValidationError:
+            raise
+        except Exception as e:
+            if isinstance(e, DataSourceError):
+                raise
+            raise DataSourceError(f"获取指数分钟线数据失败: {e}")
         finally:
             await self._disconnect()
     
@@ -620,7 +708,7 @@ class BaostockSource(BaseSource):
         await self._connect()
         try:
             all_results = []
-            fields = "date,code,open,high,low,close,volume"
+            fields = "date,code,open,high,low,close,volume,amount,adjustflag,turn,pctChg"
             
             # 分批处理代码列表
             for batch_codes in self._batch_codes(codes):
@@ -657,11 +745,11 @@ class BaostockSource(BaseSource):
             df = df.rename(columns={
                 'date': 'trade_date',
                 'code': 'code',
-                'volume': 'vol'
+                'volume': 'volume',
+                'preclose': 'preclose',
+                'amount': 'amount',
+                'pctChg': 'pctChg'
             })
-            
-            # 保留需要的列
-            df = df[['code', 'trade_date', 'open', 'high', 'low', 'close', 'vol']]
             
             return df
         except ValidationError:
@@ -699,8 +787,8 @@ class BaostockSource(BaseSource):
         await self._connect()
         try:
             all_results = []
-            fields = "date,code,open,high,low,close,volume"
-            
+            fields = "date,code,open,high,low,close,volume,amount,adjustflag,turn,pctChg"
+
             # 分批处理代码列表
             for batch_codes in self._batch_codes(codes):
                 for code in batch_codes:
@@ -736,11 +824,11 @@ class BaostockSource(BaseSource):
             df = df.rename(columns={
                 'date': 'trade_date',
                 'code': 'code',
-                'volume': 'vol'
+                'volume': 'volume',
+                'preclose': 'preclose',
+                'amount': 'amount',
+                'pctChg': 'pctChg'
             })
-            
-            # 保留需要的列
-            df = df[['code', 'trade_date', 'open', 'high', 'low', 'close', 'vol']]
             
             return df
         except ValidationError:
@@ -749,92 +837,6 @@ class BaostockSource(BaseSource):
             if isinstance(e, DataSourceError):
                 raise
             raise DataSourceError(f"获取指数月线数据失败: {e}")
-        finally:
-            await self._disconnect()
-    
-    async def get_index_minute(self, codes: List[str], start_date: Optional[str] = None, 
-                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
-        """
-        获取指数分钟线数据
-        
-        Args:
-            codes: 指数代码列表
-            start_date: 开始日期
-            end_date: 结束日期
-            **kwargs:
-                frequency: 分钟线频率，支持5/15/30/60，默认5分钟
-                
-        Returns:
-            包含指数分钟线数据的DataFrame
-        """
-        # 验证参数
-        if not codes or not isinstance(codes, list):
-            raise ValidationError("指数代码列表不能为空且必须是列表类型")
-        
-        # 设置默认日期
-        if not end_date:
-            end_date = datetime.now().strftime('%Y-%m-%d')
-        if not start_date:
-            start_date = end_date
-        
-        # 获取分钟线频率参数
-        frequency = kwargs.get('frequency', '5')
-        if frequency not in ['5', '15', '30', '60']:
-            raise ValidationError(f"不支持的分钟线频率: {frequency}")
-        
-        await self._connect()
-        try:
-            all_results = []
-            fields = "date,code,open,high,low,close,volume"
-            
-            # 分批处理代码列表
-            for batch_codes in self._batch_codes(codes):
-                for code in batch_codes:
-                    # 调用Baostock API获取指数分钟线数据
-                    rs = bs.query_history_k_data_plus(
-                        code=code,
-                        fields=fields,
-                        start_date=start_date,
-                        end_date=end_date,
-                        frequency=frequency,
-                        adjustflag="3"  # 不复权
-                    )
-                    
-                    if rs.error_code != '0':
-                        raise DataSourceError(f"获取指数{code}分钟线数据失败: {rs.error_msg}")
-                    
-                    # 处理结果
-                    result_list = []
-                    while rs.next():
-                        result_list.append(rs.get_row_data())
-                    
-                    if result_list:
-                        df = pd.DataFrame(result_list, columns=rs.fields)
-                        all_results.append(df)
-            
-            if not all_results:
-                return pd.DataFrame()
-            
-            # 合并所有结果
-            df = pd.concat(all_results, ignore_index=True)
-            
-            # 重命名列以匹配SDK规范
-            df = df.rename(columns={
-                'date': 'datetime',
-                'code': 'code',
-                'volume': 'vol'
-            })
-            
-            # 保留需要的列
-            df = df[['code', 'datetime', 'open', 'high', 'low', 'close', 'vol']]
-            
-            return df
-        except ValidationError:
-            raise
-        except Exception as e:
-            if isinstance(e, DataSourceError):
-                raise
-            raise DataSourceError(f"获取指数分钟线数据失败: {e}")
         finally:
             await self._disconnect()
     

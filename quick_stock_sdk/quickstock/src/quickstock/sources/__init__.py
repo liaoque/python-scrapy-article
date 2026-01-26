@@ -6,5 +6,6 @@
 
 from .base import BaseSource
 from .baostock import BaostockSource
+from .tonghuashun import TongHuaShunSource
 
-__all__ = ["BaseSource", "BaostockSource"]
+__all__ = ["BaseSource", "BaostockSource", "TongHuaShunSource"]

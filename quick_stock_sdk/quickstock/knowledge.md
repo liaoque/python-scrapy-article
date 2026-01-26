@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-QuickStock SDK 是一个易于使用的金融数据获取工具包，用于获取股票、指数和基金数据。该项目的目标是提供一个既简单又可维护的SDK，解决之前两个版本（`quick_stock` 太简单，`release_config` 太复杂）的问题。
+QuickStock SDK 是一个易于使用的金融数据获取工具包，用于获取股票、指数、基金和板块数据。该项目的目标是提供一个既简单又可维护的SDK，解决之前两个版本（`quick_stock` 太简单，`release_config` 太复杂）的问题。
 
 ## 目录结构
 
@@ -17,6 +17,7 @@ quickstock/
 │       ├── sources/ # 数据源模块
 │       │   ├── __init__.py
 │       │   ├── baostock.py
+│       │   ├── tonghuashun.py
 │       │   └── base.py
 │       ├── __init__.py
 │       ├── client.py
@@ -33,16 +34,18 @@ quickstock/
 
 ### 数据类型支持
 - **股票数据**：基础信息、日线、分钟线、周线、月线
-- **指数数据**：基础信息、日线、分钟线
+- **指数数据**：基础信息、日线、分钟线、周线、月线
 - **基金数据**：基础信息、日线
+- **板块数据**：概念板块列表、板块成分股、板块K线数据（日线、周线、月线、分钟线）
 
 ### API 设计
-- **同步接口**：如 `stock_basic()`、`stock_daily()`
-- **异步接口**：如 `astock_basic()`、`astock_daily()`
+- **同步接口**：如 `stock_basic()`、`stock_daily()`、`concept_list()`
+- **异步接口**：如 `astock_basic()`、`astock_daily()`、`aconcept_list()`
 - **统一返回格式**：所有方法都返回 pandas DataFrame
 
 ### 数据源
-- **固定数据源**：当前仅支持 Baostock
+- **Baostock数据源**：用于获取股票、指数、基金数据
+- **同花顺数据源**：用于获取板块数据（概念板块、板块成分股、板块K线）
 - **数据源接口**：通过抽象基类定义统一的数据源接口
 
 ## 技术架构
@@ -61,13 +64,15 @@ quickstock/
 
 #### sources/
 - **base.py**：定义数据源抽象基类，规定了必须实现的接口方法
-- **baostock.py**：Baostock 数据源的具体实现
+- **baostock.py**：Baostock 数据源的具体实现，用于获取股票、指数、基金数据
+- **tonghuashun.py**：同花顺数据源的具体实现，用于获取板块数据
 
 ### 2. 设计模式
 
 - **单例模式**：数据源实例在客户端中保持单例
 - **适配器模式**：通过抽象基类适配不同的数据源
 - **异步同步转换**：提供统一的接口风格，同时支持同步和异步调用
+- **多数据源策略**：不同数据源负责不同类型的数据，Baostock负责股票/指数/基金，同花顺负责板块
 
 ### 3. 依赖管理
 
@@ -75,7 +80,8 @@ quickstock/
 - pandas：数据处理和返回格式
 - aiohttp：异步网络请求
 - requests：同步网络请求
-- baostock：数据源依赖
+- baostock：Baostock数据源依赖
+- lxml：HTML解析（同花顺数据源）
 
 ## 关键文件分析
 
