@@ -31,11 +31,17 @@ async def test_tonghuashun():
     # 测试2: 获取指定板块的成分股
     print("\n2. 测试获取板块成分股...")
     try:
-        concept_code = "885943"
-        stocks = await client.aconcept_stocks(concept_code)
-        print(f"   成功获取板块 {concept_code} 的 {len(stocks)} 只成分股")
-        print(f"   前10只股票:")
-        print(stocks.head(10))
+        concepts = await client.aconcept_list()
+        if len(concepts) > 0:
+            first_concept = concepts.iloc[0]
+            concept_cid = first_concept['cid']
+            concept_name = first_concept['name']
+            stocks = await client.aconcept_stocks(concept_cid)
+            print(f"   成功获取概念 '{concept_name}' (cid: {concept_cid}) 的 {len(stocks)} 只成分股")
+            print(f"   前10只股票:")
+            print(stocks.head(10))
+        else:
+            print("   没有可用的概念板块")
     except Exception as e:
         print(f"   失败: {e}")
     
@@ -111,6 +117,27 @@ async def test_tonghuashun():
     except Exception as e:
         print(f"   失败: {e}")
     
+    # 测试9: 获取行业列表
+    print("\n9. 测试获取行业列表...")
+    try:
+        industries = await client.aindustry_list()
+        print(f"   成功获取 {len(industries)} 个行业")
+        print(f"   前10个行业:")
+        print(industries.head(10))
+    except Exception as e:
+        print(f"   失败: {e}")
+    
+    # 测试10: 获取行业成分股
+    print("\n10. 测试获取行业成分股...")
+    try:
+        industry_code = "881121"
+        stocks = await client.aindustry_stocks(industry_code)
+        print(f"   成功获取行业 {industry_code} 的 {len(stocks)} 只成分股")
+        print(f"   前10只股票:")
+        print(stocks.head(10))
+    except Exception as e:
+        print(f"   失败: {e}")
+    
     print("\n" + "=" * 60)
     print("测试完成")
     print("=" * 60)
@@ -135,9 +162,24 @@ def test_sync():
         print(concepts.head())
     except Exception as e:
         print(f"   失败: {e}")
-    
+
+    print("\n2. 测试获取板块成分股...")
+    try:
+        concepts = client.concept_list()
+        if len(concepts) > 0:
+            first_concept = concepts.iloc[0]
+            concept_cid = first_concept['cid']
+            concept_name = first_concept['name']
+            stocks = client.concept_stocks(concept_cid)
+            print(f"   成功获取概念 '{concept_name}' (cid: {concept_cid}) 的 {len(stocks)} 只成分股")
+            print(f"   前10只股票:")
+            print(stocks.head(10))
+        else:
+            print("   没有可用的概念板块")
+    except Exception as e:
+        print(f"   失败: {e}")
     # 测试同步获取板块日线数据
-    print("\n2. 测试同步获取板块日线数据...")
+    print("\n3. 测试同步获取板块日线数据...")
     try:
         board_code = "885943"
         daily_data = client.board_daily(board_code)
@@ -145,6 +187,27 @@ def test_sync():
         print(f"   数据行数: {len(daily_data)}")
         print(f"   前5条数据:")
         print(daily_data.head())
+    except Exception as e:
+        print(f"   失败: {e}")
+    
+    # 测试4: 获取行业列表
+    print("\n4. 测试获取行业列表...")
+    try:
+        industries = client.industry_list()
+        print(f"   成功获取 {len(industries)} 个行业")
+        print(f"   前10个行业:")
+        print(industries.head(10))
+    except Exception as e:
+        print(f"   失败: {e}")
+    
+    # 测试5: 获取行业成分股
+    print("\n5. 测试获取行业成分股...")
+    try:
+        industry_code = "881121"
+        stocks = client.industry_stocks(industry_code)
+        print(f"   成功获取行业 {industry_code} 的 {len(stocks)} 只成分股")
+        print(f"   前10只股票:")
+        print(stocks.head(10))
     except Exception as e:
         print(f"   失败: {e}")
     

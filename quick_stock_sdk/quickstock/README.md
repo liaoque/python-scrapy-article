@@ -254,19 +254,60 @@ async def get_concept_list():
 
 ```python
 # 同步方式 - 获取指定概念板块的成分股
-concept_code = "885943"  # 人工智能概念
-df_stocks = client.concept_stocks(concept_code)
-print(f"板块包含 {len(df_stocks)} 只股票")
+# 注意：获取成分股需要使用cid，而不是code
+concepts = client.concept_list()
+first_concept = concepts.iloc[0]
+concept_cid = first_concept['cid']  # 使用cid
+concept_name = first_concept['name']
+
+df_stocks = client.concept_stocks(concept_cid)
+print(f"概念 '{concept_name}' (cid: {concept_cid}) 包含 {len(df_stocks)} 只股票")
 print(df_stocks.head(10))
 
 # 异步方式
 async def get_concept_stocks():
-    df = await client.aconcept_stocks("885943")
-    print(f"板块包含 {len(df)} 只股票")
+    concepts = await client.aconcept_list()
+    first_concept = concepts.iloc[0]
+    concept_cid = first_concept['cid']
+    concept_name = first_concept['name']
+    
+    df = await client.aconcept_stocks(concept_cid)
+    print(f"概念 '{concept_name}' (cid: {concept_cid}) 包含 {len(df)} 只股票")
     print(df.head(10))
 ```
 
-#### 3. 获取板块K线数据
+#### 3. 获取行业列表
+
+```python
+# 同步方式
+df_industries = client.industry_list()
+print(f"共 {len(df_industries)} 个行业")
+print(df_industries.head(10))
+
+# 异步方式
+async def get_industry_list():
+    df = await client.aindustry_list()
+    print(f"共 {len(df)} 个行业")
+    print(df.head(10))
+```
+
+#### 4. 获取行业成分股
+
+```python
+# 同步方式 - 获取指定行业的成分股
+industry_code = "881121"  # 半导体行业
+df_stocks = client.industry_stocks(industry_code)
+print(f"行业 {industry_code} 包含 {len(df_stocks)} 只股票")
+print(df_stocks.head(10))
+
+# 异步方式
+async def get_industry_stocks():
+    df = await client.aindustry_stocks("881121")
+    print(f"行业包含 {len(df)} 只股票")
+    print(df.head(10))
+```
+
+#### 5. 获取板块K线数据
 
 ```python
 # 同步方式 - 获取板块日线数据
@@ -301,7 +342,23 @@ print(f"60分钟线数据行数: {len(df_board_minute60)}")
 print(df_board_minute60.head())
 ```
 
-#### 4. 板块代码格式说明
+#### 4. 获取行业成分股
+
+```python
+# 同步方式 - 获取指定行业的成分股
+industry_code = "881101"  # 医药行业
+df_industry_stocks = client.industry_stocks(industry_code)
+print(f"行业包含 {len(df_industry_stocks)} 只股票")
+print(df_industry_stocks.head(10))
+
+# 异步方式
+async def get_industry_stocks():
+    df = await client.aindustry_stocks("881101")
+    print(f"行业包含 {len(df)} 只股票")
+    print(df.head(10))
+```
+
+#### 5. 板块代码格式说明
 
 同花顺数据源支持两种板块代码格式：
 - 原始格式：`885943`
@@ -469,14 +526,29 @@ except DataSourceError as e:
 #### 概念板块列表
 - `concept_list() -> pd.DataFrame` - 同步获取所有概念板块列表
 - `aconcept_list() -> pd.DataFrame` - 异步获取所有概念板块列表
+- **返回字段**：code（板块代码）、name（板块名称）、cid（板块ID）
 
 #### 板块成分股
 - `concept_stocks(concept_code: str) -> pd.DataFrame` - 同步获取指定概念板块的成分股
 - `aconcept_stocks(concept_code: str) -> pd.DataFrame` - 异步获取指定概念板块的成分股
+- **重要**：参数`concept_code`必须使用cid（板块ID），而不是code（板块代码）
+- **返回字段**：code（股票代码）、cid（概念板块ID）
+
+#### 行业列表
+- `industry_list() -> pd.DataFrame` - 同步获取所有行业板块列表
+- `aindustry_list() -> pd.DataFrame` - 异步获取所有行业板块列表
+- **返回字段**：code（行业代码）、name（行业名称）
+
+#### 行业成分股
+- `industry_stocks(industry_code: str) -> pd.DataFrame` - 同步获取指定行业的成分股
+- `aindustry_stocks(industry_code: str) -> pd.DataFrame` - 异步获取指定行业的成分股
+- **参数**：`industry_code`为行业代码，如"881121"（半导体行业）
+- **返回字段**：code（股票代码）、name（股票名称）、industry_code（行业代码）
 
 #### 板块日线数据
 - `board_daily(board_code: str, start_date: Optional[str] = None, end_date: Optional[str] = None, **kwargs) -> pd.DataFrame` - 同步获取板块日线数据
 - `aboard_daily(board_code: str, start_date: Optional[str] = None, end_date: Optional[str] = None, **kwargs) -> pd.DataFrame` - 异步获取板块日线数据
+- **重要**：参数`board_code`使用板块代码（code），如"885943"
 
 #### 板块周线数据
 - `board_weekly(board_code: str, start_date: Optional[str] = None, end_date: Optional[str] = None, **kwargs) -> pd.DataFrame` - 同步获取板块周线数据

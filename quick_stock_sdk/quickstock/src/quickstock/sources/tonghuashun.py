@@ -12,6 +12,9 @@ import requests
 from lxml import etree
 import json
 from datetime import datetime
+from io import StringIO
+from bs4 import BeautifulSoup
+import akshare as ak
 
 from ..errors import (DataSourceError, ValidationError, 
                      NetworkError, DataNotFoundError)
@@ -197,7 +200,7 @@ class TongHuaShunSource(BaseSource):
                 headers=self._get_headers(host)
             )
             if response.status_code == 200:
-                return response.content
+                return response.text
             elif response.status_code == 404:
                 return False
             else:
@@ -341,8 +344,9 @@ class TongHuaShunSource(BaseSource):
         获取指定概念板块的成分股
         
         Args:
-            concept_code: 概念板块代码
-            
+            concept_code: 概念板块ID（cid），不是板块代码（code）
+                        可以从get_concept_list()返回的cid字段获取
+        
         Returns:
             包含成分股信息的DataFrame，字段包括：
             - code: 股票代码
@@ -364,6 +368,78 @@ class TongHuaShunSource(BaseSource):
             return df
         except Exception as e:
             raise DataSourceError(f"解析板块成分股失败: {e}")
+    
+    async def get_industry_list(self) -> pd.DataFrame:
+        """
+        获取所有行业板块列表
+        
+        使用akshare接口获取行业分类信息
+        
+        Returns:
+            包含行业板块信息的DataFrame，字段包括：
+            - code: 行业代码
+            - name: 行业名称
+        """
+        try:
+            df = ak.stock_board_industry_name_ths()
+            return df
+        except Exception as e:
+            raise DataSourceError(f"获取行业列表失败: {e}")
+    
+    async def get_industry_stocks(self, industry_code: str) -> pd.DataFrame:
+        """
+        获取指定行业的成分股
+        
+        Args:
+            industry_code: 行业代码，如'881101'（医药行业）
+            
+        Returns:
+            包含行业成分股信息的DataFrame，字段包括：
+            - code: 股票代码
+            - name: 股票名称
+            - industry_code: 行业代码
+        """
+        url = f"http://q.10jqka.com.cn/thshy/detail/field/199112/order/desc/page/1/ajax/1/code/{industry_code}"
+        html = self._request(url, host='q.10jqka.com.cn')
+        
+        try:
+            root = etree.fromstring(html, etree.HTMLParser(encoding='utf-8'))
+            
+            page_info = root.cssselect('.page_info')
+            if not page_info:
+                return pd.DataFrame()
+            
+            page_num = int(page_info[0].text.split('/')[1])
+            
+            big_df = pd.DataFrame()
+            
+            for page in range(1, page_num + 1):
+                url = f"http://q.10jqka.com.cn/thshy/detail/field/199112/order/desc/page/{page}/ajax/1/code/{industry_code}"
+                html = self._request(url, host='q.10jqka.com.cn')
+                
+                try:
+                    soup = BeautifulSoup(html, features='lxml')
+                    table = soup.find('table')
+                    if table:
+                        temp_df = pd.read_html(StringIO(str(table)))[0]
+                        if not temp_df.empty:
+                            if big_df.empty:
+                                big_df = temp_df
+                            else:
+                                big_df = pd.concat([big_df, temp_df], ignore_index=True)
+                except Exception as e:
+                    continue
+            
+            if not big_df.empty:
+                big_df = big_df.rename(columns={
+                    '代码': 'code',
+                    '名称': 'name'
+                })
+                big_df['industry_code'] = industry_code
+            
+            return big_df
+        except Exception as e:
+            raise DataSourceError(f"解析行业成分股失败: {e}")
     
     async def get_board_daily(self, board_code: str, start_date: Optional[str] = None, 
                             end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
@@ -526,7 +602,7 @@ class TongHuaShunSource(BaseSource):
         try:
             html = html[38:-1]
             data = json.loads(html)
-            data_str = data.get(board_code, {}).get("data", "")
+            data_str = data.get("data", "")
             
             if data_str:
                 df = self._parse_kline_data(data_str, 'minute')

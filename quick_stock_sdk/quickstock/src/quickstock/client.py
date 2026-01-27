@@ -681,7 +681,8 @@ class QuickStockClient:
         获取指定概念板块的成分股（同步方法）
         
         Args:
-            concept_code: 概念板块代码，如'885943'
+            concept_code: 概念板块ID（cid），如'300188'，不是板块代码（code'885943'）
+                        可以从concept_list()返回的cid字段获取
             
         Returns:
             包含成分股信息的DataFrame，字段包括：
@@ -695,7 +696,8 @@ class QuickStockClient:
         获取指定概念板块的成分股（异步方法）
         
         Args:
-            concept_code: 概念板块代码，如'885943'
+            concept_code: 概念板块ID（cid），如'300188'，不是板块代码（code'885943'）
+                        可以从aconcept_list()返回的cid字段获取
             
         Returns:
             包含成分股信息的DataFrame，字段包括：
@@ -703,6 +705,58 @@ class QuickStockClient:
             - cid: 概念板块ID
         """
         return await self.tonghuashun.get_concept_stocks(concept_code)
+    
+    def industry_list(self) -> pd.DataFrame:
+        """
+        获取所有行业板块列表（同步方法）
+        
+        Returns:
+            包含行业板块信息的DataFrame，字段包括：
+            - code: 行业代码
+            - name: 行业名称
+        """
+        return self._run_async(self.tonghuashun.get_industry_list())
+    
+    async def aindustry_list(self) -> pd.DataFrame:
+        """
+        获取所有行业板块列表（异步方法）
+        
+        Returns:
+            包含行业板块信息的DataFrame，字段包括：
+            - code: 行业代码
+            - name: 行业名称
+        """
+        return await self.tonghuashun.get_industry_list()
+    
+    def industry_stocks(self, industry_code: str) -> pd.DataFrame:
+        """
+        获取指定行业的成分股（同步方法）
+        
+        Args:
+            industry_code: 行业代码，如'881101'（医药行业）
+            
+        Returns:
+            包含行业成分股信息的DataFrame，字段包括：
+            - code: 股票代码
+            - name: 股票名称
+            - industry_code: 行业代码
+        """
+        return self._run_async(self.tonghuashun.get_industry_stocks(industry_code))
+    
+    async def aindustry_stocks(self, industry_code: str) -> pd.DataFrame:
+        """
+        获取指定行业的成分股（异步方法）
+        
+        Args:
+            industry_code: 行业代码，如'881101'（医药行业）
+            
+        Returns:
+            包含行业成分股信息的DataFrame，字段包括：
+            - code: 股票代码
+            - name: 股票名称
+            - industry_code: 行业代码
+        """
+        return await self.tonghuashun.get_industry_stocks(industry_code)
     
     def board_daily(self, board_code: str, start_date: Optional[str] = None, 
                    end_date: Optional[str] = None, **kwargs) -> pd.DataFrame:
