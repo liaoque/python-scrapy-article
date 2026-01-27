@@ -436,6 +436,9 @@ class TongHuaShunSource(BaseSource):
                     '名称': 'name'
                 })
                 big_df['industry_code'] = industry_code
+                
+                if 'code' in big_df.columns:
+                    big_df['code'] = big_df['code'].astype(str).str.zfill(6)
             
             return big_df
         except Exception as e:
